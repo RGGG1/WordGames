@@ -1,0 +1,284 @@
+body {
+  background: #FFFFFF;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  user-select: none;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark-mode {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+#header {
+  width: 90vw;
+  margin: 0 auto;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+#dark-mode-btn {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+#mode-icon {
+  font-size: 20px;
+  color: #000000;
+}
+
+.dark-mode #mode-icon {
+  color: #FFFFFF;
+}
+
+#game-name {
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+#score {
+  position: absolute;
+  top: 5px;
+  right: 0;
+  font-size: 16px;
+}
+
+#guess-area {
+  width: 75vw;
+  height: 20vh;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#prompt {
+  font-size: 18px;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  text-align: left;
+}
+
+#guess-background {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  height: 60px;
+  z-index: 0; /* Behind input */
+}
+
+#guess-input {
+  font-size: 56px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 40px;
+  color: #000000;
+  outline: none;
+  caret-color: transparent;
+  text-transform: uppercase;
+  z-index: 1; /* Above background */
+}
+
+.dark-mode #guess-input {
+  color: #FFFFFF;
+}
+
+#guess-input::placeholder {
+  color: transparent;
+}
+
+#guess-line {
+  width: 100%;
+  height: 2px;
+  background: #000000;
+  position: absolute;
+  top: 100px;
+  transition: opacity 0.5s ease-out; /* Smooth fade for underline */
+}
+
+.dark-mode #guess-line {
+  background: #FFFFFF;
+}
+
+#hints-box {
+  width: 80vw;
+  height: 40vh;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 5px auto;
+  overflow-y: auto;
+}
+
+#hints-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+#hints-subtitle {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.hint-line {
+  margin: 15px 0;
+}
+
+.hint-line span {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.hint-line.single {
+  display: flex;
+  justify-content: center;
+}
+
+.hint-line.double {
+  display: grid;
+  grid-template-columns: 10fr 3fr 10fr;
+  width: 100%;
+}
+
+.hint-line.double span:nth-child(1) {
+  justify-self: center;
+}
+
+.hint-line.double span:nth-child(2) {
+  visibility: hidden;
+}
+
+.hint-line.double span:nth-child(3) {
+  justify-self: center;
+}
+
+#graphic {
+  width: 60vw;
+  height: 20vh;
+  background: #FFFFFF;
+  margin: 5px auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark-mode #graphic {
+  background: #000000;
+}
+
+#shark-icon {
+  width: 45px; /* 75% of 60px */
+  position: absolute;
+  left: 0px;
+  top: 0px; /* Start at top-left */
+  transition: width 100s linear; /* Default transition for game progress */
+  z-index: 2; /* Shark overlays swimmer */
+}
+
+#shark-icon.shrink {
+  animation: shrinkAndMove 0.5s ease-out forwards; /* Shrink and move to top-right */
+}
+
+@keyframes shrinkAndMove {
+  0% { width: inherit; opacity: 1; left: inherit; top: inherit; }
+  100% { width: 0px; opacity: 0; left: calc(100% - 0px); top: 0px; }
+}
+
+#man-icon {
+  width: 60px;
+  position: absolute;
+  right: 10px;
+  bottom: 0px; /* Swimmer at bottom-right */
+  z-index: 1; /* Swimmer under shark */
+}
+
+#game-over {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.dark-mode #game-over {
+  background: #000000;
+}
+
+#game-over.win {
+  border: 5px solid #00FF00;
+}
+
+#game-over.lose {
+  border: 5px solid #FF0000;
+}
+
+#secret-word {
+  font-size: 24px;
+  margin: 10px;
+}
+
+#final-score, #next-game {
+  margin: 10px;
+}
+
+#share-btn {
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+.wrong-guess {
+  color: #FF0000; /* Red text for incorrect guess */
+  animation: fadeOutUp 0.5s ease-out forwards;
+  position: absolute;
+  width: 100%;
+}
+
+.correct-guess {
+  animation: customPulse 1s ease-out forwards;
+  position: absolute;
+  width: 100%;
+}
+
+@keyframes customPulse {
+  0% { font-size: 56px; }
+  50% { font-size: 84px; } /* Adjusted to 1.5x for mobile visibility (was 112px) */
+  100% { font-size: 56px; }
+}
+
+.flash-green {
+  animation: flashDeepGreen 1s forwards;
+}
+
+@keyframes flashDeepGreen {
+  0% { background: transparent; }
+  50% { background: #006400; } /* Deep green */
+  100% { background: transparent; }
+}
