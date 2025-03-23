@@ -1,1 +1,88 @@
-sdsdsssd
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>YKYK</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Font Awesome CDN (for dark mode and share icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Animate.css CDN -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+</head>
+<body oncontextmenu="return false;">
+    <!-- Start Screen -->
+    <div id="start-screen">
+        <button id="start-dark-mode-btn">
+            <i id="start-mode-icon" class="fas fa-moon"></i>
+        </button>
+        <div id="start-content">
+            <div id="start-title">Sharky</div>
+            <div id="start-subtitle">How to Play</div>
+            <div id="start-instructions">
+                Guess the secret word before your score hits zero and you get eaten by the shark.<br><br>
+                New hints are revealed every 10 seconds.
+            </div>
+            <div id="start-separator">~~^~~</div>
+            <button id="play-now-btn" class="animate__animated animate__pulse animate__infinite">Play Now</button>
+        </div>
+    </div>
+
+    <!-- Game Screen -->
+    <div id="game-screen" style="display: none;">
+        <div id="header">
+            <button id="dark-mode-btn">
+                <i id="mode-icon" class="fas fa-moon"></i>
+            </button>
+            <div id="game-name">YKYK</div>
+            <div id="score">Score: 100</div>
+        </div>
+        <div id="guess-area">
+            <div id="prompt">The secret word is...</div>
+            <div id="guess-background"></div>
+            <input id="guess-input" type="text" autofocus placeholder="">
+            <div id="guess-line"></div>
+        </div>
+        <div id="hints-box">
+            <div id="hints-title">Hints</div>
+            <div id="hints-subtitle">(new hint revealed every 10 seconds)</div>
+            <div id="hints">
+                <div class="hint-line single" id="hint-row-1"><span></span></div>
+                <div class="hint-line double" id="hint-row-2"><span></span><span></span><span></span></div>
+                <div class="hint-line single" id="hint-row-3"><span></span></div>
+                <div class="hint-line double" id="hint-row-4"><span></span><span></span><span></span></div>
+                <div class="hint-line single" id="hint-row-5"><span></span></div>
+            </div>
+        </div>
+        <div id="graphic">
+            <img id="shark-icon" src="shark_light_bk.png" alt="Shark">
+            <img id="man-icon" src="swimmer_light_bk.png" alt="Swimmer">
+        </div>
+    </div>
+
+    <!-- End Screen -->
+    <div id="game-over">
+        <button id="end-dark-mode-btn">
+            <i id="end-mode-icon" class="fas fa-moon"></i>
+        </button>
+        <div id="end-message"></div>
+        <div id="share-box">
+            <div id="share-text"></div>
+            <div id="share-score-label">Score</div>
+            <div id="share-score"></div>
+            <a id="share-link" href="#">Think you can beat my score? Click here </a>
+        </div>
+        <div id="share-section">
+            <div id="share-label">Share with your friends</div>
+            <div id="share-buttons">
+                <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                <a id="share-twitter" href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+            </div>
+        </div>
+        <button id="home-btn">Home</button>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

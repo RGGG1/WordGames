@@ -1,0 +1,478 @@
+body {
+  background: #FFFFFF;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  user-select: none;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.dark-mode {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+/* Start Screen Styles */
+#start-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+}
+
+.dark-mode #start-screen {
+  background: #000000;
+}
+
+#start-dark-mode-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+#start-mode-icon {
+  font-size: 20px;
+  color: #000000;
+}
+
+.dark-mode #start-mode-icon {
+  color: #FFFFFF;
+}
+
+#start-content {
+  width: 80%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#start-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#start-subtitle {
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+#start-instructions {
+  font-size: 16px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+#start-separator {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+#play-now-btn {
+  padding: 10px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  background: #000000;
+  color: #FFFFFF;
+  border: none;
+  border-radius: 15px; /* Slightly curved edges */
+  cursor: pointer;
+}
+
+.dark-mode #play-now-btn {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+/* Game Screen Styles */
+#game-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+#header {
+  width: 90vw;
+  margin: 0 auto;
+  position: relative;
+  padding-bottom: 20px;
+}
+
+#dark-mode-btn {
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+#mode-icon {
+  font-size: 20px;
+  color: #000000;
+}
+
+.dark-mode #mode-icon {
+  color: #FFFFFF;
+}
+
+#game-name {
+  font-size: 14px;
+  margin: 2px 0;
+}
+
+#score {
+  position: absolute;
+  top: 5px;
+  right: 0;
+  font-size: 16px;
+}
+
+#guess-area {
+  width: 75vw;
+  height: 20vh;
+  margin: 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+#prompt {
+  font-size: 18px;
+  position: absolute;
+  top: 10px;
+  left: 0;
+  text-align: left;
+}
+
+#guess-background {
+  position: absolute;
+  top: 40px;
+  width: 100%;
+  height: 60px;
+  z-index: 0; /* Behind input */
+}
+
+#guess-input {
+  font-size: 56px;
+  font-weight: bold;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 40px;
+  color: #000000;
+  outline: none;
+  caret-color: transparent;
+  text-transform: uppercase;
+  z-index: 1; /* Above background */
+}
+
+.dark-mode #guess-input {
+  color: #FFFFFF;
+}
+
+#guess-input::placeholder {
+  color: transparent;
+}
+
+#guess-line {
+  width: 100%;
+  height: 2px;
+  background: #000000;
+  position: absolute;
+  top: 100px;
+  transition: opacity 0.5s ease-out; /* Smooth fade for underline */
+}
+
+.dark-mode #guess-line {
+  background: #FFFFFF;
+}
+
+#hints-box {
+  width: 80vw;
+  height: 40vh;
+  border: none;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 5px auto;
+  overflow-y: auto;
+}
+
+#hints-title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 2px;
+}
+
+#hints-subtitle {
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.hint-line {
+  margin: 15px 0;
+}
+
+.hint-line span {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.hint-line.single {
+  display: flex;
+  justify-content: center;
+}
+
+.hint-line.double {
+  display: grid;
+  grid-template-columns: 10fr 3fr 10fr;
+  width: 100%;
+}
+
+.hint-line.double span:nth-child(1) {
+  justify-self: center;
+}
+
+.hint-line.double span:nth-child(2) {
+  visibility: hidden;
+}
+
+.hint-line.double span:nth-child(3) {
+  justify-self: center;
+}
+
+.hint-pulse {
+  animation: animate__pulse 2s ease-out;
+}
+
+#graphic {
+  width: 60vw;
+  height: 20vh;
+  background: #FFFFFF;
+  margin: 5px auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark-mode #graphic {
+  background: #000000;
+}
+
+#shark-icon {
+  width: 45px; /* 75% of 60px */
+  position: absolute;
+  left: 0px;
+  top: 50%; /* Vertically centered */
+  transform: translateY(-50%); /* Adjust for centering */
+  transition: width 100s linear; /* Default transition for size during game */
+  z-index: 2; /* Shark overlays swimmer */
+}
+
+#shark-icon.shark-exit {
+  transform: translateY(-50%) scaleX(-1); /* Invert horizontally, maintain vertical centering */
+  left: 0px; /* Move to left edge */
+  width: 1% !important; /* Reduce to 1% of current size (overridden dynamically in JS) */
+  transition: left 1s linear, width 1s linear; /* Animate position and size over 1 second */
+}
+
+#man-icon {
+  width: 60px;
+  position: absolute;
+  right: 10px;
+  bottom: 0px; /* Swimmer at bottom-right */
+  z-index: 1; /* Swimmer under shark */
+}
+
+/* End Screen Styles */
+#game-over {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  position: relative;
+  z-index: 10; /* Ensure it’s above the game screen */
+}
+
+.dark-mode #game-over {
+  background: #000000;
+}
+
+#game-over.win {
+  border: 5px solid #00FF00;
+}
+
+#game-over.lose {
+  border: 5px solid #FF0000;
+}
+
+#end-dark-mode-btn {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 20px;
+  height: 20px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+#end-mode-icon {
+  font-size: 20px;
+  color: #000000;
+}
+
+.dark-mode #end-mode-icon {
+  color: #FFFFFF;
+}
+
+#end-message {
+  font-size: 24px;
+  margin: 10px;
+  text-align: center;
+  white-space: pre-line; /* Preserve line breaks for "nhom-nhom!" */
+}
+
+#share-box {
+  background: #000000; /* Black background in light mode */
+  color: #FFFFFF; /* White text in light mode */
+  border-radius: 10px; /* Slightly curved edges */
+  padding: 15px;
+  margin: 10px 0;
+  text-align: center;
+  width: 80%;
+  max-width: 300px;
+}
+
+.dark-mode #share-box {
+  background: #FFFFFF; /* White background in dark mode */
+  color: #000000; /* Black text in dark mode */
+}
+
+#share-text {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+#share-score-label {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+#share-score {
+  font-size: 32px; /* Double font size for the score */
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+#share-link {
+  font-size: 14px;
+  color: #00BFFF; /* Light blue in light mode (on black background) */
+  text-decoration: underline;
+}
+
+.dark-mode #share-link {
+  color: #0000FF; /* Dark blue in dark mode (on white background) */
+}
+
+#share-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 10px 0;
+}
+
+#share-label {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+#share-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+#share-buttons a {
+  font-size: 24px;
+  color: #000000;
+  text-decoration: none;
+}
+
+.dark-mode #share-buttons a {
+  color: #FFFFFF;
+}
+
+#home-btn {
+  font-size: 12px;
+  padding: 5px 10px;
+  background: none;
+  border: 1px solid #000000;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.dark-mode #home-btn {
+  border-color: #FFFFFF;
+  color: #FFFFFF;
+}
+
+/* Guess Area Styles */
+#guess-input.wrong-guess {
+  color: #FF0000; /* Red text for incorrect guess */
+  animation: fadeOutUp 0.5s ease-out forwards;
+  position: absolute;
+  width: 100%;
+}
+
+.correct-guess {
+  font-size: 84px; /* Increase font size by 1.5x (56px to 84px) */
+  animation: animate__pulse 1s ease-out forwards; /* Burst effect */
+  position: absolute;
+  width: 100%;
+}
+
+.flash-green {
+  animation: flashDeepGreen 1s forwards;
+}
+
+@keyframes flashDeepGreen {
+  0% { background: transparent; }
+  50% { background: #006400; } /* Deep green */
+  100% { background: transparent; }
+}
