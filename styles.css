@@ -25,7 +25,6 @@ a {
   color: #1E90FF;
 }
 
-/* Hamburger Menu Styles */
 #hamburger-menu {
   position: absolute;
   top: 1vh;
@@ -36,7 +35,7 @@ a {
 #hamburger-btn {
   background: none;
   border: none;
-  font-size: 3vh;
+  font-size: 2vh;
   cursor: pointer;
   color: #000000;
 }
@@ -141,7 +140,6 @@ a {
   background: #FFFFFF;
 }
 
-/* Start Screen Styles */
 #start-screen {
   position: fixed;
   top: 0;
@@ -218,7 +216,6 @@ a {
   display: inline-block;
 }
 
-/* Game Screen Styles */
 #game-screen {
   display: flex;
   flex-direction: column;
@@ -333,7 +330,7 @@ a {
 
 #hints-subtitle {
   font-size: 1.5vh;
-  margin-bottom: 0.5vh;
+  margin-bottom: 1.5vh;
 }
 
 .hint-line {
@@ -418,7 +415,7 @@ a {
   z-index: 1;
 }
 
-#pause-btn {
+#pause-btn, #resume-btn {
   width: 5vh;
   height: 5vh;
   border-radius: 50%;
@@ -431,7 +428,7 @@ a {
   font-size: 2vh;
 }
 
-.dark-mode #pause-btn {
+.dark-mode #pause-btn, .dark-mode #resume-btn {
   background: #FFFFFF;
   color: #000000;
 }
@@ -460,27 +457,10 @@ a {
   margin-bottom: 4vh;
 }
 
-#resume-btn {
-  width: 8vh;
-  height: 8vh;
-  border-radius: 50%;
-  background: #000;
-  color: #FFF;
-  border: none;
-  cursor: pointer;
-  font-size: 3vh;
-}
-
-.dark-mode #resume-btn {
-  background: #FFF;
-  color: #000;
-}
-
 #countdown {
   font-size: 2.5vh;
 }
 
-/* End Screen Styles */
 #game-over {
   position: fixed;
   top: 0;
@@ -606,7 +586,6 @@ a {
   font-size: 1.5vh;
 }
 
-/* Additional Screens */
 .screen {
   position: fixed;
   top: 0;
@@ -660,7 +639,6 @@ a {
   color: #FFFFFF;
 }
 
-/* Guess Area Styles */
 #guess-input.wrong-guess {
   animation: wrongGuess 0.5s ease-out forwards;
 }
@@ -685,4 +663,8 @@ a {
   0% { background: transparent; }
   50% { background: #006400; }
   100% { background: transparent; }
+}
+
+#advertise-screen {
+  z-index: 30;
 }

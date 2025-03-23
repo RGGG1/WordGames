@@ -1,19 +1,18 @@
 document.addEventListener("DOMContentLoaded", () => {
-    // Game state
     let score = 100;
     let decayStarted = false;
     let gameOver = false;
     let decayStartTime = null;
-    let secretWord = ""; // Will be set by Google Sheets
-    let hints = []; // Will be set by Google Sheets
+    let secretWord = "";
+    let hints = [];
     let hintIndex = 0;
     let lastHintScore = 100;
     let firstGuessMade = false;
     let pausedTime = null;
+    let allGames = [];
 
-    console.log("Hungry Shark Version: Integrated with Google Sheets");
+    console.log("Hungry Shark Version: Updated with Anagram/Snakebite screens and end screen links");
 
-    // Fetch data from Google Sheets
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
         try {
@@ -21,18 +20,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const text = await response.text();
             const rows = text.split("\n").map(row => row.split(","));
             const headers = rows[0];
-            const data = rows.slice(1).map(row => {
+            allGames = rows.slice(1).map(row => {
                 let obj = {};
                 headers.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
                 return obj;
             });
 
-            // Find most recent date
-            const latestEntry = data.reduce((latest, current) => {
+            const latestEntry = allGames.reduce((latest, current) => {
                 return new Date(current.Date) > new Date(latest.Date) ? current : latest;
-            }, data[0]);
+            }, allGames[0]);
 
-            // Set game data
             secretWord = latestEntry["Secret Word"].toUpperCase();
             hints = [
                 latestEntry["Hint 1"], latestEntry["Hint 2"], latestEntry["Hint 3"],
@@ -40,29 +37,26 @@ document.addEventListener("DOMContentLoaded", () => {
                 latestEntry["Hint 7"], latestEntry["Hint 8"], latestEntry["Hint 9"]
             ].filter(hint => hint).map(hint => hint.toUpperCase());
 
-            // Ensure hints array matches the UI (5 rows: 1 single, 2 double, 1 single, 1 double)
-            while (hints.length < 7) hints.push(""); // Pad with empty strings if fewer hints
-
+            while (hints.length < 7) hints.push("");
             setupHints();
+            populatePreviousGames();
         } catch (error) {
             console.error("Failed to fetch game data:", error);
-            // Fallback to defaults if fetch fails
             secretWord = "ERROR";
-            hints = ["UNABLE", "TO", "LOAD", "HINTS", "FROM", "SHEET", "CHECK", "URL", "PLEASE"];
+            hints = ["UNABLE", "TO", "LOAD", "HINTS", "FROM", "SHEET", "CHECK"];
             setupHints();
         }
     }
 
-    // Initial hint setup
     function setupHints() {
         const hintElements = [
-            document.getElementById("hint-row-1").children[0], // Single
-            document.getElementById("hint-row-2").children[0], // Double (left)
-            document.getElementById("hint-row-2").children[2], // Double (right)
-            document.getElementById("hint-row-3").children[0], // Single
-            document.getElementById("hint-row-4").children[0], // Double (left)
-            document.getElementById("hint-row-4").children[2], // Double (right)
-            document.getElementById("hint-row-5").children[0]  // Single
+            document.getElementById("hint-row-1").children[0],
+            document.getElementById("hint-row-2").children[0],
+            document.getElementById("hint-row-2").children[2],
+            document.getElementById("hint-row-3").children[0],
+            document.getElementById("hint-row-4").children[0],
+            document.getElementById("hint-row-4").children[2],
+            document.getElementById("hint-row-5").children[0]
         ];
         
         hintElements.forEach((span, index) => {
@@ -71,23 +65,49 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    // Fetch data before proceeding
+    function populatePreviousGames() {
+        const gameList = document.querySelector("#previous-games-screen .game-list");
+        gameList.innerHTML = "";
+        allGames.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+        allGames.forEach(game => {
+            const link = document.createElement("a");
+            link.href = "#";
+            link.textContent = game.Date;
+            link.addEventListener("click", (e) => {
+                e.preventDefault();
+                loadGame(game);
+                document.getElementById("previous-games-screen").style.display = "none";
+                document.getElementById("game-screen").style.display = "flex";
+            });
+            gameList.appendChild(link);
+        });
+    }
+
+    function loadGame(game) {
+        resetGame();
+        secretWord = game["Secret Word"].toUpperCase();
+        hints = [
+            game["Hint 1"], game["Hint 2"], game["Hint 3"],
+            game["Hint 4"], game["Hint 5"], game["Hint 6"],
+            game["Hint 7"], game["Hint 8"], game["Hint 9"]
+        ].filter(hint => hint).map(hint => hint.toUpperCase());
+        while (hints.length < 7) hints.push("");
+        setupHints();
+    }
+
     fetchGameData().then(() => {
-        // Screen elements
         const startScreen = document.getElementById("start-screen");
         const gameScreen = document.getElementById("game-screen");
         const go = document.getElementById("game-over");
         const playNowBtn = document.getElementById("play-now-btn");
         const pauseScreen = document.getElementById("pause-screen");
 
-        // Start Screen Logic
         playNowBtn.addEventListener("click", () => {
             startScreen.style.display = "none";
             gameScreen.style.display = "flex";
             document.getElementById("guess-input").focus();
         });
 
-        // Dark mode toggle
         const menuModeButton = document.getElementById("menu-dark-mode-btn");
         const menuModeIcon = document.getElementById("menu-mode-icon");
         const sharkIcon = document.getElementById("shark-icon");
@@ -104,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         menuModeButton.addEventListener("click", toggleDarkMode);
 
-        // Keep input focused
         document.addEventListener("click", () => {
             const input = document.getElementById("guess-input");
             if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none") {
@@ -112,7 +131,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        // Score decay and hint reveal
         setInterval(() => {
             if (decayStarted && score > 0 && !gameOver) {
                 const elapsed = (Date.now() - decayStartTime) / 1000;
@@ -144,7 +162,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Guess handling
         const input = document.getElementById("guess-input");
         const guessBackground = document.getElementById("guess-background");
         const guessLine = document.getElementById("guess-line");
@@ -167,7 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
             guessDisplay.value = guess.toUpperCase();
             guessDisplay.classList.remove("wrong-guess", "correct-guess");
             guessDisplay.style.opacity = "1";
-            void guessDisplay.offsetWidth; // Force reflow
+            void guessDisplay.offsetWidth;
 
             if (guess.toUpperCase() === secretWord) {
                 guessDisplay.classList.add("correct-guess");
@@ -194,7 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // Update graphic
         function updateGraphic() {
             const shark = document.getElementById("shark-icon");
             const graphic = document.getElementById("graphic");
@@ -212,7 +228,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        // End game
         function endGame(won) {
             gameOver = true;
             const endMessage = document.getElementById("end-message");
@@ -237,13 +252,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
             shareScore.textContent = `${score}`;
             shareLink.href = "https://your-game-url.com";
-            const shareMessage = `${shareText.textContent}\nScore: ${score}\nThink you can beat my score? Play now: https://your-game-url.com`;
+            shareLink.textContent = "Can you beat my score? Click here";
+            const shareMessage = `${shareText.textContent}\nScore: ${score}\nCan you beat my score? Play now: https://your-game-url.com`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
         }
 
-        // Pause functionality
         const pauseBtn = document.getElementById("pause-btn");
         const resumeBtn = document.getElementById("resume-btn");
         const countdown = document.getElementById("countdown");
@@ -280,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 1000);
         });
 
-        // Hamburger menu logic
         const hamburgerBtn = document.getElementById("hamburger-btn");
         const menuContent = document.getElementById("menu-content");
         const menuCloseBtn = document.getElementById("menu-close-btn");
@@ -300,7 +314,7 @@ document.addEventListener("DOMContentLoaded", () => {
             subMenu.style.display = "none";
             hamburgerBtn.querySelector("i").classList.remove("fa-times");
             hamburgerBtn.querySelector("i").classList.add("fa-bars");
-            if (gameScreen.style.display === "flex" && !gameOver) {
+            if (gameScreen.style.display === "flex" && !gameOver && firstGuessMade) {
                 pauseScreen.style.display = "flex";
                 resumeBtn.style.display = "block";
                 countdown.style.display = "none";
@@ -312,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 menuContent.style.display = "flex";
                 hamburgerBtn.querySelector("i").classList.remove("fa-bars");
                 hamburgerBtn.querySelector("i").classList.add("fa-times");
-                if (gameScreen.style.display === "flex" && !gameOver && decayStarted) {
+                if (gameScreen.style.display === "flex" && !gameOver && firstGuessMade) {
                     pauseGame();
                 }
             } else {
@@ -345,6 +359,10 @@ document.addEventListener("DOMContentLoaded", () => {
         todayGame.addEventListener("click", (e) => {
             e.preventDefault();
             resetGame();
+            const latestEntry = allGames.reduce((latest, current) => {
+                return new Date(current.Date) > new Date(latest.Date) ? current : latest;
+            }, allGames[0]);
+            loadGame(latestEntry);
             startScreen.style.display = "flex";
             gameScreen.style.display = "none";
             go.style.display = "none";
@@ -391,6 +409,16 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("previous-games-screen").style.display = "flex";
         });
 
+        document.getElementById("end-anagram").addEventListener("click", (e) => {
+            e.preventDefault();
+            document.getElementById("anagram-screen").style.display = "flex";
+        });
+
+        document.getElementById("end-snakebite").addEventListener("click", (e) => {
+            e.preventDefault();
+            document.getElementById("snakebite-screen").style.display = "flex";
+        });
+
         document.getElementById("ad-link").addEventListener("click", (e) => {
             e.preventDefault();
             document.getElementById("advertise-screen").style.display = "flex";
@@ -413,7 +441,6 @@ document.addEventListener("DOMContentLoaded", () => {
             go.style.display = "none";
         });
 
-        // Skip welcome screen
         const skipWelcome = document.getElementById("skip-welcome");
         skipWelcome.addEventListener("change", () => {
             localStorage.setItem("skipWelcome", skipWelcome.checked);
@@ -425,7 +452,6 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.getElementById("guess-input").blur();
 
-        // Reset game state
         function resetGame() {
             score = 100;
             decayStarted = false;
