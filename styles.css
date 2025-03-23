@@ -223,7 +223,7 @@ a {
 }
 
 #header {
-  width: 80vw;
+  width: 75vw; /* Matches #guess-area */
   margin: 0 auto;
   position: relative;
   padding-bottom: 2vh;
@@ -421,7 +421,7 @@ a {
   border-radius: 50%;
   background: #000000;
   color: #FFFFFF;
-  border: none;
+  border: 2px solid #FFFFFF; /* Added for clean look */
   cursor: pointer;
   margin: 2vh auto;
   display: block;
@@ -431,6 +431,7 @@ a {
 .dark-mode #pause-btn, .dark-mode #resume-btn {
   background: #FFFFFF;
   color: #000000;
+  border: 2px solid #000000; /* Adjusted for dark mode */
 }
 
 #pause-screen {

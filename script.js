@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let pausedTime = null;
     let allGames = [];
 
-    console.log("Hungry Shark Version: Updated with Anagram/Snakebite screens and end screen links");
+    console.log("Hungry Shark Version: Updated Previous Games and UI");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -68,16 +68,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function populatePreviousGames() {
         const gameList = document.querySelector("#previous-games-screen .game-list");
         gameList.innerHTML = "";
-        allGames.sort((a, b) => new Date(b.Date) - new Date(a.Date));
-        allGames.forEach(game => {
+        // Sort ascending (oldest first) for numbering
+        allGames.sort((a, b) => new Date(a.Date) - new Date(b.Date));
+        allGames.forEach((game, index) => {
             const link = document.createElement("a");
             link.href = "#";
-            link.textContent = game.Date;
+            link.textContent = `Game #${index + 1}`;
             link.addEventListener("click", (e) => {
                 e.preventDefault();
                 loadGame(game);
                 document.getElementById("previous-games-screen").style.display = "none";
                 document.getElementById("game-screen").style.display = "flex";
+                document.getElementById("guess-input").focus();
             });
             gameList.appendChild(link);
         });
