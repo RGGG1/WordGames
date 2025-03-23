@@ -27,9 +27,9 @@ a {
 
 #hamburger-menu {
   position: absolute;
-  top: 1vh;
-  left: 10vw;
-  z-index: 20;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 #hamburger-btn {
@@ -47,8 +47,8 @@ a {
 #menu-content {
   position: fixed;
   top: 0;
-  left: 10vw;
-  width: 80vw;
+  left: 0;
+  width: 85vw;
   height: 100vh;
   background: #FFFFFF;
   padding: 2vh;
@@ -56,6 +56,7 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  z-index: 20;
 }
 
 .dark-mode #menu-content {
@@ -68,7 +69,7 @@ a {
   left: 1vw;
   background: none;
   border: none;
-  font-size: 4vh;
+  font-size: 2vh;
   cursor: pointer;
   color: #000000;
 }
@@ -159,7 +160,7 @@ a {
 }
 
 #start-content {
-  width: 80%;
+  width: 85vw;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -206,7 +207,7 @@ a {
 }
 
 #start-footer {
-  width: 80%;
+  width: 85vw;
   font-size: 1.8vh;
   color: #888;
 }
@@ -223,7 +224,7 @@ a {
 }
 
 #header {
-  width: 75vw; /* Matches #guess-area */
+  width: 85vw;
   margin: 0 auto;
   position: relative;
   padding-bottom: 2vh;
@@ -233,6 +234,9 @@ a {
   font-size: 2vh;
   margin: 0.5vh 0;
   font-weight: bold;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #score {
@@ -244,7 +248,7 @@ a {
 }
 
 #guess-area {
-  width: 75vw;
+  width: 85vw;
   height: 15vh;
   margin: 0 auto;
   position: relative;
@@ -314,7 +318,7 @@ a {
 }
 
 #hints-box {
-  width: 80vw;
+  width: 85vw;
   height: 30vh;
   border: none;
   border-radius: 1vh;
@@ -378,7 +382,7 @@ a {
 }
 
 #graphic {
-  width: 60vw;
+  width: 85vw;
   height: 15vh;
   background: #FFFFFF;
   margin: 0 auto;
@@ -393,18 +397,32 @@ a {
 #shark-icon {
   width: 4.5vh;
   position: absolute;
-  left: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  transition: width 100s linear;
+  left: 10%;
+  top: 10%;
+  animation: zigzag 100s linear infinite;
   z-index: 2;
 }
 
+@keyframes zigzag {
+  0% { left: 10%; top: 10%; transform: scale(0); }
+  10% { left: 18%; top: 90%; transform: scale(5); }
+  20% { left: 26%; top: 10%; transform: scale(0); }
+  30% { left: 34%; top: 90%; transform: scale(5); }
+  40% { left: 42%; top: 10%; transform: scale(0); }
+  50% { left: 50%; top: 90%; transform: scale(5); }
+  60% { left: 58%; top: 10%; transform: scale(0); }
+  70% { left: 66%; top: 90%; transform: scale(5); }
+  80% { left: 74%; top: 10%; transform: scale(0); }
+  90% { left: 82%; top: 90%; transform: scale(5); }
+  100% { left: 90%; top: 10%; transform: scale(0); }
+}
+
 #shark-icon.shark-exit {
-  transform: translateY(-50%) scaleX(-1);
+  transform: scaleX(-1);
   left: 0;
   width: 1% !important;
   transition: left 1s linear, width 1s linear;
+  animation: none;
 }
 
 #man-icon {
@@ -421,7 +439,7 @@ a {
   border-radius: 50%;
   background: #000000;
   color: #FFFFFF;
-  border: 2px solid #FFFFFF; /* Added for clean look */
+  border: 2px solid #FFFFFF;
   cursor: pointer;
   margin: 2vh auto;
   display: block;
@@ -431,7 +449,7 @@ a {
 .dark-mode #pause-btn, .dark-mode #resume-btn {
   background: #FFFFFF;
   color: #000000;
-  border: 2px solid #000000; /* Adjusted for dark mode */
+  border: 2px solid #000000;
 }
 
 #pause-screen {
@@ -494,7 +512,7 @@ a {
   padding: 1.5vh;
   margin: 1vh 0;
   text-align: center;
-  width: 80%;
+  width: 85vw;
   max-width: 30vh;
 }
 
@@ -505,7 +523,12 @@ a {
 
 #share-text {
   font-size: 2vh;
-  margin-bottom: 1vh;
+  margin-bottom: 0.5vh;
+}
+
+#share-game-number {
+  font-size: 1.8vh;
+  margin-bottom: 0.5vh;
 }
 
 #share-score-label {
@@ -567,7 +590,7 @@ a {
 }
 
 #ad-box {
-  width: 80%;
+  width: 85vw;
   height: 15vh;
   border: 0.1vh solid #000;
   border-radius: 1vh;
@@ -602,6 +625,15 @@ a {
 
 .dark-mode .screen {
   background: #000000;
+}
+
+#language-content, #previous-games-content, #create-game-content, #advertise-content {
+  width: 85vw;
+}
+
+.game-list a {
+  display: block;
+  margin: 1vh 0;
 }
 
 .language-list {

@@ -10,38 +10,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
-    <div id="hamburger-menu">
-        <button id="hamburger-btn"><i class="fas fa-bars"></i></button>
-        <div id="menu-content" style="display: none;">
-            <button id="menu-close-btn"><i class="fas fa-times"></i></button>
-            <a href="#" id="home-link">Home</a>
-            <div class="menu-section">
-                <div class="section-title">Settings</div>
-                <button id="menu-dark-mode-btn"><i id="menu-mode-icon" class="fas fa-moon"></i></button>
-                <a href="#" id="language-link">Language</a>
-            </div>
-            <div class="menu-divider"></div>
-            <div class="menu-section">
-                <div class="section-title">Games</div>
-                <div class="game-link">
-                    <a href="#" id="hungry-shark-link">Hungry Shark</a>
-                    <div class="sub-menu" style="display: none;">
-                        <a href="#" id="today-game">Today's Game</a>
-                        <a href="#" id="previous-games">Previous Games</a>
-                        <a href="#" id="create-game">Create a Game</a>
-                    </div>
-                </div>
-                <a href="#" id="anagram-link">Anagram</a>
-                <a href="#" id="snakebite-link">Snakebite</a>
-            </div>
-            <div class="menu-divider"></div>
-            <div class="menu-section">
-                <div class="section-title">Advertising</div>
-                <a href="#" id="advertise-link">Advertise with us</a>
-            </div>
-        </div>
-    </div>
-
     <div id="start-screen">
         <div id="start-content">
             <div id="start-title" class="animate__animated animate__pulse animate__infinite">Hungry Shark</div>
@@ -62,6 +30,37 @@
 
     <div id="game-screen" style="display: none;">
         <div id="header">
+            <div id="hamburger-menu">
+                <button id="hamburger-btn"><i class="fas fa-bars"></i></button>
+                <div id="menu-content" style="display: none;">
+                    <button id="menu-close-btn"><i class="fas fa-times"></i></button>
+                    <a href="#" id="home-link">Home</a>
+                    <div class="menu-section">
+                        <div class="section-title">Settings</div>
+                        <button id="menu-dark-mode-btn"><i id="menu-mode-icon" class="fas fa-moon"></i></button>
+                        <a href="#" id="language-link">Language</a>
+                    </div>
+                    <div class="menu-divider"></div>
+                    <div class="menu-section">
+                        <div class="section-title">Games</div>
+                        <div class="game-link">
+                            <a href="#" id="hungry-shark-link">Hungry Shark</a>
+                            <div class="sub-menu" style="display: none;">
+                                <a href="#" id="today-game">Today's Game</a>
+                                <a href="#" id="previous-games">Previous Games</a>
+                                <a href="#" id="create-game">Create a Game</a>
+                            </div>
+                        </div>
+                        <a href="#" id="meatball-link">Meatball</a>
+                        <a href="#" id="snakebite-link">Snakebite</a>
+                    </div>
+                    <div class="menu-divider"></div>
+                    <div class="menu-section">
+                        <div class="section-title">Advertising</div>
+                        <a href="#" id="advertise-link">Advertise with us</a>
+                    </div>
+                </div>
+            </div>
             <div id="game-name">Hungry Shark</div>
             <div id="score">Score: 100</div>
         </div>
@@ -99,6 +98,7 @@
         <div id="end-message"></div>
         <div id="share-box">
             <div id="share-text"></div>
+            <div id="share-game-number"></div>
             <div id="share-score-label">Score</div>
             <div id="share-score"></div>
             <a id="share-link" href="#">Can you beat my score? Click here</a>
@@ -112,9 +112,9 @@
             </div>
         </div>
         <div id="end-footer">
-            Until then, play our other games: <a href="#" id="end-previous-games">Hungry Shark</a>, <a href="#" id="end-anagram">Anagram</a>, <a href="#" id="end-snakebite">Snakebite</a>
+            Until then, play our other games: <a href="#" id="end-previous-games">Hungry Shark</a>, <a href="#" id="end-meatball">Meatball</a>, <a href="#" id="end-snakebite">Snakebite</a>
         </div>
-        <button id="home-btn">Home</button>
+        <button id="home-btn" class="home-btn">Home</button>
         <div id="ad-box">
             Advertise with us here and reach millions of players
             <div id="ad-link">click here to place an ad</div>
@@ -122,33 +122,41 @@
     </div>
 
     <div id="language-screen" class="screen" style="display: none;">
-        <i class="fas fa-globe"></i>
-        <div class="language-list">
-            <a href="#" class="active"><img src="ireland_flag.png" alt="IE"> English</a>
-            <a href="#" class="inactive"><img src="brazil_flag.png" alt="BR"> Brazilian Portuguese (coming soon)</a>
-            <a href="#" class="inactive"><img src="france_flag.png" alt="FR"> French (coming soon)</a>
-            <a href="#" class="inactive"><img src="italy_flag.png" alt="IT"> Italian (coming soon)</a>
-            <a href="#" class="inactive"><img src="spain_flag.png" alt="ES"> Spanish (coming soon)</a>
-            <a href="#" class="inactive"><img src="turkey_flag.png" alt="TR"> Turkish (coming soon)</a>
+        <div id="language-content">
+            <i class="fas fa-globe"></i>
+            <div class="language-list">
+                <a href="#" class="active"><img src="ireland_flag.png" alt="IE"> English</a>
+                <a href="#" class="inactive"><img src="brazil_flag.png" alt="BR"> Brazilian Portuguese (coming soon)</a>
+                <a href="#" class="inactive"><img src="france_flag.png" alt="FR"> French (coming soon)</a>
+                <a href="#" class="inactive"><img src="italy_flag.png" alt="IT"> Italian (coming soon)</a>
+                <a href="#" class="inactive"><img src="spain_flag.png" alt="ES"> Spanish (coming soon)</a>
+                <a href="#" class="inactive"><img src="turkey_flag.png" alt="TR"> Turkish (coming soon)</a>
+            </div>
+            <button class="home-btn">Home</button>
         </div>
-        <button class="home-btn">Home</button>
     </div>
     <div id="previous-games-screen" class="screen" style="display: none;">
-        <div>Previous Games</div>
-        <div class="game-list"></div>
-        <button class="home-btn">Home</button>
+        <div id="previous-games-content">
+            <div>Previous Games</div>
+            <div class="game-list"></div>
+            <button class="home-btn">Home</button>
+        </div>
     </div>
     <div id="create-game-screen" class="screen" style="display: none;">
-        <div>Create a Game...</div>
-        <p>Create your own secret words and hints...coming soon</p>
-        <button class="home-btn">Home</button>
+        <div id="create-game-content">
+            <div>Create a Game...</div>
+            <p>Create your own secret words and hints...coming soon</p>
+            <button class="home-btn">Home</button>
+        </div>
     </div>
-    <div id="anagram-screen" class="screen" style="display: none;"></div>
+    <div id="meatball-screen" class="screen" style="display: none;"></div>
     <div id="snakebite-screen" class="screen" style="display: none;"></div>
     <div id="advertise-screen" class="screen" style="display: none;">
-        <div>Advertise with us</div>
-        <p>Coming soon</p>
-        <button class="home-btn">Home</button>
+        <div id="advertise-content">
+            <div>Advertise with us</div>
+            <p>Coming soon</p>
+            <button class="home-btn">Home</button>
+        </div>
     </div>
 
     <script src="script.js"></script>

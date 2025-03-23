@@ -10,8 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let firstGuessMade = false;
     let pausedTime = null;
     let allGames = [];
+    let currentGameNumber = null;
 
-    console.log("Hungry Shark Version: Updated Previous Games and UI");
+    console.log("Hungry Shark Version: Updated with Meatball, Zig-Zag Shark, and Game Numbers");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -29,6 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const latestEntry = allGames.reduce((latest, current) => {
                 return new Date(current.Date) > new Date(latest.Date) ? current : latest;
             }, allGames[0]);
+            const sortedGames = allGames.sort((a, b) => new Date(a.Date) - new Date(b.Date));
+            currentGameNumber = sortedGames.length; // Default to latest game
 
             secretWord = latestEntry["Secret Word"].toUpperCase();
             hints = [
@@ -68,14 +71,15 @@ document.addEventListener("DOMContentLoaded", () => {
     function populatePreviousGames() {
         const gameList = document.querySelector("#previous-games-screen .game-list");
         gameList.innerHTML = "";
-        // Sort ascending (oldest first) for numbering
-        allGames.sort((a, b) => new Date(a.Date) - new Date(b.Date));
-        allGames.forEach((game, index) => {
+        const sortedGames = allGames.sort((a, b) => new Date(b.Date) - new Date(a.Date)); // Reverse chronological
+        sortedGames.forEach((game, index) => {
+            const gameNumber = sortedGames.length - index;
             const link = document.createElement("a");
             link.href = "#";
-            link.textContent = `Game #${index + 1}`;
+            link.textContent = `Game #${gameNumber}${index === 0 ? " - Today's Game" : ""}`;
             link.addEventListener("click", (e) => {
                 e.preventDefault();
+                currentGameNumber = gameNumber;
                 loadGame(game);
                 document.getElementById("previous-games-screen").style.display = "none";
                 document.getElementById("game-screen").style.display = "flex";
@@ -138,14 +142,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 const elapsed = (Date.now() - decayStartTime) / 1000;
                 score = Math.max(0, Math.floor(100 - elapsed));
                 document.getElementById("score").textContent = `Score: ${score}`;
-                updateGraphic();
-
                 if (score < 100 && score % 10 === 0 && score < lastHintScore && hintIndex < hints.length - 1) {
                     hintIndex++;
                     revealHint(hintIndex);
                     lastHintScore = score;
                 }
-
                 if (score <= 0) endGame(false);
             }
         }, 50);
@@ -213,27 +214,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        function updateGraphic() {
-            const shark = document.getElementById("shark-icon");
-            const graphic = document.getElementById("graphic");
-            const graphicWidth = graphic.offsetWidth;
-            const sharkWidth = shark.offsetWidth;
-
-            if (decayStarted && !shark.classList.contains("shark-exit")) {
-                const elapsed = (Date.now() - decayStartTime) / 1000;
-                const progress = Math.min(elapsed / 100, 1);
-                const sharkMaxX = graphicWidth - sharkWidth;
-                const sharkX = progress * sharkMaxX;
-                shark.style.left = `${sharkX}px`;
-                const sharkSize = 45 + (progress * (300 - 45));
-                shark.style.width = `${sharkSize}px`;
-            }
-        }
-
         function endGame(won) {
             gameOver = true;
             const endMessage = document.getElementById("end-message");
             const shareText = document.getElementById("share-text");
+            const shareGameNumber = document.getElementById("share-game-number");
             const shareScore = document.getElementById("share-score");
             const shareLink = document.getElementById("share-link");
             const shareWhatsApp = document.getElementById("share-whatsapp");
@@ -251,11 +236,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 endMessage.textContent = score === 0 ? "You are shark food\n\nnhom-nhom" : "You are shark food!\nnhom-nhom!";
                 shareText.textContent = "I am shark food";
             }
-
+            shareGameNumber.textContent = `Game #${currentGameNumber}`;
             shareScore.textContent = `${score}`;
             shareLink.href = "https://your-game-url.com";
             shareLink.textContent = "Can you beat my score? Click here";
-            const shareMessage = `${shareText.textContent}\nScore: ${score}\nCan you beat my score? Play now: https://your-game-url.com`;
+            const shareMessage = `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Play now: https://your-game-url.com`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
@@ -307,7 +292,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const todayGame = document.getElementById("today-game");
         const previousGames = document.getElementById("previous-games");
         const createGame = document.getElementById("create-game");
-        const anagramLink = document.getElementById("anagram-link");
+        const meatballLink = document.getElementById("meatball-link");
         const snakebiteLink = document.getElementById("snakebite-link");
         const advertiseLink = document.getElementById("advertise-link");
 
@@ -364,6 +349,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const latestEntry = allGames.reduce((latest, current) => {
                 return new Date(current.Date) > new Date(latest.Date) ? current : latest;
             }, allGames[0]);
+            currentGameNumber = allGames.sort((a, b) => new Date(a.Date) - new Date(b.Date)).length;
             loadGame(latestEntry);
             startScreen.style.display = "flex";
             gameScreen.style.display = "none";
@@ -383,9 +369,9 @@ document.addEventListener("DOMContentLoaded", () => {
             collapseMenu();
         });
 
-        anagramLink.addEventListener("click", (e) => {
+        meatballLink.addEventListener("click", (e) => {
             e.preventDefault();
-            document.getElementById("anagram-screen").style.display = "flex";
+            document.getElementById("meatball-screen").style.display = "flex";
             collapseMenu();
         });
 
@@ -411,9 +397,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("previous-games-screen").style.display = "flex";
         });
 
-        document.getElementById("end-anagram").addEventListener("click", (e) => {
+        document.getElementById("end-meatball").addEventListener("click", (e) => {
             e.preventDefault();
-            document.getElementById("anagram-screen").style.display = "flex";
+            document.getElementById("meatball-screen").style.display = "flex";
         });
 
         document.getElementById("end-snakebite").addEventListener("click", (e) => {
@@ -429,18 +415,12 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".home-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 resetGame();
-                startScreen.style.display = "flex";
-                gameScreen.style.display = "none";
+                const skipWelcome = localStorage.getItem("skipWelcome") === "true";
+                startScreen.style.display = skipWelcome ? "none" : "flex";
+                gameScreen.style.display = skipWelcome ? "flex" : "none";
                 go.style.display = "none";
                 document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
             });
-        });
-
-        document.getElementById("home-btn").addEventListener("click", () => {
-            resetGame();
-            startScreen.style.display = "flex";
-            gameScreen.style.display = "none";
-            go.style.display = "none";
         });
 
         const skipWelcome = document.getElementById("skip-welcome");
@@ -466,7 +446,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("score").textContent = `Score: ${score}`;
             document.getElementById("guess-input").value = "";
             document.getElementById("guess-line").style.opacity = "1";
-            document.getElementById("shark-icon").style.left = "0px";
+            document.getElementById("shark-icon").style.left = "10%";
             document.getElementById("shark-icon").style.width = "45px";
             setupHints();
         }
