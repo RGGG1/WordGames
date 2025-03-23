@@ -11,8 +11,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let pausedTime = null;
     let allGames = [];
     let currentGameNumber = null;
+    let sharkAnimation;
 
-    console.log("Hungry Shark Version: Updated with Meatball, Zig-Zag Shark, and Game Numbers");
+    console.log("Hungry Shark Version: Updated with Enhanced Shark Movement and UI Fixes");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -30,9 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const latestEntry = allGames.reduce((latest, current) => {
                 return new Date(current.Date) > new Date(latest.Date) ? current : latest;
             }, allGames[0]);
-            const sortedGames = allGames.sort((a, b) => new Date(a.Date) - new Date(b.Date));
-            currentGameNumber = sortedGames.length; // Default to latest game
-
+            currentGameNumber = allGames.length;
             secretWord = latestEntry["Secret Word"].toUpperCase();
             hints = [
                 latestEntry["Hint 1"], latestEntry["Hint 2"], latestEntry["Hint 3"],
@@ -71,9 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function populatePreviousGames() {
         const gameList = document.querySelector("#previous-games-screen .game-list");
         gameList.innerHTML = "";
-        const sortedGames = allGames.sort((a, b) => new Date(b.Date) - new Date(a.Date)); // Reverse chronological
-        sortedGames.forEach((game, index) => {
-            const gameNumber = sortedGames.length - index;
+        allGames.sort((a, b) => new Date(b.Date) - new Date(a.Date));
+        allGames.forEach((game, index) => {
+            const gameNumber = allGames.length - index;
             const link = document.createElement("a");
             link.href = "#";
             link.textContent = `Game #${gameNumber}${index === 0 ? " - Today's Game" : ""}`;
@@ -101,6 +100,58 @@ document.addEventListener("DOMContentLoaded", () => {
         setupHints();
     }
 
+    function updateSharkMovement() {
+        const shark = document.getElementById("shark-icon");
+        if (sharkAnimation) sharkAnimation.cancel();
+
+        if (score <= 10 && decayStarted) {
+            const swimmer = document.getElementById("man-icon");
+            const swimmerRect = swimmer.getBoundingClientRect();
+            const graphicRect = document.getElementById("graphic").getBoundingClientRect();
+            const targetLeft = ((swimmerRect.left - graphicRect.left + swimmerRect.width / 2) / graphicRect.width) * 100 - 2.25; // Center shark on swimmer
+            const targetTop = ((swimmerRect.top - graphicRect.top + swimmerRect.height / 2) / graphicRect.height) * 100 - 2.25;
+
+            shark.style.transition = `left ${score}s linear, top ${score}s linear, transform 0.5s`;
+            shark.style.left = `${targetLeft}%`;
+            shark.style.top = `${targetTop}%`;
+            shark.style.transform = "scale(2) rotateY(20deg)";
+            if (targetLeft < parseFloat(shark.style.left)) shark.style.transform += " scaleX(-1)";
+            return;
+        }
+
+        const keyframes = [];
+        let currentLeft = 10;
+        let currentTop = 10;
+        const maxLeft = 90;
+        const maxTop = 90;
+        const steps = 5;
+
+        for (let i = 0; i < steps; i++) {
+            const direction = Math.random() < 0.5 ? 1 : -1;
+            const distance = Math.random() * 20 + 10;
+            const newLeft = Math.max(10, Math.min(maxLeft, currentLeft + direction * distance));
+            const newTop = currentTop === 10 ? 90 : 10;
+            const scale = newTop === 90 ? 5 : 0;
+            const rotateY = newLeft > currentLeft ? 20 : -20;
+            const scaleX = newLeft < currentLeft ? -1 : 1;
+
+            keyframes.push({
+                left: `${currentLeft}%`,
+                top: `${currentTop}%`,
+                transform: `scale(${scale}) rotateY(${rotateY}deg) scaleX(${scaleX})`
+            });
+
+            currentLeft = newLeft;
+            currentTop = newTop;
+        }
+
+        sharkAnimation = shark.animate(keyframes, {
+            duration: 5000,
+            iterations: Infinity,
+            easing: "linear"
+        });
+    }
+
     fetchGameData().then(() => {
         const startScreen = document.getElementById("start-screen");
         const gameScreen = document.getElementById("game-screen");
@@ -112,6 +163,7 @@ document.addEventListener("DOMContentLoaded", () => {
             startScreen.style.display = "none";
             gameScreen.style.display = "flex";
             document.getElementById("guess-input").focus();
+            updateSharkMovement();
         });
 
         const menuModeButton = document.getElementById("menu-dark-mode-btn");
@@ -140,8 +192,12 @@ document.addEventListener("DOMContentLoaded", () => {
         setInterval(() => {
             if (decayStarted && score > 0 && !gameOver) {
                 const elapsed = (Date.now() - decayStartTime) / 1000;
-                score = Math.max(0, Math.floor(100 - elapsed));
-                document.getElementById("score").textContent = `Score: ${score}`;
+                const newScore = Math.max(0, Math.floor(100 - elapsed));
+                if (newScore !== score) {
+                    score = newScore;
+                    document.getElementById("score").textContent = `Score: ${score}`;
+                    if (score <= 10) updateSharkMovement();
+                }
                 if (score < 100 && score % 10 === 0 && score < lastHintScore && hintIndex < hints.length - 1) {
                     hintIndex++;
                     revealHint(hintIndex);
@@ -257,6 +313,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 pauseScreen.style.display = "flex";
                 resumeBtn.style.display = "block";
                 countdown.style.display = "none";
+                if (sharkAnimation) sharkAnimation.pause();
             }
         }
 
@@ -277,6 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         decayStarted = true;
                         decayStartTime = Date.now() - pausedTime;
                         document.getElementById("guess-input").focus();
+                        if (sharkAnimation) sharkAnimation.play();
                     }
                 }
             }, 1000);
@@ -349,7 +407,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const latestEntry = allGames.reduce((latest, current) => {
                 return new Date(current.Date) > new Date(latest.Date) ? current : latest;
             }, allGames[0]);
-            currentGameNumber = allGames.sort((a, b) => new Date(a.Date) - new Date(b.Date)).length;
+            currentGameNumber = allGames.length;
             loadGame(latestEntry);
             startScreen.style.display = "flex";
             gameScreen.style.display = "none";
@@ -431,6 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("skipWelcome") === "true") {
             startScreen.style.display = "none";
             gameScreen.style.display = "flex";
+            updateSharkMovement();
         }
         document.getElementById("guess-input").blur();
 
@@ -446,8 +505,13 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("score").textContent = `Score: ${score}`;
             document.getElementById("guess-input").value = "";
             document.getElementById("guess-line").style.opacity = "1";
-            document.getElementById("shark-icon").style.left = "10%";
-            document.getElementById("shark-icon").style.width = "45px";
+            const shark = document.getElementById("shark-icon");
+            shark.style.left = "10%";
+            shark.style.top = "10%";
+            shark.style.width = "45px";
+            shark.style.transition = "";
+            if (sharkAnimation) sharkAnimation.cancel();
+            updateSharkMovement();
             setupHints();
         }
     });

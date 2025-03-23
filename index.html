@@ -11,6 +11,37 @@
 </head>
 <body oncontextmenu="return false;">
     <div id="start-screen">
+        <div id="hamburger-menu">
+            <button id="hamburger-btn"><i class="fas fa-bars"></i></button>
+            <div id="menu-content" style="display: none;">
+                <button id="menu-close-btn"><i class="fas fa-times"></i></button>
+                <a href="#" id="home-link">Home</a>
+                <div class="menu-section">
+                    <div class="section-title">Settings</div>
+                    <button id="menu-dark-mode-btn"><i id="menu-mode-icon" class="fas fa-moon"></i></button>
+                    <a href="#" id="language-link">Language</a>
+                </div>
+                <div class="menu-divider"></div>
+                <div class="menu-section">
+                    <div class="section-title">Games</div>
+                    <div class="game-link">
+                        <a href="#" id="hungry-shark-link">Hungry Shark</a>
+                        <div class="sub-menu" style="display: none;">
+                            <a href="#" id="today-game">Today's Game</a>
+                            <a href="#" id="previous-games">Previous Games</a>
+                            <a href="#" id="create-game">Create a Game</a>
+                        </div>
+                    </div>
+                    <a href="#" id="meatball-link">Meatball</a>
+                    <a href="#" id="snakebite-link">Snakebite</a>
+                </div>
+                <div class="menu-divider"></div>
+                <div class="menu-section">
+                    <div class="section-title">Advertising</div>
+                    <a href="#" id="advertise-link">Advertise with us</a>
+                </div>
+            </div>
+        </div>
         <div id="start-content">
             <div id="start-title" class="animate__animated animate__pulse animate__infinite">Hungry Shark</div>
             <div id="start-subtitle">How to Play</div>
@@ -85,12 +116,12 @@
             <img id="shark-icon" src="shark_light_bk.png" alt="Shark">
             <img id="man-icon" src="swimmer_light_bk.png" alt="Swimmer">
         </div>
-        <button id="pause-btn"><i class="fas fa-pause"></i></button>
+        <button id="pause-btn"><i class="fas fa-play"></i></button>
     </div>
 
     <div id="pause-screen" style="display: none;">
         <div id="pause-text">Ads here - coming soon</div>
-        <button id="resume-btn"><i class="fas fa-pause"></i></button>
+        <button id="resume-btn"><i class="fas fa-play"></i></button>
         <div id="countdown" style="display: none;"></div>
     </div>
 

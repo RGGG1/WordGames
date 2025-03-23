@@ -28,8 +28,7 @@ a {
 #hamburger-menu {
   position: absolute;
   left: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 1vh;
 }
 
 #hamburger-btn {
@@ -397,39 +396,15 @@ a {
 #shark-icon {
   width: 4.5vh;
   position: absolute;
-  left: 10%;
-  top: 10%;
-  animation: zigzag 100s linear infinite;
   z-index: 2;
-}
-
-@keyframes zigzag {
-  0% { left: 10%; top: 10%; transform: scale(0); }
-  10% { left: 18%; top: 90%; transform: scale(5); }
-  20% { left: 26%; top: 10%; transform: scale(0); }
-  30% { left: 34%; top: 90%; transform: scale(5); }
-  40% { left: 42%; top: 10%; transform: scale(0); }
-  50% { left: 50%; top: 90%; transform: scale(5); }
-  60% { left: 58%; top: 10%; transform: scale(0); }
-  70% { left: 66%; top: 90%; transform: scale(5); }
-  80% { left: 74%; top: 10%; transform: scale(0); }
-  90% { left: 82%; top: 90%; transform: scale(5); }
-  100% { left: 90%; top: 10%; transform: scale(0); }
-}
-
-#shark-icon.shark-exit {
-  transform: scaleX(-1);
-  left: 0;
-  width: 1% !important;
-  transition: left 1s linear, width 1s linear;
-  animation: none;
 }
 
 #man-icon {
   width: 6vh;
   position: absolute;
-  right: 1vh;
-  bottom: 0;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1;
 }
 
