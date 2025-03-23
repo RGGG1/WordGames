@@ -3,38 +3,66 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>YKYK</title>
+    <title>Hungry Shark</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Font Awesome CDN (for dark mode and share icons) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Animate.css CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
-    <!-- Start Screen -->
+    <div id="hamburger-menu">
+        <button id="hamburger-btn"><i class="fas fa-bars"></i></button>
+        <div id="menu-content" style="display: none;">
+            <button id="menu-close-btn"><i class="fas fa-times"></i></button>
+            <a href="#" id="home-link">Home</a>
+            <div class="menu-section">
+                <div class="section-title">Settings</div>
+                <button id="menu-dark-mode-btn"><i id="menu-mode-icon" class="fas fa-moon"></i></button>
+                <a href="#" id="language-link">Language</a>
+            </div>
+            <div class="menu-divider"></div>
+            <div class="menu-section">
+                <div class="section-title">Games</div>
+                <div class="game-link">
+                    <a href="#" id="hungry-shark-link">Hungry Shark</a>
+                    <div class="sub-menu" style="display: none;">
+                        <a href="#" id="today-game">Today's Game</a>
+                        <a href="#" id="previous-games">Previous Games</a>
+                        <a href="#" id="create-game">Create a Game</a>
+                    </div>
+                </div>
+                <a href="#" id="anagram-link">Anagram</a>
+                <a href="#" id="snakebite-link">Snakebite</a>
+            </div>
+            <div class="menu-divider"></div>
+            <div class="menu-section">
+                <div class="section-title">Advertising</div>
+                <a href="#" id="advertise-link">Advertise with us</a>
+            </div>
+        </div>
+    </div>
+
     <div id="start-screen">
-        <button id="start-dark-mode-btn">
-            <i id="start-mode-icon" class="fas fa-moon"></i>
-        </button>
         <div id="start-content">
-            <div id="start-title">Sharkyok</div>
+            <div id="start-title" class="animate__animated animate__pulse animate__infinite">Hungry Shark</div>
             <div id="start-subtitle">How to Play</div>
             <div id="start-instructions">
-                Guess the secret word before your score hits zero and you get eaten by the shark.<br><br>
+                Guess the secret word<br>and<br>don't get eaten by the shark<br><br>
                 New hints are revealed every 10 seconds.
             </div>
             <div id="start-separator">~~^~~</div>
             <button id="play-now-btn" class="animate__animated animate__pulse animate__infinite">Play Now</button>
+            <div id="start-footer">
+                <a href="#" id="start-previous-games">Previous Games</a>
+                <br><br>
+                <label><input type="checkbox" id="skip-welcome"> Don't show welcome screen again</label>
+            </div>
         </div>
     </div>
 
-    <!-- Game Screen -->
     <div id="game-screen" style="display: none;">
         <div id="header">
-            <button id="dark-mode-btn">
-                <i id="mode-icon" class="fas fa-moon"></i>
-            </button>
-            <div id="game-name">YKYK</div>
+            <div id="game-name">Hungry Shark</div>
             <div id="score">Score: 100</div>
         </div>
         <div id="guess-area">
@@ -58,19 +86,22 @@
             <img id="shark-icon" src="shark_light_bk.png" alt="Shark">
             <img id="man-icon" src="swimmer_light_bk.png" alt="Swimmer">
         </div>
+        <button id="pause-btn"><i class="fas fa-pause"></i></button>
     </div>
 
-    <!-- End Screen -->
-    <div id="game-over">
-        <button id="end-dark-mode-btn">
-            <i id="end-mode-icon" class="fas fa-moon"></i>
-        </button>
+    <div id="pause-screen" style="display: none;">
+        <div id="pause-text">Ads here - coming soon</div>
+        <button id="resume-btn"><i class="fas fa-pause"></i></button>
+        <div id="countdown" style="display: none;"></div>
+    </div>
+
+    <div id="game-over" style="display: none;">
         <div id="end-message"></div>
         <div id="share-box">
             <div id="share-text"></div>
             <div id="share-score-label">Score</div>
             <div id="share-score"></div>
-            <a id="share-link" href="#">Think you can beat my score? Click here </a>
+            <a id="share-link" href="#">Think you can beat my score? Click here</a>
         </div>
         <div id="share-section">
             <div id="share-label">Share with your friends</div>
@@ -80,7 +111,55 @@
                 <a id="share-twitter" href="#" target="_blank"><i class="fab fa-twitter"></i></a>
             </div>
         </div>
+        <div id="end-footer">
+            See you tomorrow for a new secret word.<br>Until then, try some of our <a href="#" id="end-previous-games">previous games</a>
+        </div>
         <button id="home-btn">Home</button>
+        <div id="ad-box">
+            Advertise with us here and reach millions of players
+            <div id="ad-link">click here to place an ad</div>
+        </div>
+    </div>
+
+    <div id="language-screen" class="screen" style="display: none;">
+        <i class="fas fa-globe"></i>
+        <div class="language-list">
+            <a href="#" class="active"><img src="ireland_flag.png" alt="IE"> English</a>
+            <a href="#" class="inactive"><img src="brazil_flag.png" alt="BR"> Brazilian Portuguese (coming soon)</a>
+            <a href="#" class="inactive"><img src="france_flag.png" alt="FR"> French (coming soon)</a>
+            <a href="#" class="inactive"><img src="italy_flag.png" alt="IT"> Italian (coming soon)</a>
+            <a href="#" class="inactive"><img src="spain_flag.png" alt="ES"> Spanish (coming soon)</a>
+            <a href="#" class="inactive"><img src="turkey_flag.png" alt="TR"> Turkish (coming soon)</a>
+        </div>
+        <button class="home-btn">Home</button>
+    </div>
+    <div id="previous-games-screen" class="screen" style="display: none;">
+        <div>Previous Games</div>
+        <div class="game-list">
+            <a href="#">Game #1</a><a href="#">Game #2</a><a href="#">Game #3</a><a href="#">Game #4</a><a href="#">Game #5</a>
+            <a href="#">Game #6</a><a href="#">Game #7</a><a href="#">Game #8</a><a href="#">Game #9</a><a href="#">Game #10</a>
+        </div>
+        <button class="home-btn">Home</button>
+    </div>
+    <div id="create-game-screen" class="screen" style="display: none;">
+        <div>Create a Game...</div>
+        <p>Create your own secret words and hints...coming soon</p>
+        <button class="home-btn">Home</button>
+    </div>
+    <div id="anagram-screen" class="screen" style="display: none;">
+        <div>Anagram</div>
+        <p>Coming soon</p>
+        <button class="home-btn">Home</button>
+    </div>
+    <div id="snakebite-screen" class="screen" style="display: none;">
+        <div>Snakebite</div>
+        <p>Coming soon</p>
+        <button class="home-btn">Home</button>
+    </div>
+    <div id="advertise-screen" class="screen" style="display: none;">
+        <div>Advertise with us</div>
+        <p>Coming soon</p>
+        <button class="home-btn">Home</button>
     </div>
 
     <script src="script.js"></script>
