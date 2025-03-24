@@ -11,8 +11,10 @@ document.addEventListener("DOMContentLoaded", () => {
     let pausedTime = null;
     let allGames = [];
     let currentGameNumber = null;
+    let hintTimer = 10;
+    let lastHintTime = null;
 
-    console.log("Hungry Shark Version: Updated with Single-Column Hints, Share Graphic, and Fixes");
+    console.log("Hungry Shark Version: Restored Layout, Fixed Pause Button, Dynamic Hint Timer, Burst Effect");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -110,6 +112,7 @@ document.addEventListener("DOMContentLoaded", () => {
             startScreen.style.display = "none";
             gameScreen.style.display = "flex";
             document.getElementById("guess-input").focus();
+            lastHintTime = Date.now();
         });
 
         const menuModeButton = document.getElementById("menu-dark-mode-btn");
@@ -136,26 +139,30 @@ document.addEventListener("DOMContentLoaded", () => {
                 const elapsed = (Date.now() - decayStartTime) / 1000;
                 score = Math.max(0, Math.floor(100 - elapsed));
                 document.getElementById("score").textContent = `Score: ${score}`;
-                if (score < 100 && score % 10 === 0 && score < lastHintScore && hintIndex < hints.length - 1) {
+
+                const hintElapsed = (Date.now() - lastHintTime) / 1000;
+                hintTimer = Math.max(0, Math.ceil(10 - hintElapsed));
+                document.getElementById("hints-subtitle").textContent = `New hint in ${hintTimer} seconds`;
+
+                if (hintTimer === 0 && hintIndex < hints.length - 1) {
                     hintIndex++;
                     revealHint(hintIndex);
+                    lastHintTime = Date.now();
                     lastHintScore = score;
                 }
+
                 if (score <= 0) endGame(false);
             }
         }, 50);
 
         function revealHint(index) {
             const allHints = document.querySelectorAll(".hint-line span");
-            const visibleHints = Array.from(allHints).filter(span => span.textContent);
-            if (index < visibleHints.length) {
-                visibleHints[index].style.visibility = "visible";
+            if (index < allHints.length && allHints[index].textContent) {
+                allHints[index].style.visibility = "visible";
+                allHints[index].classList.add("hint-burst");
                 setTimeout(() => {
-                    visibleHints[index].classList.add("hint-burst");
-                    setTimeout(() => {
-                        visibleHints[index].classList.remove("hint-burst");
-                    }, 2000);
-                }, 100);
+                    allHints[index].classList.remove("hint-burst");
+                }, 2000);
             }
         }
 
@@ -175,6 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 firstGuessMade = true;
                 decayStarted = true;
                 decayStartTime = Date.now();
+                lastHintTime = Date.now();
             }
 
             guessDisplay.value = guess.toUpperCase();
@@ -265,6 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (!gameOver) {
                         decayStarted = true;
                         decayStartTime = Date.now() - pausedTime;
+                        lastHintTime = Date.now() - (10 - hintTimer) * 1000;
                         document.getElementById("guess-input").focus();
                     }
                 }
@@ -433,6 +442,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("skipWelcome") === "true") {
             startScreen.style.display = "none";
             gameScreen.style.display = "flex";
+            lastHintTime = Date.now();
         }
         document.getElementById("guess-input").blur();
 
@@ -445,9 +455,12 @@ document.addEventListener("DOMContentLoaded", () => {
             lastHintScore = 100;
             firstGuessMade = false;
             pausedTime = null;
+            hintTimer = 10;
+            lastHintTime = null;
             document.getElementById("score").textContent = `Score: ${score}`;
             document.getElementById("guess-input").value = "";
             document.getElementById("guess-line").style.opacity = "1";
+            document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";
             setupHints();
         }
     });
