@@ -13,8 +13,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let currentGameNumber = null;
     let hintTimer = 10;
     let lastHintTime = null;
+    let revealedHints = new Set();
 
-    console.log("Hungry Shark Version: Updated for Mobile Visibility, Background Images, No External Dependencies");
+    console.log("Hungry Shark Version: Updated for Mobile Visibility, Bottom-Left Overlay, No External Dependencies");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -87,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("game-screen").style.display = "flex";
                 document.getElementById("guess-input").focus();
                 lastHintTime = Date.now();
+                adjustBackgroundSize();
             });
             gameList.appendChild(link);
         });
@@ -116,6 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
             gameScreen.style.display = "flex";
             document.getElementById("guess-input").focus();
             lastHintTime = Date.now();
+            adjustBackgroundSize();
         });
 
         const menuModeButton = document.getElementById("menu-dark-mode-btn");
@@ -126,6 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const isDarkMode = document.body.classList.contains("dark-mode");
             menuModeIcon.classList.toggle("fa-moon", !isDarkMode);
             menuModeIcon.classList.toggle("fa-sun", isDarkMode);
+            adjustBackgroundSize(); // Update overlay on mode change
         }
 
         menuModeButton.addEventListener("click", toggleDarkMode);
@@ -160,14 +164,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function revealHint(index) {
             const allHints = document.querySelectorAll(".hint-line span");
-            if (index < allHints.length && allHints[index].textContent) {
+            if (index < allHints.length && allHints[index].textContent && !revealedHints.has(index)) {
                 allHints[index].style.visibility = "visible";
-                allHints[index].classList.remove("animate__animated", "animate__pulse");
-                void allHints[index].offsetWidth;
-                allHints[index].classList.add("animate__animated", "animate__pulse");
+                revealedHints.add(index);
                 setTimeout(() => {
-                    allHints[index].classList.remove("animate__pulse");
-                }, 2000);
+                    allHints[index].classList.add("animate__animated", "animate__pulse");
+                    setTimeout(() => {
+                        allHints[index].classList.remove("animate__pulse");
+                    }, 2000);
+                }, 100);
             }
         }
 
@@ -375,7 +380,7 @@ document.addEventListener("DOMContentLoaded", () => {
             subMenu.style.display = subMenu.style.display === "none" ? "flex" : "none";
         });
 
-        todayGame.addEventListener("click", (e) => {
+        todayGame.addEventListener("click's Game"() => {
             e.preventDefault();
             resetGame();
             const latestEntry = allGames.reduce((latest, current) => {
@@ -478,6 +483,7 @@ document.addEventListener("DOMContentLoaded", () => {
             pausedTime = null;
             hintTimer = 10;
             lastHintTime = null;
+            revealedHints.clear();
             document.getElementById("score").textContent = `Score: ${score}`;
             document.getElementById("guess-input").value = "";
             document.getElementById("guess-line").style.opacity = "1";
@@ -487,19 +493,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function adjustBackgroundSize() {
             const screenHeight = window.innerHeight;
+            const screenWidth = window.innerWidth;
             const keyboardVisible = document.activeElement === document.getElementById("guess-input") && screenHeight < window.screen.height;
-            const gameScreen = document.getElementById("game-screen");
-            const gameOver = document.getElementById("game-over");
-            const aspectRatio = 85 / 100;
-            const newHeight = keyboardVisible ? screenHeight : 100;
-            const newWidth = newHeight * aspectRatio;
+            const overlay = document.getElementById("background-overlay");
 
-            gameScreen.style.backgroundSize = `${newWidth}vw ${newHeight}vh`;
-            gameOver.style.backgroundSize = `${newWidth}vw ${newHeight}vh`;
+            let heightPercentage = 25;
+            let widthPercentage = 30;
+
+            if (keyboardVisible) {
+                const availableHeight = screenHeight / window.screen.height;
+                heightPercentage = 25 * availableHeight;
+                widthPercentage = 30 * availableHeight;
+            }
+
+            overlay.style.height = `${heightPercentage}vh`;
+            overlay.style.width = `${widthPercentage}vw`;
+            overlay.style.bottom = "0";
+            overlay.style.left = "0";
         }
 
         window.addEventListener("resize", adjustBackgroundSize);
         document.getElementById("guess-input").addEventListener("focus", adjustBackgroundSize);
         document.getElementById("guess-input").addEventListener("blur", adjustBackgroundSize);
+        adjustBackgroundSize(); // Initial call
     });
 });

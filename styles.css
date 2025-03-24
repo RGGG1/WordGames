@@ -219,18 +219,16 @@ a {
 }
 
 #game-screen {
-  background: url('shark_background_light.png') no-repeat center center;
-  background-size: 85vw 100vh;
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
   position: relative;
+  background: #FFFFFF;
 }
 
 .dark-mode #game-screen {
-  background: url('shark_background_dark.png') no-repeat center center;
-  background-size: 85vw 100vh;
+  background: #000000;
 }
 
 #header {
@@ -243,6 +241,7 @@ a {
   padding-bottom: 1vh;
   z-index: 10;
   height: 5vh;
+  background: none;
 }
 
 #game-name {
@@ -250,7 +249,6 @@ a {
   font-size: 3vh;
   letter-spacing: 0.1em;
   margin: 0.5vh 0;
-  font-weight: bold;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
@@ -272,6 +270,7 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  background: none;
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -293,6 +292,7 @@ a {
   width: 100%;
   height: 5vh;
   z-index: 0;
+  background: none;
 }
 
 #guess-input {
@@ -345,6 +345,7 @@ a {
   height: 20vh;
   margin: 0 auto;
   padding: 1vh;
+  background: none;
 }
 
 #hints-title {
@@ -379,6 +380,7 @@ a {
   height: 5vh;
   margin: 0 auto;
   position: relative;
+  background: none;
 }
 
 #pause-btn, #resume-btn {
@@ -430,8 +432,6 @@ a {
 }
 
 #game-over {
-  background: url('shark_background_light.png') no-repeat center center;
-  background-size: 85vw 100vh;
   position: fixed;
   top: 0;
   left: 0;
@@ -443,11 +443,11 @@ a {
   align-items: center;
   padding: 2vh;
   overflow: hidden;
+  background: #FFFFFF;
 }
 
 .dark-mode #game-over {
-  background: url('shark_background_dark.png') no-repeat center center;
-  background-size: 85vw 100vh;
+  background: #000000;
 }
 
 #end-message {
@@ -676,4 +676,21 @@ a {
   .hint-line span {
     font-size: 2vh;
   }
+}
+
+#background-overlay {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 30vw;
+  height: 25vh;
+  background: url('shark_background_light_small.png') no-repeat center center;
+  background-size: contain;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.dark-mode #background-overlay {
+  background: url('shark_background_dark_small.png') no-repeat center center;
+  background-size: contain;
 }
