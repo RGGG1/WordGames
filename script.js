@@ -11,9 +11,8 @@ document.addEventListener("DOMContentLoaded", () => {
     let pausedTime = null;
     let allGames = [];
     let currentGameNumber = null;
-    let sharkAnimation;
 
-    console.log("Hungry Shark Version: Updated with Enhanced Shark Movement and UI Fixes");
+    console.log("Hungry Shark Version: Updated with Single-Column Hints, Share Graphic, and Fixes");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -54,11 +53,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const hintElements = [
             document.getElementById("hint-row-1").children[0],
             document.getElementById("hint-row-2").children[0],
-            document.getElementById("hint-row-2").children[2],
             document.getElementById("hint-row-3").children[0],
             document.getElementById("hint-row-4").children[0],
-            document.getElementById("hint-row-4").children[2],
-            document.getElementById("hint-row-5").children[0]
+            document.getElementById("hint-row-5").children[0],
+            document.getElementById("hint-row-6").children[0],
+            document.getElementById("hint-row-7").children[0]
         ];
         
         hintElements.forEach((span, index) => {
@@ -100,58 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
         setupHints();
     }
 
-    function updateSharkMovement() {
-        const shark = document.getElementById("shark-icon");
-        if (sharkAnimation) sharkAnimation.cancel();
-
-        if (score <= 10 && decayStarted) {
-            const swimmer = document.getElementById("man-icon");
-            const swimmerRect = swimmer.getBoundingClientRect();
-            const graphicRect = document.getElementById("graphic").getBoundingClientRect();
-            const targetLeft = ((swimmerRect.left - graphicRect.left + swimmerRect.width / 2) / graphicRect.width) * 100 - 2.25; // Center shark on swimmer
-            const targetTop = ((swimmerRect.top - graphicRect.top + swimmerRect.height / 2) / graphicRect.height) * 100 - 2.25;
-
-            shark.style.transition = `left ${score}s linear, top ${score}s linear, transform 0.5s`;
-            shark.style.left = `${targetLeft}%`;
-            shark.style.top = `${targetTop}%`;
-            shark.style.transform = "scale(2) rotateY(20deg)";
-            if (targetLeft < parseFloat(shark.style.left)) shark.style.transform += " scaleX(-1)";
-            return;
-        }
-
-        const keyframes = [];
-        let currentLeft = 10;
-        let currentTop = 10;
-        const maxLeft = 90;
-        const maxTop = 90;
-        const steps = 5;
-
-        for (let i = 0; i < steps; i++) {
-            const direction = Math.random() < 0.5 ? 1 : -1;
-            const distance = Math.random() * 20 + 10;
-            const newLeft = Math.max(10, Math.min(maxLeft, currentLeft + direction * distance));
-            const newTop = currentTop === 10 ? 90 : 10;
-            const scale = newTop === 90 ? 5 : 0;
-            const rotateY = newLeft > currentLeft ? 20 : -20;
-            const scaleX = newLeft < currentLeft ? -1 : 1;
-
-            keyframes.push({
-                left: `${currentLeft}%`,
-                top: `${currentTop}%`,
-                transform: `scale(${scale}) rotateY(${rotateY}deg) scaleX(${scaleX})`
-            });
-
-            currentLeft = newLeft;
-            currentTop = newTop;
-        }
-
-        sharkAnimation = shark.animate(keyframes, {
-            duration: 5000,
-            iterations: Infinity,
-            easing: "linear"
-        });
-    }
-
     fetchGameData().then(() => {
         const startScreen = document.getElementById("start-screen");
         const gameScreen = document.getElementById("game-screen");
@@ -163,21 +110,16 @@ document.addEventListener("DOMContentLoaded", () => {
             startScreen.style.display = "none";
             gameScreen.style.display = "flex";
             document.getElementById("guess-input").focus();
-            updateSharkMovement();
         });
 
         const menuModeButton = document.getElementById("menu-dark-mode-btn");
         const menuModeIcon = document.getElementById("menu-mode-icon");
-        const sharkIcon = document.getElementById("shark-icon");
-        const swimmerIcon = document.getElementById("man-icon");
 
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
             const isDarkMode = document.body.classList.contains("dark-mode");
             menuModeIcon.classList.toggle("fa-moon", !isDarkMode);
             menuModeIcon.classList.toggle("fa-sun", isDarkMode);
-            sharkIcon.src = isDarkMode ? "shark_dark_bk.png" : "shark_light_bk.png";
-            swimmerIcon.src = isDarkMode ? "swimmer_dark_bk.png" : "swimmer_light_bk.png";
         }
 
         menuModeButton.addEventListener("click", toggleDarkMode);
@@ -192,12 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
         setInterval(() => {
             if (decayStarted && score > 0 && !gameOver) {
                 const elapsed = (Date.now() - decayStartTime) / 1000;
-                const newScore = Math.max(0, Math.floor(100 - elapsed));
-                if (newScore !== score) {
-                    score = newScore;
-                    document.getElementById("score").textContent = `Score: ${score}`;
-                    if (score <= 10) updateSharkMovement();
-                }
+                score = Math.max(0, Math.floor(100 - elapsed));
+                document.getElementById("score").textContent = `Score: ${score}`;
                 if (score < 100 && score % 10 === 0 && score < lastHintScore && hintIndex < hints.length - 1) {
                     hintIndex++;
                     revealHint(hintIndex);
@@ -233,7 +171,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function handleGuess(guess) {
             const guessDisplay = input;
-            const shark = document.getElementById("shark-icon");
             if (!firstGuessMade) {
                 firstGuessMade = true;
                 decayStarted = true;
@@ -249,13 +186,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 guessDisplay.classList.add("correct-guess");
                 guessBackground.classList.add("flash-green");
                 guessLine.style.opacity = "0";
-                const currentWidth = shark.offsetWidth;
-                shark.style.width = `${currentWidth}px`;
-                shark.classList.add("shark-exit");
                 setTimeout(() => {
                     guessDisplay.classList.remove("correct-guess");
                     guessBackground.classList.remove("flash-green");
-                    shark.classList.remove("shark-exit");
                     endGame(true);
                 }, 1500);
             } else {
@@ -313,7 +246,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 pauseScreen.style.display = "flex";
                 resumeBtn.style.display = "block";
                 countdown.style.display = "none";
-                if (sharkAnimation) sharkAnimation.pause();
             }
         }
 
@@ -334,13 +266,13 @@ document.addEventListener("DOMContentLoaded", () => {
                         decayStarted = true;
                         decayStartTime = Date.now() - pausedTime;
                         document.getElementById("guess-input").focus();
-                        if (sharkAnimation) sharkAnimation.play();
                     }
                 }
             }, 1000);
         });
 
-        const hamburgerBtn = document.getElementById("hamburger-btn");
+        const hamburgerBtnStart = document.getElementById("hamburger-btn-start");
+        const hamburgerBtnGame = document.getElementById("hamburger-btn-game");
         const menuContent = document.getElementById("menu-content");
         const menuCloseBtn = document.getElementById("menu-close-btn");
         const homeLink = document.getElementById("home-link");
@@ -357,8 +289,10 @@ document.addEventListener("DOMContentLoaded", () => {
         function collapseMenu() {
             menuContent.style.display = "none";
             subMenu.style.display = "none";
-            hamburgerBtn.querySelector("i").classList.remove("fa-times");
-            hamburgerBtn.querySelector("i").classList.add("fa-bars");
+            hamburgerBtnStart.querySelector("i").classList.remove("fa-times");
+            hamburgerBtnStart.querySelector("i").classList.add("fa-bars");
+            hamburgerBtnGame.querySelector("i").classList.remove("fa-times");
+            hamburgerBtnGame.querySelector("i").classList.add("fa-bars");
             if (gameScreen.style.display === "flex" && !gameOver && firstGuessMade) {
                 pauseScreen.style.display = "flex";
                 resumeBtn.style.display = "block";
@@ -366,11 +300,21 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        hamburgerBtn.addEventListener("click", () => {
+        hamburgerBtnStart.addEventListener("click", () => {
             if (menuContent.style.display === "none") {
                 menuContent.style.display = "flex";
-                hamburgerBtn.querySelector("i").classList.remove("fa-bars");
-                hamburgerBtn.querySelector("i").classList.add("fa-times");
+                hamburgerBtnStart.querySelector("i").classList.remove("fa-bars");
+                hamburgerBtnStart.querySelector("i").classList.add("fa-times");
+            } else {
+                collapseMenu();
+            }
+        });
+
+        hamburgerBtnGame.addEventListener("click", () => {
+            if (menuContent.style.display === "none") {
+                menuContent.style.display = "flex";
+                hamburgerBtnGame.querySelector("i").classList.remove("fa-bars");
+                hamburgerBtnGame.querySelector("i").classList.add("fa-times");
                 if (gameScreen.style.display === "flex" && !gameOver && firstGuessMade) {
                     pauseGame();
                 }
@@ -489,7 +433,6 @@ document.addEventListener("DOMContentLoaded", () => {
         if (localStorage.getItem("skipWelcome") === "true") {
             startScreen.style.display = "none";
             gameScreen.style.display = "flex";
-            updateSharkMovement();
         }
         document.getElementById("guess-input").blur();
 
@@ -505,13 +448,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("score").textContent = `Score: ${score}`;
             document.getElementById("guess-input").value = "";
             document.getElementById("guess-line").style.opacity = "1";
-            const shark = document.getElementById("shark-icon");
-            shark.style.left = "10%";
-            shark.style.top = "10%";
-            shark.style.width = "45px";
-            shark.style.transition = "";
-            if (sharkAnimation) sharkAnimation.cancel();
-            updateSharkMovement();
             setupHints();
         }
     });

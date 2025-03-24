@@ -8,11 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 </head>
 <body oncontextmenu="return false;">
     <div id="start-screen">
         <div id="hamburger-menu">
-            <button id="hamburger-btn"><i class="fas fa-bars"></i></button>
+            <button id="start-hamburger-btn"><i class="fas fa-bars"></i></button>
             <div id="menu-content" style="display: none;">
                 <button id="menu-close-btn"><i class="fas fa-times"></i></button>
                 <a href="#" id="home-link">Home</a>
@@ -62,35 +63,7 @@
     <div id="game-screen" style="display: none;">
         <div id="header">
             <div id="hamburger-menu">
-                <button id="hamburger-btn"><i class="fas fa-bars"></i></button>
-                <div id="menu-content" style="display: none;">
-                    <button id="menu-close-btn"><i class="fas fa-times"></i></button>
-                    <a href="#" id="home-link">Home</a>
-                    <div class="menu-section">
-                        <div class="section-title">Settings</div>
-                        <button id="menu-dark-mode-btn"><i id="menu-mode-icon" class="fas fa-moon"></i></button>
-                        <a href="#" id="language-link">Language</a>
-                    </div>
-                    <div class="menu-divider"></div>
-                    <div class="menu-section">
-                        <div class="section-title">Games</div>
-                        <div class="game-link">
-                            <a href="#" id="hungry-shark-link">Hungry Shark</a>
-                            <div class="sub-menu" style="display: none;">
-                                <a href="#" id="today-game">Today's Game</a>
-                                <a href="#" id="previous-games">Previous Games</a>
-                                <a href="#" id="create-game">Create a Game</a>
-                            </div>
-                        </div>
-                        <a href="#" id="meatball-link">Meatball</a>
-                        <a href="#" id="snakebite-link">Snakebite</a>
-                    </div>
-                    <div class="menu-divider"></div>
-                    <div class="menu-section">
-                        <div class="section-title">Advertising</div>
-                        <a href="#" id="advertise-link">Advertise with us</a>
-                    </div>
-                </div>
+                <button id="game-hamburger-btn"><i class="fas fa-bars"></i></button>
             </div>
             <div id="game-name">Hungry Shark</div>
             <div id="score">Score: 100</div>
@@ -105,23 +78,22 @@
             <div id="hints-title">Hints</div>
             <div id="hints-subtitle">(new hint revealed every 10 seconds)</div>
             <div id="hints">
-                <div class="hint-line single" id="hint-row-1"><span></span></div>
-                <div class="hint-line double" id="hint-row-2"><span></span><span></span><span></span></div>
-                <div class="hint-line single" id="hint-row-3"><span></span></div>
-                <div class="hint-line double" id="hint-row-4"><span></span><span></span><span></span></div>
-                <div class="hint-line single" id="hint-row-5"><span></span></div>
+                <div class="hint-line" id="hint-row-1"><span></span></div>
+                <div class="hint-line" id="hint-row-2"><span></span></div>
+                <div class="hint-line" id="hint-row-3"><span></span></div>
+                <div class="hint-line" id="hint-row-4"><span></span></div>
+                <div class="hint-line" id="hint-row-5"><span></span></div>
+                <div class="hint-line" id="hint-row-6"><span></span></div>
+                <div class="hint-line" id="hint-row-7"><span></span></div>
             </div>
         </div>
-        <div id="graphic">
-            <img id="shark-icon" src="shark_light_bk.png" alt="Shark">
-            <img id="man-icon" src="swimmer_light_bk.png" alt="Swimmer">
-        </div>
-        <button id="pause-btn"><i class="fas fa-play"></i></button>
+        <div id="graphic"></div>
+        <button id="pause-btn"></button>
     </div>
 
     <div id="pause-screen" style="display: none;">
         <div id="pause-text">Ads here - coming soon</div>
-        <button id="resume-btn"><i class="fas fa-play"></i></button>
+        <button id="resume-btn"></button>
         <div id="countdown" style="display: none;"></div>
     </div>
 
@@ -132,7 +104,6 @@
             <div id="share-game-number"></div>
             <div id="share-score-label">Score</div>
             <div id="share-score"></div>
-            <a id="share-link" href="#">Can you beat my score? Click here</a>
         </div>
         <div id="share-section">
             <div id="share-label">Share with your friends</div>
@@ -141,6 +112,7 @@
                 <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
                 <a id="share-twitter" href="#" target="_blank"><i class="fab fa-twitter"></i></a>
             </div>
+            <a id="share-link" href="#">Can you beat my score? Click here</a>
         </div>
         <div id="end-footer">
             Until then, play our other games: <a href="#" id="end-previous-games">Hungry Shark</a>, <a href="#" id="end-meatball">Meatball</a>, <a href="#" id="end-snakebite">Snakebite</a>
