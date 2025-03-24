@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastHintTime = null;
     let revealedHints = new Set();
 
-    console.log("Hungry Shark Version: Updated for Mobile Visibility, Bottom-Left Overlay, No External Dependencies");
+    console.log("Hungry Shark Version: Updated for Graphic Area Image, No Overlay");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -88,7 +88,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("game-screen").style.display = "flex";
                 document.getElementById("guess-input").focus();
                 lastHintTime = Date.now();
-                adjustBackgroundSize();
             });
             gameList.appendChild(link);
         });
@@ -118,7 +117,6 @@ document.addEventListener("DOMContentLoaded", () => {
             gameScreen.style.display = "flex";
             document.getElementById("guess-input").focus();
             lastHintTime = Date.now();
-            adjustBackgroundSize();
         });
 
         const menuModeButton = document.getElementById("menu-dark-mode-btn");
@@ -129,7 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const isDarkMode = document.body.classList.contains("dark-mode");
             menuModeIcon.classList.toggle("fa-moon", !isDarkMode);
             menuModeIcon.classList.toggle("fa-sun", isDarkMode);
-            adjustBackgroundSize(); // Update overlay on mode change
         }
 
         menuModeButton.addEventListener("click", toggleDarkMode);
@@ -380,11 +377,11 @@ document.addEventListener("DOMContentLoaded", () => {
             subMenu.style.display = subMenu.style.display === "none" ? "flex" : "none";
         });
 
-        todayGame.addEventListener("click's Game"() => {
+        todayGame.addEventListener("click", (e) => {
             e.preventDefault();
             resetGame();
             const latestEntry = allGames.reduce((latest, current) => {
-                return new Date(current.Date) > new Date(latest.Date) ? current : latest;
+                return new Date(current.Date) > new Date(latest.Date) ?Current : latest;
             }, allGames[0]);
             currentGameNumber = allGames.length;
             loadGame(latestEntry);
@@ -490,31 +487,5 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";
             setupHints();
         }
-
-        function adjustBackgroundSize() {
-            const screenHeight = window.innerHeight;
-            const screenWidth = window.innerWidth;
-            const keyboardVisible = document.activeElement === document.getElementById("guess-input") && screenHeight < window.screen.height;
-            const overlay = document.getElementById("background-overlay");
-
-            let heightPercentage = 25;
-            let widthPercentage = 30;
-
-            if (keyboardVisible) {
-                const availableHeight = screenHeight / window.screen.height;
-                heightPercentage = 25 * availableHeight;
-                widthPercentage = 30 * availableHeight;
-            }
-
-            overlay.style.height = `${heightPercentage}vh`;
-            overlay.style.width = `${widthPercentage}vw`;
-            overlay.style.bottom = "0";
-            overlay.style.left = "0";
-        }
-
-        window.addEventListener("resize", adjustBackgroundSize);
-        document.getElementById("guess-input").addEventListener("focus", adjustBackgroundSize);
-        document.getElementById("guess-input").addEventListener("blur", adjustBackgroundSize);
-        adjustBackgroundSize(); // Initial call
     });
 });

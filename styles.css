@@ -380,7 +380,13 @@ a {
   height: 5vh;
   margin: 0 auto;
   position: relative;
-  background: none;
+  background: url('shark_background_light_small.png') no-repeat left center;
+  background-size: 35vw 5vh;
+}
+
+.dark-mode #graphic {
+  background: url('shark_background_dark_small.png') no-repeat left center;
+  background-size: 35vw 5vh;
 }
 
 #pause-btn, #resume-btn {
@@ -676,21 +682,4 @@ a {
   .hint-line span {
     font-size: 2vh;
   }
-}
-
-#background-overlay {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 30vw;
-  height: 25vh;
-  background: url('shark_background_light_small.png') no-repeat center center;
-  background-size: contain;
-  z-index: 1000;
-  pointer-events: none;
-}
-
-.dark-mode #background-overlay {
-  background: url('shark_background_dark_small.png') no-repeat center center;
-  background-size: contain;
 }
