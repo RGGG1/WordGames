@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let hintTimer = 10;
     let lastHintTime = null;
 
-    console.log("Hungry Shark Version: Restored Layout, Fixed Pause Button, Dynamic Hint Timer, Burst Effect");
+    console.log("Hungry Shark Version: Fixed Margins, Pause Button Size, Hint Burst, Share Graphic");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -159,9 +159,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const allHints = document.querySelectorAll(".hint-line span");
             if (index < allHints.length && allHints[index].textContent) {
                 allHints[index].style.visibility = "visible";
-                allHints[index].classList.add("hint-burst");
+                allHints[index].classList.add("animate__animated", "animate__pulse");
                 setTimeout(() => {
-                    allHints[index].classList.remove("hint-burst");
+                    allHints[index].classList.remove("animate__animated", "animate__pulse");
                 }, 2000);
             }
         }
@@ -237,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
             shareScore.textContent = `${score}`;
             shareLink.href = "https://your-game-url.com";
             shareLink.textContent = "Can you beat my score? Click here";
-            const shareMessage = `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Play now: https://your-game-url.com`;
+            const shareMessage = `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nhttps://your-game-url.com`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
@@ -304,8 +304,22 @@ document.addEventListener("DOMContentLoaded", () => {
             hamburgerBtnGame.querySelector("i").classList.add("fa-bars");
             if (gameScreen.style.display === "flex" && !gameOver && firstGuessMade) {
                 pauseScreen.style.display = "flex";
-                resumeBtn.style.display = "block";
-                countdown.style.display = "none";
+                resumeBtn.style.display = "none";
+                countdown.style.display = "block";
+                let timeLeft = 5;
+                countdown.textContent = timeLeft;
+                const interval = setInterval(() => {
+                    timeLeft--;
+                    countdown.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(interval);
+                        pauseScreen.style.display = "none";
+                        decayStarted = true;
+                        decayStartTime = Date.now() - pausedTime;
+                        lastHintTime = Date.now() - (10 - hintTimer) * 1000;
+                        document.getElementById("guess-input").focus();
+                    }
+                }, 1000);
             }
         }
 
@@ -325,7 +339,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 hamburgerBtnGame.querySelector("i").classList.remove("fa-bars");
                 hamburgerBtnGame.querySelector("i").classList.add("fa-times");
                 if (gameScreen.style.display === "flex" && !gameOver && firstGuessMade) {
-                    pauseGame();
+                    decayStarted = false;
+                    pausedTime = Date.now() - decayStartTime;
                 }
             } else {
                 collapseMenu();

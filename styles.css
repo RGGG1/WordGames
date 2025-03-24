@@ -361,16 +361,6 @@ a {
   text-transform: uppercase;
 }
 
-.hint-burst {
-  animation: burst 2s ease-out;
-}
-
-@keyframes burst {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-  100% { transform: scale(1); }
-}
-
 #graphic {
   width: 85vw;
   height: 15vh;
@@ -384,8 +374,8 @@ a {
 }
 
 #pause-btn, #resume-btn {
-  width: 5vh;
-  height: 5vh;
+  width: 3.75vh;
+  height: 3.75vh;
   border-radius: 50%;
   background: transparent;
   border: 2px solid #000000;
@@ -400,17 +390,17 @@ a {
   content: '';
   position: absolute;
   background: #000000;
-  width: 0.5vh;
-  height: 2vh;
-  top: 1.5vh;
+  width: 0.375vh;
+  height: 1.5vh;
+  top: 1.125vh;
 }
 
 #pause-btn::before, #resume-btn::before {
-  left: 1.5vh;
+  left: 1.125vh;
 }
 
 #pause-btn::after, #resume-btn::after {
-  right: 1.5vh;
+  right: 1.125vh;
 }
 
 .dark-mode #pause-btn, .dark-mode #resume-btn {
