@@ -218,9 +218,17 @@ a {
 }
 
 #game-screen {
+  background: url('shark_background_light.png') no-repeat center center fixed;
+  background-size: cover;
   display: flex;
   flex-direction: column;
   height: 100vh;
+  overflow: hidden;
+}
+
+.dark-mode #game-screen {
+  background: url('shark_background_dark.png') no-repeat center center fixed;
+  background-size: cover;
 }
 
 #header {
@@ -230,11 +238,13 @@ a {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  padding-bottom: 2vh;
+  padding-bottom: 1vh;
   z-index: 10;
+  height: 5vh;
 }
 
 #game-name {
+  font-family: 'Bangers', cursive;
   font-size: 2vh;
   margin: 0.5vh 0;
   font-weight: bold;
@@ -253,8 +263,8 @@ a {
 
 #guess-area {
   width: 85vw;
-  height: 15vh;
-  margin: 5vh auto 0 auto;
+  height: 10vh;
+  margin: 6vh auto 0 auto;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -269,21 +279,21 @@ a {
 #prompt {
   font-size: 2vh;
   position: absolute;
-  top: 1vh;
+  top: 0;
   left: 0;
   text-align: left;
 }
 
 #guess-background {
   position: absolute;
-  top: 4vh;
+  top: 3vh;
   width: 100%;
-  height: 6vh;
+  height: 5vh;
   z-index: 0;
 }
 
 #guess-input {
-  font-size: 5vh;
+  font-size: 4vh;
   font-weight: bold;
   background: none;
   border: none;
@@ -292,7 +302,7 @@ a {
   padding: 0;
   margin: 0;
   position: absolute;
-  top: 4vh;
+  top: 3vh;
   color: #000000;
   outline: none;
   caret-color: black;
@@ -319,7 +329,7 @@ a {
   height: 0.2vh;
   background: #000000;
   position: absolute;
-  top: 10vh;
+  top: 8vh;
   transition: opacity 0.5s ease-out;
 }
 
@@ -329,7 +339,7 @@ a {
 
 #hints-box {
   width: 85vw;
-  height: 30vh;
+  height: 25vh;
   margin: 0 auto;
   padding: 1vh;
 }
@@ -342,7 +352,7 @@ a {
 
 #hints-subtitle {
   font-size: 1.5vh;
-  margin-bottom: 1.5vh;
+  margin-bottom: 1vh;
 }
 
 #hints {
@@ -352,7 +362,7 @@ a {
 }
 
 .hint-line {
-  margin: 0.5vh 0;
+  margin: 0.3vh 0;
 }
 
 .hint-line span {
@@ -363,53 +373,29 @@ a {
 
 #graphic {
   width: 85vw;
-  height: 15vh;
-  background: #FFFFFF;
+  height: 5vh;
   margin: 0 auto;
   position: relative;
 }
 
-.dark-mode #graphic {
-  background: #000000;
-}
-
 #pause-btn, #resume-btn {
-  width: 3.75vh;
-  height: 3.75vh;
+  width: 3vh;
+  height: 3vh;
   border-radius: 50%;
-  background: transparent;
-  border: 2px solid #000000;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid #000000;
   cursor: pointer;
-  margin: 2vh auto;
+  margin: 1vh auto;
   display: block;
-  position: relative;
-}
-
-#pause-btn::before, #pause-btn::after,
-#resume-btn::before, #resume-btn::after {
-  content: '';
-  position: absolute;
-  background: #000000;
-  width: 0.375vh;
-  height: 1.5vh;
-  top: 1.125vh;
-}
-
-#pause-btn::before, #resume-btn::before {
-  left: 1.125vh;
-}
-
-#pause-btn::after, #resume-btn::after {
-  right: 1.125vh;
+  font-size: 1.2vh;
+  color: #000000;
+  line-height: 3vh;
 }
 
 .dark-mode #pause-btn, .dark-mode #resume-btn {
-  border: 2px solid #FFFFFF;
-}
-
-.dark-mode #pause-btn::before, .dark-mode #pause-btn::after,
-.dark-mode #resume-btn::before, .dark-mode #resume-btn::after {
-  background: #FFFFFF;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #FFFFFF;
+  color: #FFFFFF;
 }
 
 #pause-screen {
@@ -441,21 +427,24 @@ a {
 }
 
 #game-over {
+  background: url('shark_background_light.png') no-repeat center center fixed;
+  background-size: cover;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100vh;
-  background: #FFFFFF;
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2vh;
+  overflow: hidden;
 }
 
 .dark-mode #game-over {
-  background: #000000;
+  background: url('shark_background_dark.png') no-repeat center center fixed;
+  background-size: cover;
 }
 
 #end-message {
@@ -542,6 +531,10 @@ a {
 #end-footer {
   font-size: 1.8vh;
   margin: 1vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5vh;
 }
 
 #home-btn {
@@ -561,7 +554,7 @@ a {
 
 #ad-box {
   width: 85vw;
-  height: 15vh;
+  height: 10vh;
   border: 0.1vh solid #000;
   border-radius: 1vh;
   display: flex;
@@ -653,7 +646,7 @@ a {
 }
 
 .correct-guess {
-  font-size: 7vh;
+  font-size: 6vh;
   animation: animate__pulse 1s ease-out forwards;
   position: absolute;
   width: 100%;

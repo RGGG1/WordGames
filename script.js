@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let hintTimer = 10;
     let lastHintTime = null;
 
-    console.log("Hungry Shark Version: Fixed Margins, Pause Button Size, Hint Burst, Share Graphic");
+    console.log("Hungry Shark Version: Updated for Mobile Visibility, Background Images, No External Dependencies");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 allHints[index].style.visibility = "visible";
                 allHints[index].classList.add("animate__animated", "animate__pulse");
                 setTimeout(() => {
-                    allHints[index].classList.remove("animate__animated", "animate__pulse");
+                    allHints[index].classList.remove("animate__pulse");
                 }, 2000);
             }
         }
@@ -237,7 +237,8 @@ document.addEventListener("DOMContentLoaded", () => {
             shareScore.textContent = `${score}`;
             shareLink.href = "https://your-game-url.com";
             shareLink.textContent = "Can you beat my score? Click here";
-            const shareMessage = `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nhttps://your-game-url.com`;
+
+            const shareMessage = `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;

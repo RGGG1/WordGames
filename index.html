@@ -46,8 +46,7 @@
             <div id="start-title" class="animate__animated animate__pulse animate__infinite">Hungry Shark</div>
             <div id="start-subtitle">How to Play</div>
             <div id="start-instructions">
-                Guess the secret word<br>and<br>don't get eaten by the shark<br><br>
-                New hints are revealed every 10 seconds.
+                Guess the secret word before the hungry shark eats you
             </div>
             <div id="start-separator">~~^~~</div>
             <button id="play-now-btn" class="animate__animated animate__pulse animate__infinite">Play Now</button>
@@ -115,12 +114,12 @@
             </div>
         </div>
         <div id="graphic"></div>
-        <button id="pause-btn"></button>
+        <button id="pause-btn"><i class="fas fa-pause"></i></button>
     </div>
 
     <div id="pause-screen" style="display: none;">
         <div id="pause-text">Ads here - coming soon</div>
-        <button id="resume-btn"></button>
+        <button id="resume-btn"><i class="fas fa-pause"></i></button>
         <div id="countdown" style="display: none;"></div>
     </div>
 
@@ -144,7 +143,10 @@
             </div>
         </div>
         <div id="end-footer">
-            Until then, play our other games: <a href="#" id="end-previous-games">Hungry Shark</a>, <a href="#" id="end-meatball">Meatball</a>, <a href="#" id="end-snakebite">Snakebite</a>
+            <div>Until then, play our other games</div>
+            <a href="#" id="end-previous-games">Hungry Shark</a>
+            <a href="#" id="end-meatball">Meatball</a>
+            <a href="#" id="end-snakebite">Snakebite</a>
         </div>
         <button id="home-btn" class="home-btn">Home</button>
         <div id="ad-box">
