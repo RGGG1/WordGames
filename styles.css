@@ -27,7 +27,7 @@ a {
 
 #hamburger-menu-start, #hamburger-menu-game {
   position: absolute;
-  left: 0;
+  left: 1vw;
   top: 1vh;
 }
 
@@ -143,8 +143,9 @@ a {
 #start-screen {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85vw;
   height: 100vh;
   background: #FFFFFF;
   display: flex;
@@ -218,17 +219,18 @@ a {
 }
 
 #game-screen {
-  background: url('shark_background_light.png') no-repeat center center fixed;
-  background-size: cover;
+  background: url('shark_background_light.png') no-repeat center center;
+  background-size: 85vw 100vh;
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
+  position: relative;
 }
 
 .dark-mode #game-screen {
-  background: url('shark_background_dark.png') no-repeat center center fixed;
-  background-size: cover;
+  background: url('shark_background_dark.png') no-repeat center center;
+  background-size: 85vw 100vh;
 }
 
 #header {
@@ -245,7 +247,8 @@ a {
 
 #game-name {
   font-family: 'Bangers', cursive;
-  font-size: 2vh;
+  font-size: 3vh;
+  letter-spacing: 0.1em;
   margin: 0.5vh 0;
   font-weight: bold;
   position: absolute;
@@ -339,7 +342,7 @@ a {
 
 #hints-box {
   width: 85vw;
-  height: 25vh;
+  height: 20vh;
   margin: 0 auto;
   padding: 1vh;
 }
@@ -366,7 +369,7 @@ a {
 }
 
 .hint-line span {
-  font-size: 1.8vh;
+  font-size: 2.5vh;
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -427,8 +430,8 @@ a {
 }
 
 #game-over {
-  background: url('shark_background_light.png') no-repeat center center fixed;
-  background-size: cover;
+  background: url('shark_background_light.png') no-repeat center center;
+  background-size: 85vw 100vh;
   position: fixed;
   top: 0;
   left: 0;
@@ -443,8 +446,8 @@ a {
 }
 
 .dark-mode #game-over {
-  background: url('shark_background_dark.png') no-repeat center center fixed;
-  background-size: cover;
+  background: url('shark_background_dark.png') no-repeat center center;
+  background-size: 85vw 100vh;
 }
 
 #end-message {
@@ -664,4 +667,13 @@ a {
 
 #advertise-screen {
   z-index: 30;
+}
+
+@media (max-height: 600px) {
+  #hints-box {
+    height: 15vh;
+  }
+  .hint-line span {
+    font-size: 2vh;
+  }
 }

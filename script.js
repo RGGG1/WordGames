@@ -81,9 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
                 currentGameNumber = gameNumber;
                 loadGame(game);
+                resetGame();
                 document.getElementById("previous-games-screen").style.display = "none";
+                document.getElementById("start-screen").style.display = "none";
                 document.getElementById("game-screen").style.display = "flex";
                 document.getElementById("guess-input").focus();
+                lastHintTime = Date.now();
             });
             gameList.appendChild(link);
         });
@@ -159,6 +162,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const allHints = document.querySelectorAll(".hint-line span");
             if (index < allHints.length && allHints[index].textContent) {
                 allHints[index].style.visibility = "visible";
+                allHints[index].classList.remove("animate__animated", "animate__pulse");
+                void allHints[index].offsetWidth;
                 allHints[index].classList.add("animate__animated", "animate__pulse");
                 setTimeout(() => {
                     allHints[index].classList.remove("animate__pulse");
@@ -479,5 +484,22 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";
             setupHints();
         }
+
+        function adjustBackgroundSize() {
+            const screenHeight = window.innerHeight;
+            const keyboardVisible = document.activeElement === document.getElementById("guess-input") && screenHeight < window.screen.height;
+            const gameScreen = document.getElementById("game-screen");
+            const gameOver = document.getElementById("game-over");
+            const aspectRatio = 85 / 100;
+            const newHeight = keyboardVisible ? screenHeight : 100;
+            const newWidth = newHeight * aspectRatio;
+
+            gameScreen.style.backgroundSize = `${newWidth}vw ${newHeight}vh`;
+            gameOver.style.backgroundSize = `${newWidth}vw ${newHeight}vh`;
+        }
+
+        window.addEventListener("resize", adjustBackgroundSize);
+        document.getElementById("guess-input").addEventListener("focus", adjustBackgroundSize);
+        document.getElementById("guess-input").addEventListener("blur", adjustBackgroundSize);
     });
 });
