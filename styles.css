@@ -25,93 +25,6 @@ a {
   color: #1E90FF;
 }
 
-#hamburger-menu-start {
-  position: absolute;
-  left: 1vw;
-  top: 1vh;
-}
-
-#hamburger-btn-start, #menu-close-btn, #menu-dark-mode-btn, #resume-btn {
-  background: none;
-  border: none;
-  font-size: 2vh;
-  cursor: pointer;
-  color: #000000;
-}
-
-.dark-mode #hamburger-btn-start, .dark-mode #menu-close-btn, .dark-mode #menu-dark-mode-btn, .dark-mode #resume-btn {
-  color: #FFFFFF;
-}
-
-#menu-content {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 85vw;
-  height: 100vh;
-  background: #FFFFFF;
-  padding: 2vh;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  z-index: 20;
-}
-
-.dark-mode #menu-content {
-  background: #000000;
-}
-
-.menu-section {
-  margin: 2vh 0;
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.section-title {
-  font-weight: bold;
-  margin-bottom: 1vh;
-  font-size: 2vh;
-}
-
-.game-link {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.sub-menu {
-  margin-top: 1vh;
-  width: 100%;
-  display: none;
-  flex-direction: column;
-  align-items: center;
-}
-
-#menu-content a, #menu-content button {
-  display: block;
-  margin: 1vh 0;
-  font-size: 2vh;
-}
-
-#today-game, #home-link {
-  font-weight: bold;
-}
-
-.menu-divider {
-  width: 50%;
-  height: 2px;
-  background: #000000;
-  margin: 2vh 0;
-}
-
-.dark-mode .menu-divider {
-  background: #FFFFFF;
-}
-
 #game-screen {
   display: flex;
   flex-direction: column;
@@ -143,7 +56,22 @@ a {
   align-items: center;
 }
 
-#game-name, #meatball-name {
+#mode-toggle {
+  position: absolute;
+  left: 0;
+  top: 0.5vh;
+  background: none;
+  border: none;
+  font-size: 2vh;
+  cursor: pointer;
+  color: #000000;
+}
+
+.dark-mode #mode-toggle {
+  color: #FFFFFF;
+}
+
+#game-name {
   font-family: 'Bangers', cursive;
   font-size: 3vh;
   letter-spacing: 0.1em;
@@ -151,10 +79,17 @@ a {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  animation: pulseHint 1.5s infinite;
 }
 
 #meatball-name {
   font-family: 'Chewy', cursive;
+  font-size: 3vh;
+  letter-spacing: 0.1em;
+  margin: 0.5vh 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #score, #meatball-score {
@@ -265,7 +200,7 @@ a {
   height: 0.2vh;
   background: #000000;
   position: absolute;
-  top: 8.5vh;
+  top: 9vh; /* Adjusted for 1vh total space */
   transition: opacity 0.5s ease-out;
 }
 
@@ -305,6 +240,10 @@ a {
 
 .hint-line {
   margin: 0.3vh 0;
+}
+
+.hint-line.spacer {
+  height: 2.5vh; /* Two lines of space */
 }
 
 #how-to-play-1, #how-to-play-2 {
@@ -549,30 +488,9 @@ a {
   text-align: center;
 }
 
-#language-content, #create-game-content, #advertise-content {
+#create-game-content {
   width: 85vw;
   margin: 0 auto;
-}
-
-.language-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.language-list a {
-  margin: 1vh 0;
-  font-size: 2vh;
-}
-
-.language-list img {
-  width: 2vh;
-  margin-right: 0.5vh;
-}
-
-.inactive {
-  color: #888;
-  pointer-events: none;
 }
 
 .home-btn {

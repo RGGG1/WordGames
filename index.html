@@ -10,37 +10,8 @@
 </head>
 <body oncontextmenu="return false;">
     <div id="game-screen">
-        <div id="hamburger-menu-start">
-            <button id="hamburger-btn-start">Menu</button>
-            <div id="menu-content" style="display: none;">
-                <button id="menu-close-btn">Close</button>
-                <a href="#" id="home-link">Home</a>
-                <div class="menu-section">
-                    <div class="section-title">Settings</div>
-                    <button id="menu-dark-mode-btn">Dark Mode</button>
-                    <a href="#" id="language-link">Language</a>
-                </div>
-                <div class="menu-divider"></div>
-                <div class="menu-section">
-                    <div class="section-title">Games</div>
-                    <div class="game-link">
-                        <a href="#" id="hungry-shark-link">Hungry Shark</a>
-                        <div class="sub-menu" style="display: none;">
-                            <a href="#" id="today-game">Today's Game</a>
-                            <a href="#" id="create-game">Create a Game</a>
-                        </div>
-                    </div>
-                    <a href="#" id="meatball-link">Meatball</a>
-                    <a href="#" id="snakebite-link">Snakebite</a>
-                </div>
-                <div class="menu-divider"></div>
-                <div class="menu-section">
-                    <div class="section-title">Advertising</div>
-                    <a href="#" id="advertise-link">Advertise with us</a>
-                </div>
-            </div>
-        </div>
         <div id="header">
+            <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">Hungry Shark</div>
             <div id="score">Score: 100</div>
         </div>
@@ -55,6 +26,8 @@
             <div id="hints-subtitle">New hint in 10 seconds</div>
             <div id="hints">
                 <div class="hint-line" id="hint-row-1"><span></span></div>
+                <div class="hint-line spacer"></div>
+                <div class="hint-line spacer"></div>
                 <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
                 <div class="hint-line" id="how-to-play-2">Guess the secret word before the shark eats you.</div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>
@@ -96,26 +69,11 @@
             <div>Until then, play our other games</div>
             <a href="#" id="end-hungry-shark">Hungry Shark</a>
             <a href="#" id="end-meatball">Meatball</a>
-            <a href="#" id="end-snakebite">Snakebite</a>
         </div>
         <button id="home-btn" class="home-btn">Home</button>
         <div id="ad-box">
             Advertise with us here and reach millions of players
             <div id="ad-link">click here to place an ad</div>
-        </div>
-    </div>
-
-    <div id="language-screen" class="screen" style="display: none;">
-        <div id="language-content">
-            <div class="language-list">
-                <a href="#" class="active"><img src="ireland_flag.png" alt="IE"> English</a>
-                <a href="#" class="inactive"><img src="brazil_flag.png" alt="BR"> Brazilian Portuguese (coming soon)</a>
-                <a href="#" class="inactive"><img src="france_flag.png" alt="FR"> French (coming soon)</a>
-                <a href="#" class="inactive"><img src="italy_flag.png" alt="IT"> Italian (coming soon)</a>
-                <a href="#" class="inactive"><img src="spain_flag.png" alt="ES"> Spanish (coming soon)</a>
-                <a href="#" class="inactive"><img src="turkey_flag.png" alt="TR"> Turkish (coming soon)</a>
-            </div>
-            <button class="home-btn">Home</button>
         </div>
     </div>
 
@@ -128,37 +86,8 @@
     </div>
 
     <div id="meatball-screen" class="screen" style="display: none;">
-        <div id="hamburger-menu-start">
-            <button id="hamburger-btn-start">Menu</button>
-            <div id="menu-content" style="display: none;">
-                <button id="menu-close-btn">Close</button>
-                <a href="#" id="home-link">Home</a>
-                <div class="menu-section">
-                    <div class="section-title">Settings</div>
-                    <button id="menu-dark-mode-btn">Dark Mode</button>
-                    <a href="#" id="language-link">Language</a>
-                </div>
-                <div class="menu-divider"></div>
-                <div class="menu-section">
-                    <div class="section-title">Games</div>
-                    <div class="game-link">
-                        <a href="#" id="hungry-shark-link">Hungry Shark</a>
-                        <div class="sub-menu" style="display: none;">
-                            <a href="#" id="today-game">Today's Game</a>
-                            <a href="#" id="create-game">Create a Game</a>
-                        </div>
-                    </div>
-                    <a href="#" id="meatball-link">Meatball</a>
-                    <a href="#" id="snakebite-link">Snakebite</a>
-                </div>
-                <div class="menu-divider"></div>
-                <div class="menu-section">
-                    <div class="section-title">Advertising</div>
-                    <a href="#" id="advertise-link">Advertise with us</a>
-                </div>
-            </div>
-        </div>
         <div id="header">
+            <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="meatball-name">Meatball</div>
             <div id="meatball-score">Score: 0</div>
         </div>
@@ -170,16 +99,6 @@
             <div id="meatball-guess-line"></div>
         </div>
         <div id="meatball-instruction">The Daily Meatball<br>Rearrange the letters of this word to form another word.<br>There may be multiple possibilities, but there is only one true meatball.</div>
-    </div>
-
-    <div id="snakebite-screen" class="screen" style="display: none;"></div>
-
-    <div id="advertise-screen" class="screen" style="display: none;">
-        <div id="advertise-content">
-            <div>Advertise with us</div>
-            <p>Coming soon</p>
-            <button class="home-btn">Home</button>
-        </div>
     </div>
 
     <script src="script.js"></script>

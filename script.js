@@ -181,14 +181,12 @@ document.addEventListener("DOMContentLoaded", () => {
         const go = document.getElementById("game-over");
         const pauseScreen = document.getElementById("pause-screen");
 
-        const menuModeButton = document.getElementById("menu-dark-mode-btn");
-
-        function toggleDarkMode() {
+        const modeToggle = document.getElementById("mode-toggle");
+        modeToggle.addEventListener("click", () => {
             document.body.classList.toggle("dark-mode");
+            modeToggle.innerHTML = document.body.classList.contains("dark-mode") ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
             adjustBackground();
-        }
-
-        menuModeButton.addEventListener("click", toggleDarkMode);
+        });
 
         document.addEventListener("click", () => {
             const input = document.getElementById("guess-input");
@@ -228,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     setTimeout(() => {
                         allHints[index].style.animation = "";
                     }, 2000);
-                }, 200); // 0.2s delay
+                }, 200);
                 revealedHints.add(index);
             }
         }
@@ -252,6 +250,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 lastHintTime = Date.now();
                 document.getElementById("how-to-play-1").style.display = "none";
                 document.getElementById("how-to-play-2").style.display = "none";
+                document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "none");
                 adjustHintsAfterGuess();
             }
 
@@ -354,98 +353,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 1000);
         });
 
-        const hamburgerBtnStart = document.getElementById("hamburger-btn-start");
-        const menuContent = document.getElementById("menu-content");
-        const menuCloseBtn = document.getElementById("menu-close-btn");
-        const homeLink = document.getElementById("home-link");
-        const languageLink = document.getElementById("language-link");
-        const hungrySharkLink = document.getElementById("hungry-shark-link");
-        const subMenu = document.querySelector(".sub-menu");
-        const todayGame = document.getElementById("today-game");
-        const createGame = document.getElementById("create-game");
-        const meatballLink = document.getElementById("meatball-link");
-        const snakebiteLink = document.getElementById("snakebite-link");
-        const advertiseLink = document.getElementById("advertise-link");
-
-        function collapseMenu() {
-            menuContent.style.display = "none";
-            subMenu.style.display = "none";
-        }
-
-        hamburgerBtnStart.addEventListener("click", () => {
-            if (menuContent.style.display === "none") {
-                menuContent.style.display = "flex";
-            } else {
-                collapseMenu();
-            }
-        });
-
-        menuCloseBtn.addEventListener("click", collapseMenu);
-
-        homeLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            resetGame();
-            gameScreen.style.display = "flex";
-            go.style.display = "none";
-            collapseMenu();
-            adjustBackground();
-        });
-
-        languageLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("language-screen").style.display = "flex";
-            collapseMenu();
-        });
-
-        hungrySharkLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            subMenu.style.display = subMenu.style.display === "none" ? "flex" : "none";
-        });
-
-        todayGame.addEventListener("click", (e) => {
-            e.preventDefault();
-            resetGame();
-            const latestEntry = allGames.reduce((latest, current) => {
-                return new Date(current.Date) > new Date(latest.Date) ? current : latest;
-            }, allGames[0]);
-            currentGameNumber = allGames.length;
-            loadGame(latestEntry);
-            gameScreen.style.display = "flex";
-            go.style.display = "none";
-            collapseMenu();
-        });
-
-        createGame.addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("create-game-screen").style.display = "flex";
-            collapseMenu();
-        });
-
-        meatballLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("meatball-screen").style.display = "flex";
-            meatballScore = 0;
-            meatballGameOver = false;
-            meatballFirstGuess = false;
-            document.getElementById("meatball-score").textContent = "Score: 0";
-            document.getElementById("meatball-guess-input").value = "";
-            document.getElementById("meatball-instruction").style.display = "block";
-            collapseMenu();
-            adjustBackground();
-        });
-
-        snakebiteLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("snakebite-screen").style.display = "flex";
-            collapseMenu();
-        });
-
-        advertiseLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("advertise-screen").style.display = "flex";
-            collapseMenu();
-        });
-
         document.getElementById("end-hungry-shark").addEventListener("click", (e) => {
             e.preventDefault();
             resetGame();
@@ -466,14 +373,9 @@ document.addEventListener("DOMContentLoaded", () => {
             adjustBackground();
         });
 
-        document.getElementById("end-snakebite").addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("snakebite-screen").style.display = "flex";
-        });
-
         document.getElementById("ad-link").addEventListener("click", (e) => {
             e.preventDefault();
-            document.getElementById("advertise-screen").style.display = "flex";
+            // No advertise screen to show anymore
         });
 
         document.querySelectorAll(".home-btn").forEach(btn => {
@@ -508,6 +410,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";
         document.getElementById("how-to-play-1").style.display = "block";
         document.getElementById("how-to-play-2").style.display = "block";
+        document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "block");
         setupHints();
     }
 
