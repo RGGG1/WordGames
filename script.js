@@ -20,7 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let meatballFirstGuess = false;
     const meatballSecretWord = "TRIANGLE";
 
-    console.log("Hungry Shark & Meatball Version");
+    console.log("Pineapple & Meatball Version");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustBackground() {
-        const screens = [document.getElementById("game-screen"), document.getElementById("meatball-screen"), document.getElementById("game-over")];
+        const screens = [document.getElementById("game-screen"), document.getElementById("meatball-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("create-game-screen")];
         const viewportHeight = window.innerHeight;
         screens.forEach(screen => {
             if (screen.style.display !== "none") {
@@ -159,6 +159,7 @@ document.addEventListener("DOMContentLoaded", () => {
             shareText.textContent = `I got today's meatball in ${totalGuesses} guesses`;
             shareGameNumber.textContent = "Game #1";
             shareScore.textContent = `${totalGuesses}`;
+            document.getElementById("score").textContent = `Score: ${totalGuesses}`;
             shareLink.href = "https://your-game-url.com/meatball";
             shareLink.textContent = "Can you beat my score? Click here";
 
@@ -181,11 +182,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const go = document.getElementById("game-over");
         const pauseScreen = document.getElementById("pause-screen");
 
-        const modeToggle = document.getElementById("mode-toggle");
-        modeToggle.addEventListener("click", () => {
-            document.body.classList.toggle("dark-mode");
-            modeToggle.innerHTML = document.body.classList.contains("dark-mode") ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            adjustBackground();
+        document.querySelectorAll("#mode-toggle").forEach(button => {
+            button.addEventListener("click", () => {
+                document.body.classList.toggle("dark-mode");
+                document.querySelectorAll("#mode-toggle").forEach(btn => {
+                    btn.innerHTML = document.body.classList.contains("dark-mode") ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                });
+                adjustBackground();
+            });
         });
 
         document.addEventListener("click", () => {
@@ -199,7 +203,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (decayStarted && score > 0 && !gameOver) {
                 const elapsed = (Date.now() - decayStartTime) / 1000;
                 score = Math.max(0, Math.floor(100 - elapsed));
-                document.getElementById("score").textContent = `Score: ${score}`;
+                document.querySelectorAll("#score").forEach(scoreDisplay => {
+                    scoreDisplay.textContent = `Score: ${score}`;
+                });
 
                 const hintElapsed = (Date.now() - lastHintTime) / 1000;
                 hintTimer = Math.max(0, Math.ceil(10 - hintElapsed));
@@ -222,9 +228,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (index < allHints.length && allHints[index].textContent && !revealedHints.has(index)) {
                 allHints[index].style.visibility = "visible";
                 setTimeout(() => {
-                    allHints[index].style.animation = "pulseHint 2s";
+                    allHints[index].classList.add("pulse-hint");
                     setTimeout(() => {
-                        allHints[index].style.animation = "";
+                        allHints[index].classList.remove("pulse-hint");
                     }, 2000);
                 }, 200);
                 revealedHints.add(index);
@@ -309,17 +315,19 @@ document.addEventListener("DOMContentLoaded", () => {
             gameScreen.style.display = "none";
             go.style.display = "flex";
             document.getElementById("guess-input").blur();
-            adjustBackground();
 
             if (won) {
-                endMessage.textContent = "You survived the hungry shark";
-                shareText.textContent = "Hungry Shark Survivor";
+                endMessage.textContent = "You survived the pineapple!";
+                shareText.textContent = "Pineapple Survivor";
             } else {
-                endMessage.textContent = score === 0 ? "You are shark food\n\nnhom-nhom" : "You are shark food!\nnhom-nhom!";
-                shareText.textContent = "I am shark food";
+                endMessage.textContent = score === 0 ? "You are pineapple food\n\nnom-nom" : "You are pineapple food!\nnom-nom!";
+                shareText.textContent = "I am pineapple food";
             }
             shareGameNumber.textContent = `Game #${currentGameNumber}`;
             shareScore.textContent = `${score}`;
+            document.querySelectorAll("#score").forEach(scoreDisplay => {
+                scoreDisplay.textContent = `Score: ${score}`;
+            });
             shareLink.href = "https://your-game-url.com";
             shareLink.textContent = "Can you beat my score? Click here";
 
@@ -327,6 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
+            adjustBackground();
         }
 
         const resumeBtn = document.getElementById("resume-btn");
@@ -375,7 +384,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("ad-link").addEventListener("click", (e) => {
             e.preventDefault();
-            // No advertise screen to show anymore
         });
 
         document.querySelectorAll(".home-btn").forEach(btn => {
@@ -404,7 +412,9 @@ document.addEventListener("DOMContentLoaded", () => {
         hintTimer = 10;
         lastHintTime = null;
         revealedHints.clear();
-        document.getElementById("score").textContent = `Score: ${score}`;
+        document.querySelectorAll("#score").forEach(scoreDisplay => {
+            scoreDisplay.textContent = `Score: ${score}`;
+        });
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";

@@ -3,16 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Hungry Shark</title>
+    <title>Pineapple</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Chewy&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Chewy&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
     <div id="game-screen">
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
-            <div id="game-name">Hungry Shark</div>
+            <div id="game-name">Pineapple</div>
             <div id="score">Score: 100</div>
         </div>
         <div id="guess-area">
@@ -41,12 +41,22 @@
     </div>
 
     <div id="pause-screen" style="display: none;">
+        <div id="header">
+            <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
+            <div id="game-name">Pineapple</div>
+            <div id="score">Score: 100</div>
+        </div>
         <div id="pause-text">Ads here - coming soon</div>
         <button id="resume-btn">Resume</button>
         <div id="countdown" style="display: none;"></div>
     </div>
 
     <div id="game-over" style="display: none;">
+        <div id="header">
+            <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
+            <div id="game-name">Pineapple</div>
+            <div id="score">Score: 0</div>
+        </div>
         <div id="end-message"></div>
         <div id="share-box">
             <div id="share-panel">
@@ -67,7 +77,7 @@
         </div>
         <div id="end-footer">
             <div>Until then, play our other games</div>
-            <a href="#" id="end-hungry-shark">Hungry Shark</a>
+            <a href="#" id="end-hungry-shark">Pineapple</a>
             <a href="#" id="end-meatball">Meatball</a>
         </div>
         <button id="home-btn" class="home-btn">Home</button>
@@ -78,6 +88,11 @@
     </div>
 
     <div id="create-game-screen" class="screen" style="display: none;">
+        <div id="header">
+            <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
+            <div id="game-name">Pineapple</div>
+            <div id="score">Score: 100</div>
+        </div>
         <div id="create-game-content">
             <div>Create a Game...</div>
             <p>Create your own secret words and hints...coming soon</p>
