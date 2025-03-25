@@ -170,11 +170,11 @@ document.addEventListener("DOMContentLoaded", () => {
             endMessage.textContent = `You got today's meatball in ${totalGuesses} guesses`;
             shareText.textContent = `I got today's meatball in ${totalGuesses} guesses`;
             shareGameNumber.textContent = "Game #1";
-            shareScore.textContent = `${meatballScore}`;
+            shareScore.textContent = `${totalGuesses}`;
             shareLink.href = "https://your-game-url.com/meatball";
             shareLink.textContent = "Can you beat my score? Click here";
 
-            const shareMessage = `${shareText.textContent}\nGame #1\nScore: ${meatballScore}\nCan you beat my score? Click here: https://your-game-url.com/meatball`;
+            const shareMessage = `${shareText.textContent}\nGame #1\nScore: ${totalGuesses}\nCan you beat my score? Click here: https://your-game-url.com/meatball`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com/meatball")}&text=${encodeURIComponent(shareMessage)}`;
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
@@ -182,7 +182,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.addEventListener("click", () => {
             if (!meatballGameOver && meatballScreen.style.display === "flex") {
-                meatbollInput.focus();
+                meatballInput.focus();
             }
         });
     }
@@ -232,6 +232,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (hintTimer === 0 && hintIndex < hints.length - 1) {
                     hintIndex++;
+                    console.log(`Revealing hint ${hintIndex}: ${hints[hintIndex]}`);
                     revealHint(hintIndex);
                     lastHintTime = Date.now();
                     lastHintScore = score;
