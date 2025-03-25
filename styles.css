@@ -25,13 +25,13 @@ a {
   color: #1E90FF;
 }
 
-#hamburger-menu-start, #hamburger-menu-game {
+#hamburger-menu-start {
   position: absolute;
   left: 1vw;
   top: 1vh;
 }
 
-#hamburger-btn-start, #hamburger-btn-game {
+#hamburger-btn-start {
   background: none;
   border: none;
   font-size: 2vh;
@@ -39,7 +39,7 @@ a {
   color: #000000;
 }
 
-.dark-mode #hamburger-btn-start, .dark-mode #hamburger-btn-game {
+.dark-mode #hamburger-btn-start {
   color: #FFFFFF;
 }
 
@@ -380,16 +380,16 @@ a {
   height: 5vh;
   margin: 0 auto;
   position: relative;
-  background: url('shark_background_light_small.png') no-repeat left center;
-  background-size: 35vw 5vh;
+  background: url('shark_background_light_small.png') no-repeat left bottom;
+  background-size: 21.25vw 5vh;
 }
 
 .dark-mode #graphic {
-  background: url('shark_background_dark_small.png') no-repeat left center;
-  background-size: 35vw 5vh;
+  background: url('shark_background_dark_small.png') no-repeat left bottom;
+  background-size: 21.25vw 5vh;
 }
 
-#pause-btn, #resume-btn {
+#resume-btn {
   width: 3vh;
   height: 3vh;
   border-radius: 50%;
@@ -403,7 +403,7 @@ a {
   line-height: 3vh;
 }
 
-.dark-mode #pause-btn, .dark-mode #resume-btn {
+.dark-mode #resume-btn {
   background: rgba(0, 0, 0, 0.8);
   border: 1px solid #FFFFFF;
   color: #FFFFFF;

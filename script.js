@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastHintTime = null;
     let revealedHints = new Set();
 
-    console.log("Hungry Shark Version: Updated for Graphic Area Image, No Overlay");
+    console.log("Hungry Shark Version: Pulse Hints, No Pause, Graphic Shark, No Game Menu");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -163,13 +163,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const allHints = document.querySelectorAll(".hint-line span");
             if (index < allHints.length && allHints[index].textContent && !revealedHints.has(index)) {
                 allHints[index].style.visibility = "visible";
+                allHints[index].classList.add("animate__animated", "animate__pulse");
                 revealedHints.add(index);
                 setTimeout(() => {
-                    allHints[index].classList.add("animate__animated", "animate__pulse");
-                    setTimeout(() => {
-                        allHints[index].classList.remove("animate__pulse");
-                    }, 2000);
-                }, 100);
+                    allHints[index].classList.remove("animate__animated", "animate__pulse");
+                }, 2000);
             }
         }
 
@@ -251,21 +249,8 @@ document.addEventListener("DOMContentLoaded", () => {
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
         }
 
-        const pauseBtn = document.getElementById("pause-btn");
         const resumeBtn = document.getElementById("resume-btn");
         const countdown = document.getElementById("countdown");
-
-        function pauseGame() {
-            if (!gameOver && decayStarted) {
-                decayStarted = false;
-                pausedTime = Date.now() - decayStartTime;
-                pauseScreen.style.display = "flex";
-                resumeBtn.style.display = "block";
-                countdown.style.display = "none";
-            }
-        }
-
-        pauseBtn.addEventListener("click", pauseGame);
 
         resumeBtn.addEventListener("click", () => {
             resumeBtn.style.display = "none";
@@ -289,7 +274,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         const hamburgerBtnStart = document.getElementById("hamburger-btn-start");
-        const hamburgerBtnGame = document.getElementById("hamburger-btn-game");
         const menuContent = document.getElementById("menu-content");
         const menuCloseBtn = document.getElementById("menu-close-btn");
         const homeLink = document.getElementById("home-link");
@@ -308,27 +292,6 @@ document.addEventListener("DOMContentLoaded", () => {
             subMenu.style.display = "none";
             hamburgerBtnStart.querySelector("i").classList.remove("fa-times");
             hamburgerBtnStart.querySelector("i").classList.add("fa-bars");
-            hamburgerBtnGame.querySelector("i").classList.remove("fa-times");
-            hamburgerBtnGame.querySelector("i").classList.add("fa-bars");
-            if (gameScreen.style.display === "flex" && !gameOver && firstGuessMade) {
-                pauseScreen.style.display = "flex";
-                resumeBtn.style.display = "none";
-                countdown.style.display = "block";
-                let timeLeft = 5;
-                countdown.textContent = timeLeft;
-                const interval = setInterval(() => {
-                    timeLeft--;
-                    countdown.textContent = timeLeft;
-                    if (timeLeft <= 0) {
-                        clearInterval(interval);
-                        pauseScreen.style.display = "none";
-                        decayStarted = true;
-                        decayStartTime = Date.now() - pausedTime;
-                        lastHintTime = Date.now() - (10 - hintTimer) * 1000;
-                        document.getElementById("guess-input").focus();
-                    }
-                }, 1000);
-            }
         }
 
         hamburgerBtnStart.addEventListener("click", () => {
@@ -336,20 +299,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 menuContent.style.display = "flex";
                 hamburgerBtnStart.querySelector("i").classList.remove("fa-bars");
                 hamburgerBtnStart.querySelector("i").classList.add("fa-times");
-            } else {
-                collapseMenu();
-            }
-        });
-
-        hamburgerBtnGame.addEventListener("click", () => {
-            if (menuContent.style.display === "none") {
-                menuContent.style.display = "flex";
-                hamburgerBtnGame.querySelector("i").classList.remove("fa-bars");
-                hamburgerBtnGame.querySelector("i").classList.add("fa-times");
-                if (gameScreen.style.display === "flex" && !gameOver && firstGuessMade) {
-                    decayStarted = false;
-                    pausedTime = Date.now() - decayStartTime;
-                }
             } else {
                 collapseMenu();
             }
@@ -381,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             resetGame();
             const latestEntry = allGames.reduce((latest, current) => {
-                return new Date(current.Date) > new Date(latest.Date) ?Current : latest;
+                return new Date(current.Date) > new Date(latest.Date) ? current : latest;
             }, allGames[0]);
             currentGameNumber = allGames.length;
             loadGame(latestEntry);
