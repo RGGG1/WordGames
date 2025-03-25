@@ -211,6 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 hintTimer = Math.max(0, Math.ceil(10 - hintElapsed));
                 document.getElementById("hints-subtitle").textContent = `New hint in ${hintTimer} seconds`;
 
+                console.log(`Hint timer: ${hintTimer}, hintIndex: ${hintIndex}`);
                 if (hintTimer === 0 && hintIndex < hints.length - 1) {
                     hintIndex++;
                     console.log(`Revealing hint ${hintIndex}: ${hints[hintIndex]}`);
@@ -228,9 +229,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (index < allHints.length && allHints[index].textContent && !revealedHints.has(index)) {
                 allHints[index].style.visibility = "visible";
                 allHints[index].classList.add("animate__animated", "animate__pulse");
+                allHints[index].style.animation = "pulse 2s";
                 revealedHints.add(index);
                 setTimeout(() => {
                     allHints[index].classList.remove("animate__animated", "animate__pulse");
+                    allHints[index].style.animation = "";
                 }, 2000);
             }
         }
