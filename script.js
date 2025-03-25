@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let meatballScore = 0;
     let meatballGameOver = false;
+    let meatballFirstGuess = false;
     const meatballSecretWord = "TRIANGLE";
 
     console.log("Hungry Shark & Meatball Version");
@@ -47,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             while (hints.length < 7) hints.push("");
             setupHints();
-            populatePreviousGames();
         } catch (error) {
             console.error("Failed to fetch game data:", error);
             secretWord = "ERROR";
@@ -73,41 +73,22 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function populatePreviousGames() {
-        const gameList = document.querySelector("#previous-games-screen .game-list");
-        gameList.innerHTML = "";
-        allGames.sort((a, b) => new Date(b.Date) - new Date(a.Date));
-        allGames.forEach((game, index) => {
-            const gameNumber = allGames.length - index;
-            const link = document.createElement("a");
-            link.href = "#";
-            link.textContent = `Game #${gameNumber}${index === 0 ? " - Today's Game" : ""}`;
-            link.addEventListener("click", (e) => {
-                e.preventDefault();
-                currentGameNumber = gameNumber;
-                loadGame(game);
-                resetGame();
-                document.getElementById("previous-games-screen").style.display = "none";
-                document.getElementById("start-screen").style.display = "none";
-                document.getElementById("game-screen").style.display = "flex";
-                document.getElementById("guess-input").focus();
-                lastHintTime = Date.now();
-            });
-            gameList.appendChild(link);
+    function adjustBackground() {
+        const screens = [document.getElementById("game-screen"), document.getElementById("game-over"), document.getElementById("meatball-screen")];
+        const viewportHeight = window.innerHeight;
+        screens.forEach(screen => {
+            if (screen.style.display !== "none") {
+                const contentHeight = screen.offsetHeight;
+                if (viewportHeight < contentHeight + 100) { // Keyboard likely visible
+                    screen.style.backgroundPosition = "center bottom";
+                } else {
+                    screen.style.backgroundPosition = "center center";
+                }
+            }
         });
     }
 
-    function loadGame(game) {
-        resetGame();
-        secretWord = game["Secret Word"].toUpperCase();
-        hints = [
-            game["Hint 1"], game["Hint 2"], game["Hint 3"],
-            game["Hint 4"], game["Hint 5"], game["Hint 6"],
-            game["Hint 7"], game["Hint 8"], game["Hint 9"]
-        ].filter(hint => hint).map(hint => hint.toUpperCase());
-        while (hints.length < 7) hints.push("");
-        setupHints();
-    }
+    window.addEventListener("resize", adjustBackground);
 
     function setupMeatballGame() {
         const meatballScreen = document.getElementById("meatball-screen");
@@ -124,16 +105,19 @@ document.addEventListener("DOMContentLoaded", () => {
         function handleMeatballGuess(guess) {
             const guessDisplay = meatballInput;
             guessDisplay.value = guess.toUpperCase();
-            guessDisplay.classList.remove("wrong-guess", "correct-guess");
+            guessDisplay.classList.remove("wrong-guess");
             guessDisplay.style.opacity = "1";
             void guessDisplay.offsetWidth;
 
+            if (!meatballFirstGuess) {
+                meatballFirstGuess = true;
+                document.getElementById("meatball-instruction").style.display = "none";
+            }
+
             if (guess.toUpperCase() === meatballSecretWord) {
-                guessDisplay.classList.add("correct-guess");
                 meatballGuessBackground.classList.add("flash-green");
                 meatballGuessLine.style.opacity = "0";
                 setTimeout(() => {
-                    guessDisplay.classList.remove("correct-guess");
                     meatballGuessBackground.classList.remove("flash-green");
                     endMeatballGame(true);
                 }, 1500);
@@ -199,16 +183,14 @@ document.addEventListener("DOMContentLoaded", () => {
             gameScreen.style.display = "flex";
             document.getElementById("guess-input").focus();
             lastHintTime = Date.now();
+            adjustBackground();
         });
 
         const menuModeButton = document.getElementById("menu-dark-mode-btn");
-        const menuModeIcon = document.getElementById("menu-mode-icon");
 
         function toggleDarkMode() {
             document.body.classList.toggle("dark-mode");
-            const isDarkMode = document.body.classList.contains("dark-mode");
-            menuModeIcon.classList.toggle("fa-moon", !isDarkMode);
-            menuModeIcon.classList.toggle("fa-sun", isDarkMode);
+            adjustBackground();
         }
 
         menuModeButton.addEventListener("click", toggleDarkMode);
@@ -247,9 +229,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (index < allHints.length && allHints[index].textContent && !revealedHints.has(index)) {
                 allHints[index].style.visibility = "visible";
                 allHints[index].classList.add("animate__animated", "animate__pulse");
+                allHints[index].style.animation = "pulse 2s"; // Fallback
                 revealedHints.add(index);
                 setTimeout(() => {
                     allHints[index].classList.remove("animate__animated", "animate__pulse");
+                    allHints[index].style.animation = "";
                 }, 2000);
             }
         }
@@ -274,16 +258,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             guessDisplay.value = guess.toUpperCase();
-            guessDisplay.classList.remove("wrong-guess", "correct-guess");
+            guessDisplay.classList.remove("wrong-guess");
             guessDisplay.style.opacity = "1";
             void guessDisplay.offsetWidth;
 
             if (guess.toUpperCase() === secretWord) {
-                guessDisplay.classList.add("correct-guess");
                 guessBackground.classList.add("flash-green");
                 guessLine.style.opacity = "0";
                 setTimeout(() => {
-                    guessDisplay.classList.remove("correct-guess");
                     guessBackground.classList.remove("flash-green");
                     endGame(true);
                 }, 1500);
@@ -313,6 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
             gameScreen.style.display = "none";
             go.style.display = "flex";
             document.getElementById("guess-input").blur();
+            adjustBackground();
 
             if (won) {
                 endMessage.textContent = "You survived the hungry shark";
@@ -364,7 +347,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const hungrySharkLink = document.getElementById("hungry-shark-link");
         const subMenu = document.querySelector(".sub-menu");
         const todayGame = document.getElementById("today-game");
-        const previousGames = document.getElementById("previous-games");
         const createGame = document.getElementById("create-game");
         const meatballLink = document.getElementById("meatball-link");
         const snakebiteLink = document.getElementById("snakebite-link");
@@ -373,15 +355,11 @@ document.addEventListener("DOMContentLoaded", () => {
         function collapseMenu() {
             menuContent.style.display = "none";
             subMenu.style.display = "none";
-            hamburgerBtnStart.querySelector("i").classList.remove("fa-times");
-            hamburgerBtnStart.querySelector("i").classList.add("fa-bars");
         }
 
         hamburgerBtnStart.addEventListener("click", () => {
             if (menuContent.style.display === "none") {
                 menuContent.style.display = "flex";
-                hamburgerBtnStart.querySelector("i").classList.remove("fa-bars");
-                hamburgerBtnStart.querySelector("i").classList.add("fa-times");
             } else {
                 collapseMenu();
             }
@@ -423,12 +401,6 @@ document.addEventListener("DOMContentLoaded", () => {
             collapseMenu();
         });
 
-        previousGames.addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("previous-games-screen").style.display = "flex";
-            collapseMenu();
-        });
-
         createGame.addEventListener("click", (e) => {
             e.preventDefault();
             document.getElementById("create-game-screen").style.display = "flex";
@@ -440,10 +412,13 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("meatball-screen").style.display = "flex";
             meatballScore = 0;
             meatballGameOver = false;
+            meatballFirstGuess = false;
             document.getElementById("meatball-score").textContent = "Score: 0";
             document.getElementById("meatball-guess-input").value = "";
             document.getElementById("meatball-guess-line").style.opacity = "1";
+            document.getElementById("meatball-instruction").style.display = "block";
             collapseMenu();
+            adjustBackground();
         });
 
         snakebiteLink.addEventListener("click", (e) => {
@@ -458,14 +433,11 @@ document.addEventListener("DOMContentLoaded", () => {
             collapseMenu();
         });
 
-        document.getElementById("start-previous-games").addEventListener("click", (e) => {
+        document.getElementById("end-hungry-shark").addEventListener("click", (e) => {
             e.preventDefault();
-            document.getElementById("previous-games-screen").style.display = "flex";
-        });
-
-        document.getElementById("end-previous-games").addEventListener("click", (e) => {
-            e.preventDefault();
-            document.getElementById("previous-games-screen").style.display = "flex";
+            resetGame();
+            gameScreen.style.display = "flex";
+            go.style.display = "none";
         });
 
         document.getElementById("end-meatball").addEventListener("click", (e) => {
@@ -473,9 +445,12 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("meatball-screen").style.display = "flex";
             meatballScore = 0;
             meatballGameOver = false;
+            meatballFirstGuess = false;
             document.getElementById("meatball-score").textContent = "Score: 0";
             document.getElementById("meatball-guess-input").value = "";
             document.getElementById("meatball-guess-line").style.opacity = "1";
+            document.getElementById("meatball-instruction").style.display = "block";
+            adjustBackground();
         });
 
         document.getElementById("end-snakebite").addEventListener("click", (e) => {
@@ -496,6 +471,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 gameScreen.style.display = skipWelcome ? "flex" : "none";
                 go.style.display = "none";
                 document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
+                adjustBackground();
             });
         });
 
@@ -508,6 +484,7 @@ document.addEventListener("DOMContentLoaded", () => {
             startScreen.style.display = "none";
             gameScreen.style.display = "flex";
             lastHintTime = Date.now();
+            adjustBackground();
         }
         document.getElementById("guess-input").blur();
 
@@ -530,6 +507,18 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";
+        setupHints();
+    }
+
+    function loadGame(game) {
+        resetGame();
+        secretWord = game["Secret Word"].toUpperCase();
+        hints = [
+            game["Hint 1"], game["Hint 2"], game["Hint 3"],
+            game["Hint 4"], game["Hint 5"], game["Hint 6"],
+            game["Hint 7"], game["Hint 8"], game["Hint 9"]
+        ].filter(hint => hint).map(hint => hint.toUpperCase());
+        while (hints.length < 7) hints.push("");
         setupHints();
     }
 });

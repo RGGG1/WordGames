@@ -31,7 +31,7 @@ a {
   top: 1vh;
 }
 
-#hamburger-btn-start {
+#hamburger-btn-start, #menu-close-btn, #menu-dark-mode-btn, #resume-btn {
   background: none;
   border: none;
   font-size: 2vh;
@@ -39,7 +39,7 @@ a {
   color: #000000;
 }
 
-.dark-mode #hamburger-btn-start {
+.dark-mode #hamburger-btn-start, .dark-mode #menu-close-btn, .dark-mode #menu-dark-mode-btn, .dark-mode #resume-btn {
   color: #FFFFFF;
 }
 
@@ -60,21 +60,6 @@ a {
 
 .dark-mode #menu-content {
   background: #000000;
-}
-
-#menu-close-btn {
-  position: absolute;
-  top: 1vh;
-  left: 1vw;
-  background: none;
-  border: none;
-  font-size: 2vh;
-  cursor: pointer;
-  color: #000000;
-}
-
-.dark-mode #menu-close-btn {
-  color: #FFFFFF;
 }
 
 .menu-section {
@@ -106,19 +91,6 @@ a {
   align-items: center;
 }
 
-#menu-dark-mode-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 2.5vh;
-  color: #000000;
-  margin: 1vh 0;
-}
-
-.dark-mode #menu-dark-mode-btn {
-  color: #FFFFFF;
-}
-
 #menu-content a, #menu-content button {
   display: block;
   margin: 1vh 0;
@@ -146,7 +118,7 @@ a {
   left: 50%;
   transform: translateX(-50%);
   width: 85vw;
-  height: 100vh;
+  max-height: 85vh;
   background: #FFFFFF;
   display: flex;
   flex-direction: column;
@@ -213,38 +185,33 @@ a {
   color: #888;
 }
 
-#start-previous-games {
-  margin-bottom: 1vh;
-  display: inline-block;
-}
-
 #game-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-  background: #FFFFFF;
+  width: 85vw;
+  max-height: 85vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: url('shark_background_light.jpg') no-repeat center center;
+  background-size: cover;
 }
 
 .dark-mode #game-screen {
-  background: #000000;
+  background: url('shark_background_dark.jpg') no-repeat center center;
+  background-size: cover;
 }
 
 #header {
-  width: 85vw;
-  margin: 0 auto;
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  padding-bottom: 1vh;
-  z-index: 10;
+  width: 100%;
   height: 5vh;
-  background: none;
+  padding-bottom: 1vh;
+  background: transparent;
+  position: relative;
 }
 
-#game-name {
+#game-name, #meatball-name {
   font-family: 'Bangers', cursive;
   font-size: 3vh;
   letter-spacing: 0.1em;
@@ -254,7 +221,11 @@ a {
   transform: translateX(-50%);
 }
 
-#score {
+#meatball-name {
+  font-family: 'Chewy', cursive;
+}
+
+#score, #meatball-score {
   position: absolute;
   top: 0.5vh;
   right: 0;
@@ -262,18 +233,18 @@ a {
   font-weight: bold;
 }
 
-#guess-area {
-  width: 85vw;
+#guess-area, #meatball-guess-area {
+  width: 100%;
   height: 10vh;
-  margin: 6vh auto 0 auto;
+  margin: 2vh auto 0 auto;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  background: none;
+  background: transparent;
 }
 
-#guess-area:hover, #guess-input:hover {
+#guess-area:hover, #guess-input:hover, #meatball-guess-area:hover, #meatball-guess-input:hover {
   outline: none;
   border: none;
 }
@@ -284,21 +255,22 @@ a {
   top: 0;
   left: 0;
   text-align: left;
+  background: transparent;
 }
 
-#guess-background {
+#guess-background, #meatball-guess-background {
   position: absolute;
   top: 3vh;
   width: 100%;
   height: 5vh;
   z-index: 0;
-  background: none;
+  background: transparent;
 }
 
-#guess-input {
-  font-size: 4vh;
+#guess-input, #meatball-guess-input {
+  font-size: 5vh; /* Increased from 4vh */
   font-weight: bold;
-  background: none;
+  background: transparent;
   border: none;
   width: 100%;
   text-align: center;
@@ -318,16 +290,16 @@ a {
   50% { caret-color: transparent; }
 }
 
-.dark-mode #guess-input {
+.dark-mode #guess-input, .dark-mode #meatball-guess-input {
   color: #FFFFFF;
   caret-color: white;
 }
 
-#guess-input::placeholder {
+#guess-input::placeholder, #meatball-guess-input::placeholder {
   color: transparent;
 }
 
-#guess-line {
+#guess-line, #meatball-guess-line {
   width: 100%;
   height: 0.2vh;
   background: #000000;
@@ -336,16 +308,15 @@ a {
   transition: opacity 0.5s ease-out;
 }
 
-.dark-mode #guess-line {
+.dark-mode #guess-line, .dark-mode #meatball-guess-line {
   background: #FFFFFF;
 }
 
 #hints-box {
-  width: 85vw;
-  height: 60vh;
-  margin: 0 auto;
+  width: 100%;
+  height: 65vh; /* Adjusted to fill remaining space */
   padding: 1vh;
-  background: none;
+  background: transparent;
   flex-grow: 1;
 }
 
@@ -376,46 +347,30 @@ a {
   text-transform: uppercase;
 }
 
-#graphic {
-  width: 85vw;
-  height: 5vh;
-  margin: 0 auto;
-  position: relative;
-  background: url('shark_background_light_small.png') no-repeat left bottom;
-  background-size: 21.25vw 5vh;
-}
-
-.dark-mode #graphic {
-  background: url('shark_background_dark_small.png') no-repeat left bottom;
-  background-size: 21.25vw 5vh;
-}
-
 #resume-btn {
-  width: 3vh;
+  width: 5vh;
   height: 3vh;
-  border-radius: 50%;
+  border-radius: 0.5vh;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid #000000;
   cursor: pointer;
   margin: 1vh auto;
   display: block;
-  font-size: 1.2vh;
-  color: #000000;
-  line-height: 3vh;
+  font-size: 1.5vh;
 }
 
 .dark-mode #resume-btn {
   background: rgba(0, 0, 0, 0.8);
   border: 1px solid #FFFFFF;
-  color: #FFFFFF;
 }
 
 #pause-screen {
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85vw;
+  max-height: 85vh;
   background: #FFFFFF;
   color: #000000;
   display: none;
@@ -440,21 +395,23 @@ a {
 
 #game-over {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85vw;
+  max-height: 85vh;
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2vh;
-  overflow: hidden;
-  background: #FFFFFF;
+  background: url('shark_background_light.jpg') no-repeat center center;
+  background-size: cover;
 }
 
 .dark-mode #game-over {
-  background: #000000;
+  background: url('shark_background_dark.jpg') no-repeat center center;
+  background-size: cover;
 }
 
 #end-message {
@@ -462,17 +419,19 @@ a {
   margin: 1vh;
   text-align: center;
   white-space: pre-line;
+  background: transparent;
 }
 
 #share-box {
-  width: 85vw;
+  width: 100%;
   max-width: 30vh;
   margin: 1vh 0;
   text-align: center;
+  background: transparent;
 }
 
 #share-panel {
-  background: #000000;
+  background: rgba(0, 0, 0, 0.8);
   color: #FFFFFF;
   border-radius: 1vh;
   padding: 1.5vh;
@@ -480,7 +439,7 @@ a {
 }
 
 .dark-mode #share-panel {
-  background: #FFFFFF;
+  background: rgba(255, 255, 255, 0.8);
   color: #000000;
 }
 
@@ -516,6 +475,7 @@ a {
   flex-direction: column;
   align-items: center;
   margin: 1vh 0;
+  background: transparent;
 }
 
 #share-label {
@@ -529,7 +489,7 @@ a {
 }
 
 #share-buttons a {
-  font-size: 3vh;
+  font-size: 2vh;
   color: #000000;
   text-decoration: none;
 }
@@ -545,6 +505,7 @@ a {
   flex-direction: column;
   align-items: center;
   gap: 0.5vh;
+  background: transparent;
 }
 
 #home-btn {
@@ -563,7 +524,7 @@ a {
 }
 
 #ad-box {
-  width: 85vw;
+  width: 100%;
   height: 10vh;
   border: 0.1vh solid #000;
   border-radius: 1vh;
@@ -572,6 +533,7 @@ a {
   justify-content: center;
   align-items: center;
   margin: 1vh 0;
+  background: transparent;
 }
 
 .dark-mode #ad-box {
@@ -585,10 +547,11 @@ a {
 
 .screen {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85vw;
+  max-height: 85vh;
   background: #FFFFFF;
   display: none;
   flex-direction: column;
@@ -603,123 +566,52 @@ a {
 #meatball-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-  background: #FFFFFF;
+  width: 85vw;
+  max-height: 85vh;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: url('shark_background_light.jpg') no-repeat center center;
+  background-size: cover;
 }
 
 .dark-mode #meatball-screen {
-  background: #000000;
-}
-
-#meatball-name {
-  font-family: 'Chewy', cursive;
-  font-size: 3vh;
-  letter-spacing: 0.1em;
-  margin: 0.5vh 0;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-#meatball-score {
-  position: absolute;
-  top: 0.5vh;
-  right: 0;
-  font-size: 2vh;
-  font-weight: bold;
+  background: url('shark_background_dark.jpg') no-repeat center center;
+  background-size: cover;
 }
 
 #meatball-relating {
-  width: 85vw;
+  width: 100%;
   margin: 6vh auto 0 auto;
-  font-size: 2vh;
+  font-size: 3vh; /* Increased from 2vh */
   text-align: center;
   text-transform: uppercase;
+  background: transparent;
 }
 
-#meatball-guess-area {
-  width: 85vw;
-  height: 10vh;
-  margin: 2vh auto 0 auto;
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  background: none;
-}
-
-#meatball-guess-area:hover, #meatball-guess-input:hover {
-  outline: none;
-  border: none;
-}
-
-#meatball-guess-background {
-  position: absolute;
-  top: 3vh;
-  width: 100%;
-  height: 5vh;
-  z-index: 0;
-  background: none;
-}
-
-#meatball-guess-input {
-  font-size: 4vh;
-  font-weight: bold;
-  background: none;
-  border: none;
-  width: 100%;
-  text-align: center;
-  padding: 0;
-  margin: 0;
-  position: absolute;
-  top: 3vh;
-  color: #000000;
-  outline: none;
-  caret-color: black;
-  text-transform: uppercase;
-  z-index: 1;
-  animation: blink 1s step-end infinite;
-}
-
-.dark-mode #meatball-guess-input {
-  color: #FFFFFF;
-  caret-color: white;
-}
-
-#meatball-guess-input::placeholder {
-  color: transparent;
-}
-
-#meatball-guess-line {
-  width: 100%;
+#meatball-separator {
+  width: 50%;
   height: 0.2vh;
   background: #000000;
-  position: absolute;
-  top: 8vh;
-  transition: opacity 0.5s ease-out;
+  margin: 1vh auto;
 }
 
-.dark-mode #meatball-guess-line {
+.dark-mode #meatball-separator {
   background: #FFFFFF;
 }
 
 #meatball-instruction {
-  width: 85vw;
+  width: 100%;
   margin: 1vh auto 0 auto;
-  font-size: 2vh;
+  font-size: 1.5vh; /* Small to avoid scrolling */
   text-align: center;
+  background: transparent;
 }
 
-#language-content, #previous-games-content, #create-game-content, #advertise-content {
-  width: 85vw;
+#language-content, #create-game-content, #advertise-content {
+  width: 100%;
   margin: 0 auto;
-}
-
-.game-list a {
-  display: block;
-  margin: 1vh 0;
 }
 
 .language-list {
@@ -767,13 +659,6 @@ a {
   100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
 }
 
-.correct-guess, #meatball-guess-input.correct-guess {
-  font-size: 6vh;
-  animation: animate__pulse 1s ease-out forwards;
-  position: absolute;
-  width: 100%;
-}
-
 .flash-green {
   animation: flashDeepGreen 1s forwards;
 }
@@ -784,13 +669,9 @@ a {
   100% { background: transparent; }
 }
 
-#advertise-screen {
-  z-index: 30;
-}
-
 @media (max-height: 600px) {
   #hints-box {
-    height: 50vh; /* Adjusted for smaller screens */
+    height: 55vh;
   }
   .hint-line span {
     font-size: 2vh;
