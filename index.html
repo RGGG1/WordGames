@@ -9,7 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Chewy&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
-    <div id="start-screen">
+    <div id="game-screen">
         <div id="hamburger-menu-start">
             <button id="hamburger-btn-start">Menu</button>
             <div id="menu-content" style="display: none;">
@@ -40,23 +40,8 @@
                 </div>
             </div>
         </div>
-        <div id="start-content">
-            <div id="start-title" class="animate__animated animate__pulse animate__infinite">Hungry Shark</div>
-            <div id="start-subtitle">How to Play</div>
-            <div id="start-instructions">
-                Guess the secret word before the hungry shark eats you
-            </div>
-            <div id="start-separator">~~^~~</div>
-            <button id="play-now-btn" class="animate__animated animate__pulse animate__infinite">Play Now</button>
-            <div id="start-footer">
-                <label><input type="checkbox" id="skip-welcome"> Don't show welcome screen again</label>
-            </div>
-        </div>
-    </div>
-
-    <div id="game-screen" style="display: none;">
         <div id="header">
-            <div id="game-name">Hungry Shark</div>
+            <div id="game-name" class="animate__animated animate__pulse animate__infinite">Hungry Shark</div>
             <div id="score">Score: 100</div>
         </div>
         <div id="guess-area">
@@ -70,6 +55,9 @@
             <div id="hints-subtitle">New hint in 10 seconds</div>
             <div id="hints">
                 <div class="hint-line" id="hint-row-1"><span></span></div>
+                <div class="hint-line spacer"></div>
+                <div class="hint-line spacer"></div>
+                <div class="hint-line" id="how-to-play">How to Play <b>Guess the secret word before the shark eats you.</b></div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>
                 <div class="hint-line" id="hint-row-3"><span></span></div>
                 <div class="hint-line" id="hint-row-4"><span></span></div>
@@ -78,7 +66,6 @@
                 <div class="hint-line" id="hint-row-7"><span></span></div>
             </div>
         </div>
-        <div id="graphic"></div>
     </div>
 
     <div id="pause-screen" style="display: none;">
@@ -101,9 +88,9 @@
         <div id="share-section">
             <div id="share-label">Share with your friends</div>
             <div id="share-buttons">
-                <a id="share-whatsapp" href="#" target="_blank">WhatsApp</a>
-                <a id="share-telegram" href="#" target="_blank">Telegram</a>
-                <a id="share-twitter" href="#" target="_blank">Twitter</a>
+                <a id="share-whatsapp" href="#" target="_blank"><img src="whatsapp_logo.png" alt="WhatsApp" class="social-logo"></a>
+                <a id="share-telegram" href="#" target="_blank"><img src="telegram_logo.png" alt="Telegram" class="social-logo"></a>
+                <a id="share-twitter" href="#" target="_blank"><img src="x_logo.png" alt="X" class="social-logo"></a>
             </div>
         </div>
         <div id="end-footer">

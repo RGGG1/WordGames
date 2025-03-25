@@ -112,91 +112,18 @@ a {
   background: #FFFFFF;
 }
 
-#start-screen {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 85vw;
-  height: 100vh;
-  background: #FFFFFF;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 2vh;
-}
-
-.dark-mode #start-screen {
-  background: #000000;
-}
-
-#start-content {
-  width: 85vw;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#start-title {
-  font-family: 'Bangers', cursive;
-  font-size: 6vh;
-  font-weight: bold;
-  margin-bottom: 2vh;
-}
-
-#start-subtitle {
-  font-size: 3vh;
-  margin-bottom: 2vh;
-}
-
-#start-instructions {
-  font-size: 2vh;
-  line-height: 1.5;
-  margin-bottom: 2vh;
-}
-
-#start-separator {
-  font-size: 2.5vh;
-  margin-bottom: 2vh;
-}
-
-#play-now-btn {
-  padding: 1vh 2vw;
-  font-size: 2.5vh;
-  font-weight: bold;
-  background: #000000;
-  color: #FFFFFF;
-  border: none;
-  border-radius: 1.5vh;
-  cursor: pointer;
-  margin-bottom: 2vh;
-}
-
-.dark-mode #play-now-btn {
-  background: #FFFFFF;
-  color: #000000;
-}
-
-#start-footer {
-  width: 85vw;
-  font-size: 1.8vh;
-  color: #888;
-}
-
 #game-screen {
   display: flex;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
   position: relative;
-  background: url('shark_background_light.jpg') no-repeat center center;
+  background: url('shark_background_light.png') no-repeat center center;
   background-size: cover;
 }
 
 .dark-mode #game-screen {
-  background: url('shark_background_dark.jpg') no-repeat center center;
+  background: url('shark_background_dark.png') no-repeat center center;
   background-size: cover;
 }
 
@@ -341,7 +268,7 @@ a {
   height: 0.2vh;
   background: #000000;
   position: absolute;
-  top: 8vh;
+  top: 8.5vh; /* Adjusted for 0.5vh space */
   transition: opacity 0.5s ease-out;
 }
 
@@ -383,14 +310,19 @@ a {
   margin: 0.3vh 0;
 }
 
+.hint-line.spacer {
+  height: 2.5vh; /* Two lines of space */
+}
+
+#how-to-play {
+  font-size: 1.5vh;
+}
+
 .hint-line span {
   font-size: 2.5vh;
   font-weight: bold;
   text-transform: uppercase;
-}
-
-#graphic {
-  display: none;
+  animation: none !important;
 }
 
 #resume-btn {
@@ -440,9 +372,10 @@ a {
 
 #game-over {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 85vw;
   height: 100vh;
   display: none;
   flex-direction: column;
@@ -450,12 +383,12 @@ a {
   align-items: center;
   padding: 2vh;
   overflow: hidden;
-  background: url('shark_background_light.jpg') no-repeat center center;
+  background: url('shark_background_light.png') no-repeat center center;
   background-size: cover;
 }
 
 .dark-mode #game-over {
-  background: url('shark_background_dark.jpg') no-repeat center center;
+  background: url('shark_background_dark.png') no-repeat center center;
   background-size: cover;
 }
 
@@ -530,14 +463,9 @@ a {
   gap: 1.5vh;
 }
 
-#share-buttons a {
-  font-size: 2vh;
-  color: #000000;
-  text-decoration: none;
-}
-
-.dark-mode #share-buttons a {
-  color: #FFFFFF;
+.social-logo {
+  width: 3vh;
+  height: 3vh;
 }
 
 #end-footer {
@@ -608,12 +536,12 @@ a {
   height: 100vh;
   overflow: hidden;
   position: relative;
-  background: url('shark_background_light.jpg') no-repeat center center;
+  background: url('shark_background_light.png') no-repeat center center;
   background-size: cover;
 }
 
 .dark-mode #meatball-screen {
-  background: url('shark_background_dark.jpg') no-repeat center center;
+  background: url('shark_background_dark.png') no-repeat center center;
   background-size: cover;
 }
 
@@ -691,24 +619,24 @@ a {
   100% { background: transparent; }
 }
 
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.hint-line span {
+  font-size: 2.5vh;
+  font-weight: bold;
+  text-transform: uppercase;
+  animation: none !important;
+}
+
 @media (max-height: 600px) {
   #hints-box {
     height: 50vh;
   }
-  .hint-line span {
-    font-size: 2vh;
+  .hint-line span, #how-to-play {
+    font-size: 1.2vh;
   }
-
-  @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
-  }
-  
-  .hint-line span {
-    font-size: 2.5vh;
-    font-weight: bold;
-    text-transform: uppercase;
-    animation: none !important; /* Reset any conflicting animations */
-  } 
 }

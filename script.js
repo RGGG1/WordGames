@@ -48,6 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
             while (hints.length < 7) hints.push("");
             setupHints();
+            document.getElementById("game-screen").style.display = "flex";
+            document.getElementById("guess-input").focus();
+            lastHintTime = Date.now();
+            adjustBackground();
         } catch (error) {
             console.error("Failed to fetch game data:", error);
             secretWord = "ERROR";
@@ -171,19 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     fetchGameData().then(() => {
-        const startScreen = document.getElementById("start-screen");
         const gameScreen = document.getElementById("game-screen");
         const go = document.getElementById("game-over");
-        const playNowBtn = document.getElementById("play-now-btn");
         const pauseScreen = document.getElementById("pause-screen");
-
-        playNowBtn.addEventListener("click", () => {
-            startScreen.style.display = "none";
-            gameScreen.style.display = "flex";
-            document.getElementById("guess-input").focus();
-            lastHintTime = Date.now();
-            adjustBackground();
-        });
 
         const menuModeButton = document.getElementById("menu-dark-mode-btn");
 
@@ -255,6 +249,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 decayStarted = true;
                 decayStartTime = Date.now();
                 lastHintTime = Date.now();
+                document.getElementById("how-to-play").style.display = "none";
             }
 
             guessDisplay.value = guess.toUpperCase();
@@ -372,10 +367,10 @@ document.addEventListener("DOMContentLoaded", () => {
         homeLink.addEventListener("click", (e) => {
             e.preventDefault();
             resetGame();
-            startScreen.style.display = "flex";
-            gameScreen.style.display = "none";
+            gameScreen.style.display = "flex";
             go.style.display = "none";
             collapseMenu();
+            adjustBackground();
         });
 
         languageLink.addEventListener("click", (e) => {
@@ -397,8 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }, allGames[0]);
             currentGameNumber = allGames.length;
             loadGame(latestEntry);
-            startScreen.style.display = "flex";
-            gameScreen.style.display = "none";
+            gameScreen.style.display = "flex";
             go.style.display = "none";
             collapseMenu();
         });
@@ -467,27 +461,13 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".home-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 resetGame();
-                const skipWelcome = localStorage.getItem("skipWelcome") === "true";
-                startScreen.style.display = skipWelcome ? "none" : "flex";
-                gameScreen.style.display = skipWelcome ? "flex" : "none";
+                gameScreen.style.display = "flex";
                 go.style.display = "none";
                 document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
                 adjustBackground();
+                document.getElementById("guess-input").focus();
             });
         });
-
-        const skipWelcome = document.getElementById("skip-welcome");
-        skipWelcome.addEventListener("change", () => {
-            localStorage.setItem("skipWelcome", skipWelcome.checked);
-        });
-
-        if (localStorage.getItem("skipWelcome") === "true") {
-            startScreen.style.display = "none";
-            gameScreen.style.display = "flex";
-            lastHintTime = Date.now();
-            adjustBackground();
-        }
-        document.getElementById("guess-input").blur();
 
         setupMeatballGame();
     });
@@ -508,6 +488,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";
+        document.getElementById("how-to-play").style.display = "block";
         setupHints();
     }
 
