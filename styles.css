@@ -599,6 +599,117 @@ a {
   background: #000000;
 }
 
+#meatball-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: #FFFFFF;
+}
+
+.dark-mode #meatball-screen {
+  background: #000000;
+}
+
+#meatball-name {
+  font-family: 'Chewy', cursive;
+  font-size: 3vh;
+  letter-spacing: 0.1em;
+  margin: 0.5vh 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+#meatball-score {
+  position: absolute;
+  top: 0.5vh;
+  right: 0;
+  font-size: 2vh;
+  font-weight: bold;
+}
+
+#meatball-relating {
+  width: 85vw;
+  margin: 6vh auto 0 auto;
+  font-size: 2vh;
+  text-align: center;
+}
+
+#meatball-guess-area {
+  width: 85vw;
+  height: 10vh;
+  margin: 1vh auto 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: none;
+}
+
+#meatball-guess-area:hover, #meatball-guess-input:hover {
+  outline: none;
+  border: none;
+}
+
+#meatball-guess-background {
+  position: absolute;
+  top: 3vh;
+  width: 100%;
+  height: 5vh;
+  z-index: 0;
+  background: none;
+}
+
+#meatball-guess-input {
+  font-size: 4vh;
+  font-weight: bold;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  position: absolute;
+  top: 3vh;
+  color: #000000;
+  outline: none;
+  caret-color: black;
+  text-transform: uppercase;
+  z-index: 1;
+  animation: blink 1s step-end infinite;
+}
+
+.dark-mode #meatball-guess-input {
+  color: #FFFFFF;
+  caret-color: white;
+}
+
+#meatball-guess-input::placeholder {
+  color: transparent;
+}
+
+#meatball-guess-line {
+  width: 100%;
+  height: 0.2vh;
+  background: #000000;
+  position: absolute;
+  top: 8vh;
+  transition: opacity 0.5s ease-out;
+}
+
+.dark-mode #meatball-guess-line {
+  background: #FFFFFF;
+}
+
+#meatball-instruction {
+  width: 85vw;
+  margin: 1vh auto;
+  font-size: 2vh;
+  text-align: center;
+}
+
 #language-content, #previous-games-content, #create-game-content, #advertise-content {
   width: 85vw;
   margin: 0 auto;
@@ -645,7 +756,7 @@ a {
   color: #FFFFFF;
 }
 
-#guess-input.wrong-guess {
+#guess-input.wrong-guess, #meatball-guess-input.wrong-guess {
   animation: wrongGuess 0.5s ease-out forwards;
 }
 
@@ -654,7 +765,7 @@ a {
   100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
 }
 
-.correct-guess {
+.correct-guess, #meatball-guess-input.correct-guess {
   font-size: 6vh;
   animation: animate__pulse 1s ease-out forwards;
   position: absolute;

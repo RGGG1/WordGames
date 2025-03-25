@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Chewy&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
     <div id="start-screen">
@@ -151,7 +151,19 @@
             <button class="home-btn">Home</button>
         </div>
     </div>
-    <div id="meatball-screen" class="screen" style="display: none;"></div>
+    <div id="meatball-screen" class="screen" style="display: none;">
+        <div id="header">
+            <div id="meatball-name">Meatball</div>
+            <div id="meatball-score">Score: 0</div>
+        </div>
+        <div id="meatball-relating">relating</div>
+        <div id="meatball-guess-area">
+            <div id="meatball-guess-background"></div>
+            <input id="meatball-guess-input" type="text" autofocus placeholder="">
+            <div id="meatball-guess-line"></div>
+        </div>
+        <div id="meatball-instruction">rearrange the letters of this word to form another word</div>
+    </div>
     <div id="snakebite-screen" class="screen" style="display: none;"></div>
     <div id="advertise-screen" class="screen" style="display: none;">
         <div id="advertise-content">

@@ -15,7 +15,11 @@ document.addEventListener("DOMContentLoaded", () => {
     let lastHintTime = null;
     let revealedHints = new Set();
 
-    console.log("Hungry Shark Version: Pulse Hints, No Pause, Graphic Shark, No Game Menu");
+    let meatballScore = 0;
+    let meatballGameOver = false;
+    const meatballSecretWord = "TRIANGLE";
+
+    console.log("Hungry Shark & Meatball Version");
 
     async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
@@ -103,6 +107,84 @@ document.addEventListener("DOMContentLoaded", () => {
         ].filter(hint => hint).map(hint => hint.toUpperCase());
         while (hints.length < 7) hints.push("");
         setupHints();
+    }
+
+    function setupMeatballGame() {
+        const meatballScreen = document.getElementById("meatball-screen");
+        const meatballInput = document.getElementById("meatball-guess-input");
+        const meatballGuessBackground = document.getElementById("meatball-guess-background");
+        const meatballGuessLine = document.getElementById("meatball-guess-line");
+
+        meatballInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !meatballGameOver) {
+                handleMeatballGuess(meatballInput.value);
+            }
+        });
+
+        function handleMeatballGuess(guess) {
+            const guessDisplay = meatballInput;
+            guessDisplay.value = guess.toUpperCase();
+            guessDisplay.classList.remove("wrong-guess", "correct-guess");
+            guessDisplay.style.opacity = "1";
+            void guessDisplay.offsetWidth;
+
+            if (guess.toUpperCase() === meatballSecretWord) {
+                guessDisplay.classList.add("correct-guess");
+                meatballGuessBackground.classList.add("flash-green");
+                meatballGuessLine.style.opacity = "0";
+                setTimeout(() => {
+                    guessDisplay.classList.remove("correct-guess");
+                    meatballGuessBackground.classList.remove("flash-green");
+                    endMeatballGame(true);
+                }, 1500);
+            } else {
+                meatballScore++;
+                document.getElementById("meatball-score").textContent = `Score: ${meatballScore}`;
+                guessDisplay.classList.add("wrong-guess");
+                setTimeout(() => {
+                    guessDisplay.classList.remove("wrong-guess");
+                    guessDisplay.style.opacity = "1";
+                    guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
+                    guessDisplay.value = "";
+                    if (!meatballGameOver) guessDisplay.focus();
+                }, 500);
+            }
+        }
+
+        function endMeatballGame(won) {
+            meatballGameOver = true;
+            const endMessage = document.getElementById("end-message");
+            const shareText = document.getElementById("share-text");
+            const shareGameNumber = document.getElementById("share-game-number");
+            const shareScore = document.getElementById("share-score");
+            const shareLink = document.getElementById("share-link");
+            const shareWhatsApp = document.getElementById("share-whatsapp");
+            const shareTelegram = document.getElementById("share-telegram");
+            const shareTwitter = document.getElementById("share-twitter");
+
+            meatballScreen.style.display = "none";
+            document.getElementById("game-over").style.display = "flex";
+            meatballInput.blur();
+
+            const totalGuesses = meatballScore + 1;
+            endMessage.textContent = `You got today's meatball in ${totalGuesses} guesses`;
+            shareText.textContent = `I got today's meatball in ${totalGuesses} guesses`;
+            shareGameNumber.textContent = "Game #1";
+            shareScore.textContent = `${meatballScore}`;
+            shareLink.href = "https://your-game-url.com/meatball";
+            shareLink.textContent = "Can you beat my score? Click here";
+
+            const shareMessage = `${shareText.textContent}\nGame #1\nScore: ${meatballScore}\nCan you beat my score? Click here: https://your-game-url.com/meatball`;
+            shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+            shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com/meatball")}&text=${encodeURIComponent(shareMessage)}`;
+            shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
+        }
+
+        document.addEventListener("click", () => {
+            if (!meatballGameOver && meatballScreen.style.display === "flex") {
+                meatbollInput.focus();
+            }
+        });
     }
 
     fetchGameData().then(() => {
@@ -355,6 +437,11 @@ document.addEventListener("DOMContentLoaded", () => {
         meatballLink.addEventListener("click", (e) => {
             e.preventDefault();
             document.getElementById("meatball-screen").style.display = "flex";
+            meatballScore = 0;
+            meatballGameOver = false;
+            document.getElementById("meatball-score").textContent = "Score: 0";
+            document.getElementById("meatball-guess-input").value = "";
+            document.getElementById("meatball-guess-line").style.opacity = "1";
             collapseMenu();
         });
 
@@ -383,6 +470,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("end-meatball").addEventListener("click", (e) => {
             e.preventDefault();
             document.getElementById("meatball-screen").style.display = "flex";
+            meatballScore = 0;
+            meatballGameOver = false;
+            document.getElementById("meatball-score").textContent = "Score: 0";
+            document.getElementById("meatball-guess-input").value = "";
+            document.getElementById("meatball-guess-line").style.opacity = "1";
         });
 
         document.getElementById("end-snakebite").addEventListener("click", (e) => {
@@ -418,23 +510,25 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         document.getElementById("guess-input").blur();
 
-        function resetGame() {
-            score = 100;
-            decayStarted = false;
-            gameOver = false;
-            decayStartTime = null;
-            hintIndex = 0;
-            lastHintScore = 100;
-            firstGuessMade = false;
-            pausedTime = null;
-            hintTimer = 10;
-            lastHintTime = null;
-            revealedHints.clear();
-            document.getElementById("score").textContent = `Score: ${score}`;
-            document.getElementById("guess-input").value = "";
-            document.getElementById("guess-line").style.opacity = "1";
-            document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";
-            setupHints();
-        }
+        setupMeatballGame();
     });
+
+    function resetGame() {
+        score = 100;
+        decayStarted = false;
+        gameOver = false;
+        decayStartTime = null;
+        hintIndex = 0;
+        lastHintScore = 100;
+        firstGuessMade = false;
+        pausedTime = null;
+        hintTimer = 10;
+        lastHintTime = null;
+        revealedHints.clear();
+        document.getElementById("score").textContent = `Score: ${score}`;
+        document.getElementById("guess-input").value = "";
+        document.getElementById("guess-line").style.opacity = "1";
+        document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";
+        setupHints();
+    }
 });
