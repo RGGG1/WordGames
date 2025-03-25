@@ -42,7 +42,7 @@ a {
 
 #header {
   width: 85vw;
-  margin: 1vh auto 0 auto; /* Added 1vh top padding */
+  margin: 1vh auto 0 auto; /* Consistent 1vh top padding */
   position: fixed;
   top: 0;
   left: 50%;
@@ -52,17 +52,14 @@ a {
   height: 5vh;
   background: none;
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: space-between; /* Distribute horizontally */
+  align-items: center; /* Center vertically */
 }
 
 #mode-toggle {
-  position: absolute;
-  left: 0;
-  top: 0.5vh;
+  font-size: 2vh;
   background: none;
   border: none;
-  font-size: 2vh;
   cursor: pointer;
   color: #000000;
 }
@@ -72,20 +69,27 @@ a {
 }
 
 #game-name, #meatball-name {
-  font-family: 'Bubblegum Sans', cursive;
+  font-family: 'Fredoka One', cursive; /* Bubbly, playful font */
   font-size: 3vh;
   letter-spacing: 0.1em;
-  margin: 0.5vh 0;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
   text-transform: uppercase;
+  color: #FFD700; /* Bright yellow for pineapple */
+  -webkit-text-stroke: 0.1vh #FF4500; /* Orange outline */
+  text-stroke: 0.1vh #FF4500;
+}
+
+#meatball-name {
+  color: #FFFFFF; /* Reset for Meatball */
+  -webkit-text-stroke: 0.1vh #000000;
+  text-stroke: 0.1vh #000000;
+}
+
+.dark-mode #meatball-name {
+  -webkit-text-stroke: 0.1vh #FFFFFF;
+  text-stroke: 0.1vh #FFFFFF;
 }
 
 #score, #meatball-score {
-  position: absolute;
-  top: 0.5vh;
-  right: 0;
   font-size: 2vh;
   font-weight: bold;
 }
@@ -538,6 +542,66 @@ a {
   0% { transform: scale(1); }
   50% { transform: scale(1.1); }
   100% { transform: scale(1); }
+}
+
+#game-select-screen {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+  background: url('pineapple_background_light.png') no-repeat center center;
+  background-size: 100vw 100vh;
+}
+
+.dark-mode #game-select-screen {
+  background: url('pineapple_background_dark.png') no-repeat center center;
+  background-size: 100vw 100vh;
+}
+
+#game-select-content {
+  width: 85vw;
+  margin: 0 auto;
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+#game-list-title {
+  font-size: 3vh;
+  font-weight: bold;
+  margin: 2vh 0;
+}
+
+#game-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.game-item {
+  font-size: 2vh;
+  margin: 1vh 0;
+  padding: 1vh 2vw;
+  background: rgba(255, 255, 255, 0.8);
+  border: 0.1vh solid #000000;
+  border-radius: 0.5vh;
+  cursor: pointer;
+  text-align: center;
+  width: 70%;
+}
+
+.dark-mode .game-item {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: #FFFFFF;
+  color: #FFFFFF;
+}
+
+.game-item:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+.dark-mode .game-item:hover {
+  background: rgba(0, 0, 0, 1);
 }
 
 @media (max-height: 600px) {

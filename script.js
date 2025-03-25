@@ -29,35 +29,37 @@ document.addEventListener("DOMContentLoaded", () => {
             const text = await response.text();
             const rows = text.split("\n").map(row => row.split(","));
             const headers = rows[0];
-            allGames = rows.slice(1).map(row => {
-                let obj = {};
+            allGames = rows.slice(1).map((row, index) => {
+                let obj = { gameNumber: index + 1 };
                 headers.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
                 return obj;
             });
 
-            const latestEntry = allGames.reduce((latest, current) => {
-                return new Date(current.Date) > new Date(latest.Date) ? current : latest;
-            }, allGames[0]);
-            currentGameNumber = allGames.length;
-            secretWord = latestEntry["Secret Word"].toUpperCase();
-            hints = [
-                latestEntry["Hint 1"], latestEntry["Hint 2"], latestEntry["Hint 3"],
-                latestEntry["Hint 4"], latestEntry["Hint 5"], latestEntry["Hint 6"],
-                latestEntry["Hint 7"], latestEntry["Hint 8"], latestEntry["Hint 9"]
-            ].filter(hint => hint).map(hint => hint.toUpperCase());
-
-            while (hints.length < 7) hints.push("");
-            setupHints();
-            document.getElementById("game-screen").style.display = "flex";
-            document.getElementById("guess-input").focus();
-            lastHintTime = Date.now();
+            displayGameList();
+            document.getElementById("game-select-screen").style.display = "flex";
             adjustBackground();
         } catch (error) {
             console.error("Failed to fetch game data:", error);
-            secretWord = "ERROR";
-            hints = ["UNABLE", "TO", "LOAD", "HINTS", "FROM", "SHEET", "CHECK"];
-            setupHints();
+            allGames = [{ gameNumber: 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
+            displayGameList();
         }
+    }
+
+    function displayGameList() {
+        const gameList = document.getElementById("game-list");
+        gameList.innerHTML = "";
+        allGames.forEach(game => {
+            const gameItem = document.createElement("div");
+            gameItem.className = "game-item";
+            gameItem.textContent = `Game #${game.gameNumber} - ${game.Date}`;
+            gameItem.addEventListener("click", () => {
+                loadGame(game);
+                document.getElementById("game-select-screen").style.display = "none";
+                document.getElementById("game-screen").style.display = "flex";
+                document.getElementById("guess-input").focus();
+            });
+            gameList.appendChild(gameItem);
+        });
     }
 
     function setupHints() {
@@ -78,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustBackground() {
-        const screens = [document.getElementById("game-screen"), document.getElementById("meatball-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("create-game-screen")];
+        const screens = [document.getElementById("game-screen"), document.getElementById("meatball-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("create-game-screen"), document.getElementById("game-select-screen")];
         const viewportHeight = window.innerHeight;
         screens.forEach(screen => {
             if (screen.style.display !== "none") {
@@ -183,6 +185,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const gameScreen = document.getElementById("game-screen");
         const go = document.getElementById("game-over");
         const pauseScreen = document.getElementById("pause-screen");
+        const gameSelectScreen = document.getElementById("game-select-screen");
 
         document.querySelectorAll("#mode-toggle").forEach(button => {
             button.addEventListener("click", () => {
@@ -396,11 +399,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".home-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 resetGame();
-                gameScreen.style.display = "flex";
+                gameScreen.style.display = "none";
                 go.style.display = "none";
                 document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
+                gameSelectScreen.style.display = "flex";
                 adjustBackground();
-                document.getElementById("guess-input").focus();
             });
         });
 
@@ -433,6 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function loadGame(game) {
         resetGame();
+        currentGameNumber = game.gameNumber;
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"], game["Hint 2"], game["Hint 3"],

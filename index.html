@@ -6,7 +6,7 @@
     <title>Pineapple</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Fredoka+One&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
     <div id="game-screen">
@@ -29,7 +29,7 @@
                 <div class="hint-line spacer"></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-                <div class="hint-line" id="how-to-play-2">Guess the secret word before the shark eats you.</div>
+                <div class="hint-line" id="how-to-play-2">Guess today's secret word before your score drops to zero.</div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>
                 <div class="hint-line" id="hint-row-3"><span></span></div>
                 <div class="hint-line" id="hint-row-4"><span></span></div>
@@ -115,6 +115,18 @@
             <div id="meatball-guess-line"></div>
         </div>
         <div id="meatball-instruction">The Daily Meatball<br>Rearrange the letters of this word to form another word.<br>There may be multiple possibilities, but there is only one true meatball.</div>
+    </div>
+
+    <div id="game-select-screen" class="screen">
+        <div id="header">
+            <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
+            <div id="game-name">PINEAPPLE</div>
+            <div id="score">Score: 100</div>
+        </div>
+        <div id="game-select-content">
+            <div id="game-list-title">Select a Game</div>
+            <div id="game-list"></div>
+        </div>
     </div>
 
     <script src="script.js"></script>
