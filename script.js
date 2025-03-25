@@ -74,12 +74,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustBackground() {
-        const screens = [document.getElementById("game-screen"), document.getElementById("game-over"), document.getElementById("meatball-screen")];
+        const screens = [document.getElementById("game-screen"), document.getElementById("meatball-screen"), document.getElementById("game-over")];
         const viewportHeight = window.innerHeight;
         screens.forEach(screen => {
             if (screen.style.display !== "none") {
                 const contentHeight = screen.offsetHeight;
-                if (viewportHeight < contentHeight + 100) { // Keyboard likely visible
+                if (viewportHeight < contentHeight + 100) {
                     screen.style.backgroundPosition = "center bottom";
                 } else {
                     screen.style.backgroundPosition = "center center";
@@ -94,7 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const meatballScreen = document.getElementById("meatball-screen");
         const meatballInput = document.getElementById("meatball-guess-input");
         const meatballGuessBackground = document.getElementById("meatball-guess-background");
-        const meatballGuessLine = document.getElementById("meatball-guess-line");
 
         meatballInput.addEventListener("keydown", (e) => {
             if (e.key === "Enter" && !meatballGameOver) {
@@ -105,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function handleMeatballGuess(guess) {
             const guessDisplay = meatballInput;
             guessDisplay.value = guess.toUpperCase();
-            guessDisplay.classList.remove("wrong-guess");
+            guessDisplay.classList.remove("wrong-guess", "correct-guess");
             guessDisplay.style.opacity = "1";
             void guessDisplay.offsetWidth;
 
@@ -116,7 +115,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (guess.toUpperCase() === meatballSecretWord) {
                 meatballGuessBackground.classList.add("flash-green");
-                meatballGuessLine.style.opacity = "0";
                 setTimeout(() => {
                     meatballGuessBackground.classList.remove("flash-green");
                     endMeatballGame(true);
@@ -162,6 +160,7 @@ document.addEventListener("DOMContentLoaded", () => {
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com/meatball")}&text=${encodeURIComponent(shareMessage)}`;
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
+            adjustBackground();
         }
 
         document.addEventListener("click", () => {
@@ -229,11 +228,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (index < allHints.length && allHints[index].textContent && !revealedHints.has(index)) {
                 allHints[index].style.visibility = "visible";
                 allHints[index].classList.add("animate__animated", "animate__pulse");
-                allHints[index].style.animation = "pulse 2s"; // Fallback
                 revealedHints.add(index);
                 setTimeout(() => {
                     allHints[index].classList.remove("animate__animated", "animate__pulse");
-                    allHints[index].style.animation = "";
                 }, 2000);
             }
         }
@@ -258,14 +255,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             guessDisplay.value = guess.toUpperCase();
-            guessDisplay.classList.remove("wrong-guess");
+            guessDisplay.classList.remove("wrong-guess", "correct-guess");
             guessDisplay.style.opacity = "1";
             void guessDisplay.offsetWidth;
 
             if (guess.toUpperCase() === secretWord) {
+                guessDisplay.classList.add("correct-guess");
                 guessBackground.classList.add("flash-green");
                 guessLine.style.opacity = "0";
                 setTimeout(() => {
+                    guessDisplay.classList.remove("correct-guess");
                     guessBackground.classList.remove("flash-green");
                     endGame(true);
                 }, 1500);
@@ -415,7 +414,6 @@ document.addEventListener("DOMContentLoaded", () => {
             meatballFirstGuess = false;
             document.getElementById("meatball-score").textContent = "Score: 0";
             document.getElementById("meatball-guess-input").value = "";
-            document.getElementById("meatball-guess-line").style.opacity = "1";
             document.getElementById("meatball-instruction").style.display = "block";
             collapseMenu();
             adjustBackground();
@@ -438,6 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
             resetGame();
             gameScreen.style.display = "flex";
             go.style.display = "none";
+            adjustBackground();
         });
 
         document.getElementById("end-meatball").addEventListener("click", (e) => {
@@ -448,7 +447,6 @@ document.addEventListener("DOMContentLoaded", () => {
             meatballFirstGuess = false;
             document.getElementById("meatball-score").textContent = "Score: 0";
             document.getElementById("meatball-guess-input").value = "";
-            document.getElementById("meatball-guess-line").style.opacity = "1";
             document.getElementById("meatball-instruction").style.display = "block";
             adjustBackground();
         });

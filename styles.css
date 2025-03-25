@@ -118,7 +118,7 @@ a {
   left: 50%;
   transform: translateX(-50%);
   width: 85vw;
-  max-height: 85vh;
+  height: 100vh;
   background: #FFFFFF;
   display: flex;
   flex-direction: column;
@@ -188,12 +188,9 @@ a {
 #game-screen {
   display: flex;
   flex-direction: column;
-  width: 85vw;
-  max-height: 85vh;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
   background: url('shark_background_light.jpg') no-repeat center center;
   background-size: cover;
 }
@@ -204,14 +201,19 @@ a {
 }
 
 #header {
-  width: 100%;
-  height: 5vh;
+  width: 85vw;
+  margin: 0 auto;
+  position: fixed;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
   padding-bottom: 1vh;
-  background: transparent;
-  position: relative;
+  z-index: 10;
+  height: 5vh;
+  background: none;
 }
 
-#game-name, #meatball-name {
+#game-name {
   font-family: 'Bangers', cursive;
   font-size: 3vh;
   letter-spacing: 0.1em;
@@ -223,6 +225,12 @@ a {
 
 #meatball-name {
   font-family: 'Chewy', cursive;
+  font-size: 3vh;
+  letter-spacing: 0.1em;
+  margin: 0.5vh 0;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #score, #meatball-score {
@@ -233,15 +241,26 @@ a {
   font-weight: bold;
 }
 
-#guess-area, #meatball-guess-area {
-  width: 100%;
+#guess-area {
+  width: 85vw;
   height: 10vh;
-  margin: 2vh auto 0 auto;
+  margin: 6vh auto 0 auto;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  background: transparent;
+  background: none;
+}
+
+#meatball-guess-area {
+  width: 85vw;
+  height: 10vh;
+  margin: 1vh auto 0 auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  background: none;
 }
 
 #guess-area:hover, #guess-input:hover, #meatball-guess-area:hover, #meatball-guess-input:hover {
@@ -255,7 +274,25 @@ a {
   top: 0;
   left: 0;
   text-align: left;
-  background: transparent;
+}
+
+#meatball-relating {
+  width: 85vw;
+  margin: 4vh auto 0 auto;
+  font-size: 3vh;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#meatball-separator {
+  width: 50%;
+  height: 0.2vh;
+  background: #000000;
+  margin: 1vh auto;
+}
+
+.dark-mode #meatball-separator {
+  background: #FFFFFF;
 }
 
 #guess-background, #meatball-guess-background {
@@ -264,13 +301,13 @@ a {
   width: 100%;
   height: 5vh;
   z-index: 0;
-  background: transparent;
+  background: none;
 }
 
 #guess-input, #meatball-guess-input {
-  font-size: 5vh; /* Increased from 4vh */
+  font-size: 5vh;
   font-weight: bold;
-  background: transparent;
+  background: none;
   border: none;
   width: 100%;
   text-align: center;
@@ -299,7 +336,7 @@ a {
   color: transparent;
 }
 
-#guess-line, #meatball-guess-line {
+#guess-line {
   width: 100%;
   height: 0.2vh;
   background: #000000;
@@ -308,15 +345,20 @@ a {
   transition: opacity 0.5s ease-out;
 }
 
-.dark-mode #guess-line, .dark-mode #meatball-guess-line {
+#meatball-guess-line {
+  display: none;
+}
+
+.dark-mode #guess-line {
   background: #FFFFFF;
 }
 
 #hints-box {
-  width: 100%;
-  height: 65vh; /* Adjusted to fill remaining space */
+  width: 85vw;
+  height: 60vh;
+  margin: 0 auto;
   padding: 1vh;
-  background: transparent;
+  background: none;
   flex-grow: 1;
 }
 
@@ -347,16 +389,20 @@ a {
   text-transform: uppercase;
 }
 
+#graphic {
+  display: none;
+}
+
 #resume-btn {
-  width: 5vh;
+  width: 3vh;
   height: 3vh;
-  border-radius: 0.5vh;
+  border-radius: 50%;
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid #000000;
   cursor: pointer;
   margin: 1vh auto;
   display: block;
-  font-size: 1.5vh;
+  font-size: 1.2vh;
 }
 
 .dark-mode #resume-btn {
@@ -367,10 +413,9 @@ a {
 #pause-screen {
   position: fixed;
   top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 85vw;
-  max-height: 85vh;
+  left: 0;
+  width: 100%;
+  height: 100vh;
   background: #FFFFFF;
   color: #000000;
   display: none;
@@ -395,16 +440,16 @@ a {
 
 #game-over {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85vw;
-  max-height: 85vh;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2vh;
+  overflow: hidden;
   background: url('shark_background_light.jpg') no-repeat center center;
   background-size: cover;
 }
@@ -419,19 +464,17 @@ a {
   margin: 1vh;
   text-align: center;
   white-space: pre-line;
-  background: transparent;
 }
 
 #share-box {
-  width: 100%;
+  width: 85vw;
   max-width: 30vh;
   margin: 1vh 0;
   text-align: center;
-  background: transparent;
 }
 
 #share-panel {
-  background: rgba(0, 0, 0, 0.8);
+  background: #000000;
   color: #FFFFFF;
   border-radius: 1vh;
   padding: 1.5vh;
@@ -439,7 +482,7 @@ a {
 }
 
 .dark-mode #share-panel {
-  background: rgba(255, 255, 255, 0.8);
+  background: #FFFFFF;
   color: #000000;
 }
 
@@ -475,7 +518,6 @@ a {
   flex-direction: column;
   align-items: center;
   margin: 1vh 0;
-  background: transparent;
 }
 
 #share-label {
@@ -505,7 +547,6 @@ a {
   flex-direction: column;
   align-items: center;
   gap: 0.5vh;
-  background: transparent;
 }
 
 #home-btn {
@@ -524,7 +565,7 @@ a {
 }
 
 #ad-box {
-  width: 100%;
+  width: 85vw;
   height: 10vh;
   border: 0.1vh solid #000;
   border-radius: 1vh;
@@ -533,7 +574,6 @@ a {
   justify-content: center;
   align-items: center;
   margin: 1vh 0;
-  background: transparent;
 }
 
 .dark-mode #ad-box {
@@ -547,11 +587,10 @@ a {
 
 .screen {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85vw;
-  max-height: 85vh;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
   background: #FFFFFF;
   display: none;
   flex-direction: column;
@@ -566,12 +605,9 @@ a {
 #meatball-screen {
   display: flex;
   flex-direction: column;
-  width: 85vw;
-  max-height: 85vh;
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
   background: url('shark_background_light.jpg') no-repeat center center;
   background-size: cover;
 }
@@ -581,36 +617,15 @@ a {
   background-size: cover;
 }
 
-#meatball-relating {
-  width: 100%;
-  margin: 6vh auto 0 auto;
-  font-size: 3vh; /* Increased from 2vh */
-  text-align: center;
-  text-transform: uppercase;
-  background: transparent;
-}
-
-#meatball-separator {
-  width: 50%;
-  height: 0.2vh;
-  background: #000000;
-  margin: 1vh auto;
-}
-
-.dark-mode #meatball-separator {
-  background: #FFFFFF;
-}
-
 #meatball-instruction {
-  width: 100%;
+  width: 85vw;
   margin: 1vh auto 0 auto;
-  font-size: 1.5vh; /* Small to avoid scrolling */
+  font-size: 1.5vh;
   text-align: center;
-  background: transparent;
 }
 
 #language-content, #create-game-content, #advertise-content {
-  width: 100%;
+  width: 85vw;
   margin: 0 auto;
 }
 
@@ -659,6 +674,13 @@ a {
   100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
 }
 
+.correct-guess {
+  font-size: 6vh;
+  animation: animate__pulse 1s ease-out forwards;
+  position: absolute;
+  width: 100%;
+}
+
 .flash-green {
   animation: flashDeepGreen 1s forwards;
 }
@@ -671,7 +693,7 @@ a {
 
 @media (max-height: 600px) {
   #hints-box {
-    height: 55vh;
+    height: 50vh;
   }
   .hint-line span {
     font-size: 2vh;
