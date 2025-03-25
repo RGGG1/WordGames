@@ -42,7 +42,7 @@ a {
 
 #header {
   width: 85vw;
-  margin: 1vh auto 0 auto; /* Consistent 1vh top padding */
+  margin: 1vh auto 0 auto;
   position: fixed;
   top: 0;
   left: 50%;
@@ -52,12 +52,12 @@ a {
   height: 5vh;
   background: none;
   display: flex;
-  justify-content: space-between; /* Distribute horizontally */
-  align-items: center; /* Center vertically */
+  justify-content: space-between;
+  align-items: center;
 }
 
 #mode-toggle {
-  font-size: 2vh;
+  font-size: 2.5vh; /* Match game-name size */
   background: none;
   border: none;
   cursor: pointer;
@@ -69,17 +69,17 @@ a {
 }
 
 #game-name, #meatball-name {
-  font-family: 'Fredoka One', cursive; /* Bubbly, playful font */
-  font-size: 3vh;
+  font-family: 'Fredoka One', cursive;
+  font-size: 2.5vh; /* Slightly reduced */
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #FFD700; /* Bright yellow for pineapple */
-  -webkit-text-stroke: 0.1vh #FF4500; /* Orange outline */
+  color: #FFD700;
+  -webkit-text-stroke: 0.1vh #FF4500;
   text-stroke: 0.1vh #FF4500;
 }
 
 #meatball-name {
-  color: #FFFFFF; /* Reset for Meatball */
+  color: #FFFFFF;
   -webkit-text-stroke: 0.1vh #000000;
   text-stroke: 0.1vh #000000;
 }
@@ -90,14 +90,14 @@ a {
 }
 
 #score, #meatball-score {
-  font-size: 2vh;
+  font-size: 2.5vh; /* Match game-name size */
   font-weight: bold;
 }
 
 #guess-area {
   width: 85vw;
   height: 10vh;
-  margin: 6vh auto 0 auto;
+  margin: 7vh auto 0 auto; /* Increased from 6vh to 7vh for extra space */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -208,12 +208,12 @@ a {
 
 #hints-box {
   width: 85vw;
-  height: calc(100vh - 16vh); /* Adjusted for header and guess area */
+  height: calc(100vh - 19vh);
   margin: 0 auto;
   padding: 1vh;
   background: none;
   flex-grow: 1;
-  overflow-y: auto; /* Allow scrolling if needed */
+  overflow-y: auto;
 }
 
 #hints-title {
@@ -545,7 +545,7 @@ a {
 }
 
 #game-select-screen {
-  display: flex;
+  display: none;
   flex-direction: column;
   height: 100vh;
   overflow: hidden;
@@ -579,34 +579,38 @@ a {
 }
 
 .game-item {
-  font-size: 2vh;
-  margin: 1vh 0;
-  padding: 1vh 2vw;
-  background: rgba(255, 255, 255, 0.8);
-  border: 0.1vh solid #000000;
-  border-radius: 0.5vh;
+  font-size: 1.5vh;
+  margin: 0.5vh 0;
   cursor: pointer;
   text-align: center;
-  width: 70%;
-}
-
-.dark-mode .game-item {
-  background: rgba(0, 0, 0, 0.8);
-  border-color: #FFFFFF;
-  color: #FFFFFF;
 }
 
 .game-item:hover {
-  background: rgba(255, 255, 255, 1);
+  text-decoration: underline;
 }
 
-.dark-mode .game-item:hover {
-  background: rgba(0, 0, 0, 1);
+#footer {
+  width: 85vw;
+  margin: 1vh auto;
+  font-size: 1.5vh;
+}
+
+#previous-games-link {
+  color: #00BFFF;
+  text-decoration: none;
+}
+
+#previous-games-link:hover {
+  text-decoration: underline;
+}
+
+.dark-mode #previous-games-link {
+  color: #1E90FF;
 }
 
 @media (max-height: 600px) {
   #hints-box {
-    height: calc(100vh - 16vh);
+    height: calc(100vh - 19vh);
   }
   .hint-line span, #how-to-play-1, #how-to-play-2 {
     font-size: 1.2vh;

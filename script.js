@@ -35,13 +35,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 return obj;
             });
 
-            displayGameList();
-            document.getElementById("game-select-screen").style.display = "flex";
+            // Load the latest game by default
+            const latestGame = allGames[allGames.length - 1];
+            loadGame(latestGame);
+            document.getElementById("game-screen").style.display = "flex";
+            document.getElementById("guess-input").focus();
             adjustBackground();
         } catch (error) {
             console.error("Failed to fetch game data:", error);
             allGames = [{ gameNumber: 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
-            displayGameList();
+            loadGame(allGames[0]);
+            document.getElementById("game-screen").style.display = "flex";
         }
     }
 
@@ -129,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, 1500);
             } else {
                 meatballScore++;
-                document.getElementById("meatball-score").textContent = `Score: ${meatballScore}`;
+                document.getElementById("meatball-score").textContent = `${meatballScore}`;
                 guessDisplay.classList.add("wrong-guess");
                 setTimeout(() => {
                     guessDisplay.classList.remove("wrong-guess");
@@ -162,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
             shareGameNumber.textContent = "Game #1";
             shareScore.textContent = `${totalGuesses}`;
             document.querySelectorAll("#score").forEach(scoreDisplay => {
-                scoreDisplay.textContent = `Score: ${totalGuesses}`;
+                scoreDisplay.textContent = `${totalGuesses}`;
             });
             shareLink.href = "https://your-game-url.com/meatball";
             shareLink.textContent = "Can you beat my score? Click here";
@@ -204,12 +208,27 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
+        document.getElementById("previous-games-link").addEventListener("click", (e) => {
+            e.preventDefault();
+            displayGameList();
+            gameScreen.style.display = "none";
+            gameSelectScreen.style.display = "flex";
+            adjustBackground();
+        });
+
+        document.getElementById("back-to-game-btn").addEventListener("click", () => {
+            gameSelectScreen.style.display = "none";
+            gameScreen.style.display = "flex";
+            document.getElementById("guess-input").focus();
+            adjustBackground();
+        });
+
         setInterval(() => {
             if (decayStarted && score > 0 && !gameOver) {
                 const elapsed = (Date.now() - decayStartTime) / 1000;
                 score = Math.max(0, Math.floor(100 - elapsed));
                 document.querySelectorAll("#score").forEach(scoreDisplay => {
-                    scoreDisplay.textContent = `Score: ${score}`;
+                    scoreDisplay.textContent = `${score}`;
                 });
 
                 const hintElapsed = (Date.now() - lastHintTime) / 1000;
@@ -254,6 +273,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function handleGuess(guess) {
             const guessDisplay = input;
+            const trimmedGuess = guess.trim(); // Remove trailing spaces
             if (!firstGuessMade) {
                 firstGuessMade = true;
                 decayStarted = true;
@@ -265,12 +285,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 adjustHintsAfterGuess();
             }
 
-            guessDisplay.value = guess.toUpperCase();
+            guessDisplay.value = trimmedGuess.toUpperCase();
             guessDisplay.classList.remove("wrong-guess", "correct-guess");
             guessDisplay.style.opacity = "1";
             void guessDisplay.offsetWidth;
 
-            if (guess.toUpperCase() === secretWord) {
+            if (trimmedGuess.toUpperCase() === secretWord) {
                 guessDisplay.classList.add("correct-guess");
                 guessBackground.classList.add("flash-green");
                 guessLine.style.opacity = "0";
@@ -336,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
             shareGameNumber.textContent = `Game #${currentGameNumber}`;
             shareScore.textContent = `${score}`;
             document.querySelectorAll("#score").forEach(scoreDisplay => {
-                scoreDisplay.textContent = `Score: ${score}`;
+                scoreDisplay.textContent = `${score}`;
             });
             shareLink.href = "https://your-game-url.com";
             shareLink.textContent = "Can you beat my score? Click here";
@@ -374,9 +394,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("end-hungry-shark").addEventListener("click", (e) => {
             e.preventDefault();
-            resetGame();
-            gameScreen.style.display = "flex";
+            displayGameList();
             go.style.display = "none";
+            gameSelectScreen.style.display = "flex";
             adjustBackground();
         });
 
@@ -386,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
             meatballScore = 0;
             meatballGameOver = false;
             meatballFirstGuess = false;
-            document.getElementById("meatball-score").textContent = "Score: 0";
+            document.getElementById("meatball-score").textContent = "0";
             document.getElementById("meatball-guess-input").value = "";
             document.getElementById("meatball-instruction").style.display = "block";
             adjustBackground();
@@ -399,11 +419,11 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".home-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 resetGame();
-                gameScreen.style.display = "none";
+                gameScreen.style.display = "flex";
                 go.style.display = "none";
                 document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
-                gameSelectScreen.style.display = "flex";
                 adjustBackground();
+                document.getElementById("guess-input").focus();
             });
         });
 
@@ -423,7 +443,7 @@ document.addEventListener("DOMContentLoaded", () => {
         lastHintTime = null;
         revealedHints.clear();
         document.querySelectorAll("#score").forEach(scoreDisplay => {
-            scoreDisplay.textContent = `Score: ${score}`;
+            scoreDisplay.textContent = `${score}`;
         });
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";

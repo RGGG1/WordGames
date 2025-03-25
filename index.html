@@ -13,7 +13,7 @@
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
-            <div id="score">Score: 100</div>
+            <div id="score">100</div>
         </div>
         <div id="guess-area">
             <div id="prompt">The secret word is...</div>
@@ -38,13 +38,16 @@
                 <div class="hint-line" id="hint-row-7"><span></span></div>
             </div>
         </div>
+        <div id="footer">
+            <a href="#" id="previous-games-link">Previous Games</a>
+        </div>
     </div>
 
     <div id="pause-screen" style="display: none;">
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
-            <div id="score">Score: 100</div>
+            <div id="score">100</div>
         </div>
         <div id="pause-text">Ads here - coming soon</div>
         <button id="resume-btn">Resume</button>
@@ -55,7 +58,7 @@
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
-            <div id="score">Score: 0</div>
+            <div id="score">0</div>
         </div>
         <img id="end-graphic" src="" alt="End Graphic" style="display: none;">
         <div id="end-message"></div>
@@ -78,7 +81,7 @@
         </div>
         <div id="end-footer">
             <div>Until then, play our other games</div>
-            <a href="#" id="end-hungry-shark">Pineapple</a>
+            <a href="#" id="end-hungry-shark">Pineapple - Previous Games</a>
             <a href="#" id="end-meatball">Meatball</a>
         </div>
         <button id="home-btn" class="home-btn">Home</button>
@@ -92,7 +95,7 @@
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
-            <div id="score">Score: 100</div>
+            <div id="score">100</div>
         </div>
         <div id="create-game-content">
             <div>Create a Game...</div>
@@ -105,7 +108,7 @@
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="meatball-name">MEATBALL</div>
-            <div id="meatball-score">Score: 0</div>
+            <div id="meatball-score">0</div>
         </div>
         <div id="meatball-relating">RELATING</div>
         <div id="meatball-separator"></div>
@@ -117,15 +120,16 @@
         <div id="meatball-instruction">The Daily Meatball<br>Rearrange the letters of this word to form another word.<br>There may be multiple possibilities, but there is only one true meatball.</div>
     </div>
 
-    <div id="game-select-screen" class="screen">
+    <div id="game-select-screen" class="screen" style="display: none;">
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
-            <div id="score">Score: 100</div>
+            <div id="score">100</div>
         </div>
         <div id="game-select-content">
-            <div id="game-list-title">Select a Game</div>
+            <div id="game-list-title">Previous Games</div>
             <div id="game-list"></div>
+            <button id="back-to-game-btn" class="home-btn">Back</button>
         </div>
     </div>
 
