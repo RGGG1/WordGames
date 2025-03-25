@@ -84,8 +84,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (screen.style.display !== "none") {
                 const contentHeight = screen.offsetHeight;
                 if (viewportHeight < contentHeight + 100) {
+                    screen.style.backgroundSize = `85vw ${viewportHeight}px`;
                     screen.style.backgroundPosition = "center bottom";
                 } else {
+                    screen.style.backgroundSize = "cover";
                     screen.style.backgroundPosition = "center center";
                 }
             }
@@ -205,7 +207,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 hintTimer = Math.max(0, Math.ceil(10 - hintElapsed));
                 document.getElementById("hints-subtitle").textContent = `New hint in ${hintTimer} seconds`;
 
-                console.log(`Hint timer: ${hintTimer}, hintIndex: ${hintIndex}`);
                 if (hintTimer === 0 && hintIndex < hints.length - 1) {
                     hintIndex++;
                     console.log(`Revealing hint ${hintIndex}: ${hints[hintIndex]}`);
@@ -222,13 +223,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const allHints = document.querySelectorAll(".hint-line span");
             if (index < allHints.length && allHints[index].textContent && !revealedHints.has(index)) {
                 allHints[index].style.visibility = "visible";
-                allHints[index].classList.add("animate__animated", "animate__pulse");
-                allHints[index].style.animation = "pulse 2s";
-                revealedHints.add(index);
                 setTimeout(() => {
-                    allHints[index].classList.remove("animate__animated", "animate__pulse");
-                    allHints[index].style.animation = "";
-                }, 2000);
+                    allHints[index].style.animation = "pulseHint 2s";
+                    setTimeout(() => {
+                        allHints[index].style.animation = "";
+                    }, 2000);
+                }, 200); // 0.2s delay
+                revealedHints.add(index);
             }
         }
 
@@ -249,7 +250,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 decayStarted = true;
                 decayStartTime = Date.now();
                 lastHintTime = Date.now();
-                document.getElementById("how-to-play").style.display = "none";
+                document.getElementById("how-to-play-1").style.display = "none";
+                document.getElementById("how-to-play-2").style.display = "none";
+                adjustHintsAfterGuess();
             }
 
             guessDisplay.value = guess.toUpperCase();
@@ -276,6 +279,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (!gameOver) guessDisplay.focus();
                 }, 500);
             }
+        }
+
+        function adjustHintsAfterGuess() {
+            const hintElements = [
+                document.getElementById("hint-row-1").children[0],
+                document.getElementById("hint-row-2").children[0],
+                document.getElementById("hint-row-3").children[0],
+                document.getElementById("hint-row-4").children[0],
+                document.getElementById("hint-row-5").children[0],
+                document.getElementById("hint-row-6").children[0],
+                document.getElementById("hint-row-7").children[0]
+            ];
+            hintElements.forEach((span, index) => {
+                span.style.visibility = index <= hintIndex ? "visible" : "hidden";
+            });
         }
 
         function endGame(won) {
@@ -488,7 +506,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("hints-subtitle").textContent = "New hint in 10 seconds";
-        document.getElementById("how-to-play").style.display = "block";
+        document.getElementById("how-to-play-1").style.display = "block";
+        document.getElementById("how-to-play-2").style.display = "block";
         setupHints();
     }
 

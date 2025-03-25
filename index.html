@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hungry Shark</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Bangers&family=Chewy&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
@@ -41,7 +41,7 @@
             </div>
         </div>
         <div id="header">
-            <div id="game-name" class="animate__animated animate__pulse animate__infinite">Hungry Shark</div>
+            <div id="game-name">Hungry Shark</div>
             <div id="score">Score: 100</div>
         </div>
         <div id="guess-area">
@@ -55,9 +55,8 @@
             <div id="hints-subtitle">New hint in 10 seconds</div>
             <div id="hints">
                 <div class="hint-line" id="hint-row-1"><span></span></div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line" id="how-to-play">How to Play <b>Guess the secret word before the shark eats you.</b></div>
+                <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
+                <div class="hint-line" id="how-to-play-2">Guess the secret word before the shark eats you.</div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>
                 <div class="hint-line" id="hint-row-3"><span></span></div>
                 <div class="hint-line" id="hint-row-4"><span></span></div>
@@ -88,9 +87,9 @@
         <div id="share-section">
             <div id="share-label">Share with your friends</div>
             <div id="share-buttons">
-                <a id="share-whatsapp" href="#" target="_blank"><img src="whatsapp_logo.png" alt="WhatsApp" class="social-logo"></a>
-                <a id="share-telegram" href="#" target="_blank"><img src="telegram_logo.png" alt="Telegram" class="social-logo"></a>
-                <a id="share-twitter" href="#" target="_blank"><img src="x_logo.png" alt="X" class="social-logo"></a>
+                <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+                <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
             </div>
         </div>
         <div id="end-footer">
@@ -129,6 +128,36 @@
     </div>
 
     <div id="meatball-screen" class="screen" style="display: none;">
+        <div id="hamburger-menu-start">
+            <button id="hamburger-btn-start">Menu</button>
+            <div id="menu-content" style="display: none;">
+                <button id="menu-close-btn">Close</button>
+                <a href="#" id="home-link">Home</a>
+                <div class="menu-section">
+                    <div class="section-title">Settings</div>
+                    <button id="menu-dark-mode-btn">Dark Mode</button>
+                    <a href="#" id="language-link">Language</a>
+                </div>
+                <div class="menu-divider"></div>
+                <div class="menu-section">
+                    <div class="section-title">Games</div>
+                    <div class="game-link">
+                        <a href="#" id="hungry-shark-link">Hungry Shark</a>
+                        <div class="sub-menu" style="display: none;">
+                            <a href="#" id="today-game">Today's Game</a>
+                            <a href="#" id="create-game">Create a Game</a>
+                        </div>
+                    </div>
+                    <a href="#" id="meatball-link">Meatball</a>
+                    <a href="#" id="snakebite-link">Snakebite</a>
+                </div>
+                <div class="menu-divider"></div>
+                <div class="menu-section">
+                    <div class="section-title">Advertising</div>
+                    <a href="#" id="advertise-link">Advertise with us</a>
+                </div>
+            </div>
+        </div>
         <div id="header">
             <div id="meatball-name">Meatball</div>
             <div id="meatball-score">Score: 0</div>

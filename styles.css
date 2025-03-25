@@ -138,9 +138,12 @@ a {
   z-index: 10;
   height: 5vh;
   background: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-#game-name {
+#game-name, #meatball-name {
   font-family: 'Bangers', cursive;
   font-size: 3vh;
   letter-spacing: 0.1em;
@@ -152,12 +155,6 @@ a {
 
 #meatball-name {
   font-family: 'Chewy', cursive;
-  font-size: 3vh;
-  letter-spacing: 0.1em;
-  margin: 0.5vh 0;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 #score, #meatball-score {
@@ -268,7 +265,7 @@ a {
   height: 0.2vh;
   background: #000000;
   position: absolute;
-  top: 8.5vh; /* Adjusted for 0.5vh space */
+  top: 8.5vh;
   transition: opacity 0.5s ease-out;
 }
 
@@ -310,19 +307,14 @@ a {
   margin: 0.3vh 0;
 }
 
-.hint-line.spacer {
-  height: 2.5vh; /* Two lines of space */
-}
-
-#how-to-play {
-  font-size: 1.5vh;
+#how-to-play-1, #how-to-play-2 {
+  font-size: 2.5vh;
 }
 
 .hint-line span {
   font-size: 2.5vh;
   font-weight: bold;
   text-transform: uppercase;
-  animation: none !important;
 }
 
 #resume-btn {
@@ -463,9 +455,14 @@ a {
   gap: 1.5vh;
 }
 
-.social-logo {
-  width: 3vh;
-  height: 3vh;
+#share-buttons a {
+  font-size: 3vh;
+  color: #000000;
+  text-decoration: none;
+}
+
+.dark-mode #share-buttons a {
+  color: #FFFFFF;
 }
 
 #end-footer {
@@ -604,7 +601,7 @@ a {
 
 .correct-guess {
   font-size: 6vh;
-  animation: animate__pulse 1s ease-out forwards;
+  animation: pulseHint 1s ease-out forwards;
   position: absolute;
   width: 100%;
 }
@@ -619,24 +616,17 @@ a {
   100% { background: transparent; }
 }
 
-@keyframes pulse {
+@keyframes pulseHint {
   0% { transform: scale(1); }
   50% { transform: scale(1.1); }
   100% { transform: scale(1); }
-}
-
-.hint-line span {
-  font-size: 2.5vh;
-  font-weight: bold;
-  text-transform: uppercase;
-  animation: none !important;
 }
 
 @media (max-height: 600px) {
   #hints-box {
     height: 50vh;
   }
-  .hint-line span, #how-to-play {
+  .hint-line span, #how-to-play-1, #how-to-play-2 {
     font-size: 1.2vh;
   }
 }
