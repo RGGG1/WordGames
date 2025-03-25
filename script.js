@@ -84,10 +84,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (screen.style.display !== "none") {
                 const contentHeight = screen.offsetHeight;
                 if (viewportHeight < contentHeight + 100) {
-                    screen.style.backgroundSize = `85vw ${viewportHeight}px`;
-                    screen.style.backgroundPosition = "center bottom";
+                    screen.style.backgroundSize = `100vw ${viewportHeight}px`;
+                    screen.style.backgroundPosition = "center top";
                 } else {
-                    screen.style.backgroundSize = "cover";
+                    screen.style.backgroundSize = "100vw 100vh";
                     screen.style.backgroundPosition = "center center";
                 }
             }
@@ -159,7 +159,9 @@ document.addEventListener("DOMContentLoaded", () => {
             shareText.textContent = `I got today's meatball in ${totalGuesses} guesses`;
             shareGameNumber.textContent = "Game #1";
             shareScore.textContent = `${totalGuesses}`;
-            document.getElementById("score").textContent = `Score: ${totalGuesses}`;
+            document.querySelectorAll("#score").forEach(scoreDisplay => {
+                scoreDisplay.textContent = `Score: ${totalGuesses}`;
+            });
             shareLink.href = "https://your-game-url.com/meatball";
             shareLink.textContent = "Can you beat my score? Click here";
 
@@ -303,6 +305,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function endGame(won) {
             gameOver = true;
+            const endGraphic = document.getElementById("end-graphic");
             const endMessage = document.getElementById("end-message");
             const shareText = document.getElementById("share-text");
             const shareGameNumber = document.getElementById("share-game-number");
@@ -317,11 +320,15 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("guess-input").blur();
 
             if (won) {
-                endMessage.textContent = "You survived the pineapple!";
-                shareText.textContent = "Pineapple Survivor";
+                endGraphic.src = "pineapple_gif.gif";
+                endGraphic.style.display = "block";
+                endMessage.textContent = "PINEAPPLE";
+                shareText.textContent = "I solved today’s pineapple";
             } else {
-                endMessage.textContent = score === 0 ? "You are pineapple food\n\nnom-nom" : "You are pineapple food!\nnom-nom!";
-                shareText.textContent = "I am pineapple food";
+                endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
+                endGraphic.style.display = "block";
+                endMessage.textContent = score === 0 ? "PINEAPPLE" : "PINEAPPLE";
+                shareText.textContent = "I didn’t solve today’s pineapple";
             }
             shareGameNumber.textContent = `Game #${currentGameNumber}`;
             shareScore.textContent = `${score}`;
