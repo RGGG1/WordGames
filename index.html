@@ -13,7 +13,7 @@
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
-            <div id="score">100</div>
+            <div id="score">0</div>
         </div>
         <div id="guess-area">
             <div id="prompt">The secret word is...</div>
@@ -23,13 +23,13 @@
         </div>
         <div id="hints-box">
             <div id="hints-title">Hints</div>
-            <div id="hints-subtitle">New hint in 10 seconds</div>
+            <div id="hints-subtitle">New hint after 5 guesses</div>
             <div id="hints">
                 <div class="hint-line" id="hint-row-1"><span></span></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-                <div class="hint-line" id="how-to-play-2">Guess today's secret word before your score drops to zero.</div>
+                <div class="hint-line" id="how-to-play-2">Guess the secret word as quickly as possible</div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>
                 <div class="hint-line" id="hint-row-3"><span></span></div>
                 <div class="hint-line" id="hint-row-4"><span></span></div>
@@ -40,7 +40,9 @@
         </div>
         <div id="footer">
             <a href="#" id="previous-games-link">Previous Games</a>
+            <button id="previous-games-btn" class="footer-btn">Previous Games</button>
         </div>
+        <button id="give-up-btn" class="give-up-btn">Give Up</button>
     </div>
 
     <div id="pause-screen" style="display: none;">
@@ -59,6 +61,8 @@
             <div id="game-name">PINEAPPLE</div>
         </div>
         <img id="end-graphic" src="" alt="End Graphic" style="display: none;">
+        <div id="todays-word-label">Today's Word</div>
+        <div id="todays-word"></div>
         <div id="share-box">
             <div id="share-panel">
                 <div id="share-text"></div>

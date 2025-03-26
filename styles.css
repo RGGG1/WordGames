@@ -32,7 +32,7 @@ a {
   overflow: hidden;
   position: relative;
   background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 125vw 222.22vh; /* 25% larger, 9:16 ratio */
+  background-size: 125vw 222.22vh;
 }
 
 .dark-mode #game-screen {
@@ -42,7 +42,7 @@ a {
 
 #header {
   width: 85vw;
-  margin: 0.5vh auto 0 auto; /* Reduced from 1vh */
+  margin: 0.5vh auto 0 auto;
   position: fixed;
   top: 0;
   left: 50%;
@@ -54,7 +54,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 0.2vh solid #000000; /* Underline */
+  border-bottom: 0.2vh solid #000000;
 }
 
 .dark-mode #header {
@@ -84,7 +84,7 @@ a {
 }
 
 #meatball-name {
-  font-family: 'Chewy', cursive; /* Fun, jovial, meatball-themed */
+  font-family: 'Chewy', cursive;
   font-size: 2.5vh;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -140,7 +140,7 @@ a {
 
 #meatball-relating {
   width: 85vw;
-  margin: 2vh auto 0 auto; /* Reduced from 4vh */
+  margin: 2vh auto 0 auto;
   font-size: 3vh;
   text-align: center;
   text-transform: uppercase;
@@ -182,7 +182,7 @@ a {
   caret-color: black;
   text-transform: uppercase;
   z-index: 1;
-  animation: blink 1s step-end infinite; /* Continuous blink */
+  animation: blink 1s step-end infinite;
 }
 
 @keyframes blink {
@@ -267,7 +267,7 @@ a {
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid #000000;
   cursor: pointer;
-  margin: 1vh auto;
+  margin:IEW: 1vh auto;
   display: block;
   font-size: 1.2vh;
 }
@@ -330,8 +330,20 @@ a {
 }
 
 #end-graphic {
-  height: 15.625vh; /* 12.5vh * 1.25 */
+  height: 15.625vh;
   margin: 1vh 0;
+}
+
+#todays-word-label {
+  font-size: 2vh;
+  font-weight: bold;
+  margin: 1vh 0 0.5vh 0;
+}
+
+#todays-word {
+  font-size: 3vh;
+  text-transform: uppercase;
+  margin-bottom: 1vh;
 }
 
 #share-box {
@@ -359,6 +371,15 @@ a {
   margin-bottom: 0.5vh;
 }
 
+#share-text.big {
+  font-size: 3vh;
+}
+
+#share-text.italic {
+  font-size: 1.5vh;
+  font-style: italic;
+}
+
 #share-game-number {
   font-size: 1.8vh;
   margin-bottom: 0.5vh;
@@ -370,7 +391,7 @@ a {
 }
 
 #share-score {
-  font-size: 5vh; /* Increased 25% from 4vh */
+  font-size: 5vh;
   font-weight: bold;
   margin-bottom: 1vh;
 }
@@ -582,6 +603,9 @@ a {
   width: 85vw;
   margin: 1vh auto;
   font-size: 1.5vh;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 #previous-games-link {
@@ -595,6 +619,37 @@ a {
 
 .dark-mode #previous-games-link {
   color: #1E90FF;
+}
+
+.footer-btn {
+  font-size: 1.5vh;
+  padding: 0.5vh 1vw;
+  background: none;
+  border: 0.1vh solid #000000;
+  border-radius: 0.5vh;
+  cursor: pointer;
+}
+
+.dark-mode .footer-btn {
+  border-color: #FFFFFF;
+  color: #FFFFFF;
+}
+
+.give-up-btn {
+  position: absolute;
+  bottom: 1vh;
+  left: 7.5vw;
+  font-size: 1.5vh;
+  padding: 0.5vh 1vw;
+  background: none;
+  border: 0.1vh solid #000000;
+  border-radius: 0.5vh;
+  cursor: pointer;
+}
+
+.dark-mode .give-up-btn {
+  border-color: #FFFFFF;
+  color: #FFFFFF;
 }
 
 @media (max-height: 600px) {
