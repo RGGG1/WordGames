@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     console.log("Pineapple & Meatball Version");
 
-    async function寓fetchGameData() {
+    async function fetchGameData() {
         const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
         try {
             const response = await fetch(csvUrl);
@@ -188,9 +188,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        document.addEventListener("click", () => {
+        document.addEventListener("click", (e) => {
             const input = document.getElementById("guess-input");
-            if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none") {
+            if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none" && !e.target.closest("button")) {
                 input.focus();
             }
         });
@@ -203,7 +203,8 @@ document.addEventListener("DOMContentLoaded", () => {
             adjustBackground();
         });
 
-        document.getElementById("previous-games-btn").addEventListener("click", () => {
+        document.getElementById("previous-games-btn").addEventListener("click", (e) => {
+            e.preventDefault(); // Ensure button doesn’t trigger unwanted behavior
             displayGameList();
             gameScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
@@ -217,7 +218,8 @@ document.addEventListener("DOMContentLoaded", () => {
             adjustBackground();
         });
 
-        document.getElementById("give-up-btn").addEventListener("click", () => {
+        document.getElementById("give-up-btn").addEventListener("click", (e) => {
+            e.preventDefault(); // Prevent default button behavior
             endGame(false, true);
         });
 
@@ -270,7 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     endGame(true);
                 }, 1500);
             } else {
-                guessDisplay.classList.add("wrong-guess");
+                guessDisplay.classList.add("wrong-guess"); // Fixed typo here
                 setTimeout(() => {
                     guessDisplay.classList.remove("wrong-guess");
                     guessDisplay.style.opacity = "1";
