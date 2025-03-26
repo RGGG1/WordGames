@@ -35,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return obj;
             });
 
-            // Load the latest game by default
             const latestGame = allGames[allGames.length - 1];
             loadGame(latestGame);
             document.getElementById("game-screen").style.display = "flex";
@@ -90,10 +89,10 @@ document.addEventListener("DOMContentLoaded", () => {
             if (screen.style.display !== "none") {
                 const contentHeight = screen.offsetHeight;
                 if (viewportHeight < contentHeight + 100) {
-                    screen.style.backgroundSize = `100vw ${viewportHeight}px`;
+                    screen.style.backgroundSize = `125vw ${viewportHeight * 1.7778}px`; /* Maintain 9:16 */
                     screen.style.backgroundPosition = "center top";
                 } else {
-                    screen.style.backgroundSize = "100vw 100vh";
+                    screen.style.backgroundSize = "125vw 222.22vh";
                     screen.style.backgroundPosition = "center center";
                 }
             }
@@ -161,15 +160,11 @@ document.addEventListener("DOMContentLoaded", () => {
             meatballInput.blur();
 
             const totalGuesses = meatballScore + 1;
-            endMessage.textContent = `You got today's meatball in ${totalGuesses} guesses`;
+            endMessage.style.display = "none"; // Hide end message
             shareText.textContent = `I got today's meatball in ${totalGuesses} guesses`;
             shareGameNumber.textContent = "Game #1";
             shareScore.textContent = `${totalGuesses}`;
-            document.querySelectorAll("#score").forEach(scoreDisplay => {
-                scoreDisplay.textContent = `${totalGuesses}`;
-            });
-            shareLink.href = "https://your-game-url.com/meatball";
-            shareLink.textContent = "Can you beat my score? Click here";
+            shareLink.style.display = "none"; // Hide share link on page
 
             const shareMessage = `${shareText.textContent}\nGame #1\nScore: ${totalGuesses}\nCan you beat my score? Click here: https://your-game-url.com/meatball`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
@@ -273,7 +268,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function handleGuess(guess) {
             const guessDisplay = input;
-            const trimmedGuess = guess.trim(); // Remove trailing spaces
+            const trimmedGuess = guess.trim();
             if (!firstGuessMade) {
                 firstGuessMade = true;
                 decayStarted = true;
@@ -291,6 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
             void guessDisplay.offsetWidth;
 
             if (trimmedGuess.toUpperCase() === secretWord) {
+                if (!decayStarted) score = 100; // First guess correct
                 guessDisplay.classList.add("correct-guess");
                 guessBackground.classList.add("flash-green");
                 guessLine.style.opacity = "0";
@@ -345,21 +341,16 @@ document.addEventListener("DOMContentLoaded", () => {
             if (won) {
                 endGraphic.src = "pineapple_gif.gif";
                 endGraphic.style.display = "block";
-                endMessage.textContent = "PINEAPPLE";
                 shareText.textContent = "I solved today’s pineapple";
             } else {
                 endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
                 endGraphic.style.display = "block";
-                endMessage.textContent = score === 0 ? "PINEAPPLE" : "PINEAPPLE";
                 shareText.textContent = "I didn’t solve today’s pineapple";
             }
+            endMessage.style.display = "none"; // Hide end message
             shareGameNumber.textContent = `Game #${currentGameNumber}`;
             shareScore.textContent = `${score}`;
-            document.querySelectorAll("#score").forEach(scoreDisplay => {
-                scoreDisplay.textContent = `${score}`;
-            });
-            shareLink.href = "https://your-game-url.com";
-            shareLink.textContent = "Can you beat my score? Click here";
+            shareLink.style.display = "none"; // Hide share link on page
 
             const shareMessage = `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;

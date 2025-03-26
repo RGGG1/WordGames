@@ -32,17 +32,17 @@ a {
   overflow: hidden;
   position: relative;
   background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 100vw 100vh;
+  background-size: 125vw 222.22vh; /* 25% larger, 9:16 ratio */
 }
 
 .dark-mode #game-screen {
   background: url('pineapple_background_dark.png') no-repeat center center;
-  background-size: 100vw 100vh;
+  background-size: 125vw 222.22vh;
 }
 
 #header {
   width: 85vw;
-  margin: 1vh auto 0 auto;
+  margin: 0.5vh auto 0 auto; /* Reduced from 1vh */
   position: fixed;
   top: 0;
   left: 50%;
@@ -54,10 +54,15 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  border-bottom: 0.2vh solid #000000; /* Underline */
+}
+
+.dark-mode #header {
+  border-bottom: 0.2vh solid #FFFFFF;
 }
 
 #mode-toggle {
-  font-size: 2.5vh; /* Match game-name size */
+  font-size: 2.5vh;
   background: none;
   border: none;
   cursor: pointer;
@@ -68,9 +73,9 @@ a {
   color: #FFFFFF;
 }
 
-#game-name, #meatball-name {
+#game-name {
   font-family: 'Fredoka One', cursive;
-  font-size: 2.5vh; /* Slightly reduced */
+  font-size: 2.5vh;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #FFD700;
@@ -79,6 +84,10 @@ a {
 }
 
 #meatball-name {
+  font-family: 'Chewy', cursive; /* Fun, jovial, meatball-themed */
+  font-size: 2.5vh;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
   color: #FFFFFF;
   -webkit-text-stroke: 0.1vh #000000;
   text-stroke: 0.1vh #000000;
@@ -90,14 +99,14 @@ a {
 }
 
 #score, #meatball-score {
-  font-size: 2.5vh; /* Match game-name size */
+  font-size: 2.5vh;
   font-weight: bold;
 }
 
 #guess-area {
   width: 85vw;
   height: 10vh;
-  margin: 7vh auto 0 auto; /* Increased from 6vh to 7vh for extra space */
+  margin: 7vh auto 0 auto;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -131,7 +140,7 @@ a {
 
 #meatball-relating {
   width: 85vw;
-  margin: 4vh auto 0 auto;
+  margin: 2vh auto 0 auto; /* Reduced from 4vh */
   font-size: 3vh;
   text-align: center;
   text-transform: uppercase;
@@ -173,7 +182,7 @@ a {
   caret-color: black;
   text-transform: uppercase;
   z-index: 1;
-  animation: blink 1s step-end infinite;
+  animation: blink 1s step-end infinite; /* Continuous blink */
 }
 
 @keyframes blink {
@@ -275,7 +284,7 @@ a {
   width: 100%;
   height: 100vh;
   background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 100vw 100vh;
+  background-size: 125vw 222.22vh;
   color: #000000;
   display: none;
   flex-direction: column;
@@ -285,7 +294,7 @@ a {
 
 .dark-mode #pause-screen {
   background: url('pineapple_background_dark.png') no-repeat center center;
-  background-size: 100vw 100vh;
+  background-size: 125vw 222.22vh;
   color: #FFFFFF;
 }
 
@@ -312,24 +321,17 @@ a {
   padding: 2vh;
   overflow: hidden;
   background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 100vw 100vh;
+  background-size: 125vw 222.22vh;
 }
 
 .dark-mode #game-over {
   background: url('pineapple_background_dark.png') no-repeat center center;
-  background-size: 100vw 100vh;
+  background-size: 125vw 222.22vh;
 }
 
 #end-graphic {
-  height: 12.5vh;
+  height: 15.625vh; /* 12.5vh * 1.25 */
   margin: 1vh 0;
-}
-
-#end-message {
-  font-size: 3vh;
-  margin: 1vh;
-  text-align: center;
-  white-space: pre-line;
 }
 
 #share-box {
@@ -368,15 +370,9 @@ a {
 }
 
 #share-score {
-  font-size: 4vh;
+  font-size: 5vh; /* Increased 25% from 4vh */
   font-weight: bold;
   margin-bottom: 1vh;
-}
-
-#share-link {
-  display: block;
-  margin-top: 1vh;
-  font-size: 1.8vh;
 }
 
 #share-section {
@@ -458,7 +454,7 @@ a {
   width: 100%;
   height: 100vh;
   background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 100vw 100vh;
+  background-size: 125vw 222.22vh;
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -467,7 +463,7 @@ a {
 
 .dark-mode .screen {
   background: url('pineapple_background_dark.png') no-repeat center center;
-  background-size: 100vw 100vh;
+  background-size: 125vw 222.22vh;
 }
 
 #meatball-screen {
@@ -550,13 +546,6 @@ a {
   height: 100vh;
   overflow: hidden;
   position: relative;
-  background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 100vw 100vh;
-}
-
-.dark-mode #game-select-screen {
-  background: url('pineapple_background_dark.png') no-repeat center center;
-  background-size: 100vw 100vh;
 }
 
 #game-select-content {
