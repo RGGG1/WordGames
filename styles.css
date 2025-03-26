@@ -136,6 +136,7 @@ a {
   top: 0;
   left: 0;
   text-align: left;
+  margin-top: 0.5vh; /* Added half line of space */
 }
 
 #meatball-relating {
@@ -233,7 +234,7 @@ a {
 
 #hints-subtitle {
   font-size: 1.5vh;
-  margin-bottom: 1vh;
+  margin-top: 1.5vh; /* Added spacing above to position it below hints */
 }
 
 #hints {
@@ -267,7 +268,7 @@ a {
   background: rgba(255, 255, 255, 0.8);
   border: 1px solid #000000;
   cursor: pointer;
-  margin:IEW: 1vh auto;
+  margin: 1vh auto;
   display: block;
   font-size: 1.2vh;
 }
@@ -604,21 +605,8 @@ a {
   margin: 1vh auto;
   font-size: 1.5vh;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end; /* Align button to the right */
   align-items: center;
-}
-
-#previous-games-link {
-  color: #00BFFF;
-  text-decoration: none;
-}
-
-#previous-games-link:hover {
-  text-decoration: underline;
-}
-
-.dark-mode #previous-games-link {
-  color: #1E90FF;
 }
 
 .footer-btn {

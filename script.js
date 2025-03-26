@@ -195,16 +195,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        document.getElementById("previous-games-link").addEventListener("click", (e) => {
-            e.preventDefault();
-            displayGameList();
-            gameScreen.style.display = "none";
-            gameSelectScreen.style.display = "flex";
-            adjustBackground();
-        });
-
         document.getElementById("previous-games-btn").addEventListener("click", (e) => {
-            e.preventDefault(); // Ensure button doesn’t trigger unwanted behavior
+            e.preventDefault();
             displayGameList();
             gameScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
@@ -219,7 +211,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
-            e.preventDefault(); // Prevent default button behavior
+            e.preventDefault();
             endGame(false, true);
         });
 
@@ -245,7 +237,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             guessCount++;
-            score = guessCount - 1;
+            score = guessCount; // Changed to match guess count directly
             document.querySelectorAll("#score").forEach(scoreDisplay => {
                 scoreDisplay.textContent = `${score}`;
             });
@@ -254,7 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 hintIndex++;
                 revealHint(hintIndex);
             }
-            document.getElementById("hints-subtitle").textContent = `New hint after ${5 - (guessCount % 5)} guesses`;
+            // No dynamic update here; text is static now
 
             guessDisplay.value = trimmedGuess.toUpperCase();
             guessDisplay.classList.remove("wrong-guess", "correct-guess");
@@ -262,7 +254,7 @@ document.addEventListener("DOMContentLoaded", () => {
             void guessDisplay.offsetWidth;
 
             if (trimmedGuess.toUpperCase() === secretWord) {
-                if (guessCount === 1) score = 0;
+                if (guessCount === 1) score = 1; // First guess still counts as 1
                 guessDisplay.classList.add("correct-guess");
                 guessBackground.classList.add("flash-green");
                 guessLine.style.opacity = "0";
@@ -272,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     endGame(true);
                 }, 1500);
             } else {
-                guessDisplay.classList.add("wrong-guess"); // Fixed typo here
+                guessDisplay.classList.add("wrong-guess");
                 setTimeout(() => {
                     guessDisplay.classList.remove("wrong-guess");
                     guessDisplay.style.opacity = "1";
@@ -340,7 +332,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (gaveUp) {
                 endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
                 endGraphic.style.display = "block";
-                shareText.innerHTML = '<span class="big">Play Pineapple</span><br><span class="italic">the daily word game</span>';
+                shareText.innerHTML = '<span class="big">Play Pineapple</span><br><span class="italic">daily word game</span>';
                 shareGameNumber.textContent = `Game #${currentGameNumber}`;
                 shareScoreLabel.style.display = "none";
                 shareScore.style.display = "none";
@@ -353,7 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const shareMessage = gaveUp
-                ? `Play Pineapple\nthe daily word game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+                ? `Play Pineapple\ndaily word game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
                 : `${shareText.textContent}\nGame #${currentGameNumber}${won ? "" : `\nScore: ${score}`}\nCan you beat my score? Click here: https://your-game-url.com`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
@@ -430,7 +422,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
-        document.getElementById("hints-subtitle").textContent = "New hint after 5 guesses";
+        document.getElementById("hints-subtitle").textContent = "New hint revealed after every five guesses";
         document.getElementById("how-to-play-1").style.display = "block";
         document.getElementById("how-to-play-2").style.display = "block";
         document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "block");
