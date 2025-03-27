@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         sortedGames.forEach(game => {
             const gameItem = document.createElement("div");
             gameItem.className = "game-item";
-            gameItem.textContent = `Game #${game.gameNumber} - ${game.Date}`;
+            gameItem.textContent = `Game #${game.gameNumber}`; // Removed date
             gameItem.addEventListener("click", () => {
                 loadGame(game);
                 document.getElementById("game-select-screen").style.display = "none";
@@ -303,9 +303,9 @@ document.addEventListener("DOMContentLoaded", () => {
         function revealHintOnClick() {
             hintIndex++;
             if (revealedHints.size === 0 && guessCount < 3) {
-                score = 5; // Set to 5 for first hint if below 3
+                score = 5;
             } else {
-                score = score * 2; // Double the current score
+                score = score * 2;
             }
             revealedHints.add(hintIndex);
             document.querySelectorAll("#score").forEach(scoreDisplay => {
@@ -349,7 +349,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (won) {
                 endGraphic.src = "pineapple_gif.gif";
                 endGraphic.style.display = "block";
-                shareText.innerHTML = `I solved today's pineapple in\n<span class="big-score">${score}</span>\nguesses\nGame #${currentGameNumber}`;
+                const guessText = score === 1 ? "guess" : "guesses";
+                shareText.innerHTML = `I solved today's pineapple in\n<span class="big-score">${score}</span>\n${guessText}\nGame #${currentGameNumber}`;
                 shareGameNumber.style.display = "none";
                 shareScoreLabel.style.display = "none";
                 shareScore.style.display = "none";
@@ -371,7 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const shareMessage = gaveUp
                 ? `PLAY PINEAPPLE\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
                 : won
-                ? `I solved today's pineapple in\n${score}\nguesses\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+                ? `I solved today's pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
                 : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
@@ -424,12 +425,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.querySelectorAll(".home-btn").forEach(btn => {
             btn.addEventListener("click", () => {
-                resetGame();
-                gameScreen.style.display = "flex";
-                go.style.display = "none";
-                document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
-                adjustBackground();
-                document.getElementById("guess-input").focus();
+                if (btn.textContent === "Play Again") {
+                    displayGameList();
+                    go.style.display = "none";
+                    document.getElementById("game-select-screen").style.display = "flex";
+                } else {
+                    resetGame();
+                    gameScreen.style.display = "flex";
+                    go.style.display = "none";
+                    document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
+                    adjustBackground();
+                    document.getElementById("guess-input").focus();
+                }
             });
         });
 

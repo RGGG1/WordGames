@@ -87,9 +87,15 @@ a {
   text-stroke: 0.1vh #FFFFFF;
 }
 
-#score, #meatball-score {
+#score-box {
+  display: flex;
+  align-items: center;
   font-size: 2.5vh;
   font-weight: bold;
+}
+
+#score-box span:first-child {
+  margin-right: 0.5vw;
 }
 
 #guess-area {
@@ -257,7 +263,7 @@ a {
 }
 
 #how-to-play-3 {
-  font-size: 2vh; /* Smaller font for additional line */
+  font-size: 2vh;
 }
 
 .hint-line span {
@@ -451,7 +457,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.5vh;
+  border-radius: 0.8vh; /* Slightly rounded corners */
   cursor: pointer;
   margin-top: 1vh;
 }
@@ -525,7 +531,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.5vh;
+  border-radius: 0.8vh; /* Slightly rounded corners */
   cursor: pointer;
   font-size: 3vh;
 }
@@ -632,7 +638,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.5vh;
+  border-radius: 0.8vh; /* Slightly rounded corners */
   cursor: pointer;
   z-index: 11;
 }
@@ -652,7 +658,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.5vh;
+  border-radius: 0.8vh; /* Slightly rounded corners */
   cursor: pointer;
   z-index: 11;
 }
@@ -665,31 +671,31 @@ a {
 
 @media (max-width: 600px) or (max-height: 600px) {
   #header, #footer {
-    width: 90vw;
+      width: 90vw;
   }
-  #game-name, #meatball-name, #score, #meatball-score {
-    font-size: 2vh;
+  #game-name, #meatball-name, #score-box {
+      font-size: 2vh;
   }
   #mode-toggle {
-    font-size: 2vh;
+      font-size: 2vh;
   }
   .footer-btn, .give-up-btn, .home-btn, #hint-btn {
-    font-size: 2.4vh;
-    padding: 0.8vh 1.6vw;
+      font-size: 2.4vh;
+      padding: 0.8vh 1.6vw;
   }
   #guess-input, #meatball-guess-input {
-    font-size: 4vh;
+      font-size: 4vh;
   }
   #hints-box {
-    height: calc(100vh - 17vh);
+      height: calc(100vh - 17vh);
   }
   .hint-line span {
-    font-size: 1.8vh;
+      font-size: 1.8vh;
   }
   #how-to-play-1, #how-to-play-2 {
-    font-size: 2.8vh;
+      font-size: 2.8vh;
   }
   #how-to-play-3 {
-    font-size: 1.6vh; /* Adjusted for smaller screens */
+      font-size: 1.6vh;
   }
 }
