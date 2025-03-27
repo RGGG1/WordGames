@@ -20,16 +20,17 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Pineapple & Meatball Version");
 
     async function fetchGameData() {
-        const pineappleUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
-        const anagramUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=ANAGRAM_GID&single=true&output=csv"; // Replace ANAGRAM_GID with actual gid
+        const spreadsheetId = "2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI";
+        const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`; // Sheet1 (gid=0)
+        const anagramUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=1690282084&single=true&output=csv`; // anagrams (example gid, adjust as needed)
 
         try {
-            // Fetch Pineapple games
+            // Fetch Pineapple games (Sheet1)
             const pineResponse = await fetch(pineappleUrl);
             const pineText = await pineResponse.text();
             const pineRows = pineText.split("\n").map(row => row.split(","));
             const pineHeaders = pineRows[0];
-            allGames = pineRows.slice(1).map((row, index) => {
+            allGames = pineRows.slice(1).map((row) => {
                 let obj = {};
                 pineHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
                 return obj;
@@ -39,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("game-screen").style.display = "flex";
             document.getElementById("guess-input").focus();
 
-            // Fetch Anagram games
+            // Fetch Anagram games (anagrams)
             const anagramResponse = await fetch(anagramUrl);
             const anagramText = await anagramResponse.text();
             const anagramRows = anagramText.split("\n").map(row => row.split(","));
@@ -197,7 +198,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
                 endGraphic.style.display = "block";
                 shareText.innerHTML = 'PLAY MEATBALL\n<span class="italic">The Anagram Word Game</span>';
-                shareGameNumber.textContent = `Game #${allAnagramGames[0]["Game Number"]}`;
+                shareGameNumber.style.display = "none"; // Remove Game #X
                 shareScore.style.display = "none";
             } else {
                 endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
@@ -208,7 +209,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const shareMessage = gaveUp
-                ? `PLAY MEATBALL\nThe Anagram Word Game\nGame #${allAnagramGames[0]["Game Number"]}\nCan you beat my score? Click here: https://your-game-url.com/meatball`
+                ? `PLAY MEATBALL\nThe Anagram Word Game\nCan you beat my score? Click here: https://your-game-url.com/meatball`
                 : won
                 ? `I solved today's meatball in\n${totalGuesses}\n${totalGuesses === 1 ? "guess" : "guesses"}\nGame #${allAnagramGames[0]["Game Number"]}\nCan you beat my score? Click here: https://your-game-url.com/meatball`
                 : `${shareText.textContent}\nGame #${allAnagramGames[0]["Game Number"]}\nScore: ${totalGuesses}\nCan you beat my score? Click here: https://your-game-url.com/meatball`;
