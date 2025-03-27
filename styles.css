@@ -58,6 +58,7 @@ a {
   border: none;
   cursor: pointer;
   color: #000000;
+  z-index: 11;
 }
 
 .dark-mode #mode-toggle {
@@ -73,6 +74,7 @@ a {
   -webkit-text-stroke: 0.1vh #FF4500;
   text-stroke: 0.1vh #FF4500;
   cursor: pointer;
+  z-index: 11;
 }
 
 #meatball-name {
@@ -90,6 +92,7 @@ a {
 #score, #meatball-score {
   font-size: 2.5vh;
   font-weight: bold;
+  z-index: 11;
 }
 
 #guess-area {
@@ -223,6 +226,7 @@ a {
   border-radius: 0.5vh;
   cursor: pointer;
   margin-top: 1.5vh;
+  z-index: 11;
 }
 
 .dark-mode #hint-btn, .dark-mode #meatball-hint-btn {
@@ -282,6 +286,7 @@ a {
   margin: 1vh auto;
   display: block;
   font-size: 1.2vh;
+  z-index: 11;
 }
 
 .dark-mode #resume-btn {
@@ -459,6 +464,7 @@ a {
   border-radius: 0.8vh;
   cursor: pointer;
   margin-top: 1vh;
+  z-index: 11;
 }
 
 .dark-mode #home-btn {
@@ -533,6 +539,7 @@ a {
   border-radius: 0.8vh;
   cursor: pointer;
   font-size: 3vh;
+  z-index: 11;
 }
 
 .dark-mode .home-btn {
