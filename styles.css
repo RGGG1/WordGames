@@ -29,11 +29,11 @@ a {
   flex-direction: column;
   min-height: 100vh;
   position: relative;
-  background: #FFFFFF; /* Removed background image */
+  background: #FFFFFF;
 }
 
 .dark-mode #game-screen {
-  background: #000000; /* Removed background image */
+  background: #000000;
 }
 
 #header {
@@ -54,18 +54,14 @@ a {
 
 #mode-toggle {
   font-size: 2.5vh;
-  background: #000000; /* Inverted colors */
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-  border-radius: 0.5vh;
-  padding: 0.2vh 0.5vw;
+  background: none; /* Not inverted */
+  border: none;
   cursor: pointer;
+  color: #000000;
 }
 
 .dark-mode #mode-toggle {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
+  color: #FFFFFF;
 }
 
 #game-name, #meatball-name {
@@ -76,6 +72,7 @@ a {
   color: #FFD700;
   -webkit-text-stroke: 0.1vh #FF4500;
   text-stroke: 0.1vh #FF4500;
+  cursor: pointer; /* Indicate clickable */
 }
 
 #meatball-name {
@@ -225,14 +222,19 @@ a {
 }
 
 #hint-btn {
-  font-size: 1.5vh;
-  padding: 0.5vh 1vw;
-  background: #000000; /* Inverted colors */
+  font-size: 3vh; /* Increased 100% from 1.5vh */
+  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
   cursor: pointer;
   margin-top: 1.5vh;
+}
+
+#hint-btn[disabled] {
+  opacity: 0.5; /* Lighter when disabled */
+  cursor: not-allowed;
 }
 
 .dark-mode #hint-btn {
@@ -256,7 +258,7 @@ a {
 }
 
 #how-to-play-1, #how-to-play-2 {
-  font-size: 2.5vh;
+  font-size: 3.5vh; /* Increased font size */
 }
 
 .hint-line span {
@@ -269,7 +271,7 @@ a {
   width: 3vh;
   height: 3vh;
   border-radius: 50%;
-  background: #000000; /* Inverted colors */
+  background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
   cursor: pointer;
@@ -290,7 +292,7 @@ a {
   left: 0;
   width: 100%;
   min-height: 100vh;
-  background: #FFFFFF; /* Removed background image */
+  background: #FFFFFF;
   color: #000000;
   display: none;
   flex-direction: column;
@@ -299,7 +301,7 @@ a {
 }
 
 .dark-mode #pause-screen {
-  background: #000000; /* Removed background image */
+  background: #000000;
   color: #FFFFFF;
 }
 
@@ -315,7 +317,8 @@ a {
 #game-over {
   position: fixed;
   top: 0;
-  left: 0;
+  left: 50%;
+  transform: translateX(-50%); /* Fully centered */
   width: 100%;
   min-height: 100vh;
   display: none;
@@ -323,23 +326,27 @@ a {
   justify-content: center;
   align-items: center;
   padding: 2vh;
-  background: #FFFFFF; /* Removed background image */
+  background: #FFFFFF;
 }
 
 .dark-mode #game-over {
-  background: #000000; /* Removed background image */
+  background: #000000;
+}
+
+#end-graphic, #todays-word-label, #todays-word, #share-box, #share-section, #end-footer, #home-btn, #ad-box {
+  margin: 0 auto; /* Ensure centering */
 }
 
 #end-graphic {
   height: 15.625vh;
-  margin: 1vh 0;
+  margin: 1vh auto;
 }
 
 #todays-word-label {
   font-size: 2vh;
   font-weight: bold;
-  margin: 1vh 0 0.5vh 0;
-  white-space: pre-line; /* Preserve line breaks */
+  margin: 1vh auto 0.5vh auto;
+  white-space: pre-line;
 }
 
 #todays-word {
@@ -351,7 +358,7 @@ a {
 #share-box {
   width: 85vw;
   max-width: 30vh;
-  margin: 1vh 0;
+  margin: 1vh auto;
   text-align: center;
 }
 
@@ -407,7 +414,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 1vh 0;
+  margin: 1vh auto;
 }
 
 #share-label {
@@ -432,7 +439,7 @@ a {
 
 #end-footer {
   font-size: 1.8vh;
-  margin: 1vh 0;
+  margin: 1vh auto;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -440,9 +447,9 @@ a {
 }
 
 #home-btn {
-  font-size: 1.5vh;
-  padding: 0.5vh 1vw;
-  background: #000000; /* Inverted colors */
+  font-size: 3vh; /* Increased 100% from 1.5vh */
+  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
@@ -465,7 +472,7 @@ a {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 1vh 0;
+  margin: 1vh auto;
 }
 
 .dark-mode #ad-box {
@@ -483,7 +490,7 @@ a {
   left: 0;
   width: 100%;
   min-height: 100vh;
-  background: #FFFFFF; /* Removed background image */
+  background: #FFFFFF;
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -491,7 +498,7 @@ a {
 }
 
 .dark-mode .screen {
-  background: #000000; /* Removed background image */
+  background: #000000;
 }
 
 #meatball-screen {
@@ -515,13 +522,13 @@ a {
 
 .home-btn {
   margin-top: 2vh;
-  padding: 0.5vh 1vw;
-  background: #000000; /* Inverted colors */
+  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
   cursor: pointer;
-  font-size: 1.5vh;
+  font-size: 3vh; /* Increased 100% from 1.5vh */
 }
 
 .dark-mode .home-btn {
@@ -578,7 +585,7 @@ a {
 
 #game-select-content {
   width: 85vw;
-  margin: 0 auto;
+  margin: 4vh auto 0 auto; /* Shifted down 4 lines */
   flex-grow: 1;
   overflow-y: auto;
 }
@@ -621,9 +628,9 @@ a {
 }
 
 .footer-btn {
-  font-size: 1.5vh;
-  padding: 0.5vh 1vw;
-  background: #000000; /* Inverted colors */
+  font-size: 3vh; /* Increased 100% from 1.5vh */
+  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
@@ -641,9 +648,9 @@ a {
   position: fixed;
   bottom: 1vh;
   left: 7.5vw;
-  font-size: 1.5vh;
-  padding: 0.5vh 1vw;
-  background: #000000; /* Inverted colors */
+  font-size: 3vh; /* Increased 100% from 1.5vh */
+  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
@@ -668,8 +675,8 @@ a {
     font-size: 2vh;
   }
   .footer-btn, .give-up-btn, .home-btn, #hint-btn {
-    font-size: 1.2vh;
-    padding: 0.4vh 0.8vw;
+    font-size: 2.4vh; /* Adjusted for smaller screens */
+    padding: 0.8vh 1.6vw;
   }
   #guess-input, #meatball-guess-input {
     font-size: 4vh;
@@ -677,7 +684,10 @@ a {
   #hints-box {
     height: calc(100vh - 17vh);
   }
-  .hint-line span, #how-to-play-1, #how-to-play-2 {
+  .hint-line span {
     font-size: 1.8vh;
+  }
+  #how-to-play-1, #how-to-play-2 {
+    font-size: 2.8vh; /* Adjusted for smaller screens */
   }
 }

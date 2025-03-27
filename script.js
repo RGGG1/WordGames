@@ -85,7 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (screen.style.display !== "none") {
                 const contentHeight = screen.offsetHeight;
                 if (viewportHeight < contentHeight + 100) {
-                    screen.style.minHeight = `${viewportHeight}px`; // Ensure visibility
+                    screen.style.minHeight = `${viewportHeight}px`;
                 }
             }
         });
@@ -186,9 +186,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.addEventListener("click", (e) => {
             const input = document.getElementById("guess-input");
-            if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none" && !e.target.closest("button")) {
+            if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none" && !e.target.closest("button") && e.target.id !== "game-name") {
                 input.focus();
             }
+        });
+
+        document.querySelectorAll("#game-name").forEach(name => {
+            name.addEventListener("click", () => {
+                resetGame();
+                document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
+                gameScreen.style.display = "flex";
+                document.getElementById("guess-input").focus();
+                adjustBackground();
+            });
         });
 
         document.getElementById("previous-games-btn").addEventListener("click", (e) => {
@@ -223,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         hintBtn.addEventListener("click", () => {
-            if (!gameOver && hintIndex < hints.length - 1) {
+            if (!gameOver && hintIndex < hints.length - 1 && guessCount >= 3) {
                 revealHintOnClick();
             }
         });
@@ -240,10 +250,17 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             guessCount++;
-            score = guessCount;
+            score = guessCount; // Always increment guessCount
+            if (revealedHints.size > 0) { // Apply doubling if hints were used
+                score = guessCount * Math.pow(2, revealedHints.size);
+            }
             document.querySelectorAll("#score").forEach(scoreDisplay => {
                 scoreDisplay.textContent = `${score}`;
             });
+
+            if (guessCount >= 3) {
+                hintBtn.disabled = false;
+            }
 
             guessDisplay.value = trimmedGuess.toUpperCase();
             guessDisplay.classList.remove("wrong-guess", "correct-guess");
@@ -288,7 +305,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function revealHintOnClick() {
             hintIndex++;
-            score = score === 0 ? 1 : score * 2;
+            score = score * 2; // Double the current score
+            revealedHints.add(hintIndex);
             document.querySelectorAll("#score").forEach(scoreDisplay => {
                 scoreDisplay.textContent = `${score}`;
             });
@@ -301,9 +319,8 @@ document.addEventListener("DOMContentLoaded", () => {
                         allHints[hintIndex].classList.remove("pulse-hint");
                     }, 2000);
                 }, 200);
-                revealedHints.add(hintIndex);
             }
-            if (hintIndex >= 6) { // After 7th hint
+            if (hintIndex >= 6) {
                 document.getElementById("hint-btn").style.display = "none";
             }
         }
@@ -433,7 +450,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("how-to-play-1").style.display = "block";
         document.getElementById("how-to-play-2").style.display = "block";
         document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "block");
-        document.getElementById("hint-btn").style.display = "block"; // Reset hint button visibility
+        document.getElementById("hint-btn").style.display = "block";
+        document.getElementById("hint-btn").disabled = true; // Disabled at start
         setupHints();
     }
 
