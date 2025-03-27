@@ -13,44 +13,62 @@ document.addEventListener("DOMContentLoaded", () => {
     let meatballScore = 0;
     let meatballGameOver = false;
     let meatballFirstGuess = false;
-    const meatballSecretWord = "TRIANGLE";
+    let meatballSecretWord = "";
+    let meatballAnagram = "";
+    let allAnagramGames = [];
 
     console.log("Pineapple & Meatball Version");
 
     async function fetchGameData() {
-        const csvUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
-        try {
-            const response = await fetch(csvUrl);
-            const text = await response.text();
-            const rows = text.split("\n").map(row => row.split(","));
-            const headers = rows[0];
-            allGames = rows.slice(1).map((row, index) => {
-                let obj = { gameNumber: index + 1 };
-                headers.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
-                return obj;
-            });
+        const pineappleUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=0&single=true&output=csv";
+        const anagramUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI/pub?gid=ANAGRAM_GID&single=true&output=csv"; // Replace ANAGRAM_GID with actual gid
 
-            const latestGame = allGames[allGames.length - 1];
-            loadGame(latestGame);
+        try {
+            // Fetch Pineapple games
+            const pineResponse = await fetch(pineappleUrl);
+            const pineText = await pineResponse.text();
+            const pineRows = pineText.split("\n").map(row => row.split(","));
+            const pineHeaders = pineRows[0];
+            allGames = pineRows.slice(1).map((row, index) => {
+                let obj = {};
+                pineHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
+                return obj;
+            }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+            const latestPineGame = allGames[0];
+            loadGame(latestPineGame);
             document.getElementById("game-screen").style.display = "flex";
             document.getElementById("guess-input").focus();
-            adjustBackground();
+
+            // Fetch Anagram games
+            const anagramResponse = await fetch(anagramUrl);
+            const anagramText = await anagramResponse.text();
+            const anagramRows = anagramText.split("\n").map(row => row.split(","));
+            const anagramHeaders = anagramRows[0];
+            allAnagramGames = anagramRows.slice(1).map((row) => {
+                let obj = {};
+                anagramHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
+                return obj;
+            }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+            const latestAnagramGame = allAnagramGames[0];
+            loadMeatballGame(latestAnagramGame);
         } catch (error) {
             console.error("Failed to fetch game data:", error);
-            allGames = [{ gameNumber: 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
+            allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
             loadGame(allGames[0]);
             document.getElementById("game-screen").style.display = "flex";
+            allAnagramGames = [{ "Game Number": 1, "Anagram": "RELATING", "Solution": "TRIANGLE" }];
+            loadMeatballGame(allAnagramGames[0]);
         }
+        adjustBackground();
     }
 
     function displayGameList() {
         const gameList = document.getElementById("game-list");
         gameList.innerHTML = "";
-        const sortedGames = [...allGames].sort((a, b) => b.gameNumber - a.gameNumber);
-        sortedGames.forEach(game => {
+        allGames.forEach(game => {
             const gameItem = document.createElement("div");
             gameItem.className = "game-item";
-            gameItem.textContent = `Game #${game.gameNumber}`; // Removed date
+            gameItem.textContent = `Game #${game["Game Number"]}`;
             gameItem.addEventListener("click", () => {
                 loadGame(game);
                 document.getElementById("game-select-screen").style.display = "none";
@@ -71,10 +89,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("hint-row-6").children[0],
             document.getElementById("hint-row-7").children[0]
         ];
-        
         hintElements.forEach((span, index) => {
             span.textContent = hints[index] || "";
-            if (index > 0 && span.textContent) span.style.visibility = "hidden";
+            span.style.visibility = index === 0 ? "visible" : "hidden"; // First hint visible
         });
     }
 
@@ -98,10 +115,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const meatballInput = document.getElementById("meatball-guess-input");
         const meatballGuessBackground = document.getElementById("meatball-guess-background");
 
+        meatballInput.addEventListener("input", (e) => {
+            if (!meatballGameOver && e.data && e.inputType === "insertReplacementText") {
+                handleMeatballGuess(meatballInput.value.trim());
+            }
+        });
+
         meatballInput.addEventListener("keydown", (e) => {
             if ((e.key === "Enter" || e.key === "NumpadEnter") && !meatballGameOver) {
-                handleMeatballGuess(meatballInput.value);
+                handleMeatballGuess(meatballInput.value.trim());
             }
+        });
+
+        document.getElementById("meatball-give-up-btn").addEventListener("click", (e) => {
+            e.preventDefault();
+            endMeatballGame(false, true);
         });
 
         function handleMeatballGuess(guess) {
@@ -136,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        function endMeatballGame(won) {
+        function endMeatballGame(won, gaveUp = false) {
             meatballGameOver = true;
             const shareText = document.getElementById("share-text");
             const shareGameNumber = document.getElementById("share-game-number");
@@ -144,17 +172,46 @@ document.addEventListener("DOMContentLoaded", () => {
             const shareWhatsApp = document.getElementById("share-whatsapp");
             const shareTelegram = document.getElementById("share-telegram");
             const shareTwitter = document.getElementById("share-twitter");
+            const endGraphic = document.getElementById("end-graphic");
+            const todaysWord = document.getElementById("todays-word");
+            const todaysWordLabel = document.getElementById("todays-word-label");
+            const gameNumberSpan = document.getElementById("game-number");
 
             meatballScreen.style.display = "none";
             document.getElementById("game-over").style.display = "flex";
             meatballInput.blur();
 
             const totalGuesses = meatballScore + 1;
-            shareText.textContent = `I got today's meatball in ${totalGuesses} guesses`;
-            shareGameNumber.textContent = "Game #1";
-            shareScore.textContent = `${totalGuesses}`;
+            todaysWordLabel.textContent = `Game #${allAnagramGames[0]["Game Number"]}\nSecret Word`;
+            todaysWord.textContent = meatballSecretWord;
+            gameNumberSpan.textContent = allAnagramGames[0]["Game Number"];
 
-            const shareMessage = `${shareText.textContent}\nGame #1\nScore: ${totalGuesses}\nCan you beat my score? Click here: https://your-game-url.com/meatball`;
+            if (won) {
+                endGraphic.src = "pineapple_gif.gif"; // Replace with meatball-specific graphic if available
+                endGraphic.style.display = "block";
+                const guessText = totalGuesses === 1 ? "guess" : "guesses";
+                shareText.innerHTML = `I solved today's meatball in\n<span class="big-score">${totalGuesses}</span>\n${guessText}\nGame #${allAnagramGames[0]["Game Number"]}`;
+                shareGameNumber.style.display = "none";
+                shareScore.style.display = "none";
+            } else if (gaveUp) {
+                endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
+                endGraphic.style.display = "block";
+                shareText.innerHTML = 'PLAY MEATBALL\n<span class="italic">The Anagram Word Game</span>';
+                shareGameNumber.textContent = `Game #${allAnagramGames[0]["Game Number"]}`;
+                shareScore.style.display = "none";
+            } else {
+                endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
+                endGraphic.style.display = "block";
+                shareText.textContent = "I didn’t solve today’s meatball";
+                shareGameNumber.textContent = `Game #${allAnagramGames[0]["Game Number"]}`;
+                shareScore.textContent = `${totalGuesses}`;
+            }
+
+            const shareMessage = gaveUp
+                ? `PLAY MEATBALL\nThe Anagram Word Game\nGame #${allAnagramGames[0]["Game Number"]}\nCan you beat my score? Click here: https://your-game-url.com/meatball`
+                : won
+                ? `I solved today's meatball in\n${totalGuesses}\n${totalGuesses === 1 ? "guess" : "guesses"}\nGame #${allAnagramGames[0]["Game Number"]}\nCan you beat my score? Click here: https://your-game-url.com/meatball`
+                : `${shareText.textContent}\nGame #${allAnagramGames[0]["Game Number"]}\nScore: ${totalGuesses}\nCan you beat my score? Click here: https://your-game-url.com/meatball`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com/meatball")}&text=${encodeURIComponent(shareMessage)}`;
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
@@ -226,9 +283,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const guessLine = document.getElementById("guess-line");
         const hintBtn = document.getElementById("hint-btn");
 
+        input.addEventListener("input", (e) => {
+            if (!gameOver && e.data && e.inputType === "insertReplacementText") {
+                handleGuess(input.value.trim());
+            }
+        });
+
         input.addEventListener("keydown", (e) => {
             if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) {
-                handleGuess(input.value);
+                handleGuess(input.value.trim());
             }
         });
 
@@ -240,7 +303,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function handleGuess(guess) {
             const guessDisplay = input;
-            const trimmedGuess = guess.trim();
+            guessDisplay.value = guess.toUpperCase();
+            guessDisplay.classList.remove("wrong-guess", "correct-guess");
+            guessDisplay.style.opacity = "1";
+            void guessDisplay.offsetWidth;
+
             if (!firstGuessMade) {
                 firstGuessMade = true;
                 document.getElementById("how-to-play-1").style.display = "none";
@@ -251,20 +318,16 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             guessCount++;
-            score = guessCount;
+            score = guessCount; // Linear progression
             if (revealedHints.size > 0) {
-                score = guessCount * Math.pow(2, revealedHints.size);
+                score = guessCount + (revealedHints.size === 1 && guessCount < 3 ? 5 - guessCount : 0);
+                if (revealedHints.size > 1) score *= Math.pow(2, revealedHints.size - 1);
             }
             document.querySelectorAll("#score").forEach(scoreDisplay => {
                 scoreDisplay.textContent = `${score}`;
             });
 
-            guessDisplay.value = trimmedGuess.toUpperCase();
-            guessDisplay.classList.remove("wrong-guess", "correct-guess");
-            guessDisplay.style.opacity = "1";
-            void guessDisplay.offsetWidth;
-
-            if (trimmedGuess.toUpperCase() === secretWord) {
+            if (guess.toUpperCase() === secretWord) {
                 guessDisplay.classList.add("correct-guess");
                 guessBackground.classList.add("flash-green");
                 guessLine.style.opacity = "0";
@@ -302,24 +365,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function revealHintOnClick() {
             hintIndex++;
-            if (revealedHints.size === 0 && guessCount < 3) {
-                score = 5;
-            } else {
-                score = score * 2;
-            }
             revealedHints.add(hintIndex);
+            if (revealedHints.size === 1 && guessCount < 3) {
+                score = 5;
+            } else if (revealedHints.size > 1) {
+                score *= 2;
+            }
             document.querySelectorAll("#score").forEach(scoreDisplay => {
                 scoreDisplay.textContent = `${score}`;
             });
             const allHints = document.querySelectorAll(".hint-line span");
-            if (hintIndex < allHints.length && allHints[hintIndex].textContent && !revealedHints.has(hintIndex)) {
+            if (hintIndex < allHints.length && allHints[hintIndex].textContent) {
                 allHints[hintIndex].style.visibility = "visible";
+                allHints[hintIndex].classList.add("pulse-hint");
                 setTimeout(() => {
-                    allHints[hintIndex].classList.add("pulse-hint");
-                    setTimeout(() => {
-                        allHints[hintIndex].classList.remove("pulse-hint");
-                    }, 2000);
-                }, 200);
+                    allHints[hintIndex].classList.remove("pulse-hint");
+                }, 2000);
             }
             if (hintIndex >= 6) {
                 document.getElementById("hint-btn").style.display = "none";
@@ -416,6 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("meatball-score").textContent = "0";
             document.getElementById("meatball-guess-input").value = "";
             document.getElementById("meatball-instruction").style.display = "block";
+            loadMeatballGame(allAnagramGames[0]);
             adjustBackground();
         });
 
@@ -465,14 +527,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function loadGame(game) {
         resetGame();
-        currentGameNumber = game.gameNumber;
+        currentGameNumber = game["Game Number"];
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"], game["Hint 2"], game["Hint 3"],
             game["Hint 4"], game["Hint 5"], game["Hint 6"],
-            game["Hint 7"], game["Hint 8"], game["Hint 9"]
+            game["Hint 7"]
         ].filter(hint => hint).map(hint => hint.toUpperCase());
         while (hints.length < 7) hints.push("");
         setupHints();
+    }
+
+    function loadMeatballGame(game) {
+        meatballSecretWord = game["Solution"].toUpperCase();
+        meatballAnagram = game["Anagram"].toUpperCase();
+        document.getElementById("meatball-relating").textContent = meatballAnagram;
     }
 });

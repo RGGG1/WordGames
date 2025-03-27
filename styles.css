@@ -87,15 +87,9 @@ a {
   text-stroke: 0.1vh #FFFFFF;
 }
 
-#score-box {
-  display: flex;
-  align-items: center;
+#score, #meatball-score {
   font-size: 2.5vh;
   font-weight: bold;
-}
-
-#score-box span:first-child {
-  margin-right: 0.5vw;
 }
 
 #guess-area {
@@ -112,7 +106,7 @@ a {
 #meatball-guess-area {
   width: 85vw;
   height: 10vh;
-  margin: 1vh auto 0 auto;
+  margin: 8vh auto 0 auto; /* Moved higher */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -136,21 +130,14 @@ a {
 
 #meatball-relating {
   width: 85vw;
-  margin: 2vh auto 0 auto;
+  margin: 4vh auto 0 auto; /* Moved higher */
   font-size: 3vh;
   text-align: center;
   text-transform: uppercase;
 }
 
 #meatball-separator {
-  width: 50%;
-  height: 0.2vh;
-  background: #000000;
-  margin: 1vh auto;
-}
-
-.dark-mode #meatball-separator {
-  background: #FFFFFF;
+  display: none; /* Removed as it's not needed with new layout */
 }
 
 #guess-background, #meatball-guess-background {
@@ -457,7 +444,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.8vh; /* Slightly rounded corners */
+  border-radius: 0.8vh;
   cursor: pointer;
   margin-top: 1vh;
 }
@@ -531,7 +518,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.8vh; /* Slightly rounded corners */
+  border-radius: 0.8vh;
   cursor: pointer;
   font-size: 3vh;
 }
@@ -638,7 +625,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.8vh; /* Slightly rounded corners */
+  border-radius: 0.8vh;
   cursor: pointer;
   z-index: 11;
 }
@@ -658,7 +645,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.8vh; /* Slightly rounded corners */
+  border-radius: 0.8vh;
   cursor: pointer;
   z-index: 11;
 }
@@ -673,7 +660,7 @@ a {
   #header, #footer {
       width: 90vw;
   }
-  #game-name, #meatball-name, #score-box {
+  #game-name, #meatball-name, #score, #meatball-score {
       font-size: 2vh;
   }
   #mode-toggle {
