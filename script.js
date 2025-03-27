@@ -8,7 +8,6 @@ document.addEventListener("DOMContentLoaded", () => {
     let allGames = [];
     let currentGameNumber = null;
     let guessCount = 0;
-    let revealedHints = new Set();
 
     let meatballScore = 0;
     let meatballGameOver = false;
@@ -17,7 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let meatballAnagram = "";
     let allAnagramGames = [];
     let meatballHintIndex = 0;
-    let meatballRevealedHints = new Set();
+    let meatballGuessCount = 0;
 
     console.log("Pineapple & Meatball Version");
 
@@ -74,7 +73,7 @@ document.addEventListener("DOMContentLoaded", () => {
             loadMeatballGame(allAnagramGames[0]);
         }
         adjustBackground();
-        setupEventListeners(); // Moved event listeners setup here
+        setupEventListeners();
     }
 
     function setupEventListeners() {
@@ -161,8 +160,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Pineapple hint
         hintBtn.addEventListener("click", () => {
-            if (!gameOver && hintIndex < hints.length - 1) {
+            if (!gameOver && hintIndex < hints.length - 1 && guessCount >= 3) {
                 revealHintOnClick();
+                input.focus(); // Focus input after hint
             }
         });
 
@@ -181,8 +181,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Meatball hint
         meatballHintBtn.addEventListener("click", () => {
-            if (!meatballGameOver && meatballHintIndex < meatballSecretWord.length) {
+            if (!meatballGameOver && meatballHintIndex < meatballSecretWord.length && meatballGuessCount >= 3) {
                 revealMeatballHint();
+                meatballInput.focus(); // Focus input after hint
             }
         });
 
@@ -226,11 +227,12 @@ document.addEventListener("DOMContentLoaded", () => {
             meatballGameOver = false;
             meatballFirstGuess = false;
             meatballHintIndex = 0;
-            meatballRevealedHints.clear();
+            meatballGuessCount = 0;
             document.getElementById("meatball-score").textContent = "0";
             document.getElementById("meatball-guess-input").value = "";
             document.getElementById("meatball-instruction").style.display = "block";
             document.getElementById("meatball-hint-text").textContent = "";
+            document.getElementById("meatball-hint-btn").disabled = true;
             document.getElementById("meatball-hint-btn").style.display = "block";
             loadMeatballGame(allAnagramGames[0]);
             adjustBackground();
@@ -325,14 +327,15 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         guessCount++;
-        score = guessCount; // Linear progression
-        if (revealedHints.size > 0) {
-            score = guessCount + (revealedHints.size === 1 && guessCount < 3 ? 5 - guessCount : 0);
-            if (revealedHints.size > 1) score *= Math.pow(2, revealedHints.size - 1);
-        }
+        score = guessCount; // Score increases by 1 per guess
         document.querySelectorAll("#score").forEach(scoreDisplay => {
             scoreDisplay.textContent = `${score}`;
         });
+
+        // Enable hint button after 3 guesses
+        if (guessCount >= 3) {
+            document.getElementById("hint-btn").disabled = false;
+        }
 
         if (guess.toUpperCase() === secretWord) {
             guessDisplay.classList.add("correct-guess");
@@ -372,12 +375,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function revealHintOnClick() {
         hintIndex++;
-        revealedHints.add(hintIndex);
-        if (revealedHints.size === 1 && guessCount < 3) {
-            score = 5;
-        } else if (revealedHints.size > 1) {
-            score *= 2;
-        }
+        score *= 2; // Double the current score
         document.querySelectorAll("#score").forEach(scoreDisplay => {
             scoreDisplay.textContent = `${score}`;
         });
@@ -461,12 +459,14 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("meatball-instruction").style.display = "none";
         }
 
-        meatballScore++; // Linear progression
-        if (meatballRevealedHints.size > 0) {
-            meatballScore = meatballScore + (meatballRevealedHints.size === 1 && meatballScore < 3 ? 5 - meatballScore : 0);
-            if (meatballRevealedHints.size > 1) meatballScore *= Math.pow(2, meatballRevealedHints.size - 1);
-        }
+        meatballGuessCount++;
+        meatballScore = meatballGuessCount; // Score increases by 1 per guess
         document.getElementById("meatball-score").textContent = `${meatballScore}`;
+
+        // Enable hint button after 3 guesses
+        if (meatballGuessCount >= 3) {
+            document.getElementById("meatball-hint-btn").disabled = false;
+        }
 
         if (guess.toUpperCase() === meatballSecretWord) {
             guessBackground.classList.add("flash-green");
@@ -488,12 +488,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function revealMeatballHint() {
         meatballHintIndex++;
-        meatballRevealedHints.add(meatballHintIndex);
-        if (meatballRevealedHints.size === 1 && meatballScore < 3) {
-            meatballScore = 5;
-        } else if (meatballRevealedHints.size > 1) {
-            meatballScore *= 2;
-        }
+        meatballScore *= 2; // Double the current score
         document.getElementById("meatball-score").textContent = `${meatballScore}`;
         document.getElementById("meatball-hint-text").textContent = meatballSecretWord.substring(0, meatballHintIndex);
         document.getElementById("meatball-hint-text").classList.add("pulse-hint");
@@ -565,7 +560,6 @@ document.addEventListener("DOMContentLoaded", () => {
         hintIndex = 0;
         firstGuessMade = false;
         guessCount = 0;
-        revealedHints.clear();
         document.querySelectorAll("#score").forEach(scoreDisplay => {
             scoreDisplay.textContent = `${score}`;
         });
@@ -575,6 +569,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("how-to-play-2").style.display = "block";
         document.getElementById("how-to-play-3").style.display = "block";
         document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "block");
+        document.getElementById("hint-btn").disabled = true;
         document.getElementById("hint-btn").style.display = "block";
         setupHints();
     }
