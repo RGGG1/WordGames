@@ -28,7 +28,7 @@
                 <div class="hint-line spacer"></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-                <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible. You can ask for up to seven hints, but each hint doubles your guess count</div>
+                <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br>You can ask for up to seven hints,<br>but each hint doubles your guess count</div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>
                 <div class="hint-line" id="hint-row-3"><span></span></div>
                 <div class="hint-line" id="hint-row-4"><span></span></div>
@@ -48,20 +48,22 @@
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
+            <div id="score">0</div>
         </div>
         <div id="pause-text">Ads here - coming soon</div>
         <button id="resume-btn">Resume</button>
         <div id="countdown" style="display: none;"></div>
-        <div id="footer"></div> <!-- Empty footer for consistency -->
+        <div id="footer"></div>
     </div>
 
     <div id="game-over" style="display: none;">
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
+            <div id="score">0</div>
         </div>
         <img id="end-graphic" src="" alt="End Graphic" style="display: none;">
-        <div id="todays-word-label">Today's Word</div>
+        <div id="todays-word-label">Game #<span id="game-number"></span><br>Secret Word</div>
         <div id="todays-word"></div>
         <div id="share-box">
             <div id="share-panel">
@@ -89,20 +91,21 @@
             Advertise with us here and reach millions of players
             <div id="ad-link">click here to place an ad</div>
         </div>
-        <div id="footer"></div> <!-- Empty footer for consistency -->
+        <div id="footer"></div>
     </div>
 
     <div id="create-game-screen" class="screen" style="display: none;">
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
+            <div id="score">0</div>
         </div>
         <div id="create-game-content">
             <div>Create a Game...</div>
             <p>Create your own secret words and hints...coming soon</p>
             <button class="home-btn">Home</button>
         </div>
-        <div id="footer"></div> <!-- Empty footer for consistency -->
+        <div id="footer"></div>
     </div>
 
     <div id="meatball-screen" class="screen" style="display: none;">
@@ -119,13 +122,14 @@
             <div id="meatball-guess-line"></div>
         </div>
         <div id="meatball-instruction">The Daily Meatball<br>Rearrange the letters of this word to form another word.<br>There may be multiple possibilities, but there is only one true meatball.</div>
-        <div id="footer"></div> <!-- Empty footer for consistency -->
+        <div id="footer"></div>
     </div>
 
     <div id="game-select-screen" class="screen" style="display: none;">
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-sun"></i></button>
             <div id="game-name">PINEAPPLE</div>
+            <div id="score">0</div>
         </div>
         <div id="game-select-content">
             <div id="game-list-title">Previous Games</div>

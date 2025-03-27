@@ -85,11 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (screen.style.display !== "none") {
                 const contentHeight = screen.offsetHeight;
                 if (viewportHeight < contentHeight + 100) {
-                    screen.style.backgroundSize = `125vw ${viewportHeight * 1.7778}px`;
-                    screen.style.backgroundPosition = "center top";
-                } else {
-                    screen.style.backgroundSize = "125vw 222.22vh";
-                    screen.style.backgroundPosition = "center center";
+                    screen.style.minHeight = `${viewportHeight}px`; // Ensure visibility
                 }
             }
         });
@@ -292,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function revealHintOnClick() {
             hintIndex++;
-            score = score === 0 ? 1 : score * 2; // Ensure score doesn’t stay 0
+            score = score === 0 ? 1 : score * 2;
             document.querySelectorAll("#score").forEach(scoreDisplay => {
                 scoreDisplay.textContent = `${score}`;
             });
@@ -307,12 +303,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }, 200);
                 revealedHints.add(hintIndex);
             }
+            if (hintIndex >= 6) { // After 7th hint
+                document.getElementById("hint-btn").style.display = "none";
+            }
         }
 
         function endGame(won, gaveUp = false) {
             gameOver = true;
             const endGraphic = document.getElementById("end-graphic");
             const todaysWord = document.getElementById("todays-word");
+            const gameNumberSpan = document.getElementById("game-number");
             const shareText = document.getElementById("share-text");
             const shareGameNumber = document.getElementById("share-game-number");
             const shareScoreLabel = document.getElementById("share-score-label");
@@ -325,6 +325,7 @@ document.addEventListener("DOMContentLoaded", () => {
             go.style.display = "flex";
             document.getElementById("guess-input").blur();
 
+            gameNumberSpan.textContent = currentGameNumber;
             todaysWord.textContent = secretWord;
 
             if (won) {
@@ -337,7 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else if (gaveUp) {
                 endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
                 endGraphic.style.display = "block";
-                shareText.innerHTML = '<span class="big">Play Pineapple</span><br><span class="italic">daily word game</span>';
+                shareText.innerHTML = 'PLAY PINEAPPLE\n<span class="italic">The Big Brain Word Game</span>';
                 shareGameNumber.textContent = `Game #${currentGameNumber}`;
                 shareScoreLabel.style.display = "none";
                 shareScore.style.display = "none";
@@ -350,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             const shareMessage = gaveUp
-                ? `Play Pineapple\ndaily word game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+                ? `PLAY PINEAPPLE\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
                 : won
                 ? `I solved today's pineapple in\n${score}\nguesses\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
                 : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
@@ -432,6 +433,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("how-to-play-1").style.display = "block";
         document.getElementById("how-to-play-2").style.display = "block";
         document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "block");
+        document.getElementById("hint-btn").style.display = "block"; // Reset hint button visibility
         setupHints();
     }
 

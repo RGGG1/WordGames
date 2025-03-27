@@ -5,7 +5,7 @@ body {
   padding: 0;
   text-align: center;
   user-select: none;
-  min-height: 100vh; /* Changed for mobile compatibility */
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -27,15 +27,13 @@ a {
 #game-screen {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; /* Changed for mobile visibility */
+  min-height: 100vh;
   position: relative;
-  background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 125vw 222.22vh;
+  background: #FFFFFF; /* Removed background image */
 }
 
 .dark-mode #game-screen {
-  background: url('pineapple_background_dark.png') no-repeat center center;
-  background-size: 125vw 222.22vh;
+  background: #000000; /* Removed background image */
 }
 
 #header {
@@ -56,14 +54,18 @@ a {
 
 #mode-toggle {
   font-size: 2.5vh;
-  background: none;
-  border: none;
+  background: #000000; /* Inverted colors */
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
+  border-radius: 0.5vh;
+  padding: 0.2vh 0.5vw;
   cursor: pointer;
-  color: #000000;
 }
 
 .dark-mode #mode-toggle {
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 #game-name, #meatball-name {
@@ -126,7 +128,7 @@ a {
   top: 0;
   left: 0;
   text-align: left;
-  margin-top: 1vh; /* Moved down half a line */
+  margin-top: 1vh;
 }
 
 #meatball-relating {
@@ -225,16 +227,18 @@ a {
 #hint-btn {
   font-size: 1.5vh;
   padding: 0.5vh 1vw;
-  background: none;
-  border: 0.1vh solid #000000;
+  background: #000000; /* Inverted colors */
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
   cursor: pointer;
-  margin-top: 1.5vh; /* Matches previous hints-subtitle positioning */
+  margin-top: 1.5vh;
 }
 
 .dark-mode #hint-btn {
-  border-color: #FFFFFF;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 #hints {
@@ -265,8 +269,9 @@ a {
   width: 3vh;
   height: 3vh;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid #000000;
+  background: #000000; /* Inverted colors */
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
   cursor: pointer;
   margin: 1vh auto;
   display: block;
@@ -274,8 +279,9 @@ a {
 }
 
 .dark-mode #resume-btn {
-  background: rgba(0, 0, 0, 0.8);
-  border: 1px solid #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 #pause-screen {
@@ -284,8 +290,7 @@ a {
   left: 0;
   width: 100%;
   min-height: 100vh;
-  background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 125vw 222.22vh;
+  background: #FFFFFF; /* Removed background image */
   color: #000000;
   display: none;
   flex-direction: column;
@@ -294,8 +299,7 @@ a {
 }
 
 .dark-mode #pause-screen {
-  background: url('pineapple_background_dark.png') no-repeat center center;
-  background-size: 125vw 222.22vh;
+  background: #000000; /* Removed background image */
   color: #FFFFFF;
 }
 
@@ -310,7 +314,7 @@ a {
 
 #game-over {
   position: fixed;
-  top: 0; /* Changed to fixed for consistency */
+  top: 0;
   left: 0;
   width: 100%;
   min-height: 100vh;
@@ -319,13 +323,11 @@ a {
   justify-content: center;
   align-items: center;
   padding: 2vh;
-  background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 125vw 222.22vh;
+  background: #FFFFFF; /* Removed background image */
 }
 
 .dark-mode #game-over {
-  background: url('pineapple_background_dark.png') no-repeat center center;
-  background-size: 125vw 222.22vh;
+  background: #000000; /* Removed background image */
 }
 
 #end-graphic {
@@ -337,6 +339,7 @@ a {
   font-size: 2vh;
   font-weight: bold;
   margin: 1vh 0 0.5vh 0;
+  white-space: pre-line; /* Preserve line breaks */
 }
 
 #todays-word {
@@ -368,11 +371,11 @@ a {
 #share-text {
   font-size: 2vh;
   margin-bottom: 0.5vh;
-  white-space: pre-line; /* Preserve line breaks */
+  white-space: pre-line;
 }
 
 #share-text .big-score {
-  font-size: 4vh; /* Double the size of 2vh */
+  font-size: 4vh;
 }
 
 #share-text.big {
@@ -439,16 +442,18 @@ a {
 #home-btn {
   font-size: 1.5vh;
   padding: 0.5vh 1vw;
-  background: none;
-  border: 0.1vh solid #000000;
+  background: #000000; /* Inverted colors */
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
   cursor: pointer;
   margin-top: 1vh;
 }
 
 .dark-mode #home-btn {
-  border-color: #FFFFFF;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 #ad-box {
@@ -478,8 +483,7 @@ a {
   left: 0;
   width: 100%;
   min-height: 100vh;
-  background: url('pineapple_background_light.png') no-repeat center center;
-  background-size: 125vw 222.22vh;
+  background: #FFFFFF; /* Removed background image */
   display: none;
   flex-direction: column;
   justify-content: center;
@@ -487,8 +491,7 @@ a {
 }
 
 .dark-mode .screen {
-  background: url('pineapple_background_dark.png') no-repeat center center;
-  background-size: 125vw 222.22vh;
+  background: #000000; /* Removed background image */
 }
 
 #meatball-screen {
@@ -513,16 +516,18 @@ a {
 .home-btn {
   margin-top: 2vh;
   padding: 0.5vh 1vw;
-  background: none;
-  border: 0.1vh solid #000;
+  background: #000000; /* Inverted colors */
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
   cursor: pointer;
   font-size: 1.5vh;
 }
 
 .dark-mode .home-btn {
-  border-color: #FFFFFF;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 #guess-input.wrong-guess, #meatball-guess-input.wrong-guess {
@@ -618,61 +623,61 @@ a {
 .footer-btn {
   font-size: 1.5vh;
   padding: 0.5vh 1vw;
-  background: none;
-  border: 0.1vh solid #000000;
+  background: #000000; /* Inverted colors */
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
   cursor: pointer;
-  z-index: 11; /* Ensure visibility on mobile */
+  z-index: 11;
 }
 
 .dark-mode .footer-btn {
-  border-color: #FFFFFF;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 .give-up-btn {
-  position: fixed; /* Changed to fixed for visibility */
+  position: fixed;
   bottom: 1vh;
   left: 7.5vw;
   font-size: 1.5vh;
   padding: 0.5vh 1vw;
-  background: none;
-  border: 0.1vh solid #000000;
+  background: #000000; /* Inverted colors */
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
   cursor: pointer;
-  z-index: 11; /* Ensure visibility on mobile */
+  z-index: 11;
 }
 
 .dark-mode .give-up-btn {
-  border-color: #FFFFFF;
-  color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
-/* Media queries for smaller screens */
 @media (max-width: 600px) or (max-height: 600px) {
   #header, #footer {
-    width: 90vw; /* Slightly wider for small screens */
+    width: 90vw;
   }
   #game-name, #meatball-name, #score, #meatball-score {
-    font-size: 2vh; /* Smaller font for small screens */
+    font-size: 2vh;
   }
   #mode-toggle {
     font-size: 2vh;
   }
-  .footer-btn, .give-up-btn {
-    font-size: 1.2vh; /* Adjust button size */
+  .footer-btn, .give-up-btn, .home-btn, #hint-btn {
+    font-size: 1.2vh;
     padding: 0.4vh 0.8vw;
   }
   #guess-input, #meatball-guess-input {
-    font-size: 4vh; /* Slightly smaller input text */
+    font-size: 4vh;
   }
   #hints-box {
-    height: calc(100vh - 17vh); /* Adjust for smaller header/footer */
+    height: calc(100vh - 17vh);
   }
   .hint-line span, #how-to-play-1, #how-to-play-2 {
     font-size: 1.8vh;
-  }
-  #hint-btn {
-    font-size: 1.2vh;
   }
 }
