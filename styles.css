@@ -106,7 +106,7 @@ a {
 #meatball-guess-area {
   width: 85vw;
   height: 10vh;
-  margin: 8vh auto 0 auto; /* Moved higher */
+  margin: 8vh auto 0 auto;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -130,14 +130,14 @@ a {
 
 #meatball-relating {
   width: 85vw;
-  margin: 4vh auto 0 auto; /* Moved higher */
+  margin: 4vh auto 0 auto;
   font-size: 3vh;
   text-align: center;
   text-transform: uppercase;
 }
 
 #meatball-separator {
-  display: none; /* Removed as it's not needed with new layout */
+  display: none;
 }
 
 #guess-background, #meatball-guess-background {
@@ -214,7 +214,7 @@ a {
   margin-bottom: 0.5vh;
 }
 
-#hint-btn {
+#hint-btn, #meatball-hint-btn {
   font-size: 3vh;
   padding: 1vh 2vw;
   background: #000000;
@@ -225,16 +225,28 @@ a {
   margin-top: 1.5vh;
 }
 
-.dark-mode #hint-btn {
+.dark-mode #hint-btn, .dark-mode #meatball-hint-btn {
   background: #FFFFFF;
   color: #000000;
   border: 0.1vh solid #000000;
 }
 
-#hints {
+#hints, #meatball-hints {
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+#meatball-hints {
+  width: 85vw;
+  margin: 1vh auto;
+}
+
+#meatball-hint-text {
+  font-size: 2.5vh;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 1vh;
 }
 
 .hint-line {
@@ -666,7 +678,7 @@ a {
   #mode-toggle {
       font-size: 2vh;
   }
-  .footer-btn, .give-up-btn, .home-btn, #hint-btn {
+  .footer-btn, .give-up-btn, .home-btn, #hint-btn, #meatball-hint-btn {
       font-size: 2.4vh;
       padding: 0.8vh 1.6vw;
   }
@@ -676,7 +688,7 @@ a {
   #hints-box {
       height: calc(100vh - 17vh);
   }
-  .hint-line span {
+  .hint-line span, #meatball-hint-text {
       font-size: 1.8vh;
   }
   #how-to-play-1, #how-to-play-2 {

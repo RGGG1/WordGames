@@ -16,44 +16,57 @@ document.addEventListener("DOMContentLoaded", () => {
     let meatballSecretWord = "";
     let meatballAnagram = "";
     let allAnagramGames = [];
+    let meatballHintIndex = 0;
+    let meatballRevealedHints = new Set();
 
     console.log("Pineapple & Meatball Version");
 
     async function fetchGameData() {
         const spreadsheetId = "2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI";
-        const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`; // Sheet1 (gid=0)
-        const anagramUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=1690282084&single=true&output=csv`; // anagrams (example gid, adjust as needed)
+        const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`; // Sheet1
+        const anagramUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=187602849&single=true&output=csv`; // anagrams
 
         try {
             // Fetch Pineapple games (Sheet1)
+            console.log("Fetching Pineapple data from:", pineappleUrl);
             const pineResponse = await fetch(pineappleUrl);
+            if (!pineResponse.ok) throw new Error(`Pineapple fetch failed: ${pineResponse.status}`);
             const pineText = await pineResponse.text();
+            console.log("Raw Pineapple CSV:", pineText);
             const pineRows = pineText.split("\n").map(row => row.split(","));
             const pineHeaders = pineRows[0];
+            console.log("Pineapple Headers:", pineHeaders);
             allGames = pineRows.slice(1).map((row) => {
                 let obj = {};
                 pineHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
                 return obj;
             }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+            console.log("Parsed Pineapple Games:", allGames);
             const latestPineGame = allGames[0];
             loadGame(latestPineGame);
             document.getElementById("game-screen").style.display = "flex";
             document.getElementById("guess-input").focus();
 
             // Fetch Anagram games (anagrams)
+            console.log("Fetching Anagram data from:", anagramUrl);
             const anagramResponse = await fetch(anagramUrl);
+            if (!anagramResponse.ok) throw new Error(`Anagram fetch failed: ${anagramResponse.status}`);
             const anagramText = await anagramResponse.text();
+            console.log("Raw Anagram CSV:", anagramText);
             const anagramRows = anagramText.split("\n").map(row => row.split(","));
             const anagramHeaders = anagramRows[0];
+            console.log("Anagram Headers:", anagramHeaders);
             allAnagramGames = anagramRows.slice(1).map((row) => {
                 let obj = {};
                 anagramHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
                 return obj;
             }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+            console.log("Parsed Anagram Games:", allAnagramGames);
             const latestAnagramGame = allAnagramGames[0];
             loadMeatballGame(latestAnagramGame);
         } catch (error) {
             console.error("Failed to fetch game data:", error);
+            console.log("Using fallback data due to error.");
             allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
             loadGame(allGames[0]);
             document.getElementById("game-screen").style.display = "flex";
@@ -115,6 +128,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const meatballScreen = document.getElementById("meatball-screen");
         const meatballInput = document.getElementById("meatball-guess-input");
         const meatballGuessBackground = document.getElementById("meatball-guess-background");
+        const meatballHintBtn = document.getElementById("meatball-hint-btn");
+        const meatballHintText = document.getElementById("meatball-hint-text");
 
         meatballInput.addEventListener("input", (e) => {
             if (!meatballGameOver && e.data && e.inputType === "insertReplacementText") {
@@ -125,6 +140,12 @@ document.addEventListener("DOMContentLoaded", () => {
         meatballInput.addEventListener("keydown", (e) => {
             if ((e.key === "Enter" || e.key === "NumpadEnter") && !meatballGameOver) {
                 handleMeatballGuess(meatballInput.value.trim());
+            }
+        });
+
+        meatballHintBtn.addEventListener("click", () => {
+            if (!meatballGameOver && meatballHintIndex < meatballSecretWord.length) {
+                revealMeatballHint();
             }
         });
 
@@ -145,6 +166,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("meatball-instruction").style.display = "none";
             }
 
+            meatballScore++; // Linear progression
+            if (meatballRevealedHints.size > 0) {
+                meatballScore = meatballScore + (meatballRevealedHints.size === 1 && meatballScore < 3 ? 5 - meatballScore : 0);
+                if (meatballRevealedHints.size > 1) meatballScore *= Math.pow(2, meatballRevealedHints.size - 1);
+            }
+            document.getElementById("meatball-score").textContent = `${meatballScore}`;
+
             if (guess.toUpperCase() === meatballSecretWord) {
                 meatballGuessBackground.classList.add("flash-green");
                 setTimeout(() => {
@@ -152,8 +180,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     endMeatballGame(true);
                 }, 1500);
             } else {
-                meatballScore++;
-                document.getElementById("meatball-score").textContent = `${meatballScore}`;
                 guessDisplay.classList.add("wrong-guess");
                 setTimeout(() => {
                     guessDisplay.classList.remove("wrong-guess");
@@ -162,6 +188,25 @@ document.addEventListener("DOMContentLoaded", () => {
                     guessDisplay.value = "";
                     if (!meatballGameOver) guessDisplay.focus();
                 }, 500);
+            }
+        }
+
+        function revealMeatballHint() {
+            meatballHintIndex++;
+            meatballRevealedHints.add(meatballHintIndex);
+            if (meatballRevealedHints.size === 1 && meatballScore < 3) {
+                meatballScore = 5;
+            } else if (meatballRevealedHints.size > 1) {
+                meatballScore *= 2;
+            }
+            document.getElementById("meatball-score").textContent = `${meatballScore}`;
+            meatballHintText.textContent = meatballSecretWord.substring(0, meatballHintIndex);
+            meatballHintText.classList.add("pulse-hint");
+            setTimeout(() => {
+                meatballHintText.classList.remove("pulse-hint");
+            }, 2000);
+            if (meatballHintIndex >= meatballSecretWord.length) {
+                meatballHintBtn.style.display = "none";
             }
         }
 
@@ -182,7 +227,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("game-over").style.display = "flex";
             meatballInput.blur();
 
-            const totalGuesses = meatballScore + 1;
+            const totalGuesses = meatballScore;
             todaysWordLabel.textContent = `Game #${allAnagramGames[0]["Game Number"]}\nSecret Word`;
             todaysWord.textContent = meatballSecretWord;
             gameNumberSpan.textContent = allAnagramGames[0]["Game Number"];
@@ -475,9 +520,13 @@ document.addEventListener("DOMContentLoaded", () => {
             meatballScore = 0;
             meatballGameOver = false;
             meatballFirstGuess = false;
+            meatballHintIndex = 0;
+            meatballRevealedHints.clear();
             document.getElementById("meatball-score").textContent = "0";
             document.getElementById("meatball-guess-input").value = "";
             document.getElementById("meatball-instruction").style.display = "block";
+            document.getElementById("meatball-hint-text").textContent = "";
+            document.getElementById("meatball-hint-btn").style.display = "block";
             loadMeatballGame(allAnagramGames[0]);
             adjustBackground();
         });
