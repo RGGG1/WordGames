@@ -54,7 +54,7 @@ a {
 
 #mode-toggle {
   font-size: 2.5vh;
-  background: none; /* Not inverted */
+  background: none;
   border: none;
   cursor: pointer;
   color: #000000;
@@ -72,7 +72,7 @@ a {
   color: #FFD700;
   -webkit-text-stroke: 0.1vh #FF4500;
   text-stroke: 0.1vh #FF4500;
-  cursor: pointer; /* Indicate clickable */
+  cursor: pointer;
 }
 
 #meatball-name {
@@ -222,19 +222,14 @@ a {
 }
 
 #hint-btn {
-  font-size: 3vh; /* Increased 100% from 1.5vh */
-  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  font-size: 3vh;
+  padding: 1vh 2vw;
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
   cursor: pointer;
   margin-top: 1.5vh;
-}
-
-#hint-btn[disabled] {
-  opacity: 0.5; /* Lighter when disabled */
-  cursor: not-allowed;
 }
 
 .dark-mode #hint-btn {
@@ -258,7 +253,11 @@ a {
 }
 
 #how-to-play-1, #how-to-play-2 {
-  font-size: 3.5vh; /* Increased font size */
+  font-size: 3.5vh;
+}
+
+#how-to-play-3 {
+  font-size: 2vh; /* Smaller font for additional line */
 }
 
 .hint-line span {
@@ -318,7 +317,7 @@ a {
   position: fixed;
   top: 0;
   left: 50%;
-  transform: translateX(-50%); /* Fully centered */
+  transform: translateX(-50%);
   width: 100%;
   min-height: 100vh;
   display: none;
@@ -334,7 +333,7 @@ a {
 }
 
 #end-graphic, #todays-word-label, #todays-word, #share-box, #share-section, #end-footer, #home-btn, #ad-box {
-  margin: 0 auto; /* Ensure centering */
+  margin: 0 auto;
 }
 
 #end-graphic {
@@ -447,8 +446,8 @@ a {
 }
 
 #home-btn {
-  font-size: 3vh; /* Increased 100% from 1.5vh */
-  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  font-size: 3vh;
+  padding: 1vh 2vw;
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
@@ -522,13 +521,13 @@ a {
 
 .home-btn {
   margin-top: 2vh;
-  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  padding: 1vh 2vw;
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
   border-radius: 0.5vh;
   cursor: pointer;
-  font-size: 3vh; /* Increased 100% from 1.5vh */
+  font-size: 3vh;
 }
 
 .dark-mode .home-btn {
@@ -585,7 +584,7 @@ a {
 
 #game-select-content {
   width: 85vw;
-  margin: 4vh auto 0 auto; /* Shifted down 4 lines */
+  margin: 4vh auto 0 auto;
   flex-grow: 1;
   overflow-y: auto;
 }
@@ -628,8 +627,8 @@ a {
 }
 
 .footer-btn {
-  font-size: 3vh; /* Increased 100% from 1.5vh */
-  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  font-size: 3vh;
+  padding: 1vh 2vw;
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
@@ -648,8 +647,8 @@ a {
   position: fixed;
   bottom: 1vh;
   left: 7.5vw;
-  font-size: 3vh; /* Increased 100% from 1.5vh */
-  padding: 1vh 2vw; /* Increased 100% from 0.5vh 1vw */
+  font-size: 3vh;
+  padding: 1vh 2vw;
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
@@ -675,7 +674,7 @@ a {
     font-size: 2vh;
   }
   .footer-btn, .give-up-btn, .home-btn, #hint-btn {
-    font-size: 2.4vh; /* Adjusted for smaller screens */
+    font-size: 2.4vh;
     padding: 0.8vh 1.6vw;
   }
   #guess-input, #meatball-guess-input {
@@ -688,6 +687,9 @@ a {
     font-size: 1.8vh;
   }
   #how-to-play-1, #how-to-play-2 {
-    font-size: 2.8vh; /* Adjusted for smaller screens */
+    font-size: 2.8vh;
+  }
+  #how-to-play-3 {
+    font-size: 1.6vh; /* Adjusted for smaller screens */
   }
 }

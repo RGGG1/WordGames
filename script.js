@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         hintBtn.addEventListener("click", () => {
-            if (!gameOver && hintIndex < hints.length - 1 && guessCount >= 3) {
+            if (!gameOver && hintIndex < hints.length - 1) {
                 revealHintOnClick();
             }
         });
@@ -245,22 +245,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 firstGuessMade = true;
                 document.getElementById("how-to-play-1").style.display = "none";
                 document.getElementById("how-to-play-2").style.display = "none";
+                document.getElementById("how-to-play-3").style.display = "none";
                 document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "none");
                 adjustHintsAfterGuess();
             }
 
             guessCount++;
-            score = guessCount; // Always increment guessCount
-            if (revealedHints.size > 0) { // Apply doubling if hints were used
+            score = guessCount;
+            if (revealedHints.size > 0) {
                 score = guessCount * Math.pow(2, revealedHints.size);
             }
             document.querySelectorAll("#score").forEach(scoreDisplay => {
                 scoreDisplay.textContent = `${score}`;
             });
-
-            if (guessCount >= 3) {
-                hintBtn.disabled = false;
-            }
 
             guessDisplay.value = trimmedGuess.toUpperCase();
             guessDisplay.classList.remove("wrong-guess", "correct-guess");
@@ -305,7 +302,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function revealHintOnClick() {
             hintIndex++;
-            score = score * 2; // Double the current score
+            if (revealedHints.size === 0 && guessCount < 3) {
+                score = 5; // Set to 5 for first hint if below 3
+            } else {
+                score = score * 2; // Double the current score
+            }
             revealedHints.add(hintIndex);
             document.querySelectorAll("#score").forEach(scoreDisplay => {
                 scoreDisplay.textContent = `${score}`;
@@ -449,9 +450,9 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("how-to-play-1").style.display = "block";
         document.getElementById("how-to-play-2").style.display = "block";
+        document.getElementById("how-to-play-3").style.display = "block";
         document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "block");
         document.getElementById("hint-btn").style.display = "block";
-        document.getElementById("hint-btn").disabled = true; // Disabled at start
         setupHints();
     }
 
