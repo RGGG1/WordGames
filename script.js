@@ -103,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const meatballGuessBackground = document.getElementById("meatball-guess-background");
 
         meatballInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" && !meatballGameOver) {
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !meatballGameOver) {
                 handleMeatballGuess(meatballInput.value);
             }
         });
@@ -218,10 +218,17 @@ document.addEventListener("DOMContentLoaded", () => {
         const input = document.getElementById("guess-input");
         const guessBackground = document.getElementById("guess-background");
         const guessLine = document.getElementById("guess-line");
+        const hintBtn = document.getElementById("hint-btn");
 
         input.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" && !gameOver) {
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) {
                 handleGuess(input.value);
+            }
+        });
+
+        hintBtn.addEventListener("click", () => {
+            if (!gameOver && hintIndex < hints.length - 1) {
+                revealHintOnClick();
             }
         });
 
@@ -237,16 +244,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }
 
             guessCount++;
-            score = guessCount; // Changed to match guess count directly
+            score = guessCount;
             document.querySelectorAll("#score").forEach(scoreDisplay => {
                 scoreDisplay.textContent = `${score}`;
             });
-
-            if (guessCount % 5 === 0 && hintIndex < hints.length - 1) {
-                hintIndex++;
-                revealHint(hintIndex);
-            }
-            // No dynamic update here; text is static now
 
             guessDisplay.value = trimmedGuess.toUpperCase();
             guessDisplay.classList.remove("wrong-guess", "correct-guess");
@@ -254,7 +255,6 @@ document.addEventListener("DOMContentLoaded", () => {
             void guessDisplay.offsetWidth;
 
             if (trimmedGuess.toUpperCase() === secretWord) {
-                if (guessCount === 1) score = 1; // First guess still counts as 1
                 guessDisplay.classList.add("correct-guess");
                 guessBackground.classList.add("flash-green");
                 guessLine.style.opacity = "0";
@@ -290,17 +290,22 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
 
-        function revealHint(index) {
+        function revealHintOnClick() {
+            hintIndex++;
+            score = score === 0 ? 1 : score * 2; // Ensure score doesn’t stay 0
+            document.querySelectorAll("#score").forEach(scoreDisplay => {
+                scoreDisplay.textContent = `${score}`;
+            });
             const allHints = document.querySelectorAll(".hint-line span");
-            if (index < allHints.length && allHints[index].textContent && !revealedHints.has(index)) {
-                allHints[index].style.visibility = "visible";
+            if (hintIndex < allHints.length && allHints[hintIndex].textContent && !revealedHints.has(hintIndex)) {
+                allHints[hintIndex].style.visibility = "visible";
                 setTimeout(() => {
-                    allHints[index].classList.add("pulse-hint");
+                    allHints[hintIndex].classList.add("pulse-hint");
                     setTimeout(() => {
-                        allHints[index].classList.remove("pulse-hint");
+                        allHints[hintIndex].classList.remove("pulse-hint");
                     }, 2000);
                 }, 200);
-                revealedHints.add(index);
+                revealedHints.add(hintIndex);
             }
         }
 
@@ -325,8 +330,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (won) {
                 endGraphic.src = "pineapple_gif.gif";
                 endGraphic.style.display = "block";
-                shareText.textContent = `I SOLVED TODAY'S PINEAPPLE IN\n${score}\nSECONDS`;
-                shareGameNumber.textContent = `Game #${currentGameNumber}`;
+                shareText.innerHTML = `I solved today's pineapple in\n<span class="big-score">${score}</span>\nguesses\nGame #${currentGameNumber}`;
+                shareGameNumber.style.display = "none";
                 shareScoreLabel.style.display = "none";
                 shareScore.style.display = "none";
             } else if (gaveUp) {
@@ -346,7 +351,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
             const shareMessage = gaveUp
                 ? `Play Pineapple\ndaily word game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
-                : `${shareText.textContent}\nGame #${currentGameNumber}${won ? "" : `\nScore: ${score}`}\nCan you beat my score? Click here: https://your-game-url.com`;
+                : won
+                ? `I solved today's pineapple in\n${score}\nguesses\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+                : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
             shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
             shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
             shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
@@ -422,7 +429,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
-        document.getElementById("hints-subtitle").textContent = "New hint revealed after every five guesses";
         document.getElementById("how-to-play-1").style.display = "block";
         document.getElementById("how-to-play-2").style.display = "block";
         document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "block");

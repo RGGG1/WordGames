@@ -5,8 +5,7 @@ body {
   padding: 0;
   text-align: center;
   user-select: none;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh; /* Changed for mobile compatibility */
   display: flex;
   flex-direction: column;
 }
@@ -28,8 +27,7 @@ a {
 #game-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh; /* Changed for mobile visibility */
   position: relative;
   background: url('pineapple_background_light.png') no-repeat center center;
   background-size: 125vw 222.22vh;
@@ -54,11 +52,6 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 0.2vh solid #000000;
-}
-
-.dark-mode #header {
-  border-bottom: 0.2vh solid #FFFFFF;
 }
 
 #mode-toggle {
@@ -73,7 +66,7 @@ a {
   color: #FFFFFF;
 }
 
-#game-name {
+#game-name, #meatball-name {
   font-family: 'Fredoka One', cursive;
   font-size: 2.5vh;
   letter-spacing: 0.1em;
@@ -85,9 +78,6 @@ a {
 
 #meatball-name {
   font-family: 'Chewy', cursive;
-  font-size: 2.5vh;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
   color: #FFFFFF;
   -webkit-text-stroke: 0.1vh #000000;
   text-stroke: 0.1vh #000000;
@@ -136,7 +126,7 @@ a {
   top: 0;
   left: 0;
   text-align: left;
-  margin-top: 0.5vh; /* Added half line of space */
+  margin-top: 1vh; /* Moved down half a line */
 }
 
 #meatball-relating {
@@ -232,9 +222,19 @@ a {
   margin-bottom: 0.5vh;
 }
 
-#hints-subtitle {
+#hint-btn {
   font-size: 1.5vh;
-  margin-top: 1.5vh; /* Added spacing above to position it below hints */
+  padding: 0.5vh 1vw;
+  background: none;
+  border: 0.1vh solid #000000;
+  border-radius: 0.5vh;
+  cursor: pointer;
+  margin-top: 1.5vh; /* Matches previous hints-subtitle positioning */
+}
+
+.dark-mode #hint-btn {
+  border-color: #FFFFFF;
+  color: #FFFFFF;
 }
 
 #hints {
@@ -283,7 +283,7 @@ a {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background: url('pineapple_background_light.png') no-repeat center center;
   background-size: 125vw 222.22vh;
   color: #000000;
@@ -310,17 +310,15 @@ a {
 
 #game-over {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 85vw;
-  height: 100vh;
+  top: 0; /* Changed to fixed for consistency */
+  left: 0;
+  width: 100%;
+  min-height: 100vh;
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 2vh;
-  overflow: hidden;
   background: url('pineapple_background_light.png') no-repeat center center;
   background-size: 125vw 222.22vh;
 }
@@ -370,6 +368,11 @@ a {
 #share-text {
   font-size: 2vh;
   margin-bottom: 0.5vh;
+  white-space: pre-line; /* Preserve line breaks */
+}
+
+#share-text .big-score {
+  font-size: 4vh; /* Double the size of 2vh */
 }
 
 #share-text.big {
@@ -474,7 +477,7 @@ a {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background: url('pineapple_background_light.png') no-repeat center center;
   background-size: 125vw 222.22vh;
   display: none;
@@ -489,10 +492,9 @@ a {
 }
 
 #meatball-screen {
-  display: flex;
+  display: none;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
   position: relative;
 }
 
@@ -565,8 +567,7 @@ a {
 #game-select-screen {
   display: none;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+  min-height: 100vh;
   position: relative;
 }
 
@@ -605,8 +606,13 @@ a {
   margin: 1vh auto;
   font-size: 1.5vh;
   display: flex;
-  justify-content: flex-end; /* Align button to the right */
+  justify-content: flex-end;
   align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 }
 
 .footer-btn {
@@ -616,6 +622,7 @@ a {
   border: 0.1vh solid #000000;
   border-radius: 0.5vh;
   cursor: pointer;
+  z-index: 11; /* Ensure visibility on mobile */
 }
 
 .dark-mode .footer-btn {
@@ -624,7 +631,7 @@ a {
 }
 
 .give-up-btn {
-  position: absolute;
+  position: fixed; /* Changed to fixed for visibility */
   bottom: 1vh;
   left: 7.5vw;
   font-size: 1.5vh;
@@ -633,6 +640,7 @@ a {
   border: 0.1vh solid #000000;
   border-radius: 0.5vh;
   cursor: pointer;
+  z-index: 11; /* Ensure visibility on mobile */
 }
 
 .dark-mode .give-up-btn {
@@ -640,11 +648,31 @@ a {
   color: #FFFFFF;
 }
 
-@media (max-height: 600px) {
+/* Media queries for smaller screens */
+@media (max-width: 600px) or (max-height: 600px) {
+  #header, #footer {
+    width: 90vw; /* Slightly wider for small screens */
+  }
+  #game-name, #meatball-name, #score, #meatball-score {
+    font-size: 2vh; /* Smaller font for small screens */
+  }
+  #mode-toggle {
+    font-size: 2vh;
+  }
+  .footer-btn, .give-up-btn {
+    font-size: 1.2vh; /* Adjust button size */
+    padding: 0.4vh 0.8vw;
+  }
+  #guess-input, #meatball-guess-input {
+    font-size: 4vh; /* Slightly smaller input text */
+  }
   #hints-box {
-    height: calc(100vh - 19vh);
+    height: calc(100vh - 17vh); /* Adjust for smaller header/footer */
   }
   .hint-line span, #how-to-play-1, #how-to-play-2 {
+    font-size: 1.8vh;
+  }
+  #hint-btn {
     font-size: 1.2vh;
   }
 }
