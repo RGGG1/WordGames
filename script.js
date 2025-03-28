@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         guessCount++;
-        score = guessCount; // Score increases by 1 per guess
+        score += 1; // Increment score by 1 based on previous score
         document.querySelectorAll("#score").forEach(scoreDisplay => {
             scoreDisplay.textContent = `${score}`;
         });
@@ -460,7 +460,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         meatballGuessCount++;
-        meatballScore = meatballGuessCount; // Score increases by 1 per guess
+        meatballScore += 1; // Increment score by 1 based on previous score
         document.getElementById("meatball-score").textContent = `${meatballScore}`;
 
         // Enable hint button after 3 guesses
