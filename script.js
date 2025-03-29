@@ -280,13 +280,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function adjustBackground() {
         const screens = [document.getElementById("game-screen"), document.getElementById("smoothbrain-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("create-game-screen"), document.getElementById("game-select-screen")];
-        const viewportHeight = window.innerHeight;
         screens.forEach(screen => {
             if (screen.style.display !== "none") {
-                const contentHeight = screen.offsetHeight;
-                if (viewportHeight < contentHeight + 100) {
-                    screen.style.minHeight = `${viewportHeight}px`;
-                }
+                screen.style.height = "100vh";
             }
         });
     }
@@ -398,6 +394,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("game-screen").style.display = "none";
         document.getElementById("game-over").style.display = "flex";
         document.getElementById("guess-input").blur();
+        document.getElementById("game-name").textContent = "PINEAPPLE";
 
         gameNumberSpan.textContent = currentGameNumber;
         todaysWord.textContent = secretWord;
@@ -502,6 +499,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("smoothbrain-screen").style.display = "none";
         document.getElementById("game-over").style.display = "flex";
         document.getElementById("smoothbrain-guess-input").blur();
+        document.getElementById("game-name").textContent = "smoothbrain";
 
         const totalGuesses = smoothbrainScore;
         todaysWordLabel.textContent = `Game #${allAnagramGames[0]["Game Number"]}\nSecret Word`;

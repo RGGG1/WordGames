@@ -8,6 +8,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden; /* Prevent scrolling */
 }
 
 .dark-mode {
@@ -24,15 +25,16 @@ a {
   color: #1E90FF;
 }
 
-#game-screen {
+#game-screen, #smoothbrain-screen {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh; /* Fixed height, no scrolling */
   position: relative;
   background: #FFFFFF;
+  overflow: hidden;
 }
 
-.dark-mode #game-screen {
+.dark-mode #game-screen, .dark-mode #smoothbrain-screen {
   background: #000000;
 }
 
@@ -78,10 +80,10 @@ a {
 }
 
 #smoothbrain-name {
-  font-family: 'Comic Neue', sans-serif; /* Silly, jovial font */
+  font-family: 'Bubblegum Sans', cursive; /* Bubbly, funny font */
   font-size: 2.5vh;
   text-transform: lowercase;
-  color: #FF69B4; /* Hot pink, silly color */
+  color: #FF69B4; /* Hot pink */
   cursor: pointer;
   z-index: 11;
 }
@@ -103,10 +105,29 @@ a {
   background: none;
 }
 
+#smoothbrain-relating {
+  width: 85vw;
+  margin: 4vh auto 0 auto; /* 2 lines below header (5vh header + 2vh) */
+  font-size: 3vh;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#smoothbrain-separator {
+  width: 85vw;
+  height: 0.2vh;
+  background: #000000;
+  margin: 1vh auto; /* 1 line of space */
+}
+
+.dark-mode #smoothbrain-separator {
+  background: #FFFFFF;
+}
+
 #smoothbrain-guess-area {
   width: 85vw;
   height: 10vh;
-  margin: 12vh auto 0 auto;
+  margin: 1vh auto 0 auto; /* 1 line after separator */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -126,25 +147,6 @@ a {
   left: 0;
   text-align: left;
   margin-top: 1vh;
-}
-
-#smoothbrain-relating {
-  width: 85vw;
-  margin: 6vh auto 0 auto;
-  font-size: 3vh;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-#smoothbrain-separator {
-  width: 85vw;
-  height: 0.2vh;
-  background: #000000;
-  margin: 1vh auto;
-}
-
-.dark-mode #smoothbrain-separator {
-  background: #FFFFFF;
 }
 
 #guess-background, #smoothbrain-guess-background {
@@ -207,12 +209,12 @@ a {
 
 #hints-box {
   width: 85vw;
-  height: calc(100vh - 19vh);
+  height: calc(100vh - 26vh); /* Adjusted for footer */
   margin: 0 auto;
   padding: 1vh;
   background: none;
   flex-grow: 1;
-  overflow-y: auto;
+  overflow: hidden; /* No scrolling */
 }
 
 #hints-title {
@@ -250,11 +252,11 @@ a {
   margin: 1vh auto;
 }
 
-#smoothbrain-hint-text {
-  font-size: 2.5vh;
-  font-weight: bold;
-  text-transform: uppercase;
-  margin-bottom: 1vh;
+#smoothbrain-instruction {
+  width: 85vw;
+  margin: 1vh auto 0 auto;
+  font-size: 1.5vh;
+  text-align: center;
 }
 
 .hint-line {
@@ -300,13 +302,14 @@ a {
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   background: #FFFFFF;
   color: #000000;
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .dark-mode #pause-screen {
@@ -329,32 +332,29 @@ a {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   display: none;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start; /* Adjusted for less space */
   align-items: center;
   padding: 2vh;
   background: #FFFFFF;
+  overflow: hidden;
 }
 
 .dark-mode #game-over {
   background: #000000;
 }
 
-#end-graphic, #todays-word-label, #todays-word, #share-box, #share-section, #end-footer, #home-btn, #ad-box {
-  margin: 0 auto;
-}
-
 #end-graphic {
-  height: 21.09375vh; /* 35% larger */
-  margin: 1vh auto;
+  height: 21.09375vh;
+  margin: 0.5vh auto; /* Reduced from 1vh */
 }
 
 #todays-word-label {
   font-size: 2vh;
   font-weight: bold;
-  margin: 1vh auto 0.5vh auto;
+  margin: 0.5vh auto; /* Reduced from 1vh */
   white-space: pre-line;
 }
 
@@ -391,12 +391,12 @@ a {
 }
 
 #share-text .big-score {
-  font-size: 6.25vh; /* 25% larger */
+  font-size: 6.25vh;
   margin-top: 0.25vh;
 }
 
 #share-text.big {
-  font-size: 3.75vh; /* 25% larger */
+  font-size: 3.75vh;
 }
 
 #share-text.italic {
@@ -405,7 +405,7 @@ a {
 }
 
 #share-game-number {
-  font-size: 1.5vh; /* Reduced from 1.8vh */
+  font-size: 1.5vh;
   margin-bottom: 0.5vh;
 }
 
@@ -500,30 +500,17 @@ a {
   top: 0;
   left: 0;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   background: #FFFFFF;
   display: none;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
 }
 
 .dark-mode .screen {
   background: #000000;
-}
-
-#smoothbrain-screen {
-  display: none;
-  flex-direction: column;
-  min-height: 100vh;
-  position: relative;
-}
-
-#smoothbrain-instruction {
-  width: 85vw;
-  margin: 1vh auto 0 auto;
-  font-size: 1.5vh;
-  text-align: center;
 }
 
 #create-game-content {
@@ -594,15 +581,16 @@ a {
 #game-select-screen {
   display: none;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh;
   position: relative;
+  overflow: hidden;
 }
 
 #game-select-content {
   width: 85vw;
   margin: 4vh auto 0 auto;
   flex-grow: 1;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 #game-list-title {
@@ -636,7 +624,7 @@ a {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  bottom: 0;
+  bottom: 8vh; /* Above keyboard */
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -677,18 +665,12 @@ a {
       font-size: 4vh;
   }
   #hints-box {
-      height: calc(100vh - 17vh);
+      height: calc(100vh - 24vh);
   }
   .hint-line span, #smoothbrain-hint-text {
       font-size: 1.8vh;
   }
   #how-to-play-1, #how-to-play-2 {
       font-size: 2.8vh;
-  }
-}
-
-@media (max-height: 500px) {
-  #footer {
-      bottom: 10vh;
   }
 }
