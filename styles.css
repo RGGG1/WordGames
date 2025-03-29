@@ -65,7 +65,7 @@ a {
   color: #FFFFFF;
 }
 
-#game-name, #meatball-name {
+#game-name, #smoothbrain-name {
   font-family: 'Fredoka One', cursive;
   font-size: 2.5vh;
   letter-spacing: 0.1em;
@@ -77,19 +77,19 @@ a {
   z-index: 11;
 }
 
-#meatball-name {
+#smoothbrain-name {
   font-family: 'Chewy', cursive;
   color: #FFFFFF;
   -webkit-text-stroke: 0.1vh #000000;
   text-stroke: 0.1vh #000000;
 }
 
-.dark-mode #meatball-name {
+.dark-mode #smoothbrain-name {
   -webkit-text-stroke: 0.1vh #FFFFFF;
   text-stroke: 0.1vh #FFFFFF;
 }
 
-#score, #meatball-score {
+#score, #smoothbrain-score {
   font-size: 2.5vh;
   font-weight: bold;
   z-index: 11;
@@ -106,10 +106,10 @@ a {
   background: none;
 }
 
-#meatball-guess-area {
+#smoothbrain-guess-area {
   width: 85vw;
   height: 10vh;
-  margin: 8vh auto 0 auto;
+  margin: 12vh auto 0 auto; /* Moved up */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -117,7 +117,7 @@ a {
   background: none;
 }
 
-#guess-area:hover, #guess-input:hover, #meatball-guess-area:hover, #meatball-guess-input:hover {
+#guess-area:hover, #guess-input:hover, #smoothbrain-guess-area:hover, #smoothbrain-guess-input:hover {
   outline: none;
   border: none;
 }
@@ -131,19 +131,26 @@ a {
   margin-top: 1vh;
 }
 
-#meatball-relating {
+#smoothbrain-relating {
   width: 85vw;
-  margin: 4vh auto 0 auto;
+  margin: 6vh auto 0 auto; /* Moved up, 3 lines below header */
   font-size: 3vh;
   text-align: center;
   text-transform: uppercase;
 }
 
-#meatball-separator {
-  display: none;
+#smoothbrain-separator {
+  width: 85vw;
+  height: 0.2vh;
+  background: #000000;
+  margin: 1vh auto; /* Line of space above and below */
 }
 
-#guess-background, #meatball-guess-background {
+.dark-mode #smoothbrain-separator {
+  background: #FFFFFF;
+}
+
+#guess-background, #smoothbrain-guess-background {
   position: absolute;
   top: 3vh;
   width: 100%;
@@ -152,7 +159,7 @@ a {
   background: none;
 }
 
-#guess-input, #meatball-guess-input {
+#guess-input, #smoothbrain-guess-input {
   font-size: 5vh;
   font-weight: bold;
   background: none;
@@ -175,12 +182,12 @@ a {
   50% { caret-color: transparent; }
 }
 
-.dark-mode #guess-input, .dark-mode #meatball-guess-input {
+.dark-mode #guess-input, .dark-mode #smoothbrain-guess-input {
   color: #FFFFFF;
   caret-color: white;
 }
 
-#guess-input::placeholder, #meatball-guess-input::placeholder {
+#guess-input::placeholder, #smoothbrain-guess-input::placeholder {
   color: transparent;
 }
 
@@ -193,7 +200,7 @@ a {
   transition: opacity 0.5s ease-out;
 }
 
-#meatball-guess-line {
+#smoothbrain-guess-line {
   display: none;
 }
 
@@ -217,7 +224,7 @@ a {
   margin-bottom: 0.5vh;
 }
 
-#hint-btn, #meatball-hint-btn {
+#smoothbrain-hint-btn {
   font-size: 3vh;
   padding: 1vh 2vw;
   background: #000000;
@@ -229,37 +236,24 @@ a {
   z-index: 11;
 }
 
-#hint-btn:disabled, #meatball-hint-btn:disabled {
-  background: #808080;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-.dark-mode #hint-btn, .dark-mode #meatball-hint-btn {
+.dark-mode #smoothbrain-hint-btn {
   background: #FFFFFF;
   color: #000000;
   border: 0.1vh solid #000000;
 }
 
-.dark-mode #hint-btn:disabled, .dark-mode #meatball-hint-btn:disabled {
-  background: #A9A9A9;
-  color: #000000;
-  cursor: not-allowed;
-  opacity: 0.6;
-}
-
-#hints, #meatball-hints {
+#hints, #smoothbrain-hints {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-#meatball-hints {
+#smoothbrain-hints {
   width: 85vw;
   margin: 1vh auto;
 }
 
-#meatball-hint-text {
+#smoothbrain-hint-text {
   font-size: 2.5vh;
   font-weight: bold;
   text-transform: uppercase;
@@ -276,10 +270,6 @@ a {
 
 #how-to-play-1, #how-to-play-2 {
   font-size: 3.5vh;
-}
-
-#how-to-play-3 {
-  font-size: 2vh;
 }
 
 .hint-line span {
@@ -360,7 +350,7 @@ a {
 }
 
 #end-graphic {
-  height: 15.625vh;
+  height: 21.09375vh; /* 15.625vh * 1.35 (35% increase) */
   margin: 1vh auto;
 }
 
@@ -404,11 +394,12 @@ a {
 }
 
 #share-text .big-score {
-  font-size: 4vh;
+  font-size: 6.25vh; /* 5vh * 1.25 (25% increase) */
+  margin-top: 0.25vh; /* Half line of space */
 }
 
 #share-text.big {
-  font-size: 3vh;
+  font-size: 3.75vh; /* 3vh * 1.25 (25% increase) for 'PLAY PINEAPPLE' */
 }
 
 #share-text.italic {
@@ -524,16 +515,16 @@ a {
   background: #000000;
 }
 
-#meatball-screen {
+#smoothbrain-screen {
   display: none;
   flex-direction: column;
   min-height: 100vh;
   position: relative;
 }
 
-#meatball-instruction {
+#smoothbrain-instruction {
   width: 85vw;
-  margin: 1vh auto 0 auto;
+  margin: 1vh auto 0 auto; /* Moved up with anagram */
   font-size: 1.5vh;
   text-align: center;
 }
@@ -561,7 +552,7 @@ a {
   border: 0.1vh solid #000000;
 }
 
-#guess-input.wrong-guess, #meatball-guess-input.wrong-guess {
+#guess-input.wrong-guess, #smoothbrain-guess-input.wrong-guess {
   animation: wrongGuess 0.5s ease-out forwards;
 }
 
@@ -642,7 +633,7 @@ a {
   margin: 1vh auto;
   font-size: 1.5vh;
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between; /* Adjusted for two buttons */
   align-items: center;
   position: fixed;
   bottom: 0;
@@ -668,47 +659,27 @@ a {
   border: 0.1vh solid #000000;
 }
 
-.give-up-btn {
-  position: fixed;
-  bottom: 1vh;
-  left: 7.5vw;
-  font-size: 3vh;
-  padding: 1vh 2vw;
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-  border-radius: 0.8vh;
-  cursor: pointer;
-  z-index: 11;
-}
-
-.dark-mode .give-up-btn {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
-}
-
 @media (max-width: 600px) or (max-height: 600px) {
   #header, #footer {
       width: 90vw;
   }
-  #game-name, #meatball-name, #score, #meatball-score {
+  #game-name, #smoothbrain-name, #score, #smoothbrain-score {
       font-size: 2vh;
   }
   #mode-toggle {
       font-size: 2vh;
   }
-  .footer-btn, .give-up-btn, .home-btn, #hint-btn, #meatball-hint-btn {
+  .footer-btn, .home-btn, #smoothbrain-hint-btn {
       font-size: 2.4vh;
       padding: 0.8vh 1.6vw;
   }
-  #guess-input, #meatball-guess-input {
+  #guess-input, #smoothbrain-guess-input {
       font-size: 4vh;
   }
   #hints-box {
       height: calc(100vh - 17vh);
   }
-  .hint-line span, #meatball-hint-text {
+  .hint-line span, #smoothbrain-hint-text {
       font-size: 1.8vh;
   }
   #how-to-play-1, #how-to-play-2 {
@@ -716,5 +687,12 @@ a {
   }
   #how-to-play-3 {
       font-size: 1.6vh;
+  }
+}
+
+/* Ensure footer stays above keyboard */
+@media (max-height: 500px) {
+  #footer {
+      bottom: 10vh; /* Adjust to stay above keyboard */
   }
 }

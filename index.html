@@ -28,21 +28,19 @@
                 <div class="hint-line spacer"></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-                <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br><br>Hints can help, but they'll also double your guess score.</div>
-                <div class="hint-line" id="how-to-play-3">(hints become available after your third guess)</div>
+                <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>
                 <div class="hint-line" id="hint-row-3"><span></span></div>
                 <div class="hint-line" id="hint-row-4"><span></span></div>
                 <div class="hint-line" id="hint-row-5"><span></span></div>
                 <div class="hint-line" id="hint-row-6"><span></span></div>
                 <div class="hint-line" id="hint-row-7"><span></span></div>
-                <button id="hint-btn" disabled>HINT</button>
             </div>
         </div>
         <div id="footer">
+            <button id="give-up-btn" class="footer-btn">Give Up</button>
             <button id="previous-games-btn" class="footer-btn">Previous Games</button>
         </div>
-        <button id="give-up-btn" class="give-up-btn">Give Up</button>
     </div>
 
     <div id="pause-screen" style="display: none;">
@@ -85,7 +83,7 @@
         <div id="end-footer">
             <div>Until then, play our other games</div>
             <a href="#" id="end-hungry-shark">Pineapple - Previous Games</a>
-            <a href="#" id="end-meatball">Meatball</a>
+            <a href="#" id="end-meatball">smoothbrain</a>
         </div>
         <button id="home-btn" class="home-btn">Play Again</button>
         <div id="ad-box">
@@ -109,25 +107,28 @@
         <div id="footer"></div>
     </div>
 
-    <div id="meatball-screen" class="screen" style="display: none;">
+    <div id="smoothbrain-screen" class="screen" style="display: none;">
         <div id="header">
             <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
-            <div id="meatball-name">MEATBALL</div>
-            <div id="meatball-score">0</div>
+            <div id="smoothbrain-name">smoothbrain</div>
+            <div id="smoothbrain-score">0</div>
         </div>
-        <div id="meatball-relating"></div>
-        <div id="meatball-guess-area">
-            <div id="meatball-guess-background"></div>
-            <input id="meatball-guess-input" type="text" autofocus placeholder="">
-            <div id="meatball-guess-line"></div>
+        <div id="smoothbrain-relating"></div>
+        <div id="smoothbrain-separator"></div>
+        <div id="smoothbrain-guess-area">
+            <div id="smoothbrain-guess-background"></div>
+            <input id="smoothbrain-guess-input" type="text" autofocus placeholder="">
+            <div id="smoothbrain-guess-line"></div>
         </div>
-        <div id="meatball-hints">
-            <div id="meatball-hint-text"></div>
-            <button id="meatball-hint-btn" disabled>HINT</button>
+        <div id="smoothbrain-hints">
+            <div id="smoothbrain-hint-text"></div>
+            <button id="smoothbrain-hint-btn">HINT</button>
         </div>
-        <div id="meatball-instruction">The Daily Meatball<br>Rearrange the letters of this word to form another word.<br>There may be multiple possibilities, but there is only one true meatball.</div>
-        <button id="meatball-give-up-btn" class="give-up-btn">Give Up</button>
-        <div id="footer"></div>
+        <div id="smoothbrain-instruction"><b>How to Play</b><br>Rearrange the letters to form another word, in as few guesses as possible.<br><br>There may be multiple possibilities, but there is only one true smoothbrain answer.<br><br>Hints can help you, BUT they'll double your guess score</div>
+        <div id="footer">
+            <button id="smoothbrain-give-up-btn" class="footer-btn">Give Up</button>
+            <button id="previous-games-btn" class="footer-btn">Previous Games</button>
+        </div>
     </div>
 
     <div id="game-select-screen" class="screen" style="display: none;">
