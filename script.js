@@ -22,8 +22,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchGameData() {
         const spreadsheetId = "2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI";
-        const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`; // Sheet1
-        const anagramUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=187602849&single=true&output=csv`; // anagrams
+        const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
+        const anagramUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=187602849&single=true&output=csv`;
 
         try {
             const pineResponse = await fetch(pineappleUrl);
@@ -104,21 +104,31 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        document.querySelectorAll("#previous-games-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                displayGameList();
-                gameScreen.style.display = "none";
-                smoothbrainScreen.style.display = "none";
-                gameSelectScreen.style.display = "flex";
-                adjustBackground();
-            });
+        document.getElementById("previous-games-btn").addEventListener("click", (e) => {
+            e.preventDefault();
+            displayGameList("pineapple");
+            gameScreen.style.display = "none";
+            gameSelectScreen.style.display = "flex";
+            adjustBackground();
+        });
+
+        document.getElementById("smoothbrain-previous-games-btn").addEventListener("click", (e) => {
+            e.preventDefault();
+            displayGameList("smoothbrain");
+            smoothbrainScreen.style.display = "none";
+            gameSelectScreen.style.display = "flex";
+            adjustBackground();
         });
 
         document.getElementById("back-to-game-btn").addEventListener("click", () => {
             gameSelectScreen.style.display = "none";
-            gameScreen.style.display = "flex";
-            input.focus();
+            if (document.getElementById("game-screen").style.display === "flex") {
+                gameScreen.style.display = "flex";
+                input.focus();
+            } else {
+                smoothbrainScreen.style.display = "flex";
+                smoothbrainInput.focus();
+            }
             adjustBackground();
         });
 
@@ -181,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("end-hungry-shark").addEventListener("click", (e) => {
             e.preventDefault();
-            displayGameList();
+            displayGameList("pineapple");
             go.style.display = "none";
             gameSelectScreen.style.display = "flex";
             adjustBackground();
@@ -211,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".home-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 if (btn.textContent === "Play Again") {
-                    displayGameList();
+                    displayGameList("pineapple");
                     go.style.display = "none";
                     gameSelectScreen.style.display = "flex";
                 } else {
@@ -226,18 +236,27 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function displayGameList() {
+    function displayGameList(gameType) {
         const gameList = document.getElementById("game-list");
         gameList.innerHTML = "";
-        allGames.forEach(game => {
+        const games = gameType === "pineapple" ? allGames : allAnagramGames;
+        document.getElementById("game-name").textContent = gameType === "pineapple" ? "PINEAPPLE" : "smoothbrain";
+        games.forEach(game => {
             const gameItem = document.createElement("div");
             gameItem.className = "game-item";
             gameItem.textContent = `Game #${game["Game Number"]}`;
             gameItem.addEventListener("click", () => {
-                loadGame(game);
-                document.getElementById("game-select-screen").style.display = "none";
-                document.getElementById("game-screen").style.display = "flex";
-                document.getElementById("guess-input").focus();
+                if (gameType === "pineapple") {
+                    loadGame(game);
+                    document.getElementById("game-select-screen").style.display = "none";
+                    document.getElementById("game-screen").style.display = "flex";
+                    document.getElementById("guess-input").focus();
+                } else {
+                    loadSmoothbrainGame(game);
+                    document.getElementById("game-select-screen").style.display = "none";
+                    document.getElementById("smoothbrain-screen").style.display = "flex";
+                    document.getElementById("smoothbrain-guess-input").focus();
+                }
             });
             gameList.appendChild(gameItem);
         });
@@ -255,7 +274,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ];
         hintElements.forEach((span, index) => {
             span.textContent = hints[index] || "";
-            span.style.visibility = index === 0 ? "visible" : "hidden"; // First hint visible
+            span.style.visibility = index === 0 ? "visible" : "hidden";
         });
     }
 
@@ -286,6 +305,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function rainConfetti() {
+        const confettiContainer = document.createElement("div");
+        confettiContainer.className = "confetti";
+        document.body.appendChild(confettiContainer);
+        for (let i = 0; i < 50; i++) {
+            const piece = document.createElement("div");
+            piece.className = "confetti-piece";
+            piece.style.left = `${Math.random() * 100}vw`;
+            piece.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            piece.style.animationDelay = `${Math.random() * 1}s`;
+            confettiContainer.appendChild(piece);
+        }
+        setTimeout(() => confettiContainer.remove(), 2000);
+    }
+
     function handleGuess(guess) {
         const guessDisplay = document.getElementById("guess-input");
         const guessBackground = document.getElementById("guess-background");
@@ -304,7 +338,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         guessCount++;
-        score += 1; // Increment score by 1
+        score += 1;
         document.querySelectorAll("#score").forEach(scoreDisplay => {
             scoreDisplay.textContent = `${score}`;
         });
@@ -315,11 +349,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (guess.toUpperCase() === secretWord) {
             guessDisplay.classList.add("correct-guess");
-            guessBackground.classList.add("flash-green");
+            rainConfetti();
             guessLine.style.opacity = "0";
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
-                guessBackground.classList.remove("flash-green");
                 endGame(true);
             }, 1500);
         } else {
@@ -373,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
             endGraphic.src = "pineapple_gif.gif";
             endGraphic.style.display = "block";
             const guessText = score === 1 ? "guess" : "guesses";
-            shareText.innerHTML = `I solved today's pineapple in\n<span class="big-score">${score}</span>\n${guessText}\nGame #${currentGameNumber}`;
+            shareText.innerHTML = `I solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}\nGame #${currentGameNumber}`;
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
@@ -387,7 +420,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
-            shareText.textContent = "I didn’t solve today’s pineapple";
+            shareText.textContent = "I didn’t solve the pineapple";
             shareGameNumber.textContent = `Game #${currentGameNumber}`;
             shareScore.textContent = `${score}`;
         }
@@ -395,7 +428,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const shareMessage = gaveUp
             ? `PLAY PINEAPPLE\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
             : won
-            ? `I solved today's pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
             : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
@@ -417,13 +450,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         smoothbrainGuessCount++;
-        smoothbrainScore += 1; // Increment score by 1
+        smoothbrainScore += 1;
         document.getElementById("smoothbrain-score").textContent = `${smoothbrainScore}`;
 
         if (guess.toUpperCase() === smoothbrainSecretWord) {
-            guessBackground.classList.add("flash-green");
+            guessDisplay.classList.add("correct-guess");
+            rainConfetti();
             setTimeout(() => {
-                guessBackground.classList.remove("flash-green");
+                guessDisplay.classList.remove("correct-guess");
                 endSmoothbrainGame(true);
             }, 1500);
         } else {
@@ -440,7 +474,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function revealSmoothbrainHint() {
         smoothbrainHintIndex++;
-        smoothbrainScore *= 2; // Double the current score
+        smoothbrainScore *= 2;
         document.getElementById("smoothbrain-score").textContent = `${smoothbrainScore}`;
         document.getElementById("smoothbrain-hint-text").textContent = smoothbrainSecretWord.substring(0, smoothbrainHintIndex);
         document.getElementById("smoothbrain-hint-text").classList.add("pulse-hint");
@@ -448,7 +482,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("smoothbrain-hint-text").classList.remove("pulse-hint");
         }, 2000);
         if (smoothbrainHintIndex >= smoothbrainSecretWord.length) {
-            endSmoothbrainGame(false, true); // End game if full word revealed
+            endSmoothbrainGame(false, true);
         }
     }
 
@@ -475,22 +509,22 @@ document.addEventListener("DOMContentLoaded", () => {
         gameNumberSpan.textContent = allAnagramGames[0]["Game Number"];
 
         if (won) {
-            endGraphic.src = "pineapple_gif.gif"; // Replace with smoothbrain-specific graphic if available
+            endGraphic.src = "smoothbrain_win.png";
             endGraphic.style.display = "block";
             const guessText = totalGuesses === 1 ? "guess" : "guesses";
-            shareText.innerHTML = `I solved today's smoothbrain in\n<span class="big-score">${totalGuesses}</span>\n${guessText}\nGame #${allAnagramGames[0]["Game Number"]}`;
+            shareText.innerHTML = `I solved the smoothbrain in\n<span class="big-score">${totalGuesses}</span>\n${guessText}\nGame #${allAnagramGames[0]["Game Number"]}`;
             shareGameNumber.style.display = "none";
             shareScore.style.display = "none";
         } else if (gaveUp) {
-            endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
+            endGraphic.src = document.body.classList.contains("dark-mode") ? "smoothbrain_lose.png" : "smoothbrain_lose.png";
             endGraphic.style.display = "block";
             shareText.innerHTML = '<span class="big">PLAY smoothbrain</span>\n<span class="italic">The Anagram Word Game</span>';
             shareGameNumber.style.display = "none";
             shareScore.style.display = "none";
         } else {
-            endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
+            endGraphic.src = document.body.classList.contains("dark-mode") ? "smoothbrain_lose.png" : "smoothbrain_lose.png";
             endGraphic.style.display = "block";
-            shareText.textContent = "I didn’t solve today’s smoothbrain";
+            shareText.textContent = "I didn’t solve the smoothbrain";
             shareGameNumber.textContent = `Game #${allAnagramGames[0]["Game Number"]}`;
             shareScore.textContent = `${totalGuesses}`;
         }
@@ -498,7 +532,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const shareMessage = gaveUp
             ? `PLAY smoothbrain\nThe Anagram Word Game\nCan you beat my score? Click here: https://your-game-url.com/smoothbrain`
             : won
-            ? `I solved today's smoothbrain in\n${totalGuesses}\n${totalGuesses === 1 ? "guess" : "guesses"}\nGame #${allAnagramGames[0]["Game Number"]}\nCan you beat my score? Click here: https://your-game-url.com/smoothbrain`
+            ? `I solved the smoothbrain in\n${totalGuesses}\n${totalGuesses === 1 ? "guess" : "guesses"}\nGame #${allAnagramGames[0]["Game Number"]}\nCan you beat my score? Click here: https://your-game-url.com/smoothbrain`
             : `${shareText.textContent}\nGame #${allAnagramGames[0]["Game Number"]}\nScore: ${totalGuesses}\nCan you beat my score? Click here: https://your-game-url.com/smoothbrain`;
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com/smoothbrain")}&text=${encodeURIComponent(shareMessage)}`;
