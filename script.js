@@ -1,4 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
+    console.log("DOM fully loaded");
+
     let score = 0;
     let gameOver = false;
     let secretWord = "";
@@ -10,8 +12,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let guessCount = 0;
     let gaveUp = false;
 
-    // Button event listeners moved to top-level scope
-    document.getElementById("all-games-btn").addEventListener("click", (e) => {
+    const allGamesBtn = document.getElementById("all-games-btn");
+    const playAgainBtn = document.getElementById("home-btn");
+
+    console.log("All Games button element:", allGamesBtn);
+    console.log("Play Again button element:", playAgainBtn);
+
+    allGamesBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log("All Games button clicked");
@@ -21,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
         adjustBackground();
     });
 
-    document.getElementById("home-btn").addEventListener("click", (e) => {
+    playAgainBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log("Play Again button clicked");
@@ -32,6 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     async function fetchGameData() {
+        console.log("Fetching game data");
         const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
         const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
 
@@ -60,6 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function setupEventListeners() {
+        console.log("Setting up additional event listeners");
         const gameScreen = document.getElementById("game-screen");
         const go = document.getElementById("game-over");
         const pauseScreen = document.getElementById("pause-screen");
@@ -101,6 +110,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.querySelectorAll("#game-name").forEach(name => {
             name.addEventListener("click", () => {
+                console.log("Game name clicked");
                 resetGame();
                 loadGame(allGames[0]);
                 document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
@@ -164,6 +174,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Give Up button clicked");
             gaveUp = true;
             saveGameResult("pineapple", currentGameNumber, secretWord, "Gave Up");
             endGame(false, true);
@@ -223,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateHintCountdown() {
+        console.log("Updating hint countdown");
         const countdownElement = document.getElementById("hint-countdown");
         if (hintIndex >= hints.length - 1) {
             countdownElement.textContent = "(All hints are now revealed)";
@@ -234,6 +246,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function displayGameList() {
+        console.log("Displaying game list");
         const gameList = document.getElementById("game-list");
         gameList.innerHTML = "";
         document.getElementById("game-name").textContent = "PINEAPPLE";
@@ -268,6 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function setupHints() {
+        console.log("Setting up hints");
         const hintElements = [
             document.getElementById("hint-row-1").children[0],
             document.getElementById("hint-row-2").children[0],
@@ -285,6 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustBackground() {
+        console.log("Adjusting background");
         const screens = [document.getElementById("game-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("game-select-screen")];
         screens.forEach(screen => {
             if (screen.style.display !== "none") {
@@ -305,6 +320,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function rainConfetti() {
+        console.log("Raining confetti");
         const confettiContainer = document.createElement("div");
         confettiContainer.className = "confetti";
         document.body.appendChild(confettiContainer);
@@ -320,6 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function handleGuess(guess) {
+        console.log("Handling guess:", guess);
         const guessDisplay = document.getElementById("guess-input");
         const guessLine = document.getElementById("guess-line");
         guessDisplay.value = guess.toUpperCase();
@@ -370,6 +387,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustHintsAfterGuess() {
+        console.log("Adjusting hints after guess");
         const hintElements = [
             document.getElementById("hint-row-1")?.children[0],
             document.getElementById("hint-row-2")?.children[0],
@@ -385,6 +403,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
+        console.log("Saving game result:", gameNumber, guesses);
         const key = gameType + "Results";
         const results = JSON.parse(localStorage.getItem(key) || "{}");
         results[gameNumber] = { secretWord, guesses };
@@ -392,6 +411,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function endGame(won, gaveUp = false) {
+        console.log("Ending game, won:", won, "gaveUp:", gaveUp);
         gameOver = true;
         const endGraphic = document.getElementById("end-graphic");
         const todaysWord = document.getElementById("todays-word");
@@ -447,6 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function resetGame() {
+        console.log("Resetting game");
         score = 0;
         gameOver = false;
         hintIndex = 0;
@@ -480,6 +501,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function loadGame(game) {
+        console.log("Loading game:", game["Game Number"]);
         resetGame();
         currentGameNumber = game["Game Number"];
         secretWord = game["Secret Word"].toUpperCase();
