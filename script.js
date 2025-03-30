@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const pauseScreen = document.getElementById("pause-screen");
         const gameSelectScreen = document.getElementById("game-select-screen");
         const input = document.getElementById("guess-input");
+        const footer = document.getElementById("footer");
 
         document.querySelectorAll("#mode-toggle").forEach(button => {
             button.addEventListener("click", () => {
@@ -56,8 +57,17 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
+        footer.addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
+
         document.addEventListener("click", (e) => {
-            if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none" && !e.target.closest("button") && e.target.id !== "game-name") {
+            if (!gameOver && 
+                gameScreen.style.display === "flex" && 
+                pauseScreen.style.display === "none" && 
+                !footer.contains(e.target) &&
+                !e.target.closest("button") && 
+                e.target.id !== "game-name") {
                 input.focus();
             }
         });
@@ -65,7 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll("#game-name").forEach(name => {
             name.addEventListener("click", () => {
                 resetGame();
-                loadGame(allGames[0]); // Restart most recent game
+                loadGame(allGames[0]);
                 document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
                 gameScreen.style.display = "flex";
                 input.focus();
@@ -75,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("all-games-btn").addEventListener("click", (e) => {
             e.preventDefault();
+            e.stopPropagation();
             displayGameList();
             gameScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
@@ -83,6 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
+            e.stopPropagation();
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
             if (currentIndex + 1 < allGames.length) {
                 loadGame(allGames[currentIndex + 1]);
@@ -91,6 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
+            e.stopPropagation();
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
             if (currentIndex - 1 >= 0) {
                 loadGame(allGames[currentIndex - 1]);
@@ -133,8 +146,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
+            e.stopPropagation();
             gaveUp = true;
-            saveGameResult("pineapple", currentGameNumber, secretWord, "Gave Up"); // Save before ending
+            saveGameResult("pineapple", currentGameNumber, secretWord, "Gave Up");
             endGame(false, true);
         });
 
@@ -154,15 +168,14 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!firstGuessMade && input.value === "") {
                 input.placeholder = "type guess here";
             }
-            // Move footer above keyboard on focus
             if (firstGuessMade) {
-                document.getElementById("footer").style.bottom = "calc(40vh)"; // Adjusted for visibility
+                document.getElementById("footer").style.bottom = "calc(40vh)";
             }
         });
 
         input.addEventListener("blur", () => {
             if (firstGuessMade) {
-                document.getElementById("footer").style.bottom = "1vh"; // Reset when keyboard hides
+                document.getElementById("footer").style.bottom = "1vh";
             }
         });
 
@@ -321,7 +334,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("how-to-play-1").remove();
             document.getElementById("how-to-play-2").remove();
             document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
-            document.getElementById("footer").style.bottom = "calc(40vh)"; // Move footer up
+            document.getElementById("footer").style.bottom = "calc(40vh)";
             adjustHintsAfterGuess();
         }
 

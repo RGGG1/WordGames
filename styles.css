@@ -72,7 +72,6 @@ a {
   text-transform: uppercase;
   color: #FFD700;
   -webkit-text-stroke: 0.1vh #FF4500;
-  text-stroke: 0.1vh #FF4500;
   cursor: pointer;
   z-index: 11;
   position: absolute;
@@ -429,6 +428,18 @@ a {
   border: 0.1vh solid #000000;
 }
 
+.inverted {
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
+}
+
+.dark-mode .inverted {
+  background: #000000;
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
+}
+
 #ad-box {
   width: 85vw;
   height: 10vh;
@@ -520,6 +531,9 @@ a {
   width: 85vw;
   margin: 4vh auto 0 auto;
   flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 #game-list-title {
@@ -529,30 +543,29 @@ a {
 }
 
 #game-list-header {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   width: 80vw;
   font-size: 1.8vh;
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
-  padding: 0; /* Remove any padding that might offset alignment */
+  padding: 0;
 }
 
 .game-list-row {
-  display: flex;
-  justify-content: space-around;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
   width: 80vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
   cursor: pointer;
-  padding: 0; /* Ensure no padding affects alignment */
+  padding: 0;
 }
 
 .game-list-row span {
-  flex: 1;
   text-align: center;
-  white-space: nowrap; /* Prevent text wrapping that could misalign */
+  white-space: nowrap;
 }
 
 .game-list-row:hover {
@@ -577,30 +590,35 @@ a {
   align-items: center;
 }
 
+.spacer {
+  height: 1vh;
+}
+
 #footer {
-  width: 85vw;
-  margin: 0;
-  font-size: 1.5vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: absolute; /* Changed to absolute for precise positioning */
-  bottom: 1vh;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-  transition: bottom 0.3s ease;
+    width: 85vw;
+    margin: 0;
+    font-size: 1.5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 1vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    transition: bottom 0.3s ease;
 }
 
 .footer-btn {
-  font-size: 2.25vh;
-  padding: 0.75vh 1.5vw;
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-  border-radius: 0.6vh;
-  cursor: pointer;
-  z-index: 11;
+    font-size: 2.25vh;
+    padding: 0.75vh 1.5vw;
+    background: #000000;
+    color: #FFFFFF;
+    border: 0.1vh solid #FFFFFF;
+    border-radius: 0.6vh;
+    cursor: pointer;
+    z-index: 101;
+    position: relative;
 }
 
 .arrow-btn {
@@ -608,22 +626,24 @@ a {
 }
 
 .footer-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vh;
+    z-index: 102;
 }
 
 .footer-nav {
-  display: flex;
-  gap: 1vw;
-  align-items: center;
+    display: flex;
+    gap: 1vw;
+    align-items: center;
+    z-index: 103;
 }
 
 .dark-mode .footer-btn {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
+    background: #FFFFFF;
+    color: #000000;
+    border: 0.1vh solid #000000;
 }
 
 @media (max-width: 600px) or (max-height: 600px) {
@@ -653,6 +673,6 @@ a {
       font-size: 2vh;
   }
   #footer {
-      width: 90vw; /* Match header width */
+      width: 90vw;
   }
 }
