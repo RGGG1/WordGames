@@ -306,9 +306,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!firstGuessMade) {
             firstGuessMade = true;
-            document.getElementById("how-to-play-1").style.display = "none";
-            document.getElementById("how-to-play-2").style.display = "none";
-            document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "none");
+            // Completely remove "How to Play" section
+            document.getElementById("how-to-play-1").remove();
+            document.getElementById("how-to-play-2").remove();
+            document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
+            // Move footer up to replace "How to Play"
+            document.getElementById("footer").style.bottom = "calc(50vh - 10vh)"; // Adjust based on keyboard height
             adjustHintsAfterGuess();
         }
 
@@ -347,14 +350,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function adjustHintsAfterGuess() {
         const hintElements = [
-            document.getElementById("hint-row-1").children[0],
-            document.getElementById("hint-row-2").children[0],
-            document.getElementById("hint-row-3").children[0],
-            document.getElementById("hint-row-4").children[0],
-            document.getElementById("hint-row-5").children[0],
-            document.getElementById("hint-row-6").children[0],
-            document.getElementById("hint-row-7").children[0]
-        ];
+            document.getElementById("hint-row-1")?.children[0],
+            document.getElementById("hint-row-2")?.children[0],
+            document.getElementById("hint-row-3")?.children[0],
+            document.getElementById("hint-row-4")?.children[0],
+            document.getElementById("hint-row-5")?.children[0],
+            document.getElementById("hint-row-6")?.children[0],
+            document.getElementById("hint-row-7")?.children[0]
+        ].filter(Boolean); // Filter out removed elements
         hintElements.forEach((span, index) => {
             span.style.visibility = index <= hintIndex ? "visible" : "hidden";
         });
@@ -399,7 +402,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (gaveUp) {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
-            shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n<span class="italic">The Big Brain Word Game</span>';
+            shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n\n<span class="italic">The Big Brain Word Game</span>'; // Added extra line
             shareGameNumber.textContent = `Game #${currentGameNumber}`;
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
@@ -412,7 +415,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const shareMessage = gaveUp
-            ? `PLAY PINEAPPLE\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+            ? `PLAY PINEAPPLE\n\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
             : won
             ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
             : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
@@ -434,9 +437,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
-        document.getElementById("how-to-play-1").style.display = "block";
-        document.getElementById("how-to-play-2").style.display = "block";
-        document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.style.display = "block");
+        document.getElementById("footer").style.bottom = "1vh"; // Reset footer position
+        // Re-add "How to Play" if removed
+        if (!document.getElementById("how-to-play-1")) {
+            const hintsBox = document.getElementById("hints");
+            hintsBox.innerHTML = `
+                <div class="hint-line" id="hint-row-1"><span></span></div>
+                <div class="hint-line spacer"></div>
+                <div class="hint-line spacer"></div>
+                <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
+                <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
+                <div class="hint-line" id="hint-row-2"><span></span></div>
+                <div class="hint-line" id="hint-row-3"><span></span></div>
+                <div class="hint-line" id="hint-row-4"><span></span></div>
+                <div class="hint-line" id="hint-row-5"><span></span></div>
+                <div class="hint-line" id="hint-row-6"><span></span></div>
+                <div class="hint-line" id="hint-row-7"><span></span></div>
+            `;
+        }
         setupHints();
         updateHintCountdown();
     }

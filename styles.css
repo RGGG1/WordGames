@@ -53,7 +53,7 @@ a {
 }
 
 #mode-toggle {
-  font-size: 2.5vh;
+  font-size: 1.875vh; /* Reduced from 2.5vh by 25% */
   background: none;
   border: none;
   cursor: pointer;
@@ -180,6 +180,7 @@ a {
   padding: 1vh;
   background: none;
   flex-grow: 1;
+  position: relative;
 }
 
 .game-number-label {
@@ -223,7 +224,7 @@ a {
 }
 
 #how-to-play-1, #how-to-play-2 {
-  font-size: 2vh; /* Matches Hints */
+  font-size: 2vh;
 }
 
 .hint-line span {
@@ -233,8 +234,8 @@ a {
 }
 
 #resume-btn {
-  width: 3vh;
-  height: 3vh;
+  width: 2.25vh; /* Reduced from 3vh by 25% */
+  height: 2.25vh;
   border-radius: 50%;
   background: #000000;
   color: #FFFFFF;
@@ -242,7 +243,7 @@ a {
   cursor: pointer;
   margin: 1vh auto;
   display: block;
-  font-size: 1.2vh;
+  font-size: 0.9vh; /* Reduced from 1.2vh by 25% */
   z-index: 11;
 }
 
@@ -388,10 +389,11 @@ a {
 #share-buttons {
   display: flex;
   gap: 1.5vh;
+  margin-bottom: 1.5vh; /* Extra half line (0.5vh + 1vh) */
 }
 
 #share-buttons a {
-  font-size: 3vh;
+  font-size: 2.25vh; /* Reduced from 3vh by 25% */
   color: #000000;
   text-decoration: none;
 }
@@ -402,22 +404,22 @@ a {
 
 #end-footer {
   font-size: 1.8vh;
-  margin: 1vh auto;
+  margin: 0.5vh auto; /* Half line between "Or, check out..." and link */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5vh;
+  gap: 0.5vh; /* Half line between text and link */
 }
 
 #home-btn {
-  font-size: 3vh;
-  padding: 1vh 2vw;
+  font-size: 2.25vh; /* Reduced from 3vh by 25% */
+  padding: 0.75vh 1.5vw; /* Reduced from 1vh 2vw by 25% */
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.8vh;
+  border-radius: 0.6vh; /* Reduced from 0.8vh by 25% */
   cursor: pointer;
-  margin-top: 1vh;
+  margin: 0.5vh auto 0 auto; /* Half line above "Or, check out..." */
   z-index: 11;
 }
 
@@ -510,13 +512,12 @@ a {
 #game-select-screen {
   display: none;
   flex-direction: column;
-  height   
   height: 100vh;
   position: relative;
 }
 
 #game-select-content {
-  width: 85vw; /* Matches other screens */
+  width: 85vw;
   margin: 4vh auto 0 auto;
   flex-grow: 1;
 }
@@ -585,21 +586,22 @@ a {
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
+  transition: bottom 0.3s ease; /* Smooth transition for footer movement */
 }
 
 .footer-btn {
-  font-size: 3vh;
-  padding: 1vh 2vw;
+  font-size: 2.25vh; /* Reduced from 3vh by 25% */
+  padding: 0.75vh 1.5vw; /* Reduced from 1vh 2vw by 25% */
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.8vh;
+  border-radius: 0.6vh; /* Reduced from 0.8vh by 25% */
   cursor: pointer;
   z-index: 11;
 }
 
 .arrow-btn {
-  padding: 1vh 1vw;
+  padding: 0.75vh 0.75vw; /* Reduced from 1vh 1vw by 25% */
 }
 
 .footer-center {
@@ -626,16 +628,14 @@ a {
       width: 90vw;
   }
   #game-name, #score {
-      font-size هفته
-
-: 2vh;
+      font-size: 2vh;
   }
   #mode-toggle {
-      font-size:,or: 2vh;
+      font-size: 1.5vh; /* Reduced from 2vh by 25% */
   }
   .footer-btn, .home-btn {
-      font-size: 2.4vh;
-      padding: 0.8vh 1.6vw;
+      font-size: 1.8vh; /* Reduced from 2.4vh by 25% */
+      padding: 0.6vh 1.2vw; /* Reduced from 0.8vh 1.6vw by 25% */
   }
   #guess-input {
       font-size: 4vh;
