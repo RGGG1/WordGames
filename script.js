@@ -23,39 +23,52 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("Play Again button:", playAgainBtn);
     console.log("Screens:", { gameScreen, gameOverScreen, pauseScreen, gameSelectScreen });
 
-    allGamesBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("All Games button clicked");
-        showGameListScreen();
-    });
+    if (!allGamesBtn) {
+        console.error("All Games button not found in DOM");
+    } else {
+        allGamesBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("All Games button clicked");
+            showGameListScreen();
+        });
+    }
 
-    playAgainBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("Play Again button clicked");
-        showGameListScreen();
-    });
+    if (!playAgainBtn) {
+        console.error("Play Again button not found in DOM");
+    } else {
+        playAgainBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Play Again button clicked");
+            showGameListScreen();
+        });
+    }
 
     function showGameListScreen() {
         console.log("Attempting to show game list screen");
+        if (!gameSelectScreen) {
+            console.error("Game select screen not found");
+            return;
+        }
         try {
             displayGameList();
             resetScreenDisplays();
             gameSelectScreen.style.display = "flex";
+            console.log("Set gameSelectScreen display to flex");
             adjustBackground();
             console.log("Game list screen should now be visible");
         } catch (error) {
-            console.error("Error showing game list screen:", error);
+            console.error("Error in showGameListScreen:", error);
         }
     }
 
     function resetScreenDisplays() {
         console.log("Resetting screen displays");
-        gameScreen.style.display = "none";
-        gameOverScreen.style.display = "none";
-        pauseScreen.style.display = "none";
-        gameSelectScreen.style.display = "none";
+        if (gameScreen) gameScreen.style.display = "none";
+        if (gameOverScreen) gameOverScreen.style.display = "none";
+        if (pauseScreen) pauseScreen.style.display = "none";
+        if (gameSelectScreen) gameSelectScreen.style.display = "none";
     }
 
     async function fetchGameData() {
@@ -104,9 +117,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        footer.addEventListener("click", (e) => {
-            e.stopPropagation();
-        });
+        if (footer) {
+            footer.addEventListener("click", (e) => {
+                e.stopPropagation();
+                console.log("Footer clicked, stopping propagation");
+            });
+        }
 
         document.addEventListener("click", (e) => {
             if (!gameOver && 
@@ -334,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Adjusting background");
         const screens = [gameScreen, gameOverScreen, pauseScreen, gameSelectScreen];
         screens.forEach(screen => {
-            if (screen.style.display === "flex") {
+            if (screen && screen.style.display === "flex") {
                 screen.style.height = "100vh";
             }
         });

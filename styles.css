@@ -576,7 +576,7 @@ a {
   bottom: 1vh;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 10;
+  z-index: 15; /* Increased to ensure it’s above other elements */
   transition: bottom 0.3s ease;
 }
 
