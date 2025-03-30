@@ -8,6 +8,8 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  width: 100vw;
+  overflow-x: hidden;
 }
 
 .dark-mode {
@@ -67,7 +69,7 @@ a {
 
 #game-name {
   font-family: 'Fredoka One', cursive;
-  font-size: 2.5vh;
+  font-size: clamp(2vh, 2.5vw, 2.5vh);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #FFD700;
@@ -80,7 +82,7 @@ a {
 }
 
 #score {
-  font-size: 2.5vh;
+  font-size: clamp(2vh, 2.5vw, 2.5vh);
   font-weight: bold;
   z-index: 11;
 }
@@ -120,7 +122,7 @@ a {
 }
 
 #guess-input {
-  font-size: 5vh;
+  font-size: clamp(4vh, 5vw, 5vh);
   font-weight: bold;
   background: none;
   border: none;
@@ -223,11 +225,11 @@ a {
 }
 
 #how-to-play-1, #how-to-play-2 {
-  font-size: 2vh;
+  font-size: clamp(1.5vh, 2vw, 2vh);
 }
 
 .hint-line span {
-  font-size: 2.5vh;
+  font-size: clamp(1.8vh, 2.5vw, 2.5vh);
   font-weight: bold;
   text-transform: uppercase;
 }
@@ -269,11 +271,6 @@ a {
 .dark-mode #pause-screen {
   background: #000000;
   color: #FFFFFF;
-}
-
-#pause-text {
-  font-size: 2.5vh;
-  margin-bottom: 4vh;
 }
 
 #countdown {
@@ -420,6 +417,11 @@ a {
   cursor: pointer;
   margin: 0.5vh auto 0 auto;
   z-index: 11;
+  transition: transform 0.2s ease;
+}
+
+#home-btn:hover {
+  transform: scale(1.05);
 }
 
 .dark-mode #home-btn {
@@ -595,30 +597,35 @@ a {
 }
 
 #footer {
-    width: 85vw;
-    margin: 0;
-    font-size: 1.5vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    bottom: 1vh;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    transition: bottom 0.3s ease;
+  width: 85vw;
+  margin: 0;
+  font-size: 1.5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 1vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  transition: bottom 0.3s ease;
 }
 
 .footer-btn {
-    font-size: 2.25vh;
-    padding: 0.75vh 1.5vw;
-    background: #000000;
-    color: #FFFFFF;
-    border: 0.1vh solid #FFFFFF;
-    border-radius: 0.6vh;
-    cursor: pointer;
-    z-index: 101;
-    position: relative;
+  font-size: 2.25vh;
+  padding: 0.75vh 1.5vw;
+  background: #000000;
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
+  border-radius: 0.6vh;
+  cursor: pointer;
+  z-index: 101;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.footer-btn:hover {
+  transform: scale(1.05);
 }
 
 .arrow-btn {
@@ -626,24 +633,24 @@ a {
 }
 
 .footer-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1vh;
-    z-index: 102;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+  z-index: 102;
 }
 
 .footer-nav {
-    display: flex;
-    gap: 1vw;
-    align-items: center;
-    z-index: 103;
+  display: flex;
+  gap: 1vw;
+  align-items: center;
+  z-index: 103;
 }
 
 .dark-mode .footer-btn {
-    background: #FFFFFF;
-    color: #000000;
-    border: 0.1vh solid #000000;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 @media (max-width: 600px) or (max-height: 600px) {
@@ -651,26 +658,23 @@ a {
       width: 90vw;
   }
   #game-name, #score {
-      font-size: 2vh;
+      font-size: clamp(1.5vh, 2vw, 2vh);
   }
   #mode-toggle {
-      font-size: 1.5vh;
+      font-size: clamp(1.2vh, 1.5vw, 1.5vh);
   }
   .footer-btn, .home-btn {
-      font-size: 1.8vh;
-      padding: 0.6vh 1.2vw;
+      font-size: clamp(1.5vh, 1.8vw, 1.8vh);
+      padding: clamp(0.5vh, 0.6vw, 0.6vh) clamp(1vh, 1.2vw, 1.2vw);
   }
   #guess-input {
-      font-size: 4vh;
+      font-size: clamp(3vh, 4vw, 4vh);
   }
   #hints-box {
       height: calc(100vh - 26vh);
   }
   .hint-line span {
-      font-size: 1.8vh;
-  }
-  #how-to-play-1, #how-to-play-2 {
-      font-size: 2vh;
+      font-size: clamp(1.5vh, 1.8vw, 1.8vh);
   }
   #footer {
       width: 90vw;

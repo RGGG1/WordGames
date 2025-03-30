@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let gaveUp = false;
 
     async function fetchGameData() {
-        const spreadsheetId = "2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI";
+        const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
         const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
 
         try {
@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
             loadGame(allGames[0]);
         }
         document.getElementById("game-screen").style.display = "flex";
-        document.getElementById("guess-input").focus();
         updateHintCountdown();
         adjustBackground();
         setupEventListeners();
@@ -46,6 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const gameSelectScreen = document.getElementById("game-select-screen");
         const input = document.getElementById("guess-input");
         const footer = document.getElementById("footer");
+        let keyboardInitiated = false;
 
         document.querySelectorAll("#mode-toggle").forEach(button => {
             button.addEventListener("click", () => {
@@ -68,7 +68,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 !footer.contains(e.target) &&
                 !e.target.closest("button") && 
                 e.target.id !== "game-name") {
-                input.focus();
+                if (!keyboardInitiated) {
+                    input.focus();
+                    keyboardInitiated = true;
+                }
+                if (firstGuessMade && !gameOver) {
+                    input.focus();
+                }
             }
         });
 
@@ -140,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("back-to-game-btn").addEventListener("click", () => {
             gameSelectScreen.style.display = "none";
             gameScreen.style.display = "flex";
-            input.focus();
+            if (firstGuessMade && !gameOver) input.focus();
             adjustBackground();
         });
 
@@ -174,7 +180,9 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         input.addEventListener("blur", () => {
-            if (firstGuessMade) {
+            if (firstGuessMade && !gameOver) {
+                input.focus();
+            } else if (!firstGuessMade) {
                 document.getElementById("footer").style.bottom = "1vh";
             }
         });
@@ -197,7 +205,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (timeLeft <= 0) {
                     clearInterval(interval);
                     pauseScreen.style.display = "none";
-                    if (!gameOver) input.focus();
+                    if (!gameOver && firstGuessMade) input.focus();
                 }
             }, 1000);
         });
@@ -218,7 +226,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     go.style.display = "none";
                     document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
                     adjustBackground();
-                    input.focus();
+                    if (firstGuessMade && !gameOver) input.focus();
                 }
             });
         });
@@ -263,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 loadGame(game);
                 document.getElementById("game-select-screen").style.display = "none";
                 document.getElementById("game-screen").style.display = "flex";
-                document.getElementById("guess-input").focus();
+                if (firstGuessMade && !gameOver) document.getElementById("guess-input").focus();
             });
             gameList.appendChild(gameItem);
         });
