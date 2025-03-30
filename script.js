@@ -11,11 +11,12 @@ document.addEventListener("DOMContentLoaded", () => {
     let guessCount = 0;
     let gaveUp = false;
 
-    async function fetchGameData() {
-        const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
-        const officialUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
-        const privateUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=639966570&single=true&output=csv`;
+    const spreadsheetId = "2PACX-1vQ87d9n-9hR-Cs5lZ5n8bYd8Z3iJ0F8nXaY8oQz5e5o5q5r5t5y5u5i5o5p5a5s5s5"; // Public URL encoded ID for fetching
+    const officialUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
+    const privateUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=639966570&single=true&output=csv`;
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxLdEKhQMRcxVHI8MwIES-y6ag2pKYHzBypq6AT2huevXvN-0bXHGy6k2RoRP0LbQ/exec";
 
+    async function fetchGameData() {
         try {
             // Fetch official games
             const officialResponse = await fetch(officialUrl);
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const officialText = await officialResponse.text();
             const officialRows = officialText.split("\n").map(row => row.split(","));
             const officialHeaders = officialRows[0];
-            allGames = officialRows.slice(1).map((row) => {
+            allGames = officialRows.slice(1).map(row => {
                 let obj = {};
                 officialHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
                 return obj;
@@ -47,6 +48,24 @@ document.addEventListener("DOMContentLoaded", () => {
         setupEventListeners();
     }
 
+    async function fetchPrivateGames() {
+        try {
+            const privateResponse = await fetch(privateUrl);
+            if (!privateResponse.ok) throw new Error(`Private fetch failed: ${privateResponse.status}`);
+            const privateText = await privateResponse.text();
+            const privateRows = privateText.split("\n").map(row => row.split(","));
+            const privateHeaders = privateRows[0];
+            privateGames = privateRows.slice(1).map(row => {
+                let obj = {};
+                privateHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
+                return obj;
+            }).sort((a, b) => b["Game Number"].localeCompare(a["Game Number"]));
+        } catch (error) {
+            console.error("Failed to fetch private games:", error);
+            privateGames = [];
+        }
+    }
+
     function setupEventListeners() {
         const gameScreen = document.getElementById("game-screen");
         const go = document.getElementById("game-over");
@@ -55,8 +74,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const customGameScreen = document.getElementById("custom-game-create-screen");
         const input = document.getElementById("guess-input");
         const footer = document.getElementById("footer");
-        const allGamesBtn = document.getElementById("all-games-btn");
-        const playMoreBtn = document.getElementById("home-btn");
 
         document.querySelectorAll("#mode-toggle").forEach(button => {
             button.addEventListener("click", () => {
@@ -71,12 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
         footer.addEventListener("click", (e) => e.stopPropagation());
 
         document.addEventListener("click", (e) => {
-            if (!gameOver && 
-                gameScreen.style.display === "flex" && 
-                pauseScreen.style.display === "none" && 
-                !footer.contains(e.target) &&
-                !e.target.closest("button") && 
-                e.target.id !== "game-name") {
+            if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none" && !footer.contains(e.target) && !e.target.closest("button") && e.target.id !== "game-name") {
                 input.focus();
             }
         });
@@ -92,10 +104,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        allGamesBtn.addEventListener("click", (e) => {
+        document.getElementById("all-games-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("All Games button clicked");
             displayGameTabs();
             gameScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
@@ -123,10 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let touchStartX = 0;
         let touchEndX = 0;
 
-        gameScreen.addEventListener("touchstart", e => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-
+        gameScreen.addEventListener("touchstart", e => touchStartX = e.changedTouches[0].screenX);
         gameScreen.addEventListener("touchend", e => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
@@ -136,14 +144,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const swipeThreshold = 50;
             if (touchStartX - touchEndX > swipeThreshold) {
                 const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                if (currentIndex - 1 >= 0) {
-                    loadGame(allGames[currentIndex - 1]);
-                }
+                if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
             } else if (touchEndX - touchStartX > swipeThreshold) {
                 const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                if (currentIndex + 1 < allGames.length) {
-                    loadGame(allGames[currentIndex + 1]);
-                }
+                if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
             }
         }
 
@@ -165,36 +169,24 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         input.addEventListener("input", (e) => {
-            if (!gameOver && e.data && e.inputType === "insertReplacementText") {
-                handleGuess(input.value.trimEnd());
-            }
+            if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trimEnd());
         });
 
         input.addEventListener("keydown", (e) => {
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) {
-                handleGuess(input.value.trimEnd());
-            }
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) handleGuess(input.value.trimEnd());
         });
 
         input.addEventListener("focus", () => {
-            if (!firstGuessMade && input.value === "") {
-                input.placeholder = "type guess here";
-            }
-            if (firstGuessMade) {
-                document.getElementById("footer").style.bottom = "calc(40vh)";
-            }
+            if (!firstGuessMade && input.value === "") input.placeholder = "type guess here";
+            if (firstGuessMade) document.getElementById("footer").style.bottom = "calc(40vh)";
         });
 
         input.addEventListener("blur", () => {
-            if (firstGuessMade) {
-                document.getElementById("footer").style.bottom = "1vh";
-            }
+            if (firstGuessMade) document.getElementById("footer").style.bottom = "1vh";
         });
 
         input.addEventListener("input", () => {
-            if (input.value.length > 0) {
-                input.placeholder = "";
-            }
+            if (input.value.length > 0) input.placeholder = "";
         });
 
         document.getElementById("resume-btn").addEventListener("click", (e) => {
@@ -216,23 +208,26 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 1000);
         });
 
-        document.getElementById("ad-link").addEventListener("click", (e) => {
-            e.preventDefault();
-        });
+        document.getElementById("ad-link").addEventListener("click", (e) => e.preventDefault());
 
-        playMoreBtn.addEventListener("click", (e) => {
+        // Fix "Play More Pineapples" button
+        const homeBtn = document.getElementById("home-btn");
+        homeBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Play More Pineapples button clicked");
+            console.log("Play More Pineapples clicked");
             displayGameTabs();
             go.style.display = "none";
             gameSelectScreen.style.display = "flex";
             adjustBackground();
         });
 
-        document.getElementById("create-link").addEventListener("click", (e) => {
+        // Fix "Create a Game" link on end screen
+        document.getElementById("create-link").addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Create a Game link clicked");
+            await fetchGameData(); // Re-fetch data to ensure lists are populated
             go.style.display = "none";
             gameSelectScreen.style.display = "flex";
             document.getElementById("private-tab").click();
@@ -264,11 +259,14 @@ document.addEventListener("DOMContentLoaded", () => {
             e.stopPropagation();
             gameSelectScreen.style.display = "none";
             customGameScreen.style.display = "flex";
+            adjustBackground();
         });
 
+        // New "Create Game" confirm button logic
         document.getElementById("submit-custom-game").addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Confirm button clicked");
             const secretWord = document.getElementById("custom-secret-word").value.trimEnd().toUpperCase();
             const hints = [
                 document.getElementById("custom-hint-1").value.trimEnd().toUpperCase(),
@@ -289,13 +287,23 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Hint 4": hints[3],
                     "Hint 5": hints[4]
                 };
-                const success = await submitCustomGame(newGame);
-                if (success) {
+                try {
+                    const response = await fetch(scriptURL, {
+                        method: "POST",
+                        body: JSON.stringify(newGame),
+                        headers: { "Content-Type": "application/json" },
+                        mode: "no-cors"
+                    });
+                    console.log("Game submitted:", newGame);
+                    await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for spreadsheet update
                     await fetchPrivateGames();
                     customGameScreen.style.display = "none";
                     gameSelectScreen.style.display = "flex";
                     displayPrivateGames();
                     document.getElementById("private-tab").click();
+                } catch (error) {
+                    console.error("Failed to create game:", error);
+                    alert("Failed to create game. Please try again.");
                 }
             }
         });
@@ -307,26 +315,6 @@ document.addEventListener("DOMContentLoaded", () => {
             gameSelectScreen.style.display = "flex";
             displayGameTabs();
         });
-    }
-
-    async function fetchPrivateGames() {
-        const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
-        const privateUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=639966570&single=true&output=csv`;
-        try {
-            const privateResponse = await fetch(privateUrl);
-            if (!privateResponse.ok) throw new Error(`Private fetch failed: ${privateResponse.status}`);
-            const privateText = await privateResponse.text();
-            const privateRows = privateText.split("\n").map(row => row.split(","));
-            const privateHeaders = privateRows[0];
-            privateGames = privateRows.slice(1).map((row) => {
-                let obj = {};
-                privateHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
-                return obj;
-            }).sort((a, b) => b["Game Number"].localeCompare(a["Game Number"]));
-        } catch (error) {
-            console.error("Failed to fetch private games:", error);
-            privateGames = [];
-        }
     }
 
     function validateCustomGame(secretWord, hints, gameName) {
@@ -345,24 +333,6 @@ document.addEventListener("DOMContentLoaded", () => {
         return true;
     }
 
-    async function submitCustomGame(game) {
-        const scriptURL = "https://script.google.com/macros/s/AKfycbxLdEKhQMRcxVHI8MwIES-y6ag2pKYHzBypq6AT2huevXvN-0bXHGy6k2RoRP0LbQ/exec";
-        try {
-            const response = await fetch(scriptURL, {
-                method: "POST",
-                body: JSON.stringify(game),
-                headers: { "Content-Type": "application/json" },
-                mode: "no-cors" // Google Apps Script doesn't support CORS
-            });
-            console.log("Game submitted:", game);
-            return true; // Assume success with no-cors
-        } catch (error) {
-            console.error("Failed to submit custom game:", error);
-            alert("Failed to save your game. Please try again.");
-            return false;
-        }
-    }
-
     function updateHintCountdown() {
         const countdownElement = document.getElementById("hint-countdown");
         if (hintIndex >= hints.length - 1) {
@@ -375,7 +345,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function displayGameTabs() {
-        console.log("Displaying game tabs");
         displayOfficialGames(); // Default to official tab
     }
 
@@ -467,9 +436,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function adjustBackground() {
         const screens = [document.getElementById("game-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("game-select-screen"), document.getElementById("custom-game-create-screen")];
         screens.forEach(screen => {
-            if (screen.style.display !== "none") {
-                screen.style.height = "100vh";
-            }
+            if (screen.style.display !== "none") screen.style.height = "100vh";
         });
     }
 
@@ -478,9 +445,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function revealHint() {
         hintIndex++;
         const allHints = document.querySelectorAll(".hint-line span");
-        if (hintIndex < allHints.length && allHints[hintIndex].textContent) {
-            allHints[hintIndex].style.visibility = "visible";
-        }
+        if (hintIndex < allHints.length && allHints[hintIndex].textContent) allHints[hintIndex].style.visibility = "visible";
         updateHintCountdown();
     }
 
@@ -518,15 +483,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         guessCount++;
         score += 1;
-        document.querySelectorAll("#score").forEach(scoreDisplay => {
-            scoreDisplay.textContent = `${score}`;
-        });
+        document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
 
-        if (guessCount % 5 === 0 && hintIndex < hints.length - 1) {
-            revealHint();
-        } else {
-            updateHintCountdown();
-        }
+        if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
+        else updateHintCountdown();
 
         if (guess.toUpperCase() === secretWord) {
             guessDisplay.classList.add("correct-guess");
@@ -559,9 +519,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("hint-row-6")?.children[0],
             document.getElementById("hint-row-7")?.children[0]
         ].filter(Boolean);
-        hintElements.forEach((span, index) => {
-            span.style.visibility = index <= hintIndex ? "visible" : "hidden";
-        });
+        hintElements.forEach((span, index) => span.style.visibility = index <= hintIndex ? "visible" : "hidden");
     }
 
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
@@ -633,9 +591,7 @@ document.addEventListener("DOMContentLoaded", () => {
         firstGuessMade = false;
         guessCount = 0;
         gaveUp = false;
-        document.querySelectorAll("#score").forEach(scoreDisplay => {
-            scoreDisplay.textContent = `${score}`;
-        });
+        document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("footer").style.bottom = "1vh";
