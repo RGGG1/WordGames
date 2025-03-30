@@ -109,14 +109,49 @@
         </div>
         <div id="game-select-content">
             <div id="game-list-title">All Games</div>
-            <div id="game-list-header" class="game-list-row">
-                <span>Game #</span>
-                <span>Secret Word</span>
-                <span>Guesses</span>
+            <div id="tabs">
+                <button id="official-tab" class="tab-btn active">Official</button>
+                <button id="private-tab" class="tab-btn">Private</button>
             </div>
-            <div id="game-list"></div>
+            <div id="official-games" class="tab-content" style="display: block;">
+                <div id="official-games-header" class="game-list-row">
+                    <span>Game #</span>
+                    <span>Secret Word</span>
+                    <span>Guesses</span>
+                </div>
+                <div id="official-game-list"></div>
+            </div>
+            <div id="private-games" class="tab-content" style="display: none;">
+                <button id="create-game-btn" class="footer-btn">Create Game</button>
+                <div id="private-games-header" class="game-list-row">
+                    <span>Game Name</span>
+                    <span>Secret Word</span>
+                    <span>Guesses</span>
+                </div>
+                <div id="private-game-list"></div>
+            </div>
             <div class="spacer"></div>
             <button id="back-to-game-btn" class="home-btn inverted">Back</button>
+        </div>
+        <div id="footer"></div>
+    </div>
+
+    <div id="custom-game-create-screen" class="screen" style="display: none;">
+        <div id="header">
+            <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
+            <div id="game-name">CREATE YOUR PINEAPPLE</div>
+            <div id="score">0</div>
+        </div>
+        <div id="custom-game-form">
+            <input id="custom-secret-word" type="text" placeholder="Secret Word (one word)" maxlength="20">
+            <input id="custom-hint-1" type="text" placeholder="Hint #1" maxlength="20">
+            <input id="custom-hint-2" type="text" placeholder="Hint #2" maxlength="20">
+            <input id="custom-hint-3" type="text" placeholder="Hint #3" maxlength="20">
+            <input id="custom-hint-4" type="text" placeholder="Hint #4" maxlength="20">
+            <input id="custom-hint-5" type="text" placeholder="Hint #5" maxlength="20">
+            <input id="custom-game-name" type="text" placeholder="Name Your Game" maxlength="20">
+            <button id="submit-custom-game" class="footer-btn">Confirm</button>
+            <button id="back-from-create" class="home-btn inverted">Back</button>
         </div>
         <div id="footer"></div>
     </div>

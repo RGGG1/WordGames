@@ -542,7 +542,42 @@ a {
   margin: 2vh 0;
 }
 
-#game-list-header {
+#tabs {
+  display: flex;
+  gap: 1vw;
+  margin-bottom: 2vh;
+}
+
+.tab-btn {
+  font-size: 2vh;
+  padding: 0.5vh 2vw;
+  background: #CCCCCC;
+  color: #000000;
+  border: none;
+  border-radius: 0.6vh;
+  cursor: pointer;
+}
+
+.tab-btn.active {
+  background: #000000;
+  color: #FFFFFF;
+}
+
+.dark-mode .tab-btn {
+  background: #333333;
+  color: #FFFFFF;
+}
+
+.dark-mode .tab-btn.active {
+  background: #FFFFFF;
+  color: #000000;
+}
+
+.tab-content {
+  width: 100%;
+}
+
+#official-games-header, #private-games-header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   width: 80vw;
@@ -572,6 +607,41 @@ a {
   text-decoration: underline;
 }
 
+#official-game-list, #private-game-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+#custom-game-create-screen {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+  position: relative;
+}
+
+#custom-game-form {
+  display: flex;
+  flex-direction: column;
+  width: 85vw;
+  gap: 1vh;
+  margin: 4vh auto;
+}
+
+#custom-game-form input {
+  font-size: 2vh;
+  padding: 0.5vh;
+  text-align: center;
+  border: 0.1vh solid #000000;
+  border-radius: 0.3vh;
+}
+
+.dark-mode #custom-game-form input {
+  border-color: #FFFFFF;
+  background: #000000;
+  color: #FFFFFF;
+}
+
 .green { color: #006400; }
 .yellow { color: #FFD700; }
 .orange { color: #FF4500; }
@@ -583,12 +653,6 @@ a {
 .dark-mode .orange { color: #FFA500; }
 .dark-mode .pink { color: #FF69B4; }
 .dark-mode .red { color: #FF0000; }
-
-#game-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 .spacer {
   height: 1vh;
