@@ -6,7 +6,7 @@
     <title>Pineapple</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Fredoka+One&family=Chewy&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
 </head>
 <body oncontextmenu="return false;">
     <div id="game-screen">
@@ -18,7 +18,7 @@
         <div id="guess-area">
             <div id="prompt">The secret word is...</div>
             <div id="guess-background"></div>
-            <input id="guess-input" type="text" autofocus placeholder="">
+            <input id="guess-input" type="text" autofocus placeholder="type guess here">
             <div id="guess-line"></div>
         </div>
         <div id="hints-box">
@@ -90,7 +90,7 @@
         </div>
         <div id="end-footer">
             <div>Until then, play our other game</div>
-            <a href="#" id="end-meatball">smoothbrain</a>
+            <a href="https://www.smoothbrain.ie" id="end-meatball">smoothbrain</a>
         </div>
         <button id="home-btn" class="home-btn">Play Again</button>
         <div id="ad-box">
@@ -98,50 +98,6 @@
             <div id="ad-link">click here to place an ad</div>
         </div>
         <div id="footer"></div>
-    </div>
-
-    <div id="create-game-screen" class="screen" style="display: none;">
-        <div id="header">
-            <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
-            <div id="game-name">PINEAPPLE</div>
-            <div id="score">0</div>
-        </div>
-        <div id="create-game-content">
-            <div>Create a Game...</div>
-            <p>Create your own secret words and hints...coming soon</p>
-            <button class="home-btn">Home</button>
-        </div>
-        <div id="footer"></div>
-    </div>
-
-    <div id="smoothbrain-screen" class="screen" style="display: none;">
-        <div id="header">
-            <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
-            <div id="smoothbrain-name">smoothbrain</div>
-            <div id="smoothbrain-score">0</div>
-        </div>
-        <div id="smoothbrain-relating"></div>
-        <div id="smoothbrain-separator"></div>
-        <div id="smoothbrain-guess-area">
-            <div id="smoothbrain-guess-background"></div>
-            <input id="smoothbrain-guess-input" type="text" autofocus placeholder="">
-            <div id="smoothbrain-guess-line"></div>
-        </div>
-        <div id="smoothbrain-hints">
-            <div id="smoothbrain-hint-text"></div>
-            <button id="smoothbrain-hint-btn">HINT</button>
-        </div>
-        <div id="smoothbrain-instruction"><b>How to Play</b><br>Rearrange the letters to form another word, in as few guesses as possible.<br><br>There may be multiple possibilities, but there is only one true smoothbrain answer.<br><br>Hints can help you, BUT they'll double your guess score</div>
-        <div id="footer">
-            <div class="footer-center">
-                <button id="smoothbrain-give-up-btn" class="footer-btn">Give Up</button>
-                <div class="footer-nav">
-                    <button id="smoothbrain-prev-arrow-btn" class="footer-btn arrow-btn"><i class="fas fa-arrow-left"></i></button>
-                    <button id="smoothbrain-all-games-btn" class="footer-btn">All Games</button>
-                    <button id="smoothbrain-next-arrow-btn" class="footer-btn arrow-btn"><i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-        </div>
     </div>
 
     <div id="game-select-screen" class="screen" style="display: none;">
@@ -155,7 +111,7 @@
             <div id="game-list-header" class="game-list-row">
                 <span>Game #</span>
                 <span>Secret Word</span>
-                <span># Guesses</span>
+                <span>Guesses</span>
             </div>
             <div id="game-list"></div>
             <button id="back-to-game-btn" class="home-btn">Back</button>

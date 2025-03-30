@@ -10,22 +10,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let guessCount = 0;
     let gaveUp = false;
 
-    let smoothbrainScore = 0;
-    let smoothbrainGameOver = false;
-    let smoothbrainFirstGuess = false;
-    let smoothbrainSecretWord = "";
-    let smoothbrainAnagram = "";
-    let allAnagramGames = [];
-    let smoothbrainHintIndex = 0;
-    let smoothbrainGuessCount = 0;
-    let smoothbrainGaveUp = false;
-
-    console.log("Pineapple & smoothbrain Version");
-
     async function fetchGameData() {
         const spreadsheetId = "2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI";
         const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
-        const anagramUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=187602849&single=true&output=csv`;
 
         try {
             const pineResponse = await fetch(pineappleUrl);
@@ -40,25 +27,10 @@ document.addEventListener("DOMContentLoaded", () => {
             }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             const latestPineGame = allGames[0];
             loadGame(latestPineGame);
-
-            const anagramResponse = await fetch(anagramUrl);
-            if (!anagramResponse.ok) throw new Error(`Anagram fetch failed: ${anagramResponse.status}`);
-            const anagramText = await anagramResponse.text();
-            const anagramRows = anagramText.split("\n").map(row => row.split(","));
-            const anagramHeaders = anagramRows[0];
-            allAnagramGames = anagramRows.slice(1).map((row) => {
-                let obj = {};
-                anagramHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
-                return obj;
-            }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            const latestAnagramGame = allAnagramGames[0];
-            loadSmoothbrainGame(latestAnagramGame);
         } catch (error) {
             console.error("Failed to fetch game data:", error);
             allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
             loadGame(allGames[0]);
-            allAnagramGames = [{ "Game Number": 1, "Anagram": "RELATING", "Solution": "TRIANGLE" }];
-            loadSmoothbrainGame(allAnagramGames[0]);
         }
         document.getElementById("game-screen").style.display = "flex";
         document.getElementById("guess-input").focus();
@@ -73,9 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const pauseScreen = document.getElementById("pause-screen");
         const gameSelectScreen = document.getElementById("game-select-screen");
         const input = document.getElementById("guess-input");
-        const smoothbrainScreen = document.getElementById("smoothbrain-screen");
-        const smoothbrainInput = document.getElementById("smoothbrain-guess-input");
-        const smoothbrainHintBtn = document.getElementById("smoothbrain-hint-btn");
 
         document.querySelectorAll("#mode-toggle").forEach(button => {
             button.addEventListener("click", () => {
@@ -91,9 +60,6 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none" && !e.target.closest("button") && e.target.id !== "game-name") {
                 input.focus();
             }
-            if (!smoothbrainGameOver && smoothbrainScreen.style.display === "flex") {
-                smoothbrainInput.focus();
-            }
         });
 
         document.querySelectorAll("#game-name").forEach(name => {
@@ -108,16 +74,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("all-games-btn").addEventListener("click", (e) => {
             e.preventDefault();
-            displayGameList("pineapple");
+            displayGameList();
             gameScreen.style.display = "none";
-            gameSelectScreen.style.display = "flex";
-            adjustBackground();
-        });
-
-        document.getElementById("smoothbrain-all-games-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            displayGameList("smoothbrain");
-            smoothbrainScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
             adjustBackground();
         });
@@ -138,22 +96,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        document.getElementById("smoothbrain-prev-arrow-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            const currentIndex = allAnagramGames.findIndex(game => game["Game Number"] === allAnagramGames[0]["Game Number"]);
-            if (currentIndex + 1 < allAnagramGames.length) {
-                loadSmoothbrainGame(allAnagramGames[currentIndex + 1]);
-            }
-        });
-
-        document.getElementById("smoothbrain-next-arrow-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            const currentIndex = allAnagramGames.findIndex(game => game["Game Number"] === allAnagramGames[0]["Game Number"]);
-            if (currentIndex - 1 >= 0) {
-                loadSmoothbrainGame(allAnagramGames[currentIndex - 1]);
-            }
-        });
-
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -163,47 +105,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
         gameScreen.addEventListener("touchend", e => {
             touchEndX = e.changedTouches[0].screenX;
-            handleSwipe("pineapple");
+            handleSwipe();
         });
 
-        smoothbrainScreen.addEventListener("touchstart", e => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-
-        smoothbrainScreen.addEventListener("touchend", e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe("smoothbrain");
-        });
-
-        function handleSwipe(gameType) {
+        function handleSwipe() {
             const swipeThreshold = 50;
             if (touchStartX - touchEndX > swipeThreshold) {
-                const games = gameType === "pineapple" ? allGames : allAnagramGames;
-                const currentNum = gameType === "pineapple" ? currentGameNumber : allAnagramGames[0]["Game Number"];
-                const currentIndex = games.findIndex(game => game["Game Number"] === currentNum);
+                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
                 if (currentIndex - 1 >= 0) {
-                    gameType === "pineapple" ? loadGame(games[currentIndex - 1]) : loadSmoothbrainGame(games[currentIndex - 1]);
+                    loadGame(allGames[currentIndex - 1]);
                 }
             } else if (touchEndX - touchStartX > swipeThreshold) {
-                const games = gameType === "pineapple" ? allGames : allAnagramGames;
-                const currentNum = gameType === "pineapple" ? currentGameNumber : allAnagramGames[0]["Game Number"];
-                const currentIndex = games.findIndex(game => game["Game Number"] === currentNum);
-                if (currentIndex + 1 < games.length) {
-                    gameType === "pineapple" ? loadGame(games[currentIndex + 1]) : loadSmoothbrainGame(games[currentIndex + 1]);
+                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+                if (currentIndex + 1 < allGames.length) {
+                    loadGame(allGames[currentIndex + 1]);
                 }
             }
         }
 
         document.getElementById("back-to-game-btn").addEventListener("click", () => {
             gameSelectScreen.style.display = "none";
-            const gameType = document.getElementById("game-name").textContent === "PINEAPPLE" ? "pineapple" : "smoothbrain";
-            if (gameType === "pineapple") {
-                gameScreen.style.display = "flex";
-                input.focus();
-            } else {
-                smoothbrainScreen.style.display = "flex";
-                smoothbrainInput.focus();
-            }
+            gameScreen.style.display = "flex";
+            input.focus();
             adjustBackground();
         });
 
@@ -211,12 +134,6 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             gaveUp = true;
             endGame(false, true);
-        });
-
-        document.getElementById("smoothbrain-give-up-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            smoothbrainGaveUp = true;
-            endSmoothbrainGame(false, true);
         });
 
         input.addEventListener("input", (e) => {
@@ -231,21 +148,15 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        smoothbrainInput.addEventListener("input", (e) => {
-            if (!smoothbrainGameOver && e.data && e.inputType === "insertReplacementText") {
-                handleSmoothbrainGuess(smoothbrainInput.value.trim());
+        input.addEventListener("focus", () => {
+            if (!firstGuessMade && input.value === "") {
+                input.placeholder = "type guess here";
             }
         });
 
-        smoothbrainInput.addEventListener("keydown", (e) => {
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !smoothbrainGameOver) {
-                handleSmoothbrainGuess(smoothbrainInput.value.trim());
-            }
-        });
-
-        smoothbrainHintBtn.addEventListener("click", () => {
-            if (!smoothbrainGameOver) {
-                revealSmoothbrainHint();
+        input.addEventListener("input", () => {
+            if (input.value.length > 0) {
+                input.placeholder = "";
             }
         });
 
@@ -266,31 +177,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 1000);
         });
 
-        document.getElementById("end-meatball").addEventListener("click", (e) => {
-            e.preventDefault();
-            if (document.getElementById("game-name").textContent === "PINEAPPLE") {
-                smoothbrainScreen.style.display = "flex";
-                smoothbrainScore = 0;
-                smoothbrainGameOver = false;
-                smoothbrainFirstGuess = false;
-                smoothbrainHintIndex = 0;
-                smoothbrainGuessCount = 0;
-                smoothbrainGaveUp = false;
-                document.getElementById("smoothbrain-score").textContent = "0";
-                document.getElementById("smoothbrain-guess-input").value = "";
-                document.getElementById("smoothbrain-instruction").style.display = "block";
-                document.getElementById("smoothbrain-hint-text").textContent = "";
-                document.getElementById("smoothbrain-hint-btn").style.display = "block";
-                loadSmoothbrainGame(allAnagramGames[0]);
-            } else {
-                resetGame();
-                document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
-                gameScreen.style.display = "flex";
-                input.focus();
-            }
-            adjustBackground();
-        });
-
         document.getElementById("ad-link").addEventListener("click", (e) => {
             e.preventDefault();
         });
@@ -298,8 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll(".home-btn").forEach(btn => {
             btn.addEventListener("click", () => {
                 if (btn.textContent === "Play Again") {
-                    const gameType = document.getElementById("game-name").textContent === "PINEAPPLE" ? "pineapple" : "smoothbrain";
-                    displayGameList(gameType);
+                    displayGameList();
                     go.style.display = "none";
                     gameSelectScreen.style.display = "flex";
                 } else {
@@ -325,22 +210,21 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function displayGameList(gameType) {
+    function displayGameList() {
         const gameList = document.getElementById("game-list");
         gameList.innerHTML = "";
-        const games = gameType === "pineapple" ? allGames : allAnagramGames;
-        document.getElementById("game-name").textContent = gameType === "pineapple" ? "PINEAPPLE" : "smoothbrain";
-        const results = JSON.parse(localStorage.getItem(gameType + "Results") || "{}");
+        document.getElementById("game-name").textContent = "PINEAPPLE";
+        const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
 
-        games.forEach(game => {
+        allGames.forEach(game => {
             const gameNumber = game["Game Number"];
-            const secretWord = gameType === "pineapple" ? game["Secret Word"] : game["Solution"];
+            const secretWord = game["Secret Word"];
             const guesses = results[gameNumber] ? results[gameNumber].guesses : "";
             const gameItem = document.createElement("div");
             gameItem.className = "game-list-row";
             gameItem.innerHTML = `
                 <span>${gameNumber}</span>
-                <span>${results[gameNumber] ? secretWord : ""}</span>
+                <span>${results[gameNumber] ? secretWord : "Play Now"}</span>
                 <span>${guesses || ""}</span>
             `;
             if (guesses && guesses !== "Gave Up") {
@@ -351,17 +235,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 gameItem.classList.add(colorClass);
             }
             gameItem.addEventListener("click", () => {
-                if (gameType === "pineapple") {
-                    loadGame(game);
-                    document.getElementById("game-select-screen").style.display = "none";
-                    document.getElementById("game-screen").style.display = "flex";
-                    document.getElementById("guess-input").focus();
-                } else {
-                    loadSmoothbrainGame(game);
-                    document.getElementById("game-select-screen").style.display = "none";
-                    document.getElementById("smoothbrain-screen").style.display = "flex";
-                    document.getElementById("smoothbrain-guess-input").focus();
-                }
+                loadGame(game);
+                document.getElementById("game-select-screen").style.display = "none";
+                document.getElementById("game-screen").style.display = "flex";
+                document.getElementById("guess-input").focus();
             });
             gameList.appendChild(gameItem);
         });
@@ -385,7 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustBackground() {
-        const screens = [document.getElementById("game-screen"), document.getElementById("smoothbrain-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("create-game-screen"), document.getElementById("game-select-screen")];
+        const screens = [document.getElementById("game-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("game-select-screen")];
         screens.forEach(screen => {
             if (screen.style.display !== "none") {
                 screen.style.height = "100vh";
@@ -400,10 +277,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const allHints = document.querySelectorAll(".hint-line span");
         if (hintIndex < allHints.length && allHints[hintIndex].textContent) {
             allHints[hintIndex].style.visibility = "visible";
-            allHints[hintIndex].classList.add("pulse-hint");
-            setTimeout(() => {
-                allHints[hintIndex].classList.remove("pulse-hint");
-            }, 2000);
         }
         updateHintCountdown();
     }
@@ -425,7 +298,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function handleGuess(guess) {
         const guessDisplay = document.getElementById("guess-input");
-        const guessBackground = document.getElementById("guess-background");
         const guessLine = document.getElementById("guess-line");
         guessDisplay.value = guess.toUpperCase();
         guessDisplay.classList.remove("wrong-guess", "correct-guess");
@@ -491,7 +363,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
         const key = gameType + "Results";
         const results = JSON.parse(localStorage.getItem(key) || "{}");
-        results[gameNumber] = { secretWord, guesses: gameType === "pineapple" && gaveUp ? "Gave Up" : gameType === "smoothbrain" && smoothbrainGaveUp ? "Gave Up" : guesses };
+        results[gameNumber] = { secretWord, guesses: gaveUp ? "Gave Up" : guesses };
         localStorage.setItem(key, JSON.stringify(results));
     }
 
@@ -550,112 +422,6 @@ document.addEventListener("DOMContentLoaded", () => {
         adjustBackground();
     }
 
-    function handleSmoothbrainGuess(guess) {
-        const guessDisplay = document.getElementById("smoothbrain-guess-input");
-        const guessBackground = document.getElementById("smoothbrain-guess-background");
-        guessDisplay.value = guess.toUpperCase();
-        guessDisplay.classList.remove("wrong-guess", "correct-guess");
-        guessDisplay.style.opacity = "1";
-        void guessDisplay.offsetWidth;
-
-        if (!smoothbrainFirstGuess) {
-            smoothbrainFirstGuess = true;
-            document.getElementById("smoothbrain-instruction").style.display = "none";
-        }
-
-        smoothbrainGuessCount++;
-        smoothbrainScore += 1;
-        document.getElementById("smoothbrain-score").textContent = `${smoothbrainScore}`;
-
-        if (guess.toUpperCase() === smoothbrainSecretWord) {
-            guessDisplay.classList.add("correct-guess");
-            rainConfetti();
-            setTimeout(() => {
-                guessDisplay.classList.remove("correct-guess");
-                saveGameResult("smoothbrain", allAnagramGames[0]["Game Number"], smoothbrainSecretWord, smoothbrainScore);
-                endSmoothbrainGame(true);
-            }, 1500);
-        } else {
-            guessDisplay.classList.add("wrong-guess");
-            setTimeout(() => {
-                guessDisplay.classList.remove("wrong-guess");
-                guessDisplay.style.opacity = "1";
-                guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
-                guessDisplay.value = "";
-                if (!smoothbrainGameOver) guessDisplay.focus();
-            }, 500);
-        }
-    }
-
-    function revealSmoothbrainHint() {
-        smoothbrainHintIndex++;
-        smoothbrainScore *= 2;
-        document.getElementById("smoothbrain-score").textContent = `${smoothbrainScore}`;
-        document.getElementById("smoothbrain-hint-text").textContent = smoothbrainSecretWord.substring(0, smoothbrainHintIndex);
-        document.getElementById("smoothbrain-hint-text").classList.add("pulse-hint");
-        setTimeout(() => {
-            document.getElementById("smoothbrain-hint-text").classList.remove("pulse-hint");
-        }, 2000);
-        if (smoothbrainHintIndex >= smoothbrainSecretWord.length) {
-            endSmoothbrainGame(false, true);
-        }
-    }
-
-    function endSmoothbrainGame(won, gaveUp = false) {
-        smoothbrainGameOver = true;
-        const shareText = document.getElementById("share-text");
-        const shareGameNumber = document.getElementById("share-game-number");
-        const shareScore = document.getElementById("share-score");
-        const shareWhatsApp = document.getElementById("share-whatsapp");
-        const shareTelegram = document.getElementById("share-telegram");
-        const shareTwitter = document.getElementById("share-twitter");
-        const endGraphic = document.getElementById("end-graphic");
-        const todaysWord = document.getElementById("todays-word");
-        const todaysWordLabel = document.getElementById("todays-word-label");
-        const gameNumberSpan = document.getElementById("game-number");
-
-        document.getElementById("smoothbrain-screen").style.display = "none";
-        document.getElementById("game-over").style.display = "flex";
-        document.getElementById("smoothbrain-guess-input").blur();
-        document.getElementById("game-name").textContent = "smoothbrain"; // Ensure smoothbrain header
-
-        const totalGuesses = smoothbrainScore;
-        todaysWordLabel.textContent = `Game #${allAnagramGames[0]["Game Number"]}\nSecret Word`;
-        todaysWord.textContent = smoothbrainSecretWord;
-        gameNumberSpan.textContent = allAnagramGames[0]["Game Number"];
-
-        if (won) {
-            endGraphic.src = "smoothbrain_win.png";
-            endGraphic.style.display = "block";
-            const guessText = totalGuesses === 1 ? "guess" : "guesses";
-            shareText.innerHTML = `I solved the\nsmoothbrain in\n<span class="big-score">${totalGuesses}</span>\n${guessText}\nGame #${allAnagramGames[0]["Game Number"]}`;
-            shareGameNumber.style.display = "none";
-            shareScore.style.display = "none";
-        } else if (gaveUp) {
-            endGraphic.src = document.body.classList.contains("dark-mode") ? "smoothbrain_lose.png" : "smoothbrain_lose.png";
-            endGraphic.style.display = "block";
-            shareText.innerHTML = '<span class="big">PLAY\nsmoothbrain</span>\n<span class="italic">The Anagram Word Game</span>';
-            shareGameNumber.style.display = "none";
-            shareScore.style.display = "none";
-        } else {
-            endGraphic.src = document.body.classList.contains("dark-mode") ? "smoothbrain_lose.png" : "smoothbrain_lose.png";
-            endGraphic.style.display = "block";
-            shareText.textContent = "I didn’t solve the smoothbrain";
-            shareGameNumber.textContent = `Game #${allAnagramGames[0]["Game Number"]}`;
-            shareScore.textContent = `${totalGuesses}`;
-        }
-
-        const shareMessage = gaveUp
-            ? `PLAY smoothbrain\nThe Anagram Word Game\nCan you beat my score? Click here: https://your-game-url.com/smoothbrain`
-            : won
-            ? `I solved the smoothbrain in\n${totalGuesses}\n${totalGuesses === 1 ? "guess" : "guesses"}\nGame #${allAnagramGames[0]["Game Number"]}\nCan you beat my score? Click here: https://your-game-url.com/smoothbrain`
-            : `${shareText.textContent}\nGame #${allAnagramGames[0]["Game Number"]}\nScore: ${totalGuesses}\nCan you beat my score? Click here: https://your-game-url.com/smoothbrain`;
-        shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
-        shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com/smoothbrain")}&text=${encodeURIComponent(shareMessage)}`;
-        shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
-        adjustBackground();
-    }
-
     function resetGame() {
         score = 0;
         gameOver = false;
@@ -686,22 +452,6 @@ document.addEventListener("DOMContentLoaded", () => {
         ].filter(hint => hint).map(hint => hint.toUpperCase());
         while (hints.length < 7) hints.push("");
         setupHints();
-    }
-
-    function loadSmoothbrainGame(game) {
-        smoothbrainScore = 0;
-        smoothbrainGameOver = false;
-        smoothbrainFirstGuess = false;
-        smoothbrainHintIndex = 0;
-        smoothbrainGuessCount = 0;
-        smoothbrainGaveUp = false;
-        smoothbrainSecretWord = game["Solution"].toUpperCase();
-        smoothbrainAnagram = game["Anagram"].toUpperCase();
-        document.getElementById("smoothbrain-score").textContent = "0";
-        document.getElementById("smoothbrain-guess-input").value = "";
-        document.getElementById("smoothbrain-instruction").style.display = "block";
-        document.getElementById("smoothbrain-hint-text").textContent = "";
-        document.getElementById("smoothbrain-relating").textContent = smoothbrainAnagram;
     }
 
     fetchGameData();

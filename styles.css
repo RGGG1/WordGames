@@ -24,7 +24,7 @@ a {
   color: #1E90FF;
 }
 
-#game-screen, #smoothbrain-screen {
+#game-screen {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -32,7 +32,7 @@ a {
   background: #FFFFFF;
 }
 
-.dark-mode #game-screen, .dark-mode #smoothbrain-screen {
+.dark-mode #game-screen {
   background: #000000;
 }
 
@@ -80,19 +80,7 @@ a {
   transform: translateX(-50%);
 }
 
-#smoothbrain-name {
-  font-family: 'Bubblegum Sans', cursive;
-  font-size: 2.5vh; /* Matches Pineapple */
-  text-transform: lowercase;
-  color: #FF69B4;
-  cursor: pointer;
-  z-index: 11;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-#score, #smoothbrain-score {
+#score {
   font-size: 2.5vh;
   font-weight: bold;
   z-index: 11;
@@ -109,37 +97,7 @@ a {
   background: none;
 }
 
-#smoothbrain-relating {
-  width: 85vw;
-  margin: 4vh auto 0 auto; /* 2 lines below header (5vh + 2vh ≈ 2 lines) */
-  font-size: 3vh;
-  text-align: center;
-  text-transform: uppercase;
-}
-
-#smoothbrain-separator {
-  width: 85vw;
-  height: 0.2vh;
-  background: #000000;
-  margin: 1vh auto; /* 1 line of space */
-}
-
-.dark-mode #smoothbrain-separator {
-  background: #FFFFFF;
-}
-
-#smoothbrain-guess-area {
-  width: 85vw;
-  height: 10vh;
-  margin: 1vh auto 0 auto; /* 1 line after separator */
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  background: none;
-}
-
-#guess-area:hover, #guess-input:hover, #smoothbrain-guess-area:hover, #smoothbrain-guess-input:hover {
+#guess-area:hover, #guess-input:hover {
   outline: none;
   border: none;
 }
@@ -153,7 +111,7 @@ a {
   margin-top: 1vh;
 }
 
-#guess-background, #smoothbrain-guess-background {
+#guess-background {
   position: absolute;
   top: 3vh;
   width: 100%;
@@ -162,7 +120,7 @@ a {
   background: none;
 }
 
-#guess-input, #smoothbrain-guess-input {
+#guess-input {
   font-size: 5vh;
   font-weight: bold;
   background: none;
@@ -185,13 +143,21 @@ a {
   50% { caret-color: transparent; }
 }
 
-.dark-mode #guess-input, .dark-mode #smoothbrain-guess-input {
+.dark-mode #guess-input {
   color: #FFFFFF;
   caret-color: white;
 }
 
-#guess-input::placeholder, #smoothbrain-guess-input::placeholder {
-  color: transparent;
+#guess-input::placeholder {
+  font-size: 2vh;
+  color: #AAAAAA;
+  text-align: left;
+  font-weight: normal;
+  text-transform: none;
+}
+
+.dark-mode #guess-input::placeholder {
+  color: #CCCCCC;
 }
 
 #guess-line {
@@ -201,10 +167,6 @@ a {
   position: absolute;
   top: 9vh;
   transition: opacity 0.5s ease-out;
-}
-
-#smoothbrain-guess-line {
-  display: none;
 }
 
 .dark-mode #guess-line {
@@ -246,40 +208,10 @@ a {
   color: #999;
 }
 
-#smoothbrain-hint-btn {
-  font-size: 3vh;
-  padding: 1vh 2vw;
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-  border-radius: 1vh;
-  cursor: pointer;
-  margin-top: 1.5vh;
-  z-index: 11;
-}
-
-.dark-mode #smoothbrain-hint-btn {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
-}
-
-#hints, #smoothbrain-hints {
+#hints {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-#smoothbrain-hints {
-  width: 85vw;
-  margin: 1vh auto;
-}
-
-#smoothbrain-instruction {
-  width: 85vw;
-  margin: 1vh auto 0 auto;
-  font-size: 1.5vh;
-  text-align: center;
 }
 
 .hint-line {
@@ -291,7 +223,7 @@ a {
 }
 
 #how-to-play-1, #how-to-play-2 {
-  font-size: 3.5vh;
+  font-size: 2vh; /* Matches Hints */
 }
 
 .hint-line span {
@@ -369,7 +301,7 @@ a {
 
 #end-graphic {
   height: 15.8203125vh;
-  margin: 3vh auto; /* 2 more lines below header (1vh → 3vh) */
+  margin: 3vh auto;
 }
 
 #todays-word-label {
@@ -533,30 +465,7 @@ a {
   background: #000000;
 }
 
-#create-game-content {
-  width: 85vw;
-  margin: 0 auto;
-}
-
-.home-btn {
-  margin-top: 2vh;
-  padding: 1vh 2vw;
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-  border-radius: 0.8vh;
-  cursor: pointer;
-  font-size: 3vh;
-  z-index: 11;
-}
-
-.dark-mode .home-btn {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
-}
-
-#guess-input.wrong-guess, #smoothbrain-guess-input.wrong-guess {
+#guess-input.wrong-guess {
   animation: wrongGuess 0.5s ease-out forwards;
 }
 
@@ -601,12 +510,13 @@ a {
 #game-select-screen {
   display: none;
   flex-direction: column;
+  height   
   height: 100vh;
   position: relative;
 }
 
 #game-select-content {
-  width: 85vw;
+  width: 85vw; /* Matches other screens */
   margin: 4vh auto 0 auto;
   flex-grow: 1;
 }
@@ -619,7 +529,7 @@ a {
 
 #game-list-header {
   display: flex;
-  justify-content: space-around; /* Changed from space-between for better centering */
+  justify-content: space-around;
   width: 80vw;
   font-size: 1.8vh;
   font-weight: bold;
@@ -629,7 +539,7 @@ a {
 
 .game-list-row {
   display: flex;
-  justify-content: space-around; /* Changed from space-between */
+  justify-content: space-around;
   width: 80vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
@@ -715,26 +625,28 @@ a {
   #header, #footer {
       width: 90vw;
   }
-  #game-name, #smoothbrain-name, #score, #smoothbrain-score {
-      font-size: 2vh;
+  #game-name, #score {
+      font-size هفته
+
+: 2vh;
   }
   #mode-toggle {
-      font-size: 2vh;
+      font-size:,or: 2vh;
   }
-  .footer-btn, .home-btn, #smoothbrain-hint-btn {
+  .footer-btn, .home-btn {
       font-size: 2.4vh;
       padding: 0.8vh 1.6vw;
   }
-  #guess-input, #smoothbrain-guess-input {
+  #guess-input {
       font-size: 4vh;
   }
   #hints-box {
       height: calc(100vh - 26vh);
   }
-  .hint-line span, #smoothbrain-hint-text {
+  .hint-line span {
       font-size: 1.8vh;
   }
   #how-to-play-1, #how-to-play-2 {
-      font-size: 2.8vh;
+      font-size: 2vh;
   }
 }
