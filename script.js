@@ -10,6 +10,27 @@ document.addEventListener("DOMContentLoaded", () => {
     let guessCount = 0;
     let gaveUp = false;
 
+    // Button event listeners moved to top-level scope
+    document.getElementById("all-games-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("All Games button clicked");
+        displayGameList();
+        document.getElementById("game-screen").style.display = "none";
+        document.getElementById("game-select-screen").style.display = "flex";
+        adjustBackground();
+    });
+
+    document.getElementById("home-btn").addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Play Again button clicked");
+        displayGameList();
+        document.getElementById("game-over").style.display = "none";
+        document.getElementById("game-select-screen").style.display = "flex";
+        adjustBackground();
+    });
+
     async function fetchGameData() {
         const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
         const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
@@ -86,15 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 gameScreen.style.display = "flex";
                 adjustBackground();
             });
-        });
-
-        document.getElementById("all-games-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            displayGameList();
-            gameScreen.style.display = "none";
-            gameSelectScreen.style.display = "flex";
-            adjustBackground();
         });
 
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
@@ -207,13 +219,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     if (!gameOver && firstGuessMade) input.focus();
                 }
             }, 1000);
-        });
-
-        document.getElementById("home-btn").addEventListener("click", () => {
-            displayGameList();
-            go.style.display = "none";
-            gameSelectScreen.style.display = "flex";
-            adjustBackground();
         });
     }
 

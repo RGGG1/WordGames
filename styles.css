@@ -407,7 +407,7 @@ a {
   border-radius: 0.6vh;
   cursor: pointer;
   margin: 0.5vh auto 0 auto;
-  z-index: 11;
+  z-index: 15;
   transition: transform 0.2s ease;
 }
 
@@ -419,11 +419,6 @@ a {
   background: #FFFFFF;
   color: #000000;
   border: 0.1vh solid #000000;
-}
-
-#game-list-text {
-  font-size: 1.5vh;
-  margin-top: 0.5vh;
 }
 
 .inverted {
@@ -581,7 +576,7 @@ a {
   bottom: 1vh;
   left: 50%;
   transform: translateX(-50%);
-  z-index: 100;
+  z-index: 10;
   transition: bottom 0.3s ease;
 }
 
@@ -593,7 +588,7 @@ a {
   border: 0.1vh solid #FFFFFF;
   border-radius: 0.6vh;
   cursor: pointer;
-  z-index: 101;
+  z-index: 15;
   transition: transform 0.2s ease;
 }
 
@@ -610,14 +605,14 @@ a {
   flex-direction: column;
   align-items: center;
   gap: 1vh;
-  z-index: 102;
+  z-index: 12;
 }
 
 .footer-nav {
   display: flex;
   gap: 1vw;
   align-items: center;
-  z-index: 103;
+  z-index: 13;
 }
 
 .dark-mode .footer-btn {
