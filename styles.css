@@ -8,7 +8,6 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .dark-mode {
@@ -31,7 +30,6 @@ a {
   height: 100vh;
   position: relative;
   background: #FFFFFF;
-  overflow: hidden;
 }
 
 .dark-mode #game-screen, .dark-mode #smoothbrain-screen {
@@ -135,14 +133,6 @@ a {
   background: none;
 }
 
-/* Smoothbrain top section (60% of visible space above keyboard) */
-#smoothbrain-screen > #header,
-#smoothbrain-relating,
-#smoothbrain-separator,
-#smoothbrain-guess-area {
-  height: calc(60vh - 8vh); /* 60% of viewport minus footer */
-}
-
 #guess-area:hover, #guess-input:hover, #smoothbrain-guess-area:hover, #smoothbrain-guess-input:hover {
   outline: none;
   border: none;
@@ -217,12 +207,21 @@ a {
 
 #hints-box {
   width: 85vw;
-  height: calc(100vh - 28vh); /* Adjusted for footer and hint countdown */
+  height: calc(100vh - 28vh);
   margin: 0 auto;
   padding: 1vh;
   background: none;
   flex-grow: 1;
-  overflow: hidden;
+}
+
+.game-number-label {
+  font-size: 1.5vh;
+  color: #666;
+  margin-bottom: 0.5vh;
+}
+
+.dark-mode .game-number-label {
+  color: #999;
 }
 
 #hints-title {
@@ -247,7 +246,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.5vh;
+  border-radius: 1vh; /* Slightly rounded corners */
   cursor: pointer;
   margin-top: 1.5vh;
   z-index: 11;
@@ -327,7 +326,6 @@ a {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 }
 
 .dark-mode #pause-screen {
@@ -357,7 +355,6 @@ a {
   align-items: center;
   padding: 2vh;
   background: #FFFFFF;
-  overflow: hidden;
 }
 
 .dark-mode #game-over {
@@ -365,8 +362,8 @@ a {
 }
 
 #end-graphic {
-  height: 21.09375vh;
-  margin: 0.5vh auto;
+  height: 15.8203125vh; /* 25% reduction from 21.09375vh */
+  margin: 1vh auto; /* Line of space from header */
 }
 
 #todays-word-label {
@@ -524,7 +521,6 @@ a {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
 }
 
 .dark-mode .screen {
@@ -601,14 +597,12 @@ a {
   flex-direction: column;
   height: 100vh;
   position: relative;
-  overflow: hidden;
 }
 
 #game-select-content {
   width: 85vw;
   margin: 4vh auto 0 auto;
   flex-grow: 1;
-  overflow: hidden;
 }
 
 #game-list-title {
@@ -644,11 +638,11 @@ a {
   text-decoration: underline;
 }
 
-.green { color: #006400; } /* Deep green */
-.yellow { color: #FFD700; } /* Deep yellow */
-.orange { color: #FF4500; } /* Deep orange */
-.pink { color: #C71585; } /* Deep pink */
-.red { color: #8B0000; } /* Deep red */
+.green { color: #006400; }
+.yellow { color: #FFD700; }
+.orange { color: #FF4500; }
+.pink { color: #C71585; }
+.red { color: #8B0000; }
 
 .dark-mode .green { color: #00FF00; }
 .dark-mode .yellow { color: #FFFF00; }
@@ -667,10 +661,10 @@ a {
   margin: 1vh auto;
   font-size: 1.5vh;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   position: fixed;
-  bottom: 8vh;
+  bottom: 1vh; /* Reverted from 8vh */
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -688,16 +682,20 @@ a {
 }
 
 .arrow-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5vw;
+  padding: 1vh 1vw;
 }
 
 .footer-center {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2vh; /* Two lines above All Games */
+  gap: 1vh; /* One line above nav */
+}
+
+.footer-nav {
+  display: flex;
+  gap: 1vw;
+  align-items: center;
 }
 
 .dark-mode .footer-btn {
