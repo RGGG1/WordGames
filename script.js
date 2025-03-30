@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
     const officialUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
     const privateUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=639966570&single=true&output=csv`;
-    const scriptURL = "https://script.google.com/macros/s/AKfycbxLdEKhQMRcxVHI8MwIES-y6ag2pKYHzBypq6AT2huevXvN-0bXHGy6k2RoRP0LbQ/exec";
 
     async function fetchGameData() {
         try {
@@ -69,7 +68,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const go = document.getElementById("game-over");
         const pauseScreen = document.getElementById("pause-screen");
         const gameSelectScreen = document.getElementById("game-select-screen");
-        const customGameScreen = document.getElementById("custom-game-create-screen");
         const input = document.getElementById("guess-input");
         const footer = document.getElementById("footer");
 
@@ -220,17 +218,6 @@ document.addEventListener("DOMContentLoaded", () => {
             adjustBackground();
         });
 
-        document.getElementById("create-link").addEventListener("click", async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Create a Game link clicked");
-            await fetchGameData();
-            go.style.display = "none";
-            gameSelectScreen.style.display = "flex";
-            document.getElementById("private-tab").click();
-            adjustBackground();
-        });
-
         document.getElementById("official-tab").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -252,85 +239,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("official-games").style.display = "none";
             displayPrivateGames();
         });
-
-        document.getElementById("create-game-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Create Game button clicked");
-            gameSelectScreen.style.display = "none";
-            customGameScreen.style.display = "flex";
-            adjustBackground();
-        });
-
-        document.getElementById("submit-custom-game").addEventListener("click", async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Confirm clicked");
-            const secretWord = document.getElementById("custom-secret-word").value.trimEnd().toUpperCase();
-            const hints = [
-                document.getElementById("custom-hint-1").value.trimEnd().toUpperCase(),
-                document.getElementById("custom-hint-2").value.trimEnd().toUpperCase(),
-                document.getElementById("custom-hint-3").value.trimEnd().toUpperCase(),
-                document.getElementById("custom-hint-4").value.trimEnd().toUpperCase(),
-                document.getElementById("custom-hint-5").value.trimEnd().toUpperCase()
-            ];
-            const gameName = document.getElementById("custom-game-name").value.trimEnd();
-
-            if (validateCustomGame(secretWord, hints, gameName)) {
-                const newGame = {
-                    "Game Number": gameName,
-                    "Secret Word": secretWord,
-                    "Hint 1": hints[0],
-                    "Hint 2": hints[1],
-                    "Hint 3": hints[2],
-                    "Hint 4": hints[3],
-                    "Hint 5": hints[4]
-                };
-                try {
-                    await fetch(scriptURL, {
-                        method: "POST",
-                        body: JSON.stringify(newGame),
-                        headers: { "Content-Type": "application/json" },
-                        mode: "no-cors"
-                    });
-                    console.log("Game submitted:", newGame);
-                    await new Promise(resolve => setTimeout(resolve, 1000));
-                    await fetchPrivateGames();
-                    customGameScreen.style.display = "none";
-                    gameSelectScreen.style.display = "flex";
-                    displayPrivateGames();
-                    document.getElementById("private-tab").click();
-                } catch (error) {
-                    console.error("Failed to submit game:", error);
-                    alert("Failed to create game. Please try again.");
-                }
-            }
-        });
-
-        document.getElementById("back-from-create").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Back from create clicked");
-            customGameScreen.style.display = "none";
-            gameSelectScreen.style.display = "flex";
-            displayGameTabs();
-        });
-    }
-
-    function validateCustomGame(secretWord, hints, gameName) {
-        if (!secretWord || !gameName || hints.some(h => !h)) {
-            alert("All fields must be filled.");
-            return false;
-        }
-        if (secretWord.replace(/\s+$/, '').includes(" ")) {
-            alert("Secret Word must be one word (ignoring trailing spaces).");
-            return false;
-        }
-        if (secretWord.length > 20 || hints.some(h => h.length > 20) || gameName.length > 20) {
-            alert("All fields must be 20 characters or less.");
-            return false;
-        }
-        return true;
     }
 
     function updateHintCountdown() {
@@ -435,7 +343,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustBackground() {
-        const screens = [document.getElementById("game-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("game-select-screen"), document.getElementById("custom-game-create-screen")];
+        const screens = [document.getElementById("game-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("game-select-screen")];
         screens.forEach(screen => {
             if (screen.style.display !== "none") screen.style.height = "100vh";
         });
@@ -577,7 +485,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const shareMessage = gaveUp
             ? `PLAY PINEAPPLE\n\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
             : won
-            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan Shakespeare beat my score? Click here: https://your-game-url.com`
             : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
