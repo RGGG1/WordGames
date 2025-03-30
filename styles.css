@@ -398,15 +398,6 @@ a {
   color: #FFFFFF;
 }
 
-#end-footer {
-  font-size: 1.8vh;
-  margin: 0.5vh auto;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5vh;
-}
-
 #home-btn {
   font-size: 2.25vh;
   padding: 0.75vh 1.5vw;
@@ -430,6 +421,11 @@ a {
   border: 0.1vh solid #000000;
 }
 
+#game-list-text {
+  font-size: 1.5vh;
+  margin-top: 0.5vh;
+}
+
 .inverted {
   background: #FFFFFF;
   color: #000000;
@@ -440,27 +436,6 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-}
-
-#ad-box {
-  width: 85vw;
-  height: 10vh;
-  border: 0.1vh solid #000;
-  border-radius: 1vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  margin: 1vh auto;
-}
-
-.dark-mode #ad-box {
-  border-color: #FFFFFF;
-  color: #FFFFFF;
-}
-
-#ad-link {
-  font-size: 1.5vh;
 }
 
 .screen {
@@ -547,22 +522,20 @@ a {
 #game-list-header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  width: 80vw;
+  width: 85vw;
   font-size: 1.8vh;
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
-  padding: 0;
 }
 
 .game-list-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
-  width: 80vw;
+  width: 85vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
   cursor: pointer;
-  padding: 0;
 }
 
 .game-list-row span {
@@ -590,6 +563,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 85vw;
 }
 
 .spacer {
@@ -620,7 +594,6 @@ a {
   border-radius: 0.6vh;
   cursor: pointer;
   z-index: 101;
-  position: relative;
   transition: transform 0.2s ease;
 }
 
@@ -677,6 +650,9 @@ a {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
   }
   #footer {
+      width: 90vw;
+  }
+  #game-list-header, .game-list-row {
       width: 90vw;
   }
 }

@@ -84,7 +84,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 loadGame(allGames[0]);
                 document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
                 gameScreen.style.display = "flex";
-                input.focus();
                 adjustBackground();
             });
         });
@@ -210,25 +209,11 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 1000);
         });
 
-        document.getElementById("ad-link").addEventListener("click", (e) => {
-            e.preventDefault();
-        });
-
-        document.querySelectorAll(".home-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                if (btn.textContent === "Play Again") {
-                    displayGameList();
-                    go.style.display = "none";
-                    gameSelectScreen.style.display = "flex";
-                } else {
-                    resetGame();
-                    gameScreen.style.display = "flex";
-                    go.style.display = "none";
-                    document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
-                    adjustBackground();
-                    if (firstGuessMade && !gameOver) input.focus();
-                }
-            });
+        document.getElementById("home-btn").addEventListener("click", () => {
+            displayGameList();
+            go.style.display = "none";
+            gameSelectScreen.style.display = "flex";
+            adjustBackground();
         });
     }
 
@@ -271,7 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 loadGame(game);
                 document.getElementById("game-select-screen").style.display = "none";
                 document.getElementById("game-screen").style.display = "flex";
-                if (firstGuessMade && !gameOver) document.getElementById("guess-input").focus();
+                adjustBackground();
             });
             gameList.appendChild(gameItem);
         });
