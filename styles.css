@@ -235,7 +235,7 @@ a {
 #resume-btn {
   width: 2.25vh;
   height: 2.25vh;
-  border-radius: 50%;
+  border-radius: 1vh; /* More rounded corners */
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
@@ -416,7 +416,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.6vh;
+  border-radius: 1vh; /* More rounded corners */
   cursor: pointer;
   margin: 0.5vh auto 0 auto;
   z-index: 11;
@@ -554,7 +554,7 @@ a {
   background: #CCCCCC;
   color: #000000;
   border: none;
-  border-radius: 0.6vh;
+  border-radius: 1vh; /* More rounded corners */
   cursor: pointer;
 }
 
@@ -579,8 +579,8 @@ a {
 
 #official-games-header, #private-games-header {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Equal width columns */
-  width: 85vw; /* Match other screen widths */
+  grid-template-columns: repeat(3, 1fr);
+  width: 85vw;
   font-size: 1.8vh;
   font-weight: bold;
   margin-bottom: 1vh;
@@ -589,8 +589,8 @@ a {
 
 .game-list-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* Equal width columns */
-  width: 85vw; /* Match other screen widths */
+  grid-template-columns: repeat(3, 1fr);
+  width: 85vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
   cursor: pointer;
@@ -642,6 +642,48 @@ a {
   color: #FFFFFF;
 }
 
+#submit-custom-game {
+  font-size: 2.25vh;
+  padding: 0.75vh 1.5vw;
+  background: #000000;
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
+  border-radius: 1vh; /* More rounded corners */
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  animation: pulse 2s infinite;
+}
+
+#submit-custom-game::after {
+  content: "(click here)";
+  font-size: 1.5vh; /* Smaller font */
+  display: block;
+  margin-top: 0.2vh;
+}
+
+.dark-mode #submit-custom-game {
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
+}
+
+#back-from-create {
+  font-size: 2.25vh;
+  padding: 0.75vh 1.5vw;
+  border-radius: 1vh; /* More rounded corners */
+  cursor: pointer;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
 .green { color: #006400; }
 .yellow { color: #FFD700; }
 .orange { color: #FF4500; }
@@ -659,30 +701,30 @@ a {
 }
 
 #footer {
-    width: 85vw;
-    margin: 0;
-    font-size: 1.5vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: fixed;
-    bottom: 1vh;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 100;
-    transition: bottom 0.3s ease;
+  width: 85vw;
+  margin: 0;
+  font-size: 1.5vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: fixed;
+  bottom: 1vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  transition: bottom 0.3s ease;
 }
 
 .footer-btn {
-    font-size: 2.25vh;
-    padding: 0.75vh 1.5vw;
-    background: #000000;
-    color: #FFFFFF;
-    border: 0.1vh solid #FFFFFF;
-    border-radius: 0.6vh;
-    cursor: pointer;
-    z-index: 101;
-    position: relative;
+  font-size: 2.25vh;
+  padding: 0.75vh 1.5vw;
+  background: #000000;
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
+  border-radius: 1vh; /* More rounded corners */
+  cursor: pointer;
+  z-index: 101;
+  position: relative;
 }
 
 .arrow-btn {
@@ -690,24 +732,24 @@ a {
 }
 
 .footer-center {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 1vh;
-    z-index: 102;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1vh;
+  z-index: 102;
 }
 
 .footer-nav {
-    display: flex;
-    gap: 1vw;
-    align-items: center;
-    z-index: 103;
+  display: flex;
+  gap: 1vw;
+  align-items: center;
+  z-index: 103;
 }
 
 .dark-mode .footer-btn {
-    background: #FFFFFF;
-    color: #000000;
-    border: 0.1vh solid #000000;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 #create-your-own {
@@ -725,31 +767,31 @@ a {
 
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
-      width: 90vw;
+    width: 90vw;
   }
   #game-name, #score {
-      font-size: 2vh;
+    font-size: 2vh;
   }
   #mode-toggle {
-      font-size: 1.5vh;
+    font-size: 1.5vh;
   }
   .footer-btn, .home-btn {
-      font-size: 1.8vh;
-      padding: 0.6vh 1.2vw;
+    font-size: 1.8vh;
+    padding: 0.6vh 1.2vw;
   }
   #guess-input {
-      font-size: 4vh;
+    font-size: 4vh;
   }
   #hints-box {
-      height: calc(100vh - 26vh);
+    height: calc(100vh - 26vh);
   }
   .hint-line span {
-      font-size: 1.8vh;
+    font-size: 1.8vh;
   }
   #how-to-play-1, #how-to-play-2 {
-      font-size: 2vh;
+    font-size: 2vh;
   }
   #footer {
-      width: 90vw;
+    width: 90vw;
   }
 }

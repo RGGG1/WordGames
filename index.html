@@ -2,30 +2,30 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pineapple</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/83f99c0a39.js" crossorigin="anonymous"></script>
 </head>
-<body oncontextmenu="return false;">
-    <div id="game-screen">
-        <div id="header">
-            <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
-            <div id="game-name">PINEAPPLE</div>
-            <div id="score">0</div>
-        </div>
+<body>
+    <div id="header">
+        <button id="mode-toggle"><i class="fas fa-moon"></i></button>
+        <div id="game-name">PINEAPPLE</div>
+        <div id="score">0</div>
+    </div>
+
+    <div id="game-screen" class="screen">
         <div id="guess-area">
-            <div id="prompt">The secret word is...</div>
+            <div id="prompt">What's your guess?</div>
             <div id="guess-background"></div>
-            <input id="guess-input" type="text" autofocus placeholder="type guess here">
+            <input type="text" id="guess-input" autocomplete="off">
             <div id="guess-line"></div>
         </div>
         <div id="hints-box">
-            <div id="game-number-label" class="game-number-label">Game #<span id="current-game-number"></span></div>
+            <div class="game-number-label">Game #<span id="current-game-number"></span></div>
             <div id="hints-title">Hints</div>
-            <div id="hint-countdown" class="hint-countdown"></div>
+            <div class="hint-countdown" id="hint-countdown"></div>
             <div id="hints">
                 <div class="hint-line" id="hint-row-1"><span></span></div>
                 <div class="hint-line spacer"></div>
@@ -42,119 +42,93 @@
         </div>
         <div id="footer">
             <div class="footer-center">
-                <button id="give-up-btn" class="footer-btn">Give Up</button>
                 <div class="footer-nav">
-                    <button id="prev-arrow-btn" class="footer-btn arrow-btn"><i class="fas fa-arrow-left"></i></button>
-                    <button id="all-games-btn" class="footer-btn">All Games</button>
-                    <button id="next-arrow-btn" class="footer-btn arrow-btn"><i class="fas fa-arrow-right"></i></button>
+                    <button class="footer-btn arrow-btn" id="prev-arrow-btn">&lt;</button>
+                    <button class="footer-btn" id="all-games-btn">All Games</button>
+                    <button class="footer-btn" id="give-up-btn">Give Up</button>
+                    <button class="footer-btn arrow-btn" id="next-arrow-btn">&gt;</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="pause-screen" style="display: none;">
-        <div id="header">
-            <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
-            <div id="game-name">PINEAPPLE</div>
-            <div id="score">0</div>
-        </div>
-        <div id="pause-text">Ads here - coming soon</div>
-        <button id="resume-btn">Resume</button>
+    <div id="pause-screen" class="screen">
+        <div id="pause-text">Game Paused</div>
+        <button id="resume-btn">▶</button>
         <div id="countdown" style="display: none;"></div>
-        <div id="footer"></div>
     </div>
 
-    <div id="game-over" style="display: none;">
-        <div id="header">
-            <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
-            <div id="game-name">PINEAPPLE</div>
-            <div id="score">0</div>
-        </div>
-        <img id="end-graphic" src="" alt="End Graphic" style="display: none;">
-        <div id="todays-word-label">Game #<span id="game-number"></span><br>Secret Word</div>
+    <div id="game-over" class="screen">
+        <img id="end-graphic" style="display: none;">
+        <div id="todays-word-label">Today's Word Was</div>
         <div id="todays-word"></div>
         <div id="share-box">
             <div id="share-panel">
                 <div id="share-text"></div>
                 <div id="share-game-number"></div>
-                <div id="share-score-label">Score</div>
+                <div id="share-score-label">Score:</div>
                 <div id="share-score"></div>
             </div>
-        </div>
-        <div id="share-section">
-            <div id="share-label">Share with your friends</div>
-            <div id="share-buttons">
-                <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-                <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+            <div id="share-section">
+                <div id="share-label">Share your results!</div>
+                <div id="share-buttons">
+                    <a href="#" id="share-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" id="share-telegram"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="#" id="share-twitter"><i class="fab fa-twitter"></i></a>
+                </div>
             </div>
         </div>
-        <button id="home-btn" class="home-btn animate__animated animate__pulse animate__infinite">Play More Pineapples</button>
-        <div class="spacer"></div>
-        <div id="create-your-own">Or<br><span id="create-link" style="cursor: pointer; text-decoration: underline;">Create Your Own Pineapple</span></div>
         <div id="end-footer">
-            <!-- Removed "Or check out our other game" and smoothbrain link -->
+            <button class="footer-btn" id="home-btn">Play More Pineapples</button>
+            <div id="create-your-own">Want to make your own? <a href="#" id="create-link">Create a game!</a></div>
+            <div class="spacer"></div>
+            <div id="ad-box">
+                <div id="ad-text">Ad Space</div>
+                <a href="#" id="ad-link">Click here!</a>
+            </div>
         </div>
-        <div id="ad-box">
-            Advertise with us here and reach millions of players
-            <div id="ad-link">click here to place an ad</div>
-        </div>
-        <div id="footer"></div>
     </div>
 
-    <div id="game-select-screen" class="screen" style="display: none;">
-        <div id="header">
-            <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
-            <div id="game-name">PINEAPPLE</div>
-            <div id="score">0</div>
-        </div>
+    <div id="game-select-screen" class="screen">
         <div id="game-select-content">
             <div id="game-list-title">All Games</div>
             <div id="tabs">
-                <button id="official-tab" class="tab-btn active">Official</button>
-                <button id="private-tab" class="tab-btn">Private</button>
+                <button class="tab-btn active" id="official-tab">Official</button>
+                <button class="tab-btn" id="private-tab">Private</button>
             </div>
-            <div id="official-games" class="tab-content" style="display: block;">
-                <div id="official-games-header" class="game-list-row">
+            <div class="tab-content" id="official-games">
+                <div id="official-games-header">
                     <span>Game #</span>
-                    <span>Secret Word</span>
+                    <span>Word</span>
                     <span>Guesses</span>
                 </div>
                 <div id="official-game-list"></div>
             </div>
-            <div id="private-games" class="tab-content" style="display: none;">
-                <button id="create-game-btn" class="footer-btn">Create Game</button>
-                <div id="private-games-header" class="game-list-row">
+            <div class="tab-content" id="private-games" style="display: none;">
+                <div id="private-games-header">
                     <span>Game Name</span>
-                    <span>Secret Word</span>
+                    <span>Word</span>
                     <span>Guesses</span>
                 </div>
                 <div id="private-game-list"></div>
             </div>
-            <div class="spacer"></div>
-            <button id="back-to-game-btn" class="home-btn inverted">Back</button>
+            <button class="footer-btn" id="create-game-btn">Create Game</button>
+            <button class="footer-btn" id="back-to-game-btn">Back to Game</button>
         </div>
-        <div id="footer"></div>
     </div>
 
-    <div id="custom-game-create-screen" class="screen" style="display: none;">
-        <div id="header">
-            <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
-            <div id="game-name">CREATE YOUR PINEAPPLE</div>
-            <div id="score">0</div>
-        </div>
+    <div id="custom-game-create-screen" class="screen">
         <div id="custom-game-form">
-            <input id="custom-secret-word" type="text" placeholder="Secret Word (one word)" maxlength="20">
-            <input id="custom-hint-1" type="text" placeholder="Hint #1" maxlength="20">
-            <input id="custom-hint-2" type="text" placeholder="Hint #2" maxlength="20">
-            <input id="custom-hint-3" type="text" placeholder="Hint #3" maxlength="20">
-            <input id="custom-hint-4" type="text" placeholder="Hint #4" maxlength="20">
-            <input id="custom-hint-5" type="text" placeholder="Hint #5" maxlength="20">
-            <input id="custom-game-name" type="text" placeholder="Name Your Game" maxlength="20">
-            <button id="submit-custom-game" class="footer-btn">Confirm</button>
-            <button id="back-from-create" class="home-btn inverted">Back</button>
+            <input type="text" id="custom-game-name" placeholder="Game Name" maxlength="20">
+            <input type="text" id="custom-secret-word" placeholder="Secret Word" maxlength="20">
+            <input type="text" id="custom-hint-1" placeholder="Hint 1" maxlength="20">
+            <input type="text" id="custom-hint-2" placeholder="Hint 2" maxlength="20">
+            <input type="text" id="custom-hint-3" placeholder="Hint 3" maxlength="20">
+            <input type="text" id="custom-hint-4" placeholder="Hint 4" maxlength="20">
+            <input type="text" id="custom-hint-5" placeholder="Hint 5" maxlength="20">
+            <button class="footer-btn" id="submit-custom-game">Create Game</button>
+            <button class="footer-btn inverted" id="back-from-create">Back</button>
         </div>
-        <div id="footer"></div>
     </div>
 
     <script src="script.js"></script>

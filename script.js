@@ -11,14 +11,13 @@ document.addEventListener("DOMContentLoaded", () => {
     let guessCount = 0;
     let gaveUp = false;
 
-    const spreadsheetId = "2PACX-1vQ87d9n-9hR-Cs5lZ5n8bYd8Z3iJ0F8nXaY8oQz5e5o5q5r5t5y5u5i5o5p5a5s5s5"; // Public URL encoded ID for fetching
+    const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
     const officialUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
     const privateUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=639966570&single=true&output=csv`;
     const scriptURL = "https://script.google.com/macros/s/AKfycbxLdEKhQMRcxVHI8MwIES-y6ag2pKYHzBypq6AT2huevXvN-0bXHGy6k2RoRP0LbQ/exec";
 
     async function fetchGameData() {
         try {
-            // Fetch official games
             const officialResponse = await fetch(officialUrl);
             if (!officialResponse.ok) throw new Error(`Official fetch failed: ${officialResponse.status}`);
             const officialText = await officialResponse.text();
@@ -30,7 +29,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return obj;
             }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
 
-            // Fetch private games
             await fetchPrivateGames();
 
             const latestOfficialGame = allGames[0];
@@ -117,18 +115,14 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-            if (currentIndex + 1 < allGames.length) {
-                loadGame(allGames[currentIndex + 1]);
-            }
+            if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
         });
 
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-            if (currentIndex - 1 >= 0) {
-                loadGame(allGames[currentIndex - 1]);
-            }
+            if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
         });
 
         let touchStartX = 0;
@@ -210,9 +204,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("ad-link").addEventListener("click", (e) => e.preventDefault());
 
-        // Fix "Play More Pineapples" button
-        const homeBtn = document.getElementById("home-btn");
-        homeBtn.addEventListener("click", (e) => {
+        document.getElementById("home-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Play More Pineapples clicked");
@@ -222,12 +214,11 @@ document.addEventListener("DOMContentLoaded", () => {
             adjustBackground();
         });
 
-        // Fix "Create a Game" link on end screen
         document.getElementById("create-link").addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Create a Game link clicked");
-            await fetchGameData(); // Re-fetch data to ensure lists are populated
+            await fetchGameData();
             go.style.display = "none";
             gameSelectScreen.style.display = "flex";
             document.getElementById("private-tab").click();
@@ -262,11 +253,10 @@ document.addEventListener("DOMContentLoaded", () => {
             adjustBackground();
         });
 
-        // New "Create Game" confirm button logic
         document.getElementById("submit-custom-game").addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Confirm button clicked");
+            console.log("Create Game Confirm clicked");
             const secretWord = document.getElementById("custom-secret-word").value.trimEnd().toUpperCase();
             const hints = [
                 document.getElementById("custom-hint-1").value.trimEnd().toUpperCase(),
@@ -288,21 +278,21 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Hint 5": hints[4]
                 };
                 try {
-                    const response = await fetch(scriptURL, {
+                    await fetch(scriptURL, {
                         method: "POST",
                         body: JSON.stringify(newGame),
                         headers: { "Content-Type": "application/json" },
                         mode: "no-cors"
                     });
                     console.log("Game submitted:", newGame);
-                    await new Promise(resolve => setTimeout(resolve, 1000)); // Delay for spreadsheet update
+                    await new Promise(resolve => setTimeout(resolve, 1000));
                     await fetchPrivateGames();
                     customGameScreen.style.display = "none";
                     gameSelectScreen.style.display = "flex";
                     displayPrivateGames();
                     document.getElementById("private-tab").click();
                 } catch (error) {
-                    console.error("Failed to create game:", error);
+                    console.error("Failed to submit game:", error);
                     alert("Failed to create game. Please try again.");
                 }
             }
@@ -345,7 +335,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function displayGameTabs() {
-        displayOfficialGames(); // Default to official tab
+        displayOfficialGames();
     }
 
     function displayOfficialGames() {
