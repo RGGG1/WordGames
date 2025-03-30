@@ -75,15 +75,21 @@ a {
   text-stroke: 0.1vh #FF4500;
   cursor: pointer;
   z-index: 11;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #smoothbrain-name {
   font-family: 'Bubblegum Sans', cursive;
-  font-size: 2.5vh;
+  font-size: 2.5vh; /* Matches Pineapple */
   text-transform: lowercase;
   color: #FF69B4;
   cursor: pointer;
   z-index: 11;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 #score, #smoothbrain-score {
@@ -105,7 +111,7 @@ a {
 
 #smoothbrain-relating {
   width: 85vw;
-  margin: 2vh auto 0 auto; /* 1 line below header */
+  margin: 4vh auto 0 auto; /* 2 lines below header (5vh + 2vh ≈ 2 lines) */
   font-size: 3vh;
   text-align: center;
   text-transform: uppercase;
@@ -246,7 +252,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 1vh; /* Slightly rounded corners */
+  border-radius: 1vh;
   cursor: pointer;
   margin-top: 1.5vh;
   z-index: 11;
@@ -362,8 +368,8 @@ a {
 }
 
 #end-graphic {
-  height: 15.8203125vh; /* 25% reduction from 21.09375vh */
-  margin: 1vh auto; /* Line of space from header */
+  height: 15.8203125vh;
+  margin: 3vh auto; /* 2 more lines below header (1vh → 3vh) */
 }
 
 #todays-word-label {
@@ -613,16 +619,17 @@ a {
 
 #game-list-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around; /* Changed from space-between for better centering */
   width: 80vw;
   font-size: 1.8vh;
   font-weight: bold;
   margin-bottom: 1vh;
+  text-align: center;
 }
 
 .game-list-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around; /* Changed from space-between */
   width: 80vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
@@ -664,7 +671,7 @@ a {
   justify-content: center;
   align-items: center;
   position: fixed;
-  bottom: 1vh; /* Reverted from 8vh */
+  bottom: 1vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -689,7 +696,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1vh; /* One line above nav */
+  gap: 1vh;
 }
 
 .footer-nav {

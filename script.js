@@ -178,7 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
         function handleSwipe(gameType) {
             const swipeThreshold = 50;
             if (touchStartX - touchEndX > swipeThreshold) {
-                // Swipe left (next)
                 const games = gameType === "pineapple" ? allGames : allAnagramGames;
                 const currentNum = gameType === "pineapple" ? currentGameNumber : allAnagramGames[0]["Game Number"];
                 const currentIndex = games.findIndex(game => game["Game Number"] === currentNum);
@@ -186,7 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     gameType === "pineapple" ? loadGame(games[currentIndex - 1]) : loadSmoothbrainGame(games[currentIndex - 1]);
                 }
             } else if (touchEndX - touchStartX > swipeThreshold) {
-                // Swipe right (previous)
                 const games = gameType === "pineapple" ? allGames : allAnagramGames;
                 const currentNum = gameType === "pineapple" ? currentGameNumber : allAnagramGames[0]["Game Number"];
                 const currentIndex = games.findIndex(game => game["Game Number"] === currentNum);
@@ -198,7 +196,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("back-to-game-btn").addEventListener("click", () => {
             gameSelectScreen.style.display = "none";
-            if (document.getElementById("game-screen").style.display === "flex") {
+            const gameType = document.getElementById("game-name").textContent === "PINEAPPLE" ? "pineapple" : "smoothbrain";
+            if (gameType === "pineapple") {
                 gameScreen.style.display = "flex";
                 input.focus();
             } else {
@@ -269,19 +268,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
         document.getElementById("end-meatball").addEventListener("click", (e) => {
             e.preventDefault();
-            smoothbrainScreen.style.display = "flex";
-            smoothbrainScore = 0;
-            smoothbrainGameOver = false;
-            smoothbrainFirstGuess = false;
-            smoothbrainHintIndex = 0;
-            smoothbrainGuessCount = 0;
-            smoothbrainGaveUp = false;
-            document.getElementById("smoothbrain-score").textContent = "0";
-            document.getElementById("smoothbrain-guess-input").value = "";
-            document.getElementById("smoothbrain-instruction").style.display = "block";
-            document.getElementById("smoothbrain-hint-text").textContent = "";
-            document.getElementById("smoothbrain-hint-btn").style.display = "block";
-            loadSmoothbrainGame(allAnagramGames[0]);
+            if (document.getElementById("game-name").textContent === "PINEAPPLE") {
+                smoothbrainScreen.style.display = "flex";
+                smoothbrainScore = 0;
+                smoothbrainGameOver = false;
+                smoothbrainFirstGuess = false;
+                smoothbrainHintIndex = 0;
+                smoothbrainGuessCount = 0;
+                smoothbrainGaveUp = false;
+                document.getElementById("smoothbrain-score").textContent = "0";
+                document.getElementById("smoothbrain-guess-input").value = "";
+                document.getElementById("smoothbrain-instruction").style.display = "block";
+                document.getElementById("smoothbrain-hint-text").textContent = "";
+                document.getElementById("smoothbrain-hint-btn").style.display = "block";
+                loadSmoothbrainGame(allAnagramGames[0]);
+            } else {
+                resetGame();
+                document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
+                gameScreen.style.display = "flex";
+                input.focus();
+            }
             adjustBackground();
         });
 
@@ -313,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (hintIndex >= hints.length - 1) {
             countdownElement.textContent = "(All hints are now revealed)";
         } else {
-            const guessesUntilNextHint = 5 - (guessCount % 5 || 5);
+            const guessesUntilNextHint = guessCount === 0 ? 5 : 5 - (guessCount % 5);
             const guessText = guessesUntilNextHint === 1 ? "guess" : "guesses";
             countdownElement.textContent = `(hint revealed after ${guessesUntilNextHint} ${guessText})`;
         }
@@ -611,7 +617,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("smoothbrain-screen").style.display = "none";
         document.getElementById("game-over").style.display = "flex";
         document.getElementById("smoothbrain-guess-input").blur();
-        document.getElementById("game-name").textContent = "smoothbrain";
+        document.getElementById("game-name").textContent = "smoothbrain"; // Ensure smoothbrain header
 
         const totalGuesses = smoothbrainScore;
         todaysWordLabel.textContent = `Game #${allAnagramGames[0]["Game Number"]}\nSecret Word`;
