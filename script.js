@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("all-games-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("All Games clicked");
             displayGameTabs();
             gameScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
@@ -114,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Previous clicked");
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
             if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
         });
@@ -121,6 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Next clicked");
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
             if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
         });
@@ -148,6 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("back-to-game-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Back to Game clicked");
             gameSelectScreen.style.display = "none";
             gameScreen.style.display = "flex";
             input.focus();
@@ -157,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Give Up clicked");
             gaveUp = true;
             saveGameResult("pineapple", currentGameNumber, secretWord, "Gave Up");
             endGame(false, true);
@@ -186,6 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("resume-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Resume clicked");
             const countdown = document.getElementById("countdown");
             document.getElementById("resume-btn").style.display = "none";
             countdown.style.display = "block";
@@ -228,6 +234,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("official-tab").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Official tab clicked");
             document.getElementById("official-tab").classList.add("active");
             document.getElementById("private-tab").classList.remove("active");
             document.getElementById("official-games").style.display = "block";
@@ -238,6 +245,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("private-tab").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Private tab clicked");
             document.getElementById("private-tab").classList.add("active");
             document.getElementById("official-tab").classList.remove("active");
             document.getElementById("private-games").style.display = "block";
@@ -248,6 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("create-game-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Create Game button clicked");
             gameSelectScreen.style.display = "none";
             customGameScreen.style.display = "flex";
             adjustBackground();
@@ -256,7 +265,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("submit-custom-game").addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Create Game Confirm clicked");
+            console.log("Confirm clicked");
             const secretWord = document.getElementById("custom-secret-word").value.trimEnd().toUpperCase();
             const hints = [
                 document.getElementById("custom-hint-1").value.trimEnd().toUpperCase(),
@@ -301,6 +310,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("back-from-create").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Back from create clicked");
             customGameScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
             displayGameTabs();
@@ -335,6 +345,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function displayGameTabs() {
+        console.log("Displaying game tabs");
         displayOfficialGames();
     }
 
