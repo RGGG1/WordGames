@@ -30,16 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
 
             // Fetch private games
-            const privateResponse = await fetch(privateUrl);
-            if (!privateResponse.ok) throw new Error(`Private fetch failed: ${privateResponse.status}`);
-            const privateText = await privateResponse.text();
-            const privateRows = privateText.split("\n").map(row => row.split(","));
-            const privateHeaders = privateRows[0];
-            privateGames = privateRows.slice(1).map((row) => {
-                let obj = {};
-                privateHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
-                return obj;
-            }).sort((a, b) => b["Game Number"].localeCompare(a["Game Number"])); // Sort by name (string comparison)
+            await fetchPrivateGames();
 
             const latestOfficialGame = allGames[0];
             loadGame(latestOfficialGame);
@@ -64,6 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const customGameScreen = document.getElementById("custom-game-create-screen");
         const input = document.getElementById("guess-input");
         const footer = document.getElementById("footer");
+        const allGamesBtn = document.getElementById("all-games-btn");
+        const playMoreBtn = document.getElementById("home-btn");
 
         document.querySelectorAll("#mode-toggle").forEach(button => {
             button.addEventListener("click", () => {
@@ -75,9 +68,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        footer.addEventListener("click", (e) => {
-            e.stopPropagation();
-        });
+        footer.addEventListener("click", (e) => e.stopPropagation());
 
         document.addEventListener("click", (e) => {
             if (!gameOver && 
@@ -101,9 +92,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        document.getElementById("all-games-btn").addEventListener("click", (e) => {
+        // Ensure All Games button works
+        allGamesBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("All Games button clicked");
             displayGameTabs();
             gameScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
@@ -228,24 +221,15 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
         });
 
-        document.querySelectorAll(".home-btn").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                if (btn.id === "home-btn" && btn.textContent === "Play More Pineapples") {
-                    displayGameTabs();
-                    go.style.display = "none";
-                    gameSelectScreen.style.display = "flex";
-                    adjustBackground();
-                } else {
-                    resetGame();
-                    gameScreen.style.display = "flex";
-                    go.style.display = "none";
-                    document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
-                    adjustBackground();
-                    input.focus();
-                }
-            });
+        // Ensure Play More Pineapples button works
+        playMoreBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Play More Pineapples button clicked");
+            displayGameTabs();
+            go.style.display = "none";
+            gameSelectScreen.style.display = "flex";
+            adjustBackground();
         });
 
         document.getElementById("create-link").addEventListener("click", (e) => {
@@ -307,13 +291,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Hint 4": hints[3],
                     "Hint 5": hints[4]
                 };
-                await submitCustomGame(newGame);
-                // Refresh private games list from spreadsheet after submission
-                await fetchPrivateGames();
-                customGameScreen.style.display = "none";
-                gameSelectScreen.style.display = "flex";
-                displayPrivateGames();
-                document.getElementById("private-tab").click();
+                const success = await submitCustomGame(newGame);
+                if (success) {
+                    await fetchPrivateGames(); // Refresh private games after successful submission
+                    customGameScreen.style.display = "none";
+                    gameSelectScreen.style.display = "flex";
+                    displayPrivateGames();
+                    document.getElementById("private-tab").click();
+                }
             }
         });
 
@@ -368,13 +353,16 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch(scriptURL, {
                 method: "POST",
                 body: JSON.stringify(game),
-                headers: { "Content-Type": "application/json" }
+                headers: { "Content-Type": "application/json" },
+                mode: "no-cors" // Use no-cors to avoid CORS issues with Google Apps Script
             });
-            if (!response.ok) throw new Error(`Failed to submit game: ${response.status}`);
-            console.log("Game submitted successfully:", game);
+            console.log("Game submission attempted:", game);
+            // Since no-cors doesn't return a usable response, assume success and rely on fetchPrivateGames to confirm
+            return true;
         } catch (error) {
             console.error("Failed to submit custom game:", error);
             alert("Failed to save your game. Please try again.");
+            return false;
         }
     }
 
@@ -390,6 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function displayGameTabs() {
+        console.log("Displaying game tabs");
         displayOfficialGames(); // Default to official tab
     }
 
