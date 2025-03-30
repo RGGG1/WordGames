@@ -39,13 +39,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 let obj = {};
                 privateHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
                 return obj;
-            }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+            }).sort((a, b) => b["Game Number"].localeCompare(a["Game Number"])); // Sort by name (string comparison)
 
             const latestOfficialGame = allGames[0];
             loadGame(latestOfficialGame);
         } catch (error) {
             console.error("Failed to fetch game data:", error);
-            allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
+            allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
             privateGames = [];
             loadGame(allGames[0]);
         }
@@ -236,6 +236,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     displayGameTabs();
                     go.style.display = "none";
                     gameSelectScreen.style.display = "flex";
+                    adjustBackground();
                 } else {
                     resetGame();
                     gameScreen.style.display = "flex";
@@ -247,17 +248,15 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // Create Your Own Pineapple link
         document.getElementById("create-link").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             go.style.display = "none";
             gameSelectScreen.style.display = "flex";
-            document.getElementById("private-tab").click(); // Switch to Private tab
+            document.getElementById("private-tab").click();
             adjustBackground();
         });
 
-        // Tab switching
         document.getElementById("official-tab").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -278,7 +277,6 @@ document.addEventListener("DOMContentLoaded", () => {
             displayPrivateGames();
         });
 
-        // Create game
         document.getElementById("create-game-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -301,7 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (validateCustomGame(secretWord, hints, gameName)) {
                 const newGame = {
-                    "Game Number": gameName, // Use custom name instead of number
+                    "Game Number": gameName,
                     "Secret Word": secretWord,
                     "Hint 1": hints[0],
                     "Hint 2": hints[1],
@@ -310,11 +308,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     "Hint 5": hints[4]
                 };
                 await submitCustomGame(newGame);
-                privateGames.unshift(newGame); // Add to top for reverse chronological order
+                // Refresh private games list from spreadsheet after submission
+                await fetchPrivateGames();
                 customGameScreen.style.display = "none";
                 gameSelectScreen.style.display = "flex";
                 displayPrivateGames();
-                document.getElementById("private-tab").click(); // Switch to private tab
+                document.getElementById("private-tab").click();
             }
         });
 
@@ -325,6 +324,26 @@ document.addEventListener("DOMContentLoaded", () => {
             gameSelectScreen.style.display = "flex";
             displayGameTabs();
         });
+    }
+
+    async function fetchPrivateGames() {
+        const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
+        const privateUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=639966570&single=true&output=csv`;
+        try {
+            const privateResponse = await fetch(privateUrl);
+            if (!privateResponse.ok) throw new Error(`Private fetch failed: ${privateResponse.status}`);
+            const privateText = await privateResponse.text();
+            const privateRows = privateText.split("\n").map(row => row.split(","));
+            const privateHeaders = privateRows[0];
+            privateGames = privateRows.slice(1).map((row) => {
+                let obj = {};
+                privateHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
+                return obj;
+            }).sort((a, b) => b["Game Number"].localeCompare(a["Game Number"]));
+        } catch (error) {
+            console.error("Failed to fetch private games:", error);
+            privateGames = [];
+        }
     }
 
     function validateCustomGame(secretWord, hints, gameName) {
@@ -346,13 +365,16 @@ document.addEventListener("DOMContentLoaded", () => {
     async function submitCustomGame(game) {
         const scriptURL = "https://script.google.com/macros/s/AKfycbyZFqAOqmbBuJ5Fr2cmLJUkoGP4FcxfpYWHvx9q8ByRkCzY7UysH05x6nzHEQHEo041/exec";
         try {
-            await fetch(scriptURL, {
+            const response = await fetch(scriptURL, {
                 method: "POST",
                 body: JSON.stringify(game),
                 headers: { "Content-Type": "application/json" }
             });
+            if (!response.ok) throw new Error(`Failed to submit game: ${response.status}`);
+            console.log("Game submitted successfully:", game);
         } catch (error) {
             console.error("Failed to submit custom game:", error);
+            alert("Failed to save your game. Please try again.");
         }
     }
 
@@ -412,7 +434,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const results = JSON.parse(localStorage.getItem("pineapplePrivateResults") || "{}");
 
         privateGames.forEach(game => {
-            const gameName = game["Game Number"]; // Using custom name
+            const gameName = game["Game Number"];
             const secretWord = game["Secret Word"];
             const guesses = results[gameName] ? results[gameName].guesses : "";
             const gameItem = document.createElement("div");
