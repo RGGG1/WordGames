@@ -6,36 +6,30 @@ document.addEventListener("DOMContentLoaded", () => {
     let hintIndex = 0;
     let firstGuessMade = false;
     let allGames = [];
-    let privateGames = [];
     let currentGameNumber = null;
     let guessCount = 0;
     let gaveUp = false;
 
-    const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
-    const officialUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
-    const privateUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=639966570&single=true&output=csv`;
-
     async function fetchGameData() {
+        const spreadsheetId = "2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI";
+        const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
+
         try {
-            const officialResponse = await fetch(officialUrl);
-            if (!officialResponse.ok) throw new Error(`Official fetch failed: ${officialResponse.status}`);
-            const officialText = await officialResponse.text();
-            const officialRows = officialText.split("\n").map(row => row.split(","));
-            const officialHeaders = officialRows[0];
-            allGames = officialRows.slice(1).map(row => {
+            const pineResponse = await fetch(pineappleUrl);
+            if (!pineResponse.ok) throw new Error(`Pineapple fetch failed: ${pineResponse.status}`);
+            const pineText = await pineResponse.text();
+            const pineRows = pineText.split("\n").map(row => row.split(","));
+            const pineHeaders = pineRows[0];
+            allGames = pineRows.slice(1).map((row) => {
                 let obj = {};
-                officialHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
+                pineHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
                 return obj;
             }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-
-            await fetchPrivateGames();
-
-            const latestOfficialGame = allGames[0];
-            loadGame(latestOfficialGame);
+            const latestPineGame = allGames[0];
+            loadGame(latestPineGame);
         } catch (error) {
             console.error("Failed to fetch game data:", error);
-            allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
-            privateGames = [];
+            allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
             loadGame(allGames[0]);
         }
         document.getElementById("game-screen").style.display = "flex";
@@ -43,24 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
         updateHintCountdown();
         adjustBackground();
         setupEventListeners();
-    }
-
-    async function fetchPrivateGames() {
-        try {
-            const privateResponse = await fetch(privateUrl);
-            if (!privateResponse.ok) throw new Error(`Private fetch failed: ${privateResponse.status}`);
-            const privateText = await privateResponse.text();
-            const privateRows = privateText.split("\n").map(row => row.split(","));
-            const privateHeaders = privateRows[0];
-            privateGames = privateRows.slice(1).map(row => {
-                let obj = {};
-                privateHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
-                return obj;
-            }).sort((a, b) => b["Game Number"].localeCompare(a["Game Number"]));
-        } catch (error) {
-            console.error("Failed to fetch private games:", error);
-            privateGames = [];
-        }
     }
 
     function setupEventListeners() {
@@ -81,10 +57,17 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        footer.addEventListener("click", (e) => e.stopPropagation());
+        footer.addEventListener("click", (e) => {
+            e.stopPropagation();
+        });
 
         document.addEventListener("click", (e) => {
-            if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none" && !footer.contains(e.target) && !e.target.closest("button") && e.target.id !== "game-name") {
+            if (!gameOver && 
+                gameScreen.style.display === "flex" && 
+                pauseScreen.style.display === "none" && 
+                !footer.contains(e.target) &&
+                !e.target.closest("button") && 
+                e.target.id !== "game-name") {
                 input.focus();
             }
         });
@@ -103,8 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("all-games-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("All Games clicked");
-            displayGameTabs();
+            displayGameList();
             gameScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
             adjustBackground();
@@ -113,23 +95,28 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Previous clicked");
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-            if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
+            if (currentIndex + 1 < allGames.length) {
+                loadGame(allGames[currentIndex + 1]);
+            }
         });
 
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Next clicked");
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-            if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
+            if (currentIndex - 1 >= 0) {
+                loadGame(allGames[currentIndex - 1]);
+            }
         });
 
         let touchStartX = 0;
         let touchEndX = 0;
 
-        gameScreen.addEventListener("touchstart", e => touchStartX = e.changedTouches[0].screenX);
+        gameScreen.addEventListener("touchstart", e => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+
         gameScreen.addEventListener("touchend", e => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
@@ -139,17 +126,18 @@ document.addEventListener("DOMContentLoaded", () => {
             const swipeThreshold = 50;
             if (touchStartX - touchEndX > swipeThreshold) {
                 const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
+                if (currentIndex - 1 >= 0) {
+                    loadGame(allGames[currentIndex - 1]);
+                }
             } else if (touchEndX - touchStartX > swipeThreshold) {
                 const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
+                if (currentIndex + 1 < allGames.length) {
+                    loadGame(allGames[currentIndex + 1]);
+                }
             }
         }
 
-        document.getElementById("back-to-game-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Back to Game clicked");
+        document.getElementById("back-to-game-btn").addEventListener("click", () => {
             gameSelectScreen.style.display = "none";
             gameScreen.style.display = "flex";
             input.focus();
@@ -159,37 +147,45 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Give Up clicked");
             gaveUp = true;
             saveGameResult("pineapple", currentGameNumber, secretWord, "Gave Up");
             endGame(false, true);
         });
 
         input.addEventListener("input", (e) => {
-            if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trimEnd());
+            if (!gameOver && e.data && e.inputType === "insertReplacementText") {
+                handleGuess(input.value.trim());
+            }
         });
 
         input.addEventListener("keydown", (e) => {
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) handleGuess(input.value.trimEnd());
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) {
+                handleGuess(input.value.trim());
+            }
         });
 
         input.addEventListener("focus", () => {
-            if (!firstGuessMade && input.value === "") input.placeholder = "type guess here";
-            if (firstGuessMade) document.getElementById("footer").style.bottom = "calc(40vh)";
+            if (!firstGuessMade && input.value === "") {
+                input.placeholder = "type guess here";
+            }
+            if (firstGuessMade) {
+                document.getElementById("footer").style.bottom = "calc(40vh)";
+            }
         });
 
         input.addEventListener("blur", () => {
-            if (firstGuessMade) document.getElementById("footer").style.bottom = "1vh";
+            if (firstGuessMade) {
+                document.getElementById("footer").style.bottom = "1vh";
+            }
         });
 
         input.addEventListener("input", () => {
-            if (input.value.length > 0) input.placeholder = "";
+            if (input.value.length > 0) {
+                input.placeholder = "";
+            }
         });
 
-        document.getElementById("resume-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Resume clicked");
+        document.getElementById("resume-btn").addEventListener("click", () => {
             const countdown = document.getElementById("countdown");
             document.getElementById("resume-btn").style.display = "none";
             countdown.style.display = "block";
@@ -206,38 +202,25 @@ document.addEventListener("DOMContentLoaded", () => {
             }, 1000);
         });
 
-        document.getElementById("ad-link").addEventListener("click", (e) => e.preventDefault());
-
-        document.getElementById("home-btn").addEventListener("click", (e) => {
+        document.getElementById("ad-link").addEventListener("click", (e) => {
             e.preventDefault();
-            e.stopPropagation();
-            console.log("Play More Pineapples clicked");
-            displayGameTabs();
-            go.style.display = "none";
-            gameSelectScreen.style.display = "flex";
-            adjustBackground();
         });
 
-        document.getElementById("official-tab").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Official tab clicked");
-            document.getElementById("official-tab").classList.add("active");
-            document.getElementById("private-tab").classList.remove("active");
-            document.getElementById("official-games").style.display = "block";
-            document.getElementById("private-games").style.display = "none";
-            displayOfficialGames();
-        });
-
-        document.getElementById("private-tab").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Private tab clicked");
-            document.getElementById("private-tab").classList.add("active");
-            document.getElementById("official-tab").classList.remove("active");
-            document.getElementById("private-games").style.display = "block";
-            document.getElementById("official-games").style.display = "none";
-            displayPrivateGames();
+        document.querySelectorAll(".home-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                if (btn.textContent === "Play Again") {
+                    displayGameList();
+                    go.style.display = "none";
+                    gameSelectScreen.style.display = "flex";
+                } else {
+                    resetGame();
+                    gameScreen.style.display = "flex";
+                    go.style.display = "none";
+                    document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
+                    adjustBackground();
+                    input.focus();
+                }
+            });
         });
     }
 
@@ -252,13 +235,8 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
-    function displayGameTabs() {
-        console.log("Displaying game tabs");
-        displayOfficialGames();
-    }
-
-    function displayOfficialGames() {
-        const gameList = document.getElementById("official-game-list");
+    function displayGameList() {
+        const gameList = document.getElementById("game-list");
         gameList.innerHTML = "";
         document.getElementById("game-name").textContent = "PINEAPPLE";
         const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
@@ -291,40 +269,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    function displayPrivateGames() {
-        const gameList = document.getElementById("private-game-list");
-        gameList.innerHTML = "";
-        document.getElementById("game-name").textContent = "PINEAPPLE";
-        const results = JSON.parse(localStorage.getItem("pineapplePrivateResults") || "{}");
-
-        privateGames.forEach(game => {
-            const gameName = game["Game Number"];
-            const secretWord = game["Secret Word"];
-            const guesses = results[gameName] ? results[gameName].guesses : "";
-            const gameItem = document.createElement("div");
-            gameItem.className = "game-list-row";
-            gameItem.innerHTML = `
-                <span>${gameName.trim()}</span>
-                <span>${results[gameName] ? secretWord.trim() : "Play Now"}</span>
-                <span>${guesses.trim() || ""}</span>
-            `;
-            if (guesses && guesses !== "Gave Up") {
-                const colorClass = guesses <= 5 ? "green" :
-                                  guesses <= 10 ? "yellow" :
-                                  guesses <= 15 ? "orange" :
-                                  guesses <= 20 ? "pink" : "red";
-                gameItem.classList.add(colorClass);
-            }
-            gameItem.addEventListener("click", () => {
-                loadPrivateGame(game);
-                document.getElementById("game-select-screen").style.display = "none";
-                document.getElementById("game-screen").style.display = "flex";
-                document.getElementById("guess-input").focus();
-            });
-            gameList.appendChild(gameItem);
-        });
-    }
-
     function setupHints() {
         const hintElements = [
             document.getElementById("hint-row-1").children[0],
@@ -345,7 +289,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function adjustBackground() {
         const screens = [document.getElementById("game-screen"), document.getElementById("game-over"), document.getElementById("pause-screen"), document.getElementById("game-select-screen")];
         screens.forEach(screen => {
-            if (screen.style.display !== "none") screen.style.height = "100vh";
+            if (screen.style.display !== "none") {
+                screen.style.height = "100vh";
+            }
         });
     }
 
@@ -354,7 +300,9 @@ document.addEventListener("DOMContentLoaded", () => {
     function revealHint() {
         hintIndex++;
         const allHints = document.querySelectorAll(".hint-line span");
-        if (hintIndex < allHints.length && allHints[hintIndex].textContent) allHints[hintIndex].style.visibility = "visible";
+        if (hintIndex < allHints.length && allHints[hintIndex].textContent) {
+            allHints[hintIndex].style.visibility = "visible";
+        }
         updateHintCountdown();
     }
 
@@ -392,10 +340,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         guessCount++;
         score += 1;
-        document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
+        document.querySelectorAll("#score").forEach(scoreDisplay => {
+            scoreDisplay.textContent = `${score}`;
+        });
 
-        if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
-        else updateHintCountdown();
+        if (guessCount % 5 === 0 && hintIndex < hints.length - 1) {
+            revealHint();
+        } else {
+            updateHintCountdown();
+        }
 
         if (guess.toUpperCase() === secretWord) {
             guessDisplay.classList.add("correct-guess");
@@ -403,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
             guessLine.style.opacity = "0";
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
-                saveGameResult(privateGames.some(g => g["Game Number"] === currentGameNumber) ? "pineapplePrivate" : "pineapple", currentGameNumber, secretWord, score);
+                saveGameResult("pineapple", currentGameNumber, secretWord, score);
                 endGame(true);
             }, 1500);
         } else {
@@ -428,7 +381,9 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("hint-row-6")?.children[0],
             document.getElementById("hint-row-7")?.children[0]
         ].filter(Boolean);
-        hintElements.forEach((span, index) => span.style.visibility = index <= hintIndex ? "visible" : "hidden");
+        hintElements.forEach((span, index) => {
+            span.style.visibility = index <= hintIndex ? "visible" : "hidden";
+        });
     }
 
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
@@ -485,7 +440,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const shareMessage = gaveUp
             ? `PLAY PINEAPPLE\n\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
             : won
-            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan Shakespeare beat my score? Click here: https://your-game-url.com`
+            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
             : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
@@ -500,7 +455,9 @@ document.addEventListener("DOMContentLoaded", () => {
         firstGuessMade = false;
         guessCount = 0;
         gaveUp = false;
-        document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
+        document.querySelectorAll("#score").forEach(scoreDisplay => {
+            scoreDisplay.textContent = `${score}`;
+        });
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("footer").style.bottom = "1vh";
@@ -530,21 +487,10 @@ document.addEventListener("DOMContentLoaded", () => {
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"], game["Hint 2"], game["Hint 3"],
-            game["Hint 4"], game["Hint 5"], game["Hint 6"] || "",
-            game["Hint 7"] || ""
+            game["Hint 4"], game["Hint 5"], game["Hint 6"],
+            game["Hint 7"]
         ].filter(hint => hint).map(hint => hint.toUpperCase());
         while (hints.length < 7) hints.push("");
-        setupHints();
-    }
-
-    function loadPrivateGame(game) {
-        resetGame();
-        currentGameNumber = game["Game Number"];
-        secretWord = game["Secret Word"].toUpperCase();
-        hints = [
-            game["Hint 1"], game["Hint 2"], game["Hint 3"],
-            game["Hint 4"], game["Hint 5"], "", ""
-        ].map(hint => hint.toUpperCase());
         setupHints();
     }
 

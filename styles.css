@@ -235,7 +235,7 @@ a {
 #resume-btn {
   width: 2.25vh;
   height: 2.25vh;
-  border-radius: 0.3vh;
+  border-radius: 50%;
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
@@ -416,7 +416,7 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.3vh;
+  border-radius: 0.6vh;
   cursor: pointer;
   margin: 0.5vh auto 0 auto;
   z-index: 11;
@@ -426,6 +426,18 @@ a {
   background: #FFFFFF;
   color: #000000;
   border: 0.1vh solid #000000;
+}
+
+.inverted {
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
+}
+
+.dark-mode .inverted {
+  background: #000000;
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
 }
 
 #ad-box {
@@ -530,75 +542,34 @@ a {
   margin: 2vh 0;
 }
 
-#tabs {
-  display: flex;
-  gap: 1vw;
-  margin-bottom: 2vh;
-}
-
-.tab-btn {
-  font-size: 2vh;
-  padding: 0.5vh 2vw;
-  background: #CCCCCC;
-  color: #000000;
-  border: none;
-  border-radius: 0.3vh;
-  cursor: pointer;
-}
-
-.tab-btn.active {
-  background: #000000;
-  color: #FFFFFF;
-}
-
-.dark-mode .tab-btn {
-  background: #333333;
-  color: #FFFFFF;
-}
-
-.dark-mode .tab-btn.active {
-  background: #FFFFFF;
-  color: #000000;
-}
-
-.tab-content {
-  width: 100%;
-}
-
-#official-games-header, #private-games-header {
+#game-list-header {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  width: 85vw;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 80vw;
   font-size: 1.8vh;
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
+  padding: 0;
 }
 
 .game-list-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  width: 85vw;
+  grid-template-columns: 1fr 1fr 1fr;
+  width: 80vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
   cursor: pointer;
+  padding: 0;
 }
 
 .game-list-row span {
   text-align: center;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .game-list-row:hover {
   text-decoration: underline;
-}
-
-#official-game-list, #private-game-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .green { color: #006400; }
@@ -613,35 +584,41 @@ a {
 .dark-mode .pink { color: #FF69B4; }
 .dark-mode .red { color: #FF0000; }
 
+#game-list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
 .spacer {
   height: 1vh;
 }
 
 #footer {
-  width: 85vw;
-  margin: 0;
-  font-size: 1.5vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  bottom: 1vh;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  transition: bottom 0.3s ease;
+    width: 85vw;
+    margin: 0;
+    font-size: 1.5vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    bottom: 1vh;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 100;
+    transition: bottom 0.3s ease;
 }
 
 .footer-btn {
-  font-size: 2.25vh;
-  padding: 0.75vh 1.5vw;
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-  border-radius: 0.3vh;
-  cursor: pointer;
-  z-index: 101;
-  position: relative;
+    font-size: 2.25vh;
+    padding: 0.75vh 1.5vw;
+    background: #000000;
+    color: #FFFFFF;
+    border: 0.1vh solid #FFFFFF;
+    border-radius: 0.6vh;
+    cursor: pointer;
+    z-index: 101;
+    position: relative;
 }
 
 .arrow-btn {
@@ -649,24 +626,24 @@ a {
 }
 
 .footer-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1vh;
-  z-index: 102;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vh;
+    z-index: 102;
 }
 
 .footer-nav {
-  display: flex;
-  gap: 1vw;
-  align-items: center;
-  z-index: 103;
+    display: flex;
+    gap: 1vw;
+    align-items: center;
+    z-index: 103;
 }
 
 .dark-mode .footer-btn {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
+    background: #FFFFFF;
+    color: #000000;
+    border: 0.1vh solid #000000;
 }
 
 @media (max-width: 600px) or (max-height: 600px) {
