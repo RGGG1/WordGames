@@ -8,7 +8,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  overflow: hidden; /* Prevent scrolling */
+  overflow: hidden;
 }
 
 .dark-mode {
@@ -28,7 +28,7 @@ a {
 #game-screen, #smoothbrain-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Fixed height, no scrolling */
+  height: 100vh;
   position: relative;
   background: #FFFFFF;
   overflow: hidden;
@@ -80,10 +80,10 @@ a {
 }
 
 #smoothbrain-name {
-  font-family: 'Bubblegum Sans', cursive; /* Bubbly, funny font */
+  font-family: 'Bubblegum Sans', cursive;
   font-size: 2.5vh;
   text-transform: lowercase;
-  color: #FF69B4; /* Hot pink */
+  color: #FF69B4;
   cursor: pointer;
   z-index: 11;
 }
@@ -107,7 +107,7 @@ a {
 
 #smoothbrain-relating {
   width: 85vw;
-  margin: 4vh auto 0 auto; /* 2 lines below header (5vh header + 2vh) */
+  margin: 2vh auto 0 auto; /* 1 line below header */
   font-size: 3vh;
   text-align: center;
   text-transform: uppercase;
@@ -133,6 +133,14 @@ a {
   flex-direction: column;
   justify-content: flex-start;
   background: none;
+}
+
+/* Smoothbrain top section (60% of visible space above keyboard) */
+#smoothbrain-screen > #header,
+#smoothbrain-relating,
+#smoothbrain-separator,
+#smoothbrain-guess-area {
+  height: calc(60vh - 8vh); /* 60% of viewport minus footer */
 }
 
 #guess-area:hover, #guess-input:hover, #smoothbrain-guess-area:hover, #smoothbrain-guess-input:hover {
@@ -209,18 +217,28 @@ a {
 
 #hints-box {
   width: 85vw;
-  height: calc(100vh - 26vh); /* Adjusted for footer */
+  height: calc(100vh - 28vh); /* Adjusted for footer and hint countdown */
   margin: 0 auto;
   padding: 1vh;
   background: none;
   flex-grow: 1;
-  overflow: hidden; /* No scrolling */
+  overflow: hidden;
 }
 
 #hints-title {
   font-size: 2vh;
   font-weight: bold;
   margin-bottom: 0.5vh;
+}
+
+.hint-countdown {
+  font-size: 1.5vh;
+  color: #666;
+  margin-bottom: 1vh;
+}
+
+.dark-mode .hint-countdown {
+  color: #999;
 }
 
 #smoothbrain-hint-btn {
@@ -335,7 +353,7 @@ a {
   height: 100vh;
   display: none;
   flex-direction: column;
-  justify-content: flex-start; /* Adjusted for less space */
+  justify-content: flex-start;
   align-items: center;
   padding: 2vh;
   background: #FFFFFF;
@@ -348,13 +366,13 @@ a {
 
 #end-graphic {
   height: 21.09375vh;
-  margin: 0.5vh auto; /* Reduced from 1vh */
+  margin: 0.5vh auto;
 }
 
 #todays-word-label {
   font-size: 2vh;
   font-weight: bold;
-  margin: 0.5vh auto; /* Reduced from 1vh */
+  margin: 0.5vh auto;
   white-space: pre-line;
 }
 
@@ -599,21 +617,49 @@ a {
   margin: 2vh 0;
 }
 
+#game-list-header {
+  display: flex;
+  justify-content: space-between;
+  width: 80vw;
+  font-size: 1.8vh;
+  font-weight: bold;
+  margin-bottom: 1vh;
+}
+
+.game-list-row {
+  display: flex;
+  justify-content: space-between;
+  width: 80vw;
+  font-size: 1.5vh;
+  margin: 0.5vh 0;
+  cursor: pointer;
+}
+
+.game-list-row span {
+  flex: 1;
+  text-align: center;
+}
+
+.game-list-row:hover {
+  text-decoration: underline;
+}
+
+.green { color: #006400; } /* Deep green */
+.yellow { color: #FFD700; } /* Deep yellow */
+.orange { color: #FF4500; } /* Deep orange */
+.pink { color: #C71585; } /* Deep pink */
+.red { color: #8B0000; } /* Deep red */
+
+.dark-mode .green { color: #00FF00; }
+.dark-mode .yellow { color: #FFFF00; }
+.dark-mode .orange { color: #FFA500; }
+.dark-mode .pink { color: #FF69B4; }
+.dark-mode .red { color: #FF0000; }
+
 #game-list {
   display: flex;
   flex-direction: column;
   align-items: center;
-}
-
-.game-item {
-  font-size: 1.5vh;
-  margin: 0.5vh 0;
-  cursor: pointer;
-  text-align: center;
-}
-
-.game-item:hover {
-  text-decoration: underline;
 }
 
 #footer {
@@ -624,7 +670,7 @@ a {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  bottom: 8vh; /* Above keyboard */
+  bottom: 8vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -639,6 +685,19 @@ a {
   border-radius: 0.8vh;
   cursor: pointer;
   z-index: 11;
+}
+
+.arrow-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5vw;
+}
+
+.footer-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2vh; /* Two lines above All Games */
 }
 
 .dark-mode .footer-btn {
@@ -665,7 +724,7 @@ a {
       font-size: 4vh;
   }
   #hints-box {
-      height: calc(100vh - 24vh);
+      height: calc(100vh - 26vh);
   }
   .hint-line span, #smoothbrain-hint-text {
       font-size: 1.8vh;

@@ -23,6 +23,7 @@
         </div>
         <div id="hints-box">
             <div id="hints-title">Hints</div>
+            <div id="hint-countdown" class="hint-countdown"></div>
             <div id="hints">
                 <div class="hint-line" id="hint-row-1"><span></span></div>
                 <div class="hint-line spacer"></div>
@@ -38,8 +39,12 @@
             </div>
         </div>
         <div id="footer">
-            <button id="give-up-btn" class="footer-btn">Give Up</button>
-            <button id="previous-games-btn" class="footer-btn">Previous Games</button>
+            <button id="previous-btn" class="footer-btn arrow-btn"><i class="fas fa-arrow-left"></i> Previous</button>
+            <div class="footer-center">
+                <button id="give-up-btn" class="footer-btn">Give Up</button>
+                <button id="all-games-btn" class="footer-btn">All Games</button>
+            </div>
+            <button id="next-btn" class="footer-btn arrow-btn">Next <i class="fas fa-arrow-right"></i></button>
         </div>
     </div>
 
@@ -81,8 +86,7 @@
             </div>
         </div>
         <div id="end-footer">
-            <div>Until then, play our other games</div>
-            <a href="#" id="end-hungry-shark">Pineapple - Previous Games</a>
+            <div>Until then, play our other game</div>
             <a href="#" id="end-meatball">smoothbrain</a>
         </div>
         <button id="home-btn" class="home-btn">Play Again</button>
@@ -126,8 +130,12 @@
         </div>
         <div id="smoothbrain-instruction"><b>How to Play</b><br>Rearrange the letters to form another word, in as few guesses as possible.<br><br>There may be multiple possibilities, but there is only one true smoothbrain answer.<br><br>Hints can help you, BUT they'll double your guess score</div>
         <div id="footer">
-            <button id="smoothbrain-give-up-btn" class="footer-btn">Give Up</button>
-            <button id="smoothbrain-previous-games-btn" class="footer-btn">Previous Games</button>
+            <button id="smoothbrain-previous-btn" class="footer-btn arrow-btn"><i class="fas fa-arrow-left"></i> Previous</button>
+            <div class="footer-center">
+                <button id="smoothbrain-give-up-btn" class="footer-btn">Give Up</button>
+                <button id="smoothbrain-all-games-btn" class="footer-btn">All Games</button>
+            </div>
+            <button id="smoothbrain-next-btn" class="footer-btn arrow-btn">Next <i class="fas fa-arrow-right"></i></button>
         </div>
     </div>
 
@@ -138,7 +146,12 @@
             <div id="score">0</div>
         </div>
         <div id="game-select-content">
-            <div id="game-list-title">Previous Games</div>
+            <div id="game-list-title">All Games</div>
+            <div id="game-list-header" class="game-list-row">
+                <span>Game #</span>
+                <span>Secret Word</span>
+                <span># Guesses</span>
+            </div>
             <div id="game-list"></div>
             <button id="back-to-game-btn" class="home-btn">Back</button>
         </div>
