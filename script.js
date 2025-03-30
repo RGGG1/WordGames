@@ -12,9 +12,9 @@ document.addEventListener("DOMContentLoaded", () => {
     let gaveUp = false;
 
     async function fetchGameData() {
-        const spreadsheetId = "2PACX-1vThRLyZdJhT8H1_VEHQ1OuFi9tOB6QeRDIDD0PZ9PddetHpLybJG8mAjMxTtFsDpxWBx7v4eQOTaGyI";
+        const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
         const officialUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
-        const privateUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=675577010&single=true&output=csv`;
+        const privateUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=639966570&single=true&output=csv`;
 
         try {
             // Fetch official games
@@ -155,7 +155,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        document.getElementById("back-to-game-btn").addEventListener("click", () => {
+        document.getElementById("back-to-game-btn").addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             gameSelectScreen.style.display = "none";
             gameScreen.style.display = "flex";
             input.focus();
@@ -203,7 +205,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        document.getElementById("resume-btn").addEventListener("click", () => {
+        document.getElementById("resume-btn").addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             const countdown = document.getElementById("countdown");
             document.getElementById("resume-btn").style.display = "none";
             countdown.style.display = "block";
@@ -225,8 +229,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         document.querySelectorAll(".home-btn").forEach(btn => {
-            btn.addEventListener("click", () => {
-                if (btn.textContent === "Play Again") {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                if (btn.id === "home-btn" && btn.textContent === "Play More Pineapples") {
                     displayGameTabs();
                     go.style.display = "none";
                     gameSelectScreen.style.display = "flex";
@@ -241,8 +247,20 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
+        // Create Your Own Pineapple link
+        document.getElementById("create-link").addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            go.style.display = "none";
+            gameSelectScreen.style.display = "flex";
+            document.getElementById("private-tab").click(); // Switch to Private tab
+            adjustBackground();
+        });
+
         // Tab switching
-        document.getElementById("official-tab").addEventListener("click", () => {
+        document.getElementById("official-tab").addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             document.getElementById("official-tab").classList.add("active");
             document.getElementById("private-tab").classList.remove("active");
             document.getElementById("official-games").style.display = "block";
@@ -250,7 +268,9 @@ document.addEventListener("DOMContentLoaded", () => {
             displayOfficialGames();
         });
 
-        document.getElementById("private-tab").addEventListener("click", () => {
+        document.getElementById("private-tab").addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             document.getElementById("private-tab").classList.add("active");
             document.getElementById("official-tab").classList.remove("active");
             document.getElementById("private-games").style.display = "block";
@@ -281,7 +301,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (validateCustomGame(secretWord, hints, gameName)) {
                 const newGame = {
-                    "Game Number": (privateGames.length + 1).toString(),
+                    "Game Number": gameName, // Use custom name instead of number
                     "Secret Word": secretWord,
                     "Hint 1": hints[0],
                     "Hint 2": hints[1],
@@ -298,7 +318,9 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        document.getElementById("back-from-create").addEventListener("click", () => {
+        document.getElementById("back-from-create").addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
             customGameScreen.style.display = "none";
             gameSelectScreen.style.display = "flex";
             displayGameTabs();
@@ -322,7 +344,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function submitCustomGame(game) {
-        const scriptURL = "https://script.google.com/macros/s/[YOUR_APPS_SCRIPT_ID]/exec"; // Replace with your Apps Script URL
+        const scriptURL = "https://script.google.com/macros/s/AKfycbyZFqAOqmbBuJ5Fr2cmLJUkoGP4FcxfpYWHvx9q8ByRkCzY7UysH05x6nzHEQHEo041/exec";
         try {
             await fetch(scriptURL, {
                 method: "POST",
@@ -390,7 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const results = JSON.parse(localStorage.getItem("pineapplePrivateResults") || "{}");
 
         privateGames.forEach(game => {
-            const gameName = game["Game Number"];
+            const gameName = game["Game Number"]; // Using custom name
             const secretWord = game["Secret Word"];
             const guesses = results[gameName] ? results[gameName].guesses : "";
             const gameItem = document.createElement("div");

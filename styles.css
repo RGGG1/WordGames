@@ -740,3 +740,17 @@ a {
       width: 90vw;
   }
 }
+
+/* Added styles for "Create Your Own Pineapple" */
+#create-your-own {
+  font-size: 1.8vh;
+  margin: 0.5vh auto;
+}
+
+#create-link {
+  color: #00BFFF;
+}
+
+.dark-mode #create-link {
+  color: #1E90FF;
+}
