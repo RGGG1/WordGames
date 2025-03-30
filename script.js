@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll("#game-name").forEach(name => {
             name.addEventListener("click", () => {
                 resetGame();
+                loadGame(allGames[0]); // Restart most recent game
                 document.querySelectorAll(".screen").forEach(screen => screen.style.display = "none");
                 gameScreen.style.display = "flex";
                 input.focus();
@@ -133,6 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
             gaveUp = true;
+            saveGameResult("pineapple", currentGameNumber, secretWord, "Gave Up"); // Save before ending
             endGame(false, true);
         });
 
@@ -151,6 +153,16 @@ document.addEventListener("DOMContentLoaded", () => {
         input.addEventListener("focus", () => {
             if (!firstGuessMade && input.value === "") {
                 input.placeholder = "type guess here";
+            }
+            // Move footer above keyboard on focus
+            if (firstGuessMade) {
+                document.getElementById("footer").style.bottom = "calc(40vh)"; // Adjusted for visibility
+            }
+        });
+
+        input.addEventListener("blur", () => {
+            if (firstGuessMade) {
+                document.getElementById("footer").style.bottom = "1vh"; // Reset when keyboard hides
             }
         });
 
@@ -223,9 +235,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const gameItem = document.createElement("div");
             gameItem.className = "game-list-row";
             gameItem.innerHTML = `
-                <span>${gameNumber}</span>
-                <span>${results[gameNumber] ? secretWord : "Play Now"}</span>
-                <span>${guesses || ""}</span>
+                <span>${gameNumber.trim()}</span>
+                <span>${results[gameNumber] ? secretWord.trim() : "Play Now"}</span>
+                <span>${guesses.trim() || ""}</span>
             `;
             if (guesses && guesses !== "Gave Up") {
                 const colorClass = guesses <= 5 ? "green" :
@@ -306,12 +318,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!firstGuessMade) {
             firstGuessMade = true;
-            // Completely remove "How to Play" section
             document.getElementById("how-to-play-1").remove();
             document.getElementById("how-to-play-2").remove();
             document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
-            // Move footer up to replace "How to Play"
-            document.getElementById("footer").style.bottom = "calc(50vh - 10vh)"; // Adjust based on keyboard height
+            document.getElementById("footer").style.bottom = "calc(40vh)"; // Move footer up
             adjustHintsAfterGuess();
         }
 
@@ -357,7 +367,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("hint-row-5")?.children[0],
             document.getElementById("hint-row-6")?.children[0],
             document.getElementById("hint-row-7")?.children[0]
-        ].filter(Boolean); // Filter out removed elements
+        ].filter(Boolean);
         hintElements.forEach((span, index) => {
             span.style.visibility = index <= hintIndex ? "visible" : "hidden";
         });
@@ -366,7 +376,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
         const key = gameType + "Results";
         const results = JSON.parse(localStorage.getItem(key) || "{}");
-        results[gameNumber] = { secretWord, guesses: gaveUp ? "Gave Up" : guesses };
+        results[gameNumber] = { secretWord, guesses };
         localStorage.setItem(key, JSON.stringify(results));
     }
 
@@ -402,7 +412,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else if (gaveUp) {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
-            shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n\n<span class="italic">The Big Brain Word Game</span>'; // Added extra line
+            shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n\n<span class="italic">The Big Brain Word Game</span>';
             shareGameNumber.textContent = `Game #${currentGameNumber}`;
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
@@ -437,8 +447,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
-        document.getElementById("footer").style.bottom = "1vh"; // Reset footer position
-        // Re-add "How to Play" if removed
+        document.getElementById("footer").style.bottom = "1vh";
         if (!document.getElementById("how-to-play-1")) {
             const hintsBox = document.getElementById("hints");
             hintsBox.innerHTML = `

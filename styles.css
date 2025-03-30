@@ -53,7 +53,7 @@ a {
 }
 
 #mode-toggle {
-  font-size: 1.875vh; /* Reduced from 2.5vh by 25% */
+  font-size: 1.875vh;
   background: none;
   border: none;
   cursor: pointer;
@@ -234,7 +234,7 @@ a {
 }
 
 #resume-btn {
-  width: 2.25vh; /* Reduced from 3vh by 25% */
+  width: 2.25vh;
   height: 2.25vh;
   border-radius: 50%;
   background: #000000;
@@ -243,7 +243,7 @@ a {
   cursor: pointer;
   margin: 1vh auto;
   display: block;
-  font-size: 0.9vh; /* Reduced from 1.2vh by 25% */
+  font-size: 0.9vh;
   z-index: 11;
 }
 
@@ -389,11 +389,11 @@ a {
 #share-buttons {
   display: flex;
   gap: 1.5vh;
-  margin-bottom: 1.5vh; /* Extra half line (0.5vh + 1vh) */
+  margin-bottom: 1.5vh;
 }
 
 #share-buttons a {
-  font-size: 2.25vh; /* Reduced from 3vh by 25% */
+  font-size: 2.25vh;
   color: #000000;
   text-decoration: none;
 }
@@ -404,22 +404,22 @@ a {
 
 #end-footer {
   font-size: 1.8vh;
-  margin: 0.5vh auto; /* Half line between "Or, check out..." and link */
+  margin: 0.5vh auto;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5vh; /* Half line between text and link */
+  gap: 0.5vh;
 }
 
 #home-btn {
-  font-size: 2.25vh; /* Reduced from 3vh by 25% */
-  padding: 0.75vh 1.5vw; /* Reduced from 1vh 2vw by 25% */
+  font-size: 2.25vh;
+  padding: 0.75vh 1.5vw;
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.6vh; /* Reduced from 0.8vh by 25% */
+  border-radius: 0.6vh;
   cursor: pointer;
-  margin: 0.5vh auto 0 auto; /* Half line above "Or, check out..." */
+  margin: 0.5vh auto 0 auto;
   z-index: 11;
 }
 
@@ -536,6 +536,7 @@ a {
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
+  padding: 0; /* Remove any padding that might offset alignment */
 }
 
 .game-list-row {
@@ -545,11 +546,13 @@ a {
   font-size: 1.5vh;
   margin: 0.5vh 0;
   cursor: pointer;
+  padding: 0; /* Ensure no padding affects alignment */
 }
 
 .game-list-row span {
   flex: 1;
   text-align: center;
+  white-space: nowrap; /* Prevent text wrapping that could misalign */
 }
 
 .game-list-row:hover {
@@ -576,32 +579,32 @@ a {
 
 #footer {
   width: 85vw;
-  margin: 1vh auto;
+  margin: 0;
   font-size: 1.5vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: fixed;
+  position: absolute; /* Changed to absolute for precise positioning */
   bottom: 1vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
-  transition: bottom 0.3s ease; /* Smooth transition for footer movement */
+  transition: bottom 0.3s ease;
 }
 
 .footer-btn {
-  font-size: 2.25vh; /* Reduced from 3vh by 25% */
-  padding: 0.75vh 1.5vw; /* Reduced from 1vh 2vw by 25% */
+  font-size: 2.25vh;
+  padding: 0.75vh 1.5vw;
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0.6vh; /* Reduced from 0.8vh by 25% */
+  border-radius: 0.6vh;
   cursor: pointer;
   z-index: 11;
 }
 
 .arrow-btn {
-  padding: 0.75vh 0.75vw; /* Reduced from 1vh 1vw by 25% */
+  padding: 0.75vh 0.75vw;
 }
 
 .footer-center {
@@ -624,18 +627,18 @@ a {
 }
 
 @media (max-width: 600px) or (max-height: 600px) {
-  #header, #footer {
+  #header {
       width: 90vw;
   }
   #game-name, #score {
       font-size: 2vh;
   }
   #mode-toggle {
-      font-size: 1.5vh; /* Reduced from 2vh by 25% */
+      font-size: 1.5vh;
   }
   .footer-btn, .home-btn {
-      font-size: 1.8vh; /* Reduced from 2.4vh by 25% */
-      padding: 0.6vh 1.2vw; /* Reduced from 0.8vh 1.6vw by 25% */
+      font-size: 1.8vh;
+      padding: 0.6vh 1.2vw;
   }
   #guess-input {
       font-size: 4vh;
@@ -648,5 +651,8 @@ a {
   }
   #how-to-play-1, #how-to-play-2 {
       font-size: 2vh;
+  }
+  #footer {
+      width: 90vw; /* Match header width */
   }
 }
