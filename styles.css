@@ -579,28 +579,28 @@ a {
 
 #official-games-header, #private-games-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  width: 80vw;
+  grid-template-columns: repeat(3, 1fr); /* Equal width columns */
+  width: 85vw; /* Match other screen widths */
   font-size: 1.8vh;
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
-  padding: 0;
 }
 
 .game-list-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  width: 80vw;
+  grid-template-columns: repeat(3, 1fr); /* Equal width columns */
+  width: 85vw; /* Match other screen widths */
   font-size: 1.5vh;
   margin: 0.5vh 0;
   cursor: pointer;
-  padding: 0;
 }
 
 .game-list-row span {
   text-align: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .game-list-row:hover {
@@ -710,6 +710,19 @@ a {
     border: 0.1vh solid #000000;
 }
 
+#create-your-own {
+  font-size: 1.8vh;
+  margin: 0.5vh auto;
+}
+
+#create-link {
+  color: #00BFFF;
+}
+
+.dark-mode #create-link {
+  color: #1E90FF;
+}
+
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
       width: 90vw;
@@ -739,18 +752,4 @@ a {
   #footer {
       width: 90vw;
   }
-}
-
-/* Added styles for "Create Your Own Pineapple" */
-#create-your-own {
-  font-size: 1.8vh;
-  margin: 0.5vh auto;
-}
-
-#create-link {
-  color: #00BFFF;
-}
-
-.dark-mode #create-link {
-  color: #1E90FF;
 }

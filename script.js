@@ -92,7 +92,6 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        // Ensure All Games button works
         allGamesBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -167,13 +166,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input.addEventListener("input", (e) => {
             if (!gameOver && e.data && e.inputType === "insertReplacementText") {
-                handleGuess(input.value.trim());
+                handleGuess(input.value.trimEnd());
             }
         });
 
         input.addEventListener("keydown", (e) => {
             if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) {
-                handleGuess(input.value.trim());
+                handleGuess(input.value.trimEnd());
             }
         });
 
@@ -221,7 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
         });
 
-        // Ensure Play More Pineapples button works
         playMoreBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -271,15 +269,15 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("submit-custom-game").addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const secretWord = document.getElementById("custom-secret-word").value.trim().toUpperCase();
+            const secretWord = document.getElementById("custom-secret-word").value.trimEnd().toUpperCase();
             const hints = [
-                document.getElementById("custom-hint-1").value.trim().toUpperCase(),
-                document.getElementById("custom-hint-2").value.trim().toUpperCase(),
-                document.getElementById("custom-hint-3").value.trim().toUpperCase(),
-                document.getElementById("custom-hint-4").value.trim().toUpperCase(),
-                document.getElementById("custom-hint-5").value.trim().toUpperCase()
+                document.getElementById("custom-hint-1").value.trimEnd().toUpperCase(),
+                document.getElementById("custom-hint-2").value.trimEnd().toUpperCase(),
+                document.getElementById("custom-hint-3").value.trimEnd().toUpperCase(),
+                document.getElementById("custom-hint-4").value.trimEnd().toUpperCase(),
+                document.getElementById("custom-hint-5").value.trimEnd().toUpperCase()
             ];
-            const gameName = document.getElementById("custom-game-name").value.trim();
+            const gameName = document.getElementById("custom-game-name").value.trimEnd();
 
             if (validateCustomGame(secretWord, hints, gameName)) {
                 const newGame = {
@@ -293,7 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 };
                 const success = await submitCustomGame(newGame);
                 if (success) {
-                    await fetchPrivateGames(); // Refresh private games after successful submission
+                    await fetchPrivateGames();
                     customGameScreen.style.display = "none";
                     gameSelectScreen.style.display = "flex";
                     displayPrivateGames();
@@ -336,8 +334,8 @@ document.addEventListener("DOMContentLoaded", () => {
             alert("All fields must be filled.");
             return false;
         }
-        if (secretWord.includes(" ")) {
-            alert("Secret Word must be one word.");
+        if (secretWord.replace(/\s+$/, '').includes(" ")) {
+            alert("Secret Word must be one word (ignoring trailing spaces).");
             return false;
         }
         if (secretWord.length > 20 || hints.some(h => h.length > 20) || gameName.length > 20) {
@@ -348,17 +346,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function submitCustomGame(game) {
-        const scriptURL = "https://script.google.com/macros/s/AKfycbyZFqAOqmbBuJ5Fr2cmLJUkoGP4FcxfpYWHvx9q8ByRkCzY7UysH05x6nzHEQHEo041/exec";
+        const scriptURL = "https://script.google.com/macros/s/AKfycbxLdEKhQMRcxVHI8MwIES-y6ag2pKYHzBypq6AT2huevXvN-0bXHGy6k2RoRP0LbQ/exec";
         try {
             const response = await fetch(scriptURL, {
                 method: "POST",
                 body: JSON.stringify(game),
                 headers: { "Content-Type": "application/json" },
-                mode: "no-cors" // Use no-cors to avoid CORS issues with Google Apps Script
+                mode: "no-cors" // Google Apps Script doesn't support CORS
             });
-            console.log("Game submission attempted:", game);
-            // Since no-cors doesn't return a usable response, assume success and rely on fetchPrivateGames to confirm
-            return true;
+            console.log("Game submitted:", game);
+            return true; // Assume success with no-cors
         } catch (error) {
             console.error("Failed to submit custom game:", error);
             alert("Failed to save your game. Please try again.");
