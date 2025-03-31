@@ -43,14 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Back button clicked");
         resetScreenDisplays();
         gameScreen.style.display = "flex";
-        adjustBackground(); // Ensure layout adjusts properly
+        adjustBackground();
     });
 
     function showGameSelectScreen() {
         console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
-        displayGameList(); // Both buttons use the same function
+        displayGameList(); // Ensure list is populated every time
     }
 
     function resetScreenDisplays() {
@@ -69,8 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const pineResponse = await fetch(pineappleUrl);
             if (!pineResponse.ok) throw new Error(`Pineapple fetch failed: ${pineResponse.status}`);
             const pineText = await pineResponse.text();
+            console.log("Raw CSV data:", pineText); // Log raw data for debugging
             const pineRows = pineText.split("\n").map(row => {
-                // Handle quoted fields with commas
                 const fields = [];
                 let currentField = "";
                 let insideQuotes = false;
@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 fields.push(currentField); // Add last field
                 return fields;
-            });
+            }).filter(row => row.length >= 8); // Ensure rows have all expected columns
             const pineHeaders = pineRows[0];
             allGames = pineRows.slice(1).map(row => {
                 let obj = {};
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return obj;
             }).filter(game => game["Game Number"] && game["Secret Word"]) // Filter invalid rows
             .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            console.log("Fetched games:", allGames.length);
+            console.log("Parsed games:", allGames.length, allGames); // Log parsed data
 
             const latestPineGame = allGames[0];
             loadGame(latestPineGame);
@@ -105,6 +105,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
+            displayGameList(); // Populate list on initial load
         } catch (error) {
             console.error("Failed to fetch game data:", error);
             allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
@@ -114,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
+            displayGameList();
         }
     }
 
