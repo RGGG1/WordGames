@@ -43,14 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Back button clicked");
         resetScreenDisplays();
         gameScreen.style.display = "flex";
-        adjustBackground();
+        adjustBackground(); // Ensure layout adjusts properly
     });
 
     function showGameSelectScreen() {
         console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
-        displayGameList();
+        displayGameList(); // Both buttons use the same function
     }
 
     function resetScreenDisplays() {
@@ -63,15 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchGameData() {
         console.log("Fetching game data");
-        const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
-        const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
+        const pineappleUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR/pub?output=csv";
 
         try {
             const pineResponse = await fetch(pineappleUrl);
             if (!pineResponse.ok) throw new Error(`Pineapple fetch failed: ${pineResponse.status}`);
             const pineText = await pineResponse.text();
             const pineRows = pineText.split("\n").map(row => {
-                // Simple CSV parsing: split on commas, handle quoted fields
+                // Handle quoted fields with commas
                 const fields = [];
                 let currentField = "";
                 let insideQuotes = false;
@@ -85,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         currentField += char;
                     }
                 }
-                fields.push(currentField); // Add the last field
+                fields.push(currentField); // Add last field
                 return fields;
             });
             const pineHeaders = pineRows[0];
@@ -95,7 +94,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     obj[header.trim()] = row[i] ? row[i].trim().replace(/^"|"$/g, "") : "";
                 });
                 return obj;
-            }).filter(game => game["Game Number"] && game["Secret Word"]) // Ensure valid games
+            }).filter(game => game["Game Number"] && game["Secret Word"]) // Filter invalid rows
             .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Fetched games:", allGames.length);
 
@@ -106,12 +105,15 @@ document.addEventListener("DOMContentLoaded", () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            displayGameList();
         } catch (error) {
             console.error("Failed to fetch game data:", error);
             allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
             loadGame(allGames[0]);
-            displayGameList();
+            resetScreenDisplays();
+            gameScreen.style.display = "flex";
+            updateHintCountdown();
+            adjustBackground();
+            setupEventListeners();
         }
     }
 
@@ -464,7 +466,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const results = JSON.parse(localStorage.getItem(key) || "{}");
         results[gameNumber] = { secretWord, guesses };
         localStorage.setItem(key, JSON.stringify(results));
-        fetchGameData(); // Refresh the list after saving results
     }
 
     function endGame(won, gaveUp = false) {
@@ -571,5 +572,5 @@ document.addEventListener("DOMContentLoaded", () => {
         setupHints();
     }
 
-    fetchGameData(); // Initial fetch
+    fetchGameData();
 });
