@@ -557,12 +557,16 @@ a {
 
 .game-list-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr 1fr; /* Adjusted for Private: Game #, Game Name (wider), Secret Word, Guesses */
   width: 85vw;
   font-size: 1.8vh;
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
+}
+
+#official-list-header {
+  grid-template-columns: 1fr 1fr 1fr; /* Official keeps 3 columns */
 }
 
 .game-list {
@@ -576,11 +580,15 @@ a {
 
 .game-list-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 2fr 1fr 1fr; /* Adjusted for Private */
   width: 85vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
   cursor: pointer;
+}
+
+#official-list .game-list-row {
+  grid-template-columns: 1fr 1fr 1fr; /* Official keeps 3 columns */
 }
 
 .game-list-row span {

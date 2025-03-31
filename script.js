@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
     let hintIndex = 0;
     let firstGuessMade = false;
     let allGames = [];
+    let privateGames = [];
     let currentGameNumber = null;
     let guessCount = 0;
     let gaveUp = false;
@@ -20,16 +21,16 @@ document.addEventListener("DOMContentLoaded", () => {
     const backBtn = document.getElementById("back-btn");
     const createPineappleBtn = document.getElementById("create-pineapple");
     const createForm = document.getElementById("create-form");
+    const confirmBtn = document.getElementById("confirm-btn");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
 
-    console.log("officialTab:", officialTab);
-    console.log("privateTab:", privateTab);
-    console.log("officialContent:", officialContent);
-    console.log("privateContent:", privateContent);
+    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
+    const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv&gid=639966570";
+    const webAppUrl = "https://script.google.com/macros/s/AKfycby-DbeDaDOcqip5FZr60NsHfnF6F4iOulGf47LOaK7BSKrE6InqKx5INbcmnxs-G9-b/exec";
 
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
@@ -49,8 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
             officialContent.classList.remove("active");
             if (createForm) createForm.style.display = "none";
         });
-    } else {
-        console.error("Tab elements not found");
     }
 
     allGamesBtn.addEventListener("click", (e) => {
@@ -66,12 +65,12 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Home button clicked");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
-        officialTab.classList.add("active");    // Force Official tab active
-        privateTab.classList.remove("active");  // Force Private tab inactive
+        officialTab.classList.add("active");
+        privateTab.classList.remove("active");
         officialContent.classList.add("active");
         privateContent.classList.remove("active");
-        if (createForm) createForm.style.display = "none"; // Ensure form is hidden
-        displayGameList();  // Refresh game list
+        if (createForm) createForm.style.display = "none";
+        displayGameList();
         adjustBackground();
     });
 
@@ -94,11 +93,62 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    if (confirmBtn) {
+        confirmBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Confirm button clicked");
+            const formData = {
+                gameName: document.getElementById("game-name-input").value.trim(),
+                secretWord: document.getElementById("secret-word").value.trim().toUpperCase(),
+                hint1: document.getElementById("hint-1").value.trim().toUpperCase(),
+                hint2: document.getElementById("hint-2").value.trim().toUpperCase(),
+                hint3: document.getElementById("hint-3").value.trim().toUpperCase(),
+                hint4: document.getElementById("hint-4").value.trim().toUpperCase(),
+                hint5: document.getElementById("hint-5").value.trim().toUpperCase()
+            };
+
+            // Basic validation
+            if (!formData.gameName || !formData.secretWord || !formData.hint1) {
+                alert("Please fill in Game Name, Secret Word, and at least Hint #1");
+                return;
+            }
+
+            fetch(webAppUrl, {
+                method: "POST",
+                body: JSON.stringify(formData),
+                headers: { "Content-Type": "application/json" }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === "success") {
+                    console.log("Submission success:", data);
+                    createForm.style.display = "none";
+                    resetScreenDisplays();
+                    gameSelectScreen.style.display = "flex";
+                    privateTab.classList.add("active");
+                    officialTab.classList.remove("active");
+                    privateContent.classList.add("active");
+                    officialContent.classList.remove("active");
+                    fetchPrivateGames().then(() => displayGameList());
+                    adjustBackground();
+                } else {
+                    console.error("Submission failed:", data.message);
+                    alert("Failed to create game: " + data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Submission error:", error);
+                alert("Error submitting game. Please try again.");
+            });
+        });
+    }
+
     function showGameSelectScreen() {
         console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
-        officialTab.classList.add("active");    // Ensure Official tab is default
+        officialTab.classList.add("active");
         privateTab.classList.remove("active");
         officialContent.classList.add("active");
         privateContent.classList.remove("active");
@@ -113,13 +163,11 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function fetchGameData() {
-        const pineappleUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
-
         try {
-            const response = await fetch(pineappleUrl);
+            const response = await fetch(officialUrl);
             if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
             const text = await response.text();
-            console.log("CSV fetched:", text);
+            console.log("Official CSV fetched:", text);
 
             const parsed = Papa.parse(text, {
                 header: true,
@@ -131,7 +179,7 @@ document.addEventListener("DOMContentLoaded", () => {
             allGames = parsed.data
                 .filter(game => game["Game Number"] && game["Secret Word"])
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            console.log("Parsed games:", allGames);
+            console.log("Parsed official games:", allGames);
 
             if (allGames.length === 0) throw new Error("No valid games in CSV");
 
@@ -143,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
             adjustBackground();
             setupEventListeners();
         } catch (error) {
-            console.error("Error fetching game data:", error);
+            console.error("Error fetching official games:", error);
             allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "DATA", "Hint 5": "CHECK" }];
             loadGame(allGames[0]);
             resetScreenDisplays();
@@ -154,52 +202,103 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    async function fetchPrivateGames() {
+        try {
+            const response = await fetch(privateUrl);
+            if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
+            const text = await response.text();
+            console.log("Private CSV fetched:", text);
+
+            const parsed = Papa.parse(text, {
+                header: true,
+                skipEmptyLines: true,
+                quoteChar: '"',
+                dynamicTyping: false
+            });
+
+            privateGames = parsed.data
+                .filter(game => game["Game Name"] && game["Secret Word"])
+                .map((game, index) => ({ ...game, "Game Number": (index + 1).toString() }))
+                .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+            console.log("Parsed private games:", privateGames);
+        } catch (error) {
+            console.error("Error fetching private games:", error);
+            privateGames = [];
+        }
+    }
+
     function displayGameList() {
         const officialList = document.getElementById("official-list");
-        if (!officialList) {
-            console.error("official-list element not found");
-            return;
+        if (officialList) {
+            officialList.innerHTML = "";
+            document.getElementById("game-name").textContent = "PINEAPPLE";
+            console.log("Populating official games list");
+
+            if (!allGames.length) {
+                officialList.innerHTML = "<div>No official games available</div>";
+            } else {
+                const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
+                allGames.forEach(game => {
+                    const gameNumber = game["Game Number"];
+                    const secretWord = game["Secret Word"].toUpperCase();
+                    const pastResult = results[gameNumber];
+                    const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
+                    const isCompleted = pastResult && pastResult.guesses !== "Gave Up" && pastResult.secretWord === secretWord;
+                    const displayWord = isCompleted || (pastResult && pastResult.guesses === "Gave Up") ? secretWord : "Play Now";
+
+                    const gameItem = document.createElement("div");
+                    gameItem.className = "game-list-row";
+                    gameItem.innerHTML = `
+                        <span>${gameNumber}</span>
+                        <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
+                        <span>${guesses}</span>
+                    `;
+                    gameItem.addEventListener("click", () => {
+                        loadGame(game);
+                        resetScreenDisplays();
+                        gameScreen.style.display = "flex";
+                        adjustBackground();
+                    });
+                    officialList.appendChild(gameItem);
+                });
+            }
         }
-        officialList.innerHTML = "";
-        document.getElementById("game-name").textContent = "PINEAPPLE";
-        console.log("Populating official games list");
-
-        if (!allGames.length) {
-            officialList.innerHTML = "<div>No games available</div>";
-            return;
-        }
-
-        const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
-
-        allGames.forEach(game => {
-            const gameNumber = game["Game Number"];
-            const secretWord = game["Secret Word"].toUpperCase();
-            const pastResult = results[gameNumber];
-            const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
-            const isCompleted = pastResult && pastResult.guesses !== "Gave Up" && pastResult.secretWord === secretWord;
-            const displayWord = isCompleted || (pastResult && pastResult.guesses === "Gave Up") ? secretWord : "Play Now";
-
-            const gameItem = document.createElement("div");
-            gameItem.className = "game-list-row";
-            gameItem.innerHTML = `
-                <span>${gameNumber}</span>
-                <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
-                <span>${guesses}</span>
-            `;
-            gameItem.addEventListener("click", () => {
-                loadGame(game);
-                resetScreenDisplays();
-                gameScreen.style.display = "flex";
-                adjustBackground();
-            });
-            officialList.appendChild(gameItem);
-        });
 
         const privateList = document.getElementById("private-list");
         if (privateList) {
-            privateList.innerHTML = "<div>No private games yet</div>";
-        } else {
-            console.error("private-list element not found");
+            privateList.innerHTML = "";
+            console.log("Populating private games list");
+
+            if (!privateGames.length) {
+                privateList.innerHTML = "<div>No private games yet</div>";
+            } else {
+                const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
+                privateGames.forEach(game => {
+                    const gameNumber = game["Game Number"];
+                    const gameName = game["Game Name"];
+                    const secretWord = game["Secret Word"].toUpperCase();
+                    const pastResult = results[gameNumber];
+                    const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
+                    const isCompleted = pastResult && pastResult.guesses !== "Gave Up" && pastResult.secretWord === secretWord;
+                    const displayWord = isCompleted || (pastResult && pastResult.guesses === "Gave Up") ? secretWord : "Play Now";
+
+                    const gameItem = document.createElement("div");
+                    gameItem.className = "game-list-row";
+                    gameItem.innerHTML = `
+                        <span>${gameNumber}</span>
+                        <span>${gameName}</span>
+                        <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
+                        <span>${guesses}</span>
+                    `;
+                    gameItem.addEventListener("click", () => {
+                        loadGame(game);
+                        resetScreenDisplays();
+                        gameScreen.style.display = "flex";
+                        adjustBackground();
+                    });
+                    privateList.appendChild(gameItem);
+                });
+            }
         }
     }
 
@@ -395,7 +494,7 @@ document.addEventListener("DOMContentLoaded", () => {
             guessLine.style.opacity = "0";
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
-                saveGameResult("pineapple", currentGameNumber, secretWord, score);
+                saveGameResult(currentGameNumber.includes("P") ? "privatePineapple" : "pineapple", currentGameNumber, secretWord, score);
                 endGame(true);
             }, 1500);
         } else {
@@ -516,7 +615,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function loadGame(game) {
         resetGame();
-        currentGameNumber = game["Game Number"];
+        currentGameNumber = game["Game Number"] || `P${privateGames.findIndex(g => g["Secret Word"] === game["Secret Word"] && g["Game Name"] === game["Game Name"]) + 1}`;
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"], game["Hint 2"], game["Hint 3"],
@@ -527,4 +626,5 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     fetchGameData();
+    fetchPrivateGames();
 });
