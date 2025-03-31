@@ -70,6 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!pineResponse.ok) throw new Error(`Pineapple fetch failed: ${pineResponse.status}`);
             const pineText = await pineResponse.text();
             console.log("Raw CSV data:", pineText);
+
             const pineRows = pineText.split("\n").map(row => {
                 const fields = [];
                 let currentField = "";
@@ -87,6 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 fields.push(currentField);
                 return fields;
             }).filter(row => row.length >= 8);
+
             const pineHeaders = pineRows[0];
             allGames = pineRows.slice(1).map(row => {
                 let obj = {};
@@ -95,8 +97,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
                 return obj;
             }).filter(game => game["Game Number"] && game["Secret Word"])
-            .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            console.log("Fetched games:", allGames.length);
+              .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+
+            console.log("Parsed games:", allGames);
+            if (allGames.length === 0) throw new Error("No valid games found in CSV");
 
             const latestPineGame = allGames[0];
             loadGame(latestPineGame);
@@ -133,14 +137,20 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
+
         allGames.forEach(game => {
             const gameNumber = game["Game Number"];
+            const secretWord = game["Secret Word"].toUpperCase();
+            const pastResult = results[gameNumber];
+            const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : "-";
+
             const gameItem = document.createElement("div");
             gameItem.className = "game-list-row";
             gameItem.innerHTML = `
-                <span>${gameNumber.trim()}</span>
-                <span>Play Now</span>
-                <span></span>
+                <span>${gameNumber}</span>
+                <span>${secretWord}</span>
+                <span>${guesses}</span>
             `;
             gameItem.addEventListener("click", () => {
                 loadGame(game);
@@ -372,7 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const piece = document.createElement("div");
             piece.className = "confetti-piece";
             piece.style.left = `${Math.random() * 100}vw`;
-            piece.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            piece理論style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
             piece.style.animationDelay = `${Math.random() * 1}s`;
             confettiContainer.appendChild(piece);
         }
