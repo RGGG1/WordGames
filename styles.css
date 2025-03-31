@@ -445,6 +445,11 @@ a {
   transform: scale(1.05);
 }
 
+.small-btn {
+  font-size: 1.5vh; /* Smaller than footer-btn's 2.25vh */
+  padding: 0.5vh 1vw; /* Reduced padding */
+}
+
 .arrow-btn {
   padding: 0.75vh 0.75vw;
 }

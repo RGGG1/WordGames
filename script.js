@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const createPineappleBtn = document.getElementById("create-pineapple");
     const createForm = document.getElementById("create-form");
     const confirmBtn = document.getElementById("confirm-btn");
+    const formBackBtn = document.getElementById("form-back-btn");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -108,39 +109,50 @@ document.addEventListener("DOMContentLoaded", () => {
                 hint5: document.getElementById("hint-5").value.trim().toUpperCase()
             };
 
-            // Basic validation
             if (!formData.gameName || !formData.secretWord || !formData.hint1) {
                 alert("Please fill in Game Name, Secret Word, and at least Hint #1");
                 return;
             }
 
-            fetch(webAppUrl, {
-                method: "POST",
-                body: JSON.stringify(formData),
-                headers: { "Content-Type": "application/json" }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === "success") {
-                    console.log("Submission success:", data);
-                    createForm.style.display = "none";
-                    resetScreenDisplays();
-                    gameSelectScreen.style.display = "flex";
-                    privateTab.classList.add("active");
-                    officialTab.classList.remove("active");
-                    privateContent.classList.add("active");
-                    officialContent.classList.remove("active");
-                    fetchPrivateGames().then(() => displayGameList());
-                    adjustBackground();
-                } else {
-                    console.error("Submission failed:", data.message);
-                    alert("Failed to create game: " + data.message);
-                }
-            })
-            .catch(error => {
-                console.error("Submission error:", error);
-                alert("Error submitting game. Please try again.");
-            });
+            // Create hidden form for submission
+            const tempForm = document.createElement("form");
+            tempForm.method = "POST";
+            tempForm.action = webAppUrl;
+            tempForm.style.display = "none";
+
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = "data";
+            input.value = JSON.stringify(formData);
+            tempForm.appendChild(input);
+
+            document.body.appendChild(tempForm);
+            tempForm.submit();
+
+            // Redirect to Private tab
+            setTimeout(() => {
+                createForm.style.display = "none";
+                resetScreenDisplays();
+                gameSelectScreen.style.display = "flex";
+                privateTab.classList.add("active");
+                officialTab.classList.remove("active");
+                privateContent.classList.add("active");
+                officialContent.classList.remove("active");
+                fetchPrivateGames().then(() => displayGameList());
+                adjustBackground();
+            }, 1000); // Delay to allow submission
+        });
+    }
+
+    if (formBackBtn) {
+        formBackBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Form Back button clicked");
+            createForm.style.display = "none";
+            resetScreenDisplays();
+            gameScreen.style.display = "flex";
+            adjustBackground();
         });
     }
 
@@ -450,7 +462,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function rainConfetti() {
-        const confettiContainer = document.createElement("div");
+        const confettiContainer = document.createElement GOOGLE("div");
         confettiContainer.className = "confetti";
         document.body.appendChild(confettiContainer);
         for (let i = 0; i < 50; i++) {
