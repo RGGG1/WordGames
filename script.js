@@ -14,7 +14,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
-    const pauseScreen = document.getElementById("pause-screen");
     const gameSelectScreen = document.getElementById("game-select-screen");
     const allGamesBtn = document.getElementById("all-games-btn");
     const homeBtn = document.getElementById("home-btn");
@@ -49,7 +48,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function resetScreenDisplays() {
         if (gameScreen) gameScreen.style.display = "none";
         if (gameOverScreen) gameOverScreen.style.display = "none";
-        if (pauseScreen) pauseScreen.style.display = "none";
         if (gameSelectScreen) gameSelectScreen.style.display = "none";
     }
 
@@ -107,17 +105,20 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
+
         allGames.forEach(game => {
             const gameNumber = game["Game Number"];
             const secretWord = game["Secret Word"].toUpperCase();
             const pastResult = results[gameNumber];
-            const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : "-";
+            const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
+            const isCompleted = pastResult && pastResult.guesses !== "Gave Up" && pastResult.secretWord === secretWord;
+            const displayWord = isCompleted || (pastResult && pastResult.guesses === "Gave Up") ? secretWord : "Play Now";
 
             const gameItem = document.createElement("div");
             gameItem.className = "game-list-row";
             gameItem.innerHTML = `
                 <span>${gameNumber}</span>
-                <span>${secretWord}</span>
+                <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                 <span>${guesses}</span>
             `;
             gameItem.addEventListener("click", () => {
@@ -148,7 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (footer) footer.addEventListener("click", (e) => e.stopPropagation());
 
         document.addEventListener("click", (e) => {
-            if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none" && 
+            if (!gameOver && gameScreen.style.display === "flex" && 
                 !footer.contains(e.target) && !e.target.closest("button") && e.target.id !== "game-name") {
                 if (!keyboardInitiated) {
                     input.focus();
@@ -230,23 +231,6 @@ document.addEventListener("DOMContentLoaded", () => {
         input.addEventListener("input", () => {
             if (input.value.length > 0) input.placeholder = "";
         });
-
-        document.getElementById("resume-btn").addEventListener("click", () => {
-            const countdown = document.getElementById("countdown");
-            document.getElementById("resume-btn").style.display = "none";
-            countdown.style.display = "block";
-            let timeLeft = 5;
-            countdown.textContent = timeLeft;
-            const interval = setInterval(() => {
-                timeLeft--;
-                countdown.textContent = timeLeft;
-                if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    pauseScreen.style.display = "none";
-                    if (!gameOver && firstGuessMade) input.focus();
-                }
-            }, 1000);
-        });
     }
 
     function updateHintCountdown() {
@@ -277,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustBackground() {
-        const screens = [gameScreen, gameOverScreen, pauseScreen, gameSelectScreen];
+        const screens = [gameScreen, gameOverScreen, gameSelectScreen];
         screens.forEach(screen => {
             if (screen && screen.style.display === "flex") screen.style.height = "100vh";
         });

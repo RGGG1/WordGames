@@ -1,395 +1,285 @@
-body {
-  background: #FFFFFF;
-  font-family: Arial, sans-serif;
+/* General Reset and Base Styles */
+* {
   margin: 0;
   padding: 0;
-  text-align: center;
-  user-select: none;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
+body {
+  font-family: 'Comic Neue', sans-serif;
+  background: #FFFFFF;
+  color: #000000;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Dark Mode */
 .dark-mode {
   background: #000000;
   color: #FFFFFF;
 }
 
-a {
-  color: #00BFFF;
-  text-decoration: underline;
-}
-
-.dark-mode a {
-  color: #1E90FF;
-}
-
-#game-screen {
+/* Screen Containers */
+#game-screen, #game-over, #game-select-screen {
   display: flex;
   flex-direction: column;
+  width: 100%;
+  max-width: 600px;
   height: 100vh;
   position: relative;
-  background: #FFFFFF;
 }
 
-.dark-mode #game-screen {
-  background: #000000;
-}
-
+/* Header */
 #header {
-  width: 85vw;
-  margin: 0.5vh auto 0 auto;
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  padding-bottom: 1vh;
-  z-index: 10;
-  height: 5vh;
-  background: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  padding: 10px 20px;
+  background: #FFD700; /* Pineapple yellow */
 }
 
-#mode-toggle {
-  font-size: 1.875vh;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #000000;
-  z-index: 11;
-}
-
-.dark-mode #mode-toggle {
-  color: #FFFFFF;
+.dark-mode #header {
+  background: #FFA500; /* Darker orange for dark mode */
 }
 
 #game-name {
   font-family: 'Fredoka One', cursive;
-  font-size: clamp(2vh, 2.5vw, 2.5vh);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #FFD700;
-  -webkit-text-stroke: 0.1vh #FF4500;
+  font-size: 24px;
   cursor: pointer;
-  z-index: 11;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 #score {
-  font-size: clamp(2vh, 2.5vw, 2.5vh);
-  font-weight: bold;
-  z-index: 11;
+  font-size: 20px;
 }
 
+.mode-btn {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Guess Area */
 #guess-area {
-  width: 85vw;
-  height: 10vh;
-  margin: 7vh auto 0 auto;
-  position: relative;
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  background: none;
-}
-
-#guess-area:hover, #guess-input:hover {
-  outline: none;
-  border: none;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
 #prompt {
-  font-size: 2vh;
-  position: absolute;
-  top: 0;
-  left: 0;
-  text-align: left;
-  margin-top: 1vh;
+  font-size: 18px;
+  margin-bottom: 20px;
 }
 
 #guess-background {
   position: absolute;
-  top: 3vh;
   width: 100%;
-  height: 5vh;
-  z-index: 0;
-  background: none;
+  height: 100%;
+  background: #F0F0F0;
+  opacity: 0.5;
+  z-index: -1;
+}
+
+.dark-mode #guess-background {
+  background: #333333;
 }
 
 #guess-input {
-  font-size: clamp(4vh, 5vw, 5vh);
-  font-weight: bold;
-  background: none;
-  border: none;
-  width: 100%;
+  width: 80%;
+  max-width: 300px;
+  padding: 10px;
+  font-size: 18px;
   text-align: center;
-  padding: 0;
-  margin: 0;
-  position: absolute;
-  top: 3vh;
-  color: #000000;
+  border: 2px solid #000000;
+  border-radius: 5px;
   outline: none;
-  caret-color: black;
-  text-transform: uppercase;
-  z-index: 1;
-  animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-  50% { caret-color: transparent; }
+  background: #FFFFFF;
+  color: #000000;
 }
 
 .dark-mode #guess-input {
+  border-color: #FFFFFF;
+  background: #222222;
   color: #FFFFFF;
-  caret-color: white;
 }
 
-#guess-input::placeholder {
-  font-size: 2vh;
-  color: #AAAAAA;
-  text-align: left;
-  font-weight: normal;
-  text-transform: none;
+#guess-input.wrong-guess {
+  animation: shake 0.5s;
+  border-color: #FF0000;
 }
 
-.dark-mode #guess-input::placeholder {
-  color: #CCCCCC;
+#guess-input.correct-guess {
+  border-color: #00FF00;
 }
 
 #guess-line {
-  width: 100%;
-  height: 0.2vh;
+  width: 80%;
+  max-width: 300px;
+  height: 2px;
   background: #000000;
-  position: absolute;
-  top: 9vh;
-  transition: opacity 0.5s ease-out;
+  margin-top: 5px;
 }
 
 .dark-mode #guess-line {
   background: #FFFFFF;
 }
 
+/* Hints Box */
 #hints-box {
-  width: 85vw;
-  height: calc(100vh - 28vh);
-  margin: 0 auto;
-  padding: 1vh;
-  background: none;
-  flex-grow: 1;
-  position: relative;
+  padding: 20px;
+  background: #FFFACD; /* Light yellow */
 }
 
-.game-number-label {
-  font-size: 1.5vh;
-  color: #666;
-  margin-bottom: 0.5vh;
+.dark-mode #hints-box {
+  background: #666633; /* Darker yellow-gray */
 }
 
-.dark-mode .game-number-label {
-  color: #999;
+#game-number-label {
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 #hints-title {
-  font-size: 2vh;
+  font-size: 20px;
   font-weight: bold;
-  margin-bottom: 0.5vh;
+  margin-bottom: 10px;
 }
 
-.hint-countdown {
-  font-size: 1.5vh;
-  color: #666;
-  margin-bottom: 1vh;
-}
-
-.dark-mode .hint-countdown {
-  color: #999;
+#hint-countdown {
+  font-size: 14px;
+  margin-bottom: 10px;
 }
 
 #hints {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  font-size: 16px;
 }
 
 .hint-line {
-  margin: 0.3vh 0;
-}
-
-.hint-line.spacer {
-  height: 2.5vh;
-}
-
-#how-to-play-1, #how-to-play-2 {
-  font-size: clamp(1.5vh, 2vw, 2vh);
+  margin: 5px 0;
 }
 
 .hint-line span {
-  font-size: clamp(1.8vh, 2.5vw, 2.5vh);
-  font-weight: bold;
-  text-transform: uppercase;
+  visibility: hidden;
 }
 
-#resume-btn {
-  width: 2.25vh;
-  height: 2.25vh;
-  border-radius: 50%;
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-  cursor: pointer;
-  margin: 1vh auto;
-  display: block;
-  font-size: 0.9vh;
-  z-index: 11;
+.hint-line.spacer {
+  height: 20px;
 }
 
-.dark-mode #resume-btn {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
-}
-
-#pause-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
+/* Footer */
+#footer {
+  position: absolute;
+  bottom: 1vh;
   width: 100%;
-  height: 100vh;
-  background: #FFFFFF;
-  color: #000000;
-  display: none;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.dark-mode #pause-screen {
-  background: #000000;
-  color: #FFFFFF;
-}
-
-#countdown {
-  font-size: 2.5vh;
-}
-
-#game-over {
-  position: fixed;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 100%;
-  height: 100vh;
-  display: none;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 2vh;
-  background: #FFFFFF;
-}
-
-.dark-mode #game-over {
-  background: #000000;
-}
-
-#end-graphic {
-  height: 15.8203125vh;
-  margin: 3vh auto;
-}
-
-#todays-word-label {
-  font-size: 2vh;
-  font-weight: bold;
-  margin: 0.5vh auto;
-  white-space: pre-line;
-}
-
-#todays-word {
-  font-size: 3vh;
-  text-transform: uppercase;
-  margin-bottom: 1vh;
-}
-
-#share-box {
-  width: 85vw;
-  max-width: 30vh;
-  margin: 1vh auto;
+  padding: 10px;
   text-align: center;
 }
 
-#share-panel {
-  background: #000000;
-  color: #FFFFFF;
-  border-radius: 1vh;
-  padding: 1.5vh;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+.footer-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
-.dark-mode #share-panel {
-  background: #FFFFFF;
-  color: #000000;
+.footer-btn {
+  background: #FFD700;
+  border: 2px solid #000000;
+  padding: 5px 15px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.dark-mode .footer-btn {
+  background: #FFA500;
+  border-color: #FFFFFF;
+}
+
+.footer-nav {
+  display: flex;
+  gap: 10px;
+}
+
+.arrow-btn {
+  width: 40px;
+}
+
+/* Game Over Screen */
+#game-over {
+  text-align: center;
+  padding: 20px;
+}
+
+#end-graphic {
+  max-width: 200px;
+  margin: 20px auto;
+}
+
+#todays-word-label {
+  font-size: 18px;
+  margin: 10px 0;
+}
+
+#todays-word {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+#share-box {
+  background: #F0F0F0;
+  padding: 15px;
+  border-radius: 5px;
+  margin: 20px 0;
+}
+
+.dark-mode #share-box {
+  background: #333333;
 }
 
 #share-text {
-  font-size: 2vh;
-  margin-bottom: 0.5vh;
-  white-space: pre-line;
+  font-size: 18px;
 }
 
-#share-text .big-score {
-  font-size: 6.25vh;
-  margin-top: 0.25vh;
+.big-score {
+  font-size: 32px;
+  font-weight: bold;
 }
 
-#share-text.big {
-  font-size: 3.75vh;
+.big {
+  font-size: 24px;
+  font-weight: bold;
 }
 
-#share-text.italic {
-  font-size: 1.5vh;
+.italic {
   font-style: italic;
 }
 
-#share-game-number {
-  font-size: 1.5vh;
-  margin-bottom: 0.5vh;
-}
-
-#share-score-label {
-  font-size: 2vh;
-  margin-bottom: 0.5vh;
-}
-
-#share-score {
-  font-size: 5vh;
-  font-weight: bold;
-  margin-bottom: 1vh;
+#share-game-number, #share-score-label, #share-score {
+  font-size: 16px;
+  margin: 5px 0;
 }
 
 #share-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 1vh auto;
+  margin: 20px 0;
 }
 
 #share-label {
-  font-size: 1.8vh;
-  margin-bottom: 1vh;
-}
-
-#share-buttons {
-  display: flex;
-  gap: 1.5vh;
-  margin-bottom: 1.5vh;
+  font-size: 16px;
+  margin-bottom: 10px;
 }
 
 #share-buttons a {
-  font-size: 2.25vh;
+  font-size: 24px;
+  margin: 0 10px;
   color: #000000;
   text-decoration: none;
 }
@@ -398,37 +288,49 @@ a {
   color: #FFFFFF;
 }
 
-.inverted {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
+/* Game Select Screen */
+#game-select-screen {
+  padding: 20px;
 }
 
-.dark-mode .inverted {
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
+#game-select-content {
+  flex: 1;
+  overflow-y: auto;
 }
 
-#guess-input.wrong-guess {
-  animation: wrongGuess 0.5s ease-out forwards;
+#game-list-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
 }
 
-#guess-input.correct-guess {
-  animation: pulseGuess 1s ease-out forwards;
+.game-list-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  border-bottom: 1px solid #000000;
 }
 
-@keyframes wrongGuess {
-  0% { color: #FF0000; transform: translateY(0); }
-  100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
+.dark-mode .game-list-row {
+  border-color: #FFFFFF;
 }
 
-@keyframes pulseGuess {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+.game-list-row span {
+  flex: 1;
+  text-align: center;
 }
 
+.play-now {
+  color: #007BFF;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.dark-mode .play-now {
+  color: #66B2FF;
+}
+
+/* Confetti Animation */
 .confetti {
   position: fixed;
   top: 0;
@@ -443,7 +345,7 @@ a {
   position: absolute;
   width: 10px;
   height: 10px;
-  background: #ff0000;
+  background: #FF0000;
   animation: fall 2s linear forwards;
 }
 
@@ -452,177 +354,9 @@ a {
   100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
 }
 
-.spacer {
-  height: 1vh;
-}
-
-#footer {
-  width: 85vw;
-  margin: 0;
-  font-size: 1.5vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: fixed;
-  bottom: 1vh;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 15;
-  transition: bottom 0.3s ease;
-}
-
-.footer-btn {
-  font-size: 2.25vh;
-  padding: 0.75vh 1.5vw;
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-  border-radius: 0.6vh;
-  cursor: pointer;
-  z-index: 20;
-  transition: transform 0.2s ease;
-  pointer-events: auto;
-}
-
-.footer-btn:hover {
-  transform: scale(1.05);
-}
-
-.arrow-btn {
-  padding: 0.75vh 0.75vw;
-}
-
-.footer-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 1vh;
-  z-index: 12;
-}
-
-.footer-nav {
-  display: flex;
-  gap: 1vw;
-  align-items: center;
-  z-index: 13;
-}
-
-.dark-mode .footer-btn {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
-}
-
-#game-select-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
-  background: #FFFFFF;
-  display: none;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  z-index: 100;
-}
-
-.dark-mode #game-select-screen {
-  background: #000000;
-}
-
-#game-select-content {
-  width: 85vw;
-  margin: 7vh auto 0 auto;
-  text-align: center;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-#game-list-title {
-  font-size: 3vh;
-  font-weight: bold;
-  margin: 2vh 0;
-}
-
-#game-list-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  width: 85vw;
-  font-size: 1.8vh;
-  font-weight: bold;
-  margin-bottom: 1vh;
-  text-align: center;
-}
-
-.game-list-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  width: 85vw;
-  font-size: 1.5vh;
-  margin: 0.5vh 0;
-  cursor: pointer;
-}
-
-.game-list-row span {
-  text-align: center;
-  white-space: nowrap;
-}
-
-.game-list-row:hover {
-  text-decoration: underline;
-}
-
-.green { color: #006400; }
-.yellow { color: #FFD700; }
-.orange { color: #FF4500; }
-.pink { color: #C71585; }
-.red { color: #8B0000; }
-
-.dark-mode .green { color: #00FF00; }
-.dark-mode .yellow { color: #FFFF00; }
-.dark-mode .orange { color: #FFA500; }
-.dark-mode .pink { color: #FF69B4; }
-.dark-mode .red { color: #FF0000; }
-
-#game-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 85vw;
-  max-height: 60vh;
-  overflow-y: auto;
-}
-
-@media (max-width: 600px) or (max-height: 600px) {
-  #header {
-      width: 90vw;
-  }
-  #game-name, #score {
-      font-size: clamp(1.5vh, 2vw, 2vh);
-  }
-  #mode-toggle {
-      font-size: clamp(1.2vh, 1.5vw, 1.5vh);
-  }
-  .footer-btn {
-      font-size: clamp(1.5vh, 1.8vw, 1.8vh);
-      padding: clamp(0.5vh, 0.6vw, 0.6vh) clamp(1vh, 1.2vw, 1.2vw);
-  }
-  #guess-input {
-      font-size: clamp(3vh, 4vw, 4vh);
-  }
-  #hints-box {
-      height: calc(100vh - 26vh);
-  }
-  .hint-line span {
-      font-size: clamp(1.5vh, 1.8vw, 1.8vh);
-  }
-  #footer {
-      width: 90vw;
-  }
-  #game-list-header, .game-list-row {
-      width: 90vw;
-  }
+/* Animations */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
 }
