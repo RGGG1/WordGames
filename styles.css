@@ -626,3 +626,21 @@ a {
       width: 90vw;
   }
 }
+
+/* Added Play Now Styles */
+.play-now {
+    color: #00BFFF;
+    text-decoration: underline;
+    cursor: pointer;
+    animation: pulse 1.5s infinite ease-in-out;
+}
+
+.dark-mode .play-now {
+    color: #1E90FF;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
