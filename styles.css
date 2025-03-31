@@ -496,7 +496,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: relative; /* For overlay positioning */
+  position: relative;
   z-index: 5;
 }
 
@@ -623,16 +623,16 @@ a {
 /* Create Form Styles */
 .create-form {
   position: fixed;
-  top: 6vh; /* Below header */
+  top: 6vh;
   left: 0;
   width: 100%;
-  height: calc(100vh - 6vh); /* Full height minus header */
+  height: calc(100vh - 6vh);
   background: #FFFFFF;
   display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  z-index: 200; /* Above game-select-content */
+  z-index: 200;
   padding: 2vh;
   box-sizing: border-box;
 }
