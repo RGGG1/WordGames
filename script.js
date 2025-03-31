@@ -12,55 +12,43 @@ document.addEventListener("DOMContentLoaded", () => {
     let guessCount = 0;
     let gaveUp = false;
 
-    const allGamesBtn = document.getElementById("all-games-btn");
-    const playAgainBtn = document.getElementById("home-btn");
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
     const pauseScreen = document.getElementById("pause-screen");
     const gameSelectScreen = document.getElementById("game-select-screen");
+    const allGamesBtn = document.getElementById("all-games-btn");
+    const homeBtn = document.getElementById("home-btn");
+    const backBtn = document.getElementById("back-btn");
 
-    console.log("All Games button:", allGamesBtn);
-    console.log("Play Again button:", playAgainBtn);
     console.log("Screens:", { gameScreen, gameOverScreen, pauseScreen, gameSelectScreen });
+    console.log("Buttons:", { allGamesBtn, homeBtn, backBtn });
 
-    if (!allGamesBtn) {
-        console.error("All Games button not found in DOM");
-    } else {
-        allGamesBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("All Games button clicked");
-            showGameListScreen();
-        });
-    }
+    allGamesBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("All Games button clicked");
+        showGameSelectScreen();
+    });
 
-    if (!playAgainBtn) {
-        console.error("Play Again button not found in DOM");
-    } else {
-        playAgainBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Play Again button clicked");
-            showGameListScreen();
-        });
-    }
+    homeBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Play Again button clicked");
+        showGameSelectScreen();
+    });
 
-    function showGameListScreen() {
-        console.log("Attempting to show game list screen");
-        if (!gameSelectScreen) {
-            console.error("Game select screen not found");
-            return;
-        }
-        try {
-            displayGameList();
-            resetScreenDisplays();
-            gameSelectScreen.style.display = "flex";
-            console.log("Set gameSelectScreen display to flex");
-            adjustBackground();
-            console.log("Game list screen should now be visible");
-        } catch (error) {
-            console.error("Error in showGameListScreen:", error);
-        }
+    backBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Back button clicked");
+        resetScreenDisplays();
+        gameScreen.style.display = "flex";
+    });
+
+    function showGameSelectScreen() {
+        console.log("Showing game select screen");
+        resetScreenDisplays();
+        gameSelectScreen.style.display = "flex";
     }
 
     function resetScreenDisplays() {
@@ -102,7 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function setupEventListeners() {
-        console.log("Setting up additional event listeners");
+        console.log("Setting up event listeners");
         const input = document.getElementById("guess-input");
         const footer = document.getElementById("footer");
         let keyboardInitiated = false;
@@ -197,13 +185,6 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        document.getElementById("back-to-game-btn").addEventListener("click", () => {
-            resetScreenDisplays();
-            gameScreen.style.display = "flex";
-            if (firstGuessMade && !gameOver) input.focus();
-            adjustBackground();
-        });
-
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -280,52 +261,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const guessText = guessesUntilNextHint === 1 ? "guess" : "guesses";
             countdownElement.textContent = `(hint revealed after ${guessesUntilNextHint} ${guessText})`;
         }
-    }
-
-    function displayGameList() {
-        console.log("Displaying game list");
-        const gameList = document.getElementById("game-list");
-        if (!gameList) {
-            console.error("Game list element not found");
-            return;
-        }
-        gameList.innerHTML = "";
-        document.getElementById("game-name").textContent = "PINEAPPLE";
-
-        if (!allGames || allGames.length === 0) {
-            console.warn("No games available to display");
-            gameList.innerHTML = "<div>No games available</div>";
-            return;
-        }
-
-        const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
-        allGames.forEach(game => {
-            const gameNumber = game["Game Number"];
-            const secretWord = game["Secret Word"];
-            const guesses = results[gameNumber] ? results[gameNumber].guesses : "";
-            const gameItem = document.createElement("div");
-            gameItem.className = "game-list-row";
-            gameItem.innerHTML = `
-                <span>${gameNumber.trim()}</span>
-                <span>${results[gameNumber] ? secretWord.trim() : "Play Now"}</span>
-                <span>${guesses.trim() || ""}</span>
-            `;
-            if (guesses && guesses !== "Gave Up") {
-                const colorClass = guesses <= 5 ? "green" :
-                                  guesses <= 10 ? "yellow" :
-                                  guesses <= 15 ? "orange" :
-                                  guesses <= 20 ? "pink" : "red";
-                gameItem.classList.add(colorClass);
-            }
-            gameItem.addEventListener("click", () => {
-                loadGame(game);
-                resetScreenDisplays();
-                gameScreen.style.display = "flex";
-                adjustBackground();
-            });
-            gameList.appendChild(gameItem);
-        });
-        console.log("Game list populated");
     }
 
     function setupHints() {

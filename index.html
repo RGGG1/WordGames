@@ -45,7 +45,7 @@
                 <button id="give-up-btn" class="footer-btn">Give Up</button>
                 <div class="footer-nav">
                     <button id="prev-arrow-btn" class="footer-btn arrow-btn"><i class="fas fa-arrow-left"></i></button>
-                    <button id="all-games-btn" class="footer-btn" onclick="console.log('Inline All Games clicked')">All Games</button>
+                    <button id="all-games-btn" class="footer-btn">All Games</button>
                     <button id="next-arrow-btn" class="footer-btn arrow-btn"><i class="fas fa-arrow-right"></i></button>
                 </div>
             </div>
@@ -88,28 +88,18 @@
                 <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
             </div>
         </div>
-        <button id="home-btn" class="home-btn animate__animated animate__pulse animate__infinite">Play Again</button>
+        <button id="home-btn" class="footer-btn">Play Again</button>
         <div id="footer"></div>
     </div>
 
-    <div id="game-select-screen" class="screen" style="display: none;">
+    <div id="game-select-screen" style="display: none;">
         <div id="header">
-            <button id="mode-toggle" class="mode-btn"><i class="fas fa-moon"></i></button>
-            <div id="game-name">PINEAPPLE</div>
-            <div id="score">0</div>
+            <div id="game-name">All Games</div>
         </div>
-        <div id="game-select-content">
-            <div id="game-list-title">All Games</div>
-            <div id="game-list-header" class="game-list-row">
-                <span>Game #</span>
-                <span>Secret Word</span>
-                <span>Guesses</span>
-            </div>
-            <div id="game-list"></div>
-            <div class="spacer"></div>
-            <button id="back-to-game-btn" class="home-btn inverted">Back</button>
+        <div id="game-list-content">
+            <div id="game-list-text">Game list goes here</div>
+            <button id="back-btn" class="footer-btn">Back</button>
         </div>
-        <div id="footer"></div>
     </div>
 
     <script src="script.js"></script>
