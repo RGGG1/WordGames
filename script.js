@@ -43,13 +43,14 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Back button clicked");
         resetScreenDisplays();
         gameScreen.style.display = "flex";
+        adjustBackground();
     });
 
     function showGameSelectScreen() {
         console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
-        displayGameList();
+        fetchGameData(true); // Refresh data before displaying
     }
 
     function resetScreenDisplays() {
@@ -60,8 +61,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (gameSelectScreen) gameSelectScreen.style.display = "none";
     }
 
-    async function fetchGameData() {
-        console.log("Fetching game data");
+    async function fetchGameData(forceRefresh = false) {
+        console.log("Fetching game data, forceRefresh:", forceRefresh);
         const spreadsheetId = "2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR";
         const pineappleUrl = `https://docs.google.com/spreadsheets/d/e/${spreadsheetId}/pub?gid=0&single=true&output=csv`;
 
@@ -69,29 +70,35 @@ document.addEventListener("DOMContentLoaded", () => {
             const pineResponse = await fetch(pineappleUrl);
             if (!pineResponse.ok) throw new Error(`Pineapple fetch failed: ${pineResponse.status}`);
             const pineText = await pineResponse.text();
-            const pineRows = pineText.split("\n").map(row => row.split(","));
+            const pineRows = pineText.split("\n").map(row => row.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/)); // Improved CSV parsing
             const pineHeaders = pineRows[0];
-            allGames = pineRows.slice(1).map((row) => {
+            const newGames = pineRows.slice(1).map((row) => {
                 let obj = {};
-                pineHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim() : "");
+                pineHeaders.forEach((header, i) => obj[header.trim()] = row[i] ? row[i].trim().replace(/^"|"$/g, "") : "");
                 return obj;
-            }).sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            const latestPineGame = allGames[0];
-            loadGame(latestPineGame);
+            }).filter(game => game["Game Number"] && game["Secret Word"]); // Filter out invalid rows
+            allGames = newGames.sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+
+            if (!forceRefresh) {
+                const latestPineGame = allGames[0];
+                loadGame(latestPineGame);
+                resetScreenDisplays();
+                gameScreen.style.display = "flex";
+                updateHintCountdown();
+                adjustBackground();
+                setupEventListeners();
+            }
+            displayGameList(); // Always display the updated list when refreshing
         } catch (error) {
             console.error("Failed to fetch game data:", error);
             allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
-            loadGame(allGames[0]);
+            if (!forceRefresh) loadGame(allGames[0]);
+            displayGameList();
         }
-        resetScreenDisplays();
-        gameScreen.style.display = "flex";
-        updateHintCountdown();
-        adjustBackground();
-        setupEventListeners();
     }
 
     function displayGameList() {
-        console.log("Displaying game list");
+        console.log("Displaying game list, total games:", allGames.length);
         const gameList = document.getElementById("game-list");
         if (!gameList) {
             console.error("Game list element not found");
@@ -495,6 +502,7 @@ document.addEventListener("DOMContentLoaded", () => {
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
         adjustBackground();
+        fetchGameData(true); // Refresh game list after game ends
     }
 
     function resetGame() {
@@ -545,5 +553,5 @@ document.addEventListener("DOMContentLoaded", () => {
         setupHints();
     }
 
-    fetchGameData();
+    fetchGameData(); // Initial fetch without force refresh
 });
