@@ -88,12 +88,27 @@
         </div>
         <div id="game-select-content">
             <div id="game-list-title">All Games</div>
-            <div id="game-list-header" class="game-list-row">
-                <span>Game #</span>
-                <span>Secret Word</span>
-                <span>Guesses</span>
+            <div id="tabs">
+                <button id="official-tab" class="tab-btn active">Official Games</button>
+                <button id="private-tab" class="tab-btn">Private Games</button>
             </div>
-            <div id="game-list"></div>
+            <div id="official-games" class="tab-content active">
+                <div id="official-list-header" class="game-list-header">
+                    <span>Game #</span>
+                    <span>Secret Word</span>
+                    <span>Guesses</span>
+                </div>
+                <div id="official-list" class="game-list"></div>
+            </div>
+            <div id="private-games" class="tab-content">
+                <button id="create-pineapple" class="footer-btn" disabled>Create a Pineapple</button>
+                <div id="private-list-header" class="game-list-header">
+                    <span>Game #</span>
+                    <span>Secret Word</span>
+                    <span>Guesses</span>
+                </div>
+                <div id="private-list" class="game-list"></div>
+            </div>
             <button id="back-btn" class="footer-btn">Back</button>
         </div>
     </div>
