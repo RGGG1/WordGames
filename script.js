@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchGameData() {
         console.log("Fetching game data");
-        const pineappleUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR/pub?output=csv";
+        const pineappleUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR/pub?output=csv&t=" + Date.now();
 
         try {
             const pineResponse = await fetch(pineappleUrl);
@@ -71,38 +71,30 @@ document.addEventListener("DOMContentLoaded", () => {
             const pineText = await pineResponse.text();
             console.log("Raw CSV data:", pineText);
 
-            const pineRows = pineText.split("\n").map(row => {
-                const fields = [];
-                let currentField = "";
-                let insideQuotes = false;
-                for (let char of row) {
-                    if (char === '"') {
-                        insideQuotes = !insideQuotes;
-                    } else if (char === "," && !insideQuotes) {
-                        fields.push(currentField);
-                        currentField = "";
-                    } else {
-                        currentField += char;
-                    }
-                }
-                fields.push(currentField);
-                return fields;
-            }).filter(row => row.length >= 8);
+            const parseResult = Papa.parse(pineText, {
+                header: true,
+                skipEmptyLines: true,
+                quoteChar: '"',
+                dynamicTyping: false
+            });
 
-            const pineHeaders = pineRows[0];
-            allGames = pineRows.slice(1).map(row => {
-                let obj = {};
-                pineHeaders.forEach((header, i) => {
-                    obj[header.trim()] = row[i] ? row[i].trim().replace(/^"|"$/g, "") : "";
-                });
-                return obj;
-            }).filter(game => game["Game Number"] && game["Secret Word"])
-              .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+            console.log("Papa Parse result (data):", parseResult.data);
+            console.log("Papa Parse result (meta):", parseResult.meta);
+            console.log("Papa Parse errors:", parseResult.errors);
 
-            console.log("Parsed games:", allGames);
+            allGames = parseResult.data
+                .filter(game => {
+                    const isValid = game["Game Number"] && game["Secret Word"];
+                    console.log("Game object:", game, "Is valid:", isValid);
+                    return isValid;
+                })
+                .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+            console.log("Parsed and filtered games:", allGames);
+
             if (allGames.length === 0) throw new Error("No valid games found in CSV");
 
             const latestPineGame = allGames[0];
+            console.log("Loading game:", latestPineGame);
             loadGame(latestPineGame);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
@@ -111,7 +103,7 @@ document.addEventListener("DOMContentLoaded", () => {
             setupEventListeners();
         } catch (error) {
             console.error("Failed to fetch game data:", error);
-            allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
+            allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
@@ -382,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const piece = document.createElement("div");
             piece.className = "confetti-piece";
             piece.style.left = `${Math.random() * 100}vw`;
-            piece理論style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            piece.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
             piece.style.animationDelay = `${Math.random() * 1}s`;
             confettiContainer.appendChild(piece);
         }
@@ -565,6 +557,7 @@ document.addEventListener("DOMContentLoaded", () => {
             game["Hint 7"]
         ].filter(hint => hint).map(hint => hint.toUpperCase());
         while (hints.length < 7) hints.push("");
+        console.log("Secret word:", secretWord, "Hints:", hints);
         setupHints();
     }
 
