@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             privateTab.classList.remove("active");
             officialContent.classList.add("active");
             privateContent.classList.remove("active");
-            if (createForm) createForm.style.display = "none"; // Hide form when switching tabs
+            if (createForm) createForm.style.display = "none";
         });
 
         privateTab.addEventListener("click", () => {
@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
             officialTab.classList.remove("active");
             privateContent.classList.add("active");
             officialContent.classList.remove("active");
+            if (createForm) createForm.style.display = "none"; // Hide form when switching back to Private
         });
     } else {
         console.error("Tab elements not found");
@@ -73,6 +74,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resetScreenDisplays();
         gameScreen.style.display = "flex";
         adjustBackground();
+        if (createForm) createForm.style.display = "none"; // Hide form when going back
     });
 
     if (createPineappleBtn && createForm) {
@@ -81,7 +83,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.stopPropagation();
             console.log("Create a Pineapple clicked");
             createForm.style.display = "flex";
-            createPineappleBtn.style.display = "none"; // Hide button when form is shown
+            // Don’t hide createPineappleBtn since form overlays everything
         });
     }
 

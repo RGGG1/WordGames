@@ -496,6 +496,8 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative; /* For overlay positioning */
+  z-index: 5;
 }
 
 #game-list-title {
@@ -519,13 +521,13 @@ a {
   border-radius: 0;
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
-  opacity: 0.6; /* Inactive state slightly greyed */
+  opacity: 0.6;
 }
 
 .tab-btn.active {
   background: #FFFFFF;
   color: #000000;
-  opacity: 1; /* Active state fully opaque */
+  opacity: 1;
   font-weight: bold;
 }
 
@@ -620,20 +622,31 @@ a {
 
 /* Create Form Styles */
 .create-form {
-  width: 85vw;
-  margin-top: 2vh;
-  display: flex;
+  position: fixed;
+  top: 6vh; /* Below header */
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 6vh); /* Full height minus header */
+  background: #FFFFFF;
+  display: none;
   flex-direction: column;
   align-items: center;
-  gap: 1.5vh;
+  justify-content: center;
+  z-index: 200; /* Above game-select-content */
+  padding: 2vh;
+  box-sizing: border-box;
+}
+
+.dark-mode .create-form {
+  background: #000000;
 }
 
 .form-input {
-  font-size: clamp(2vh, 3vw, 3vh); /* Smaller than guess input but still bold */
+  font-size: clamp(2vh, 3vw, 3vh);
   font-weight: bold;
   background: none;
   border: none;
-  width: 100%;
+  width: 85vw;
   text-align: center;
   padding: 0;
   margin: 0;
@@ -663,10 +676,11 @@ a {
 }
 
 .form-line {
-  width: 100%;
+  width: 85vw;
   height: 0.2vh;
   background: #000000;
   transition: opacity 0.5s ease-out;
+  margin-bottom: 1vh;
 }
 
 .dark-mode .form-line {
@@ -704,6 +718,9 @@ a {
   }
   .form-input {
       font-size: clamp(1.8vh, 2.5vw, 2.5vh);
+  }
+  .form-line {
+      width: 90vw;
   }
 }
 
