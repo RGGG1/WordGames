@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
         displayGameList();
+        setupTabListeners(); // Set up tab switching
     }
 
     function resetScreenDisplays() {
@@ -94,13 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function displayGameList() {
-        const gameList = document.getElementById("game-list");
-        if (!gameList) return;
-        gameList.innerHTML = "";
+        const officialList = document.getElementById("official-list");
+        if (!officialList) return;
+        officialList.innerHTML = "";
         document.getElementById("game-name").textContent = "PINEAPPLE";
 
         if (!allGames.length) {
-            gameList.innerHTML = "<div>No games available</div>";
+            officialList.innerHTML = "<div>No games available</div>";
             return;
         }
 
@@ -127,7 +128,34 @@ document.addEventListener("DOMContentLoaded", () => {
                 gameScreen.style.display = "flex";
                 adjustBackground();
             });
-            gameList.appendChild(gameItem);
+            officialList.appendChild(gameItem);
+        });
+
+        // Private list (empty for now)
+        const privateList = document.getElementById("private-list");
+        if (privateList) {
+            privateList.innerHTML = "<div>No private games yet</div>";
+        }
+    }
+
+    function setupTabListeners() {
+        const officialTab = document.getElementById("official-tab");
+        const privateTab = document.getElementById("private-tab");
+        const officialContent = document.getElementById("official-games");
+        const privateContent = document.getElementById("private-games");
+
+        officialTab.addEventListener("click", () => {
+            officialTab.classList.add("active");
+            privateTab.classList.remove("active");
+            officialContent.classList.add("active");
+            privateContent.classList.remove("active");
+        });
+
+        privateTab.addEventListener("click", () => {
+            privateTab.classList.add("active");
+            officialTab.classList.remove("active");
+            privateContent.classList.add("active");
+            officialContent.classList.remove("active");
         });
     }
 
