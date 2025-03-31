@@ -49,6 +49,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
+        displayGameList();
     }
 
     function resetScreenDisplays() {
@@ -87,6 +88,53 @@ document.addEventListener("DOMContentLoaded", () => {
         updateHintCountdown();
         adjustBackground();
         setupEventListeners();
+    }
+
+    function displayGameList() {
+        console.log("Displaying game list");
+        const gameList = document.getElementById("game-list");
+        if (!gameList) {
+            console.error("Game list element not found");
+            return;
+        }
+        gameList.innerHTML = "";
+        document.getElementById("game-name").textContent = "PINEAPPLE";
+
+        if (!allGames || allGames.length === 0) {
+            console.warn("No games available to display");
+            gameList.innerHTML = "<div>No games available</div>";
+            return;
+        }
+
+        const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
+        allGames.forEach(game => {
+            const gameNumber = game["Game Number"];
+            const secretWord = game["Secret Word"];
+            const guesses = results[gameNumber] ? results[gameNumber].guesses : "";
+            const gameItem = document.createElement("div");
+            gameItem.className = "game-list-row";
+            gameItem.innerHTML = `
+                <span>${gameNumber.trim()}</span>
+                <span>${results[gameNumber] ? secretWord.trim() : "Play Now"}</span>
+                <span>${guesses.trim() || ""}</span>
+            `;
+            if (guesses && guesses !== "Gave Up") {
+                const guessCount = parseInt(guesses, 10);
+                const colorClass = guessCount <= 5 ? "green" :
+                                  guessCount <= 10 ? "yellow" :
+                                  guessCount <= 15 ? "orange" :
+                                  guessCount <= 20 ? "pink" : "red";
+                gameItem.classList.add(colorClass);
+            }
+            gameItem.addEventListener("click", () => {
+                loadGame(game);
+                resetScreenDisplays();
+                gameScreen.style.display = "flex";
+                adjustBackground();
+            });
+            gameList.appendChild(gameItem);
+        });
+        console.log("Game list populated");
     }
 
     function setupEventListeners() {
