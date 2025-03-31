@@ -506,7 +506,7 @@ a {
 
 #tabs {
   display: flex;
-  gap: 0; /* Remove gap for tab-like appearance */
+  gap: 0;
   margin-bottom: 2vh;
 }
 
@@ -516,14 +516,16 @@ a {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
-  border-radius: 0; /* Flat edges for tabs */
+  border-radius: 0;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
+  opacity: 0.6; /* Inactive state slightly greyed */
 }
 
 .tab-btn.active {
   background: #FFFFFF;
   color: #000000;
+  opacity: 1; /* Active state fully opaque */
   font-weight: bold;
 }
 
@@ -531,11 +533,13 @@ a {
   background: #FFFFFF;
   color: #000000;
   border: 0.1vh solid #000000;
+  opacity: 0.6;
 }
 
 .dark-mode .tab-btn.active {
   background: #000000;
   color: #FFFFFF;
+  opacity: 1;
 }
 
 .tab-content {
@@ -599,19 +603,74 @@ a {
 .dark-mode .red { color: #FF0000; }
 
 .play-now {
-  color: #000000; /* Black instead of blue */
-  text-decoration: none; /* No underline */
+  color: #000000;
+  text-decoration: none;
   cursor: pointer;
   animation: pulse 1.5s infinite ease-in-out;
 }
 
 .dark-mode .play-now {
-  color: #FFFFFF; /* White in dark mode */
+  color: #FFFFFF;
 }
 
 .plus {
-  font-size: 3vh; /* Larger + symbol */
-  line-height: 1; /* Adjust line height for alignment */
+  font-size: 3vh;
+  line-height: 1;
+}
+
+/* Create Form Styles */
+.create-form {
+  width: 85vw;
+  margin-top: 2vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5vh;
+}
+
+.form-input {
+  font-size: clamp(2vh, 3vw, 3vh); /* Smaller than guess input but still bold */
+  font-weight: bold;
+  background: none;
+  border: none;
+  width: 100%;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  color: #000000;
+  outline: none;
+  caret-color: black;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+}
+
+.dark-mode .form-input {
+  color: #FFFFFF;
+  caret-color: white;
+}
+
+.form-input::placeholder {
+  font-size: 1.5vh;
+  color: #AAAAAA;
+  text-align: center;
+  font-weight: normal;
+  text-transform: none;
+}
+
+.dark-mode .form-input::placeholder {
+  color: #CCCCCC;
+}
+
+.form-line {
+  width: 100%;
+  height: 0.2vh;
+  background: #000000;
+  transition: opacity 0.5s ease-out;
+}
+
+.dark-mode .form-line {
+  background: #FFFFFF;
 }
 
 @media (max-width: 600px) or (max-height: 600px) {
@@ -642,6 +701,9 @@ a {
   }
   .game-list-header, .game-list-row {
       width: 90vw;
+  }
+  .form-input {
+      font-size: clamp(1.8vh, 2.5vw, 2.5vh);
   }
 }
 

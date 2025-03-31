@@ -18,20 +18,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const allGamesBtn = document.getElementById("all-games-btn");
     const homeBtn = document.getElementById("home-btn");
     const backBtn = document.getElementById("back-btn");
+    const createPineappleBtn = document.getElementById("create-pineapple");
+    const createForm = document.getElementById("create-form");
 
-    // Tab elements
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
 
-    // Debug: Check if elements exist
     console.log("officialTab:", officialTab);
     console.log("privateTab:", privateTab);
     console.log("officialContent:", officialContent);
     console.log("privateContent:", privateContent);
 
-    // Setup tab listeners once on load
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
             console.log("Official tab clicked");
@@ -39,6 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
             privateTab.classList.remove("active");
             officialContent.classList.add("active");
             privateContent.classList.remove("active");
+            if (createForm) createForm.style.display = "none"; // Hide form when switching tabs
         });
 
         privateTab.addEventListener("click", () => {
@@ -75,12 +75,21 @@ document.addEventListener("DOMContentLoaded", () => {
         adjustBackground();
     });
 
+    if (createPineappleBtn && createForm) {
+        createPineappleBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Create a Pineapple clicked");
+            createForm.style.display = "flex";
+            createPineappleBtn.style.display = "none"; // Hide button when form is shown
+        });
+    }
+
     function showGameSelectScreen() {
         console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
         displayGameList();
-        // No need to call setupTabListeners here; it's done once on load
     }
 
     function resetScreenDisplays() {
@@ -172,7 +181,6 @@ document.addEventListener("DOMContentLoaded", () => {
             officialList.appendChild(gameItem);
         });
 
-        // Private list (empty for now)
         const privateList = document.getElementById("private-list");
         if (privateList) {
             privateList.innerHTML = "<div>No private games yet</div>";

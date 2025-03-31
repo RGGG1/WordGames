@@ -101,13 +101,30 @@
                 <div id="official-list" class="game-list"></div>
             </div>
             <div id="private-games" class="tab-content">
-                <button id="create-pineapple" class="footer-btn" disabled>Create a Pineapple<br><span class="plus">+</span></button>
+                <button id="create-pineapple" class="footer-btn">Create a Pineapple<br><span class="plus">+</span></button>
                 <div id="private-list-header" class="game-list-header">
-                    <span>Game ##</span>
+                    <span>Game #</span>
                     <span>Secret Word</span>
                     <span>Guesses</span>
                 </div>
                 <div id="private-list" class="game-list"></div>
+                <div id="create-form" class="create-form" style="display: none;">
+                    <input id="secret-word" class="form-input" type="text" placeholder="Secret Word">
+                    <div class="form-line"></div>
+                    <input id="hint-1" class="form-input" type="text" placeholder="Hint #1">
+                    <div class="form-line"></div>
+                    <input id="hint-2" class="form-input" type="text" placeholder="Hint #2">
+                    <div class="form-line"></div>
+                    <input id="hint-3" class="form-input" type="text" placeholder="Hint #3">
+                    <div class="form-line"></div>
+                    <input id="hint-4" class="form-input" type="text" placeholder="Hint #4">
+                    <div class="form-line"></div>
+                    <input id="hint-5" class="form-input" type="text" placeholder="Hint #5">
+                    <div class="form-line"></div>
+                    <input id="game-name" class="form-input" type="text" placeholder="Name Your Game">
+                    <div class="form-line"></div>
+                    <button id="confirm-btn" class="footer-btn">Confirm</button>
+                </div>
             </div>
             <button id="back-btn" class="footer-btn">Back</button>
         </div>
