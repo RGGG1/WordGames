@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
-        displayGameList(); // Ensure list is populated every time
+        displayGameList();
     }
 
     function resetScreenDisplays() {
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const pineResponse = await fetch(pineappleUrl);
             if (!pineResponse.ok) throw new Error(`Pineapple fetch failed: ${pineResponse.status}`);
             const pineText = await pineResponse.text();
-            console.log("Raw CSV data:", pineText); // Log raw data for debugging
+            console.log("Raw CSV data:", pineText);
             const pineRows = pineText.split("\n").map(row => {
                 const fields = [];
                 let currentField = "";
@@ -84,9 +84,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         currentField += char;
                     }
                 }
-                fields.push(currentField); // Add last field
+                fields.push(currentField);
                 return fields;
-            }).filter(row => row.length >= 8); // Ensure rows have all expected columns
+            }).filter(row => row.length >= 8);
             const pineHeaders = pineRows[0];
             allGames = pineRows.slice(1).map(row => {
                 let obj = {};
@@ -94,9 +94,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     obj[header.trim()] = row[i] ? row[i].trim().replace(/^"|"$/g, "") : "";
                 });
                 return obj;
-            }).filter(game => game["Game Number"] && game["Secret Word"]) // Filter invalid rows
+            }).filter(game => game["Game Number"] && game["Secret Word"])
             .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            console.log("Parsed games:", allGames.length, allGames); // Log parsed data
+            console.log("Fetched games:", allGames.length);
 
             const latestPineGame = allGames[0];
             loadGame(latestPineGame);
@@ -105,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            displayGameList(); // Populate list on initial load
         } catch (error) {
             console.error("Failed to fetch game data:", error);
             allGames = [{ "Game Number": 1, "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
@@ -115,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            displayGameList();
         }
     }
 
@@ -135,26 +133,15 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
         allGames.forEach(game => {
             const gameNumber = game["Game Number"];
-            const secretWord = game["Secret Word"];
-            const guesses = results[gameNumber] ? results[gameNumber].guesses : "";
             const gameItem = document.createElement("div");
             gameItem.className = "game-list-row";
             gameItem.innerHTML = `
                 <span>${gameNumber.trim()}</span>
-                <span>${results[gameNumber] ? secretWord.trim() : "Play Now"}</span>
-                <span>${guesses.trim() || ""}</span>
+                <span>Play Now</span>
+                <span></span>
             `;
-            if (guesses && guesses !== "Gave Up") {
-                const guessCount = parseInt(guesses, 10);
-                const colorClass = guessCount <= 5 ? "green" :
-                                  guessCount <= 10 ? "yellow" :
-                                  guessCount <= 15 ? "orange" :
-                                  guessCount <= 20 ? "pink" : "red";
-                gameItem.classList.add(colorClass);
-            }
             gameItem.addEventListener("click", () => {
                 loadGame(game);
                 resetScreenDisplays();
@@ -327,10 +314,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function updateHintCountdown() {
         console.log("Updating hint countdown");
         const countdownElement = document.getElementById("hint-countdown");
-        if (!countdownElement) {
-            console.error("Hint countdown element not found");
-            return;
-        }
+        if (!countdownElement) return;
         if (hintIndex >= hints.length - 1) {
             countdownElement.textContent = "(All hints are now revealed)";
         } else {
