@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
             officialTab.classList.remove("active");
             privateContent.classList.add("active");
             officialContent.classList.remove("active");
-            if (createForm) createForm.style.display = "none"; // Hide form when switching back to Private
+            if (createForm) createForm.style.display = "none";
         });
     } else {
         console.error("Tab elements not found");
@@ -64,7 +64,15 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         e.stopPropagation();
         console.log("Home button clicked");
-        showGameSelectScreen();
+        resetScreenDisplays();
+        gameSelectScreen.style.display = "flex";
+        officialTab.classList.add("active");    // Force Official tab active
+        privateTab.classList.remove("active");  // Force Private tab inactive
+        officialContent.classList.add("active");
+        privateContent.classList.remove("active");
+        if (createForm) createForm.style.display = "none"; // Ensure form is hidden
+        displayGameList();  // Refresh game list
+        adjustBackground();
     });
 
     backBtn.addEventListener("click", (e) => {
@@ -74,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
         resetScreenDisplays();
         gameScreen.style.display = "flex";
         adjustBackground();
-        if (createForm) createForm.style.display = "none"; // Hide form when going back
+        if (createForm) createForm.style.display = "none";
     });
 
     if (createPineappleBtn && createForm) {
@@ -83,7 +91,6 @@ document.addEventListener("DOMContentLoaded", () => {
             e.stopPropagation();
             console.log("Create a Pineapple clicked");
             createForm.style.display = "flex";
-            // Don’t hide createPineappleBtn since form overlays everything
         });
     }
 
@@ -91,6 +98,11 @@ document.addEventListener("DOMContentLoaded", () => {
         console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
+        officialTab.classList.add("active");    // Ensure Official tab is default
+        privateTab.classList.remove("active");
+        officialContent.classList.add("active");
+        privateContent.classList.remove("active");
+        if (createForm) createForm.style.display = "none";
         displayGameList();
     }
 
