@@ -20,41 +20,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const homeBtn = document.getElementById("home-btn");
     const backBtn = document.getElementById("back-btn");
 
-    console.log("Screens:", { gameScreen, gameOverScreen, pauseScreen, gameSelectScreen });
-    console.log("Buttons:", { allGamesBtn, homeBtn, backBtn });
-
     allGamesBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("All Games button clicked");
         showGameSelectScreen();
     });
 
     homeBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("Play Again button clicked");
         showGameSelectScreen();
     });
 
     backBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        console.log("Back button clicked");
         resetScreenDisplays();
         gameScreen.style.display = "flex";
         adjustBackground();
     });
 
     function showGameSelectScreen() {
-        console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
         displayGameList();
     }
 
     function resetScreenDisplays() {
-        console.log("Resetting screen displays");
         if (gameScreen) gameScreen.style.display = "none";
         if (gameOverScreen) gameOverScreen.style.display = "none";
         if (pauseScreen) pauseScreen.style.display = "none";
@@ -62,48 +54,38 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     async function fetchGameData() {
-        console.log("Fetching game data");
-        const pineappleUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRMvXgPjexmdAprs9-QpmW22h63q2Fl-tDcCFFSXfMf8JeI4wsmkFERxrIIhYO5g1BhbHnt99B7lbXR/pub?output=csv&t=" + Date.now();
+        const pineappleUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
 
         try {
-            const pineResponse = await fetch(pineappleUrl);
-            if (!pineResponse.ok) throw new Error(`Pineapple fetch failed: ${pineResponse.status}`);
-            const pineText = await pineResponse.text();
-            console.log("Raw CSV data:", pineText);
+            const response = await fetch(pineappleUrl);
+            if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
+            const text = await response.text();
+            console.log("CSV fetched:", text);
 
-            const parseResult = Papa.parse(pineText, {
+            const parsed = Papa.parse(text, {
                 header: true,
                 skipEmptyLines: true,
                 quoteChar: '"',
                 dynamicTyping: false
             });
 
-            console.log("Papa Parse result (data):", parseResult.data);
-            console.log("Papa Parse result (meta):", parseResult.meta);
-            console.log("Papa Parse errors:", parseResult.errors);
-
-            allGames = parseResult.data
-                .filter(game => {
-                    const isValid = game["Game Number"] && game["Secret Word"];
-                    console.log("Game object:", game, "Is valid:", isValid);
-                    return isValid;
-                })
+            allGames = parsed.data
+                .filter(game => game["Game Number"] && game["Secret Word"])
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            console.log("Parsed and filtered games:", allGames);
+            console.log("Parsed games:", allGames);
 
-            if (allGames.length === 0) throw new Error("No valid games found in CSV");
+            if (allGames.length === 0) throw new Error("No valid games in CSV");
 
-            const latestPineGame = allGames[0];
-            console.log("Loading game:", latestPineGame);
-            loadGame(latestPineGame);
+            const latestGame = allGames[0];
+            loadGame(latestGame);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
         } catch (error) {
-            console.error("Failed to fetch game data:", error);
-            allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "HINTS", "Hint 5": "FROM", "Hint 6": "SHEET", "Hint 7": "CHECK" }];
+            console.error("Error fetching game data:", error);
+            allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "DATA", "Hint 5": "CHECK" }];
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
@@ -114,23 +96,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function displayGameList() {
-        console.log("Displaying game list, total games:", allGames.length);
         const gameList = document.getElementById("game-list");
-        if (!gameList) {
-            console.error("Game list element not found");
-            return;
-        }
+        if (!gameList) return;
         gameList.innerHTML = "";
         document.getElementById("game-name").textContent = "PINEAPPLE";
 
-        if (!allGames || allGames.length === 0) {
-            console.warn("No games available to display");
+        if (!allGames.length) {
             gameList.innerHTML = "<div>No games available</div>";
             return;
         }
 
         const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
-
         allGames.forEach(game => {
             const gameNumber = game["Game Number"];
             const secretWord = game["Secret Word"].toUpperCase();
@@ -152,11 +128,9 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             gameList.appendChild(gameItem);
         });
-        console.log("Game list populated");
     }
 
     function setupEventListeners() {
-        console.log("Setting up event listeners");
         const input = document.getElementById("guess-input");
         const footer = document.getElementById("footer");
         let keyboardInitiated = false;
@@ -171,33 +145,21 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        if (footer) {
-            footer.addEventListener("click", (e) => {
-                e.stopPropagation();
-                console.log("Footer clicked, stopping propagation");
-            });
-        }
+        if (footer) footer.addEventListener("click", (e) => e.stopPropagation());
 
         document.addEventListener("click", (e) => {
-            if (!gameOver && 
-                gameScreen.style.display === "flex" && 
-                pauseScreen.style.display === "none" && 
-                !footer.contains(e.target) &&
-                !e.target.closest("button") && 
-                e.target.id !== "game-name") {
+            if (!gameOver && gameScreen.style.display === "flex" && pauseScreen.style.display === "none" && 
+                !footer.contains(e.target) && !e.target.closest("button") && e.target.id !== "game-name") {
                 if (!keyboardInitiated) {
                     input.focus();
                     keyboardInitiated = true;
                 }
-                if (firstGuessMade && !gameOver) {
-                    input.focus();
-                }
+                if (firstGuessMade && !gameOver) input.focus();
             }
         });
 
         document.querySelectorAll("#game-name").forEach(name => {
             name.addEventListener("click", () => {
-                console.log("Game name clicked");
                 resetGame();
                 loadGame(allGames[0]);
                 resetScreenDisplays();
@@ -210,27 +172,20 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-            if (currentIndex + 1 < allGames.length) {
-                loadGame(allGames[currentIndex + 1]);
-            }
+            if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
         });
 
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-            if (currentIndex - 1 >= 0) {
-                loadGame(allGames[currentIndex - 1]);
-            }
+            if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
         });
 
         let touchStartX = 0;
         let touchEndX = 0;
 
-        gameScreen.addEventListener("touchstart", e => {
-            touchStartX = e.changedTouches[0].screenX;
-        });
-
+        gameScreen.addEventListener("touchstart", e => touchStartX = e.changedTouches[0].screenX);
         gameScreen.addEventListener("touchend", e => {
             touchEndX = e.changedTouches[0].screenX;
             handleSwipe();
@@ -238,61 +193,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function handleSwipe() {
             const swipeThreshold = 50;
-            if (touchStartX - touchEndX > swipeThreshold) {
-                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                if (currentIndex - 1 >= 0) {
-                    loadGame(allGames[currentIndex - 1]);
-                }
-            } else if (touchEndX - touchStartX > swipeThreshold) {
-                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                if (currentIndex + 1 < allGames.length) {
-                    loadGame(allGames[currentIndex + 1]);
-                }
+            const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+            if (touchStartX - touchEndX > swipeThreshold && currentIndex - 1 >= 0) {
+                loadGame(allGames[currentIndex - 1]);
+            } else if (touchEndX - touchStartX > swipeThreshold && currentIndex + 1 < allGames.length) {
+                loadGame(allGames[currentIndex + 1]);
             }
         }
 
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Give Up button clicked");
             gaveUp = true;
             saveGameResult("pineapple", currentGameNumber, secretWord, "Gave Up");
             endGame(false, true);
         });
 
         input.addEventListener("input", (e) => {
-            if (!gameOver && e.data && e.inputType === "insertReplacementText") {
-                handleGuess(input.value.trim());
-            }
+            if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trim());
         });
 
         input.addEventListener("keydown", (e) => {
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) {
-                handleGuess(input.value.trim());
-            }
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) handleGuess(input.value.trim());
         });
 
         input.addEventListener("focus", () => {
-            if (!firstGuessMade && input.value === "") {
-                input.placeholder = "type guess here";
-            }
-            if (firstGuessMade) {
-                document.getElementById("footer").style.bottom = "calc(40vh)";
-            }
+            if (!firstGuessMade && input.value === "") input.placeholder = "type guess here";
+            if (firstGuessMade) document.getElementById("footer").style.bottom = "calc(40vh)";
         });
 
         input.addEventListener("blur", () => {
-            if (firstGuessMade && !gameOver) {
-                input.focus();
-            } else if (!firstGuessMade) {
-                document.getElementById("footer").style.bottom = "1vh";
-            }
+            if (firstGuessMade && !gameOver) input.focus();
+            else if (!firstGuessMade) document.getElementById("footer").style.bottom = "1vh";
         });
 
         input.addEventListener("input", () => {
-            if (input.value.length > 0) {
-                input.placeholder = "";
-            }
+            if (input.value.length > 0) input.placeholder = "";
         });
 
         document.getElementById("resume-btn").addEventListener("click", () => {
@@ -314,7 +250,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function updateHintCountdown() {
-        console.log("Updating hint countdown");
         const countdownElement = document.getElementById("hint-countdown");
         if (!countdownElement) return;
         if (hintIndex >= hints.length - 1) {
@@ -327,15 +262,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function setupHints() {
-        console.log("Setting up hints");
         const hintElements = [
             document.getElementById("hint-row-1")?.children[0],
             document.getElementById("hint-row-2")?.children[0],
             document.getElementById("hint-row-3")?.children[0],
             document.getElementById("hint-row-4")?.children[0],
-            document.getElementById("hint-row-5")?.children[0],
-            document.getElementById("hint-row-6")?.children[0],
-            document.getElementById("hint-row-7")?.children[0]
+            document.getElementById("hint-row-5")?.children[0]
         ].filter(Boolean);
         hintElements.forEach((span, index) => {
             span.textContent = hints[index] || "";
@@ -345,12 +277,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustBackground() {
-        console.log("Adjusting background");
         const screens = [gameScreen, gameOverScreen, pauseScreen, gameSelectScreen];
         screens.forEach(screen => {
-            if (screen && screen.style.display === "flex") {
-                screen.style.height = "100vh";
-            }
+            if (screen && screen.style.display === "flex") screen.style.height = "100vh";
         });
     }
 
@@ -366,7 +295,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function rainConfetti() {
-        console.log("Raining confetti");
         const confettiContainer = document.createElement("div");
         confettiContainer.className = "confetti";
         document.body.appendChild(confettiContainer);
@@ -382,7 +310,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function handleGuess(guess) {
-        console.log("Handling guess:", guess);
         const guessDisplay = document.getElementById("guess-input");
         const guessLine = document.getElementById("guess-line");
         guessDisplay.value = guess.toUpperCase();
@@ -401,15 +328,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
         guessCount++;
         score += 1;
-        document.querySelectorAll("#score").forEach(scoreDisplay => {
-            scoreDisplay.textContent = `${score}`;
-        });
+        document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
 
-        if (guessCount % 5 === 0 && hintIndex < hints.length - 1) {
-            revealHint();
-        } else {
-            updateHintCountdown();
-        }
+        if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
+        else updateHintCountdown();
 
         if (guess.toUpperCase() === secretWord) {
             guessDisplay.classList.add("correct-guess");
@@ -433,15 +355,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function adjustHintsAfterGuess() {
-        console.log("Adjusting hints after guess");
         const hintElements = [
             document.getElementById("hint-row-1")?.children[0],
             document.getElementById("hint-row-2")?.children[0],
             document.getElementById("hint-row-3")?.children[0],
             document.getElementById("hint-row-4")?.children[0],
-            document.getElementById("hint-row-5")?.children[0],
-            document.getElementById("hint-row-6")?.children[0],
-            document.getElementById("hint-row-7")?.children[0]
+            document.getElementById("hint-row-5")?.children[0]
         ].filter(Boolean);
         hintElements.forEach((span, index) => {
             span.style.visibility = index <= hintIndex ? "visible" : "hidden";
@@ -449,7 +368,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
-        console.log("Saving game result:", gameNumber, guesses);
         const key = gameType + "Results";
         const results = JSON.parse(localStorage.getItem(key) || "{}");
         results[gameNumber] = { secretWord, guesses };
@@ -457,7 +375,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function endGame(won, gaveUp = false) {
-        console.log("Ending game, won:", won, "gaveUp:", gaveUp);
         gameOver = true;
         const endGraphic = document.getElementById("end-graphic");
         const todaysWord = document.getElementById("todays-word");
@@ -513,16 +430,13 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function resetGame() {
-        console.log("Resetting game");
         score = 0;
         gameOver = false;
         hintIndex = 0;
         firstGuessMade = false;
         guessCount = 0;
         gaveUp = false;
-        document.querySelectorAll("#score").forEach(scoreDisplay => {
-            scoreDisplay.textContent = `${score}`;
-        });
+        document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
         document.getElementById("guess-input").value = "";
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("footer").style.bottom = "1vh";
@@ -538,8 +452,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="hint-line" id="hint-row-3"><span></span></div>
                 <div class="hint-line" id="hint-row-4"><span></span></div>
                 <div class="hint-line" id="hint-row-5"><span></span></div>
-                <div class="hint-line" id="hint-row-6"><span></span></div>
-                <div class="hint-line" id="hint-row-7"><span></span></div>
             `;
         }
         setupHints();
@@ -547,17 +459,14 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function loadGame(game) {
-        console.log("Loading game:", game["Game Number"]);
         resetGame();
         currentGameNumber = game["Game Number"];
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"], game["Hint 2"], game["Hint 3"],
-            game["Hint 4"], game["Hint 5"], game["Hint 6"],
-            game["Hint 7"]
+            game["Hint 4"], game["Hint 5"]
         ].filter(hint => hint).map(hint => hint.toUpperCase());
-        while (hints.length < 7) hints.push("");
-        console.log("Secret word:", secretWord, "Hints:", hints);
+        console.log("Loaded game:", { currentGameNumber, secretWord, hints });
         setupHints();
     }
 
