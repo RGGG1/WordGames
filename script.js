@@ -19,31 +19,68 @@ document.addEventListener("DOMContentLoaded", () => {
     const homeBtn = document.getElementById("home-btn");
     const backBtn = document.getElementById("back-btn");
 
+    // Tab elements
+    const officialTab = document.getElementById("official-tab");
+    const privateTab = document.getElementById("private-tab");
+    const officialContent = document.getElementById("official-games");
+    const privateContent = document.getElementById("private-games");
+
+    // Debug: Check if elements exist
+    console.log("officialTab:", officialTab);
+    console.log("privateTab:", privateTab);
+    console.log("officialContent:", officialContent);
+    console.log("privateContent:", privateContent);
+
+    // Setup tab listeners once on load
+    if (officialTab && privateTab && officialContent && privateContent) {
+        officialTab.addEventListener("click", () => {
+            console.log("Official tab clicked");
+            officialTab.classList.add("active");
+            privateTab.classList.remove("active");
+            officialContent.classList.add("active");
+            privateContent.classList.remove("active");
+        });
+
+        privateTab.addEventListener("click", () => {
+            console.log("Private tab clicked");
+            privateTab.classList.add("active");
+            officialTab.classList.remove("active");
+            privateContent.classList.add("active");
+            officialContent.classList.remove("active");
+        });
+    } else {
+        console.error("Tab elements not found");
+    }
+
     allGamesBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
+        console.log("All Games button clicked");
         showGameSelectScreen();
     });
 
     homeBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
+        console.log("Home button clicked");
         showGameSelectScreen();
     });
 
     backBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
+        console.log("Back button clicked");
         resetScreenDisplays();
         gameScreen.style.display = "flex";
         adjustBackground();
     });
 
     function showGameSelectScreen() {
+        console.log("Showing game select screen");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
         displayGameList();
-        setupTabListeners(); // Set up tab switching
+        // No need to call setupTabListeners here; it's done once on load
     }
 
     function resetScreenDisplays() {
@@ -96,9 +133,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function displayGameList() {
         const officialList = document.getElementById("official-list");
-        if (!officialList) return;
+        if (!officialList) {
+            console.error("official-list element not found");
+            return;
+        }
         officialList.innerHTML = "";
         document.getElementById("game-name").textContent = "PINEAPPLE";
+        console.log("Populating official games list");
 
         if (!allGames.length) {
             officialList.innerHTML = "<div>No games available</div>";
@@ -135,28 +176,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const privateList = document.getElementById("private-list");
         if (privateList) {
             privateList.innerHTML = "<div>No private games yet</div>";
+        } else {
+            console.error("private-list element not found");
         }
-    }
-
-    function setupTabListeners() {
-        const officialTab = document.getElementById("official-tab");
-        const privateTab = document.getElementById("private-tab");
-        const officialContent = document.getElementById("official-games");
-        const privateContent = document.getElementById("private-games");
-
-        officialTab.addEventListener("click", () => {
-            officialTab.classList.add("active");
-            privateTab.classList.remove("active");
-            officialContent.classList.add("active");
-            privateContent.classList.remove("active");
-        });
-
-        privateTab.addEventListener("click", () => {
-            privateTab.classList.add("active");
-            officialTab.classList.remove("active");
-            privateContent.classList.add("active");
-            officialContent.classList.remove("active");
-        });
     }
 
     function setupEventListeners() {
