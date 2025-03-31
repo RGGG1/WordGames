@@ -506,34 +506,36 @@ a {
 
 #tabs {
   display: flex;
-  gap: 1vw;
+  gap: 0; /* Remove gap for tab-like appearance */
   margin-bottom: 2vh;
 }
 
 .tab-btn {
   font-size: 2vh;
-  padding: 0.5vh 1vw;
-  background: #CCCCCC;
-  color: #000000;
-  border: 0.1vh solid #000000;
-  border-radius: 0.6vh;
+  padding: 0.75vh 1.5vw;
+  background: #000000;
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
+  border-radius: 0; /* Flat edges for tabs */
   cursor: pointer;
   transition: background 0.3s ease;
 }
 
 .tab-btn.active {
-  background: #FFD700;
+  background: #FFFFFF;
+  color: #000000;
   font-weight: bold;
 }
 
 .dark-mode .tab-btn {
-  background: #666666;
-  color: #FFFFFF;
-  border-color: #FFFFFF;
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 .dark-mode .tab-btn.active {
-  background: #FFA500;
+  background: #000000;
+  color: #FFFFFF;
 }
 
 .tab-content {
@@ -562,7 +564,7 @@ a {
   flex-direction: column;
   align-items: center;
   width: 85vw;
-  max-height: 50vh; /* Reduced to fit tabs and button */
+  max-height: 50vh;
   overflow-y: auto;
 }
 
@@ -596,6 +598,22 @@ a {
 .dark-mode .pink { color: #FF69B4; }
 .dark-mode .red { color: #FF0000; }
 
+.play-now {
+  color: #000000; /* Black instead of blue */
+  text-decoration: none; /* No underline */
+  cursor: pointer;
+  animation: pulse 1.5s infinite ease-in-out;
+}
+
+.dark-mode .play-now {
+  color: #FFFFFF; /* White in dark mode */
+}
+
+.plus {
+  font-size: 3vh; /* Larger + symbol */
+  line-height: 1; /* Adjust line height for alignment */
+}
+
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
       width: 90vw;
@@ -627,20 +645,8 @@ a {
   }
 }
 
-/* Play Now Styles */
-.play-now {
-    color: #00BFFF;
-    text-decoration: underline;
-    cursor: pointer;
-    animation: pulse 1.5s infinite ease-in-out;
-}
-
-.dark-mode .play-now {
-    color: #1E90FF;
-}
-
 @keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.1); }
-    100% { transform: scale(1); }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
