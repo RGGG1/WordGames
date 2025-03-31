@@ -53,12 +53,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
-    allGamesBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("All Games button clicked");
-        showGameSelectScreen();
-    });
+    if (allGamesBtn) {
+        allGamesBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("All Games button clicked");
+            showGameSelectScreen();
+        });
+    }
 
     homeBtn.addEventListener("click", (e) => {
         e.preventDefault();
@@ -114,7 +116,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            // Create hidden form for submission
             const tempForm = document.createElement("form");
             tempForm.method = "POST";
             tempForm.action = webAppUrl;
@@ -129,7 +130,6 @@ document.addEventListener("DOMContentLoaded", () => {
             document.body.appendChild(tempForm);
             tempForm.submit();
 
-            // Redirect to Private tab
             setTimeout(() => {
                 createForm.style.display = "none";
                 resetScreenDisplays();
@@ -140,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 officialContent.classList.remove("active");
                 fetchPrivateGames().then(() => displayGameList());
                 adjustBackground();
-            }, 1000); // Delay to allow submission
+            }, 1000);
         });
     }
 
@@ -176,8 +176,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchGameData() {
         try {
+            console.log("Fetching official games from:", officialUrl);
             const response = await fetch(officialUrl);
-            if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
+            if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
             const text = await response.text();
             console.log("Official CSV fetched:", text);
 
@@ -211,13 +212,15 @@ document.addEventListener("DOMContentLoaded", () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
+            alert("Failed to load game data. Using fallback game.");
         }
     }
 
     async function fetchPrivateGames() {
         try {
+            console.log("Fetching private games from:", privateUrl);
             const response = await fetch(privateUrl);
-            if (!response.ok) throw new Error(`Fetch failed: ${response.status}`);
+            if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
             const text = await response.text();
             console.log("Private CSV fetched:", text);
 
@@ -462,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function rainConfetti() {
-        const confettiContainer = document.createElement GOOGLE("div");
+        const confettiContainer = document.createElement("div");
         confettiContainer.className = "confetti";
         document.body.appendChild(confettiContainer);
         for (let i = 0; i < 50; i++) {
