@@ -552,7 +552,7 @@ a {
 
 .game-list-header {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 1fr 1fr; /* Adjusted for Private: #, Name (wider), Secret Word, Guesses */
+  grid-template-columns: 0.3fr 2fr 1fr 0.5fr; /* Reduced # to 0.3fr (~5 chars), Guesses to 0.5fr (~9 chars) */
   width: 85vw;
   font-size: 1.8vh;
   font-weight: bold;
@@ -575,7 +575,7 @@ a {
 
 .game-list-row {
   display: grid;
-  grid-template-columns: 0.5fr 2fr 1fr 1fr; /* Adjusted for Private */
+  grid-template-columns: 0.3fr 2fr 1fr 0.5fr; /* Match header: #, Name, Secret Word, Guesses */
   width: 85vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
@@ -589,6 +589,8 @@ a {
 .game-list-row span {
   text-align: center;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Truncate long text */
 }
 
 .game-list-row:hover {

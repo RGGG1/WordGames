@@ -119,9 +119,15 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Confirm button clicked");
+            const secretWordInput = document.getElementById("secret-word").value.trim();
+            if (secretWordInput.includes(" ")) {
+                alert("Secret Word must be one word (no spaces allowed).");
+                return;
+            }
+
             const formData = {
                 gameName: document.getElementById("game-name-input").value.trim(),
-                secretWord: document.getElementById("secret-word").value.trim().toUpperCase(),
+                secretWord: secretWordInput.toUpperCase(),
                 hint1: document.getElementById("hint-1").value.trim().toUpperCase(),
                 hint2: document.getElementById("hint-2").value.trim().toUpperCase(),
                 hint3: document.getElementById("hint-3").value.trim().toUpperCase(),
@@ -420,6 +426,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input.addEventListener("input", (e) => {
             if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trim());
+            if (input.value.length > 0) input.placeholder = ""; // Clear placeholder when typing begins
         });
 
         input.addEventListener("keydown", (e) => {
@@ -427,17 +434,14 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         input.addEventListener("focus", () => {
-            if (!firstGuessMade && input.value === "") input.placeholder = "type guess here";
+            if (input.value === "") input.placeholder = "type guess here"; // Show placeholder on focus if empty
             if (firstGuessMade) document.getElementById("footer").style.bottom = "calc(40vh)";
         });
 
         input.addEventListener("blur", () => {
+            if (input.value === "") input.placeholder = "type guess here"; // Restore placeholder on blur if empty
             if (firstGuessMade && !gameOver) input.focus();
             else if (!firstGuessMade) document.getElementById("footer").style.bottom = "1vh";
-        });
-
-        input.addEventListener("input", () => {
-            if (input.value.length > 0) input.placeholder = "";
         });
     }
 
@@ -620,6 +624,11 @@ document.addEventListener("DOMContentLoaded", () => {
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
+
+        // Refresh game list to reflect updated private game results
+        if (currentGameNumber.includes("P")) {
+            displayGameList();
+        }
         adjustBackground();
     }
 
@@ -631,7 +640,9 @@ document.addEventListener("DOMContentLoaded", () => {
         guessCount = 0;
         gaveUp = false;
         document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
-        document.getElementById("guess-input").value = "";
+        const guessInput = document.getElementById("guess-input");
+        guessInput.value = "";
+        guessInput.placeholder = "type guess here"; // Reset placeholder on game reset
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("footer").style.bottom = "1vh";
         if (!document.getElementById("how-to-play-1")) {
