@@ -23,6 +23,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const createForm = document.getElementById("create-form");
     const confirmBtn = document.getElementById("confirm-btn");
     const formBackBtn = document.getElementById("form-back-btn");
+    const createPineappleLink = document.getElementById("create-pineapple-link");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -93,6 +94,23 @@ document.addEventListener("DOMContentLoaded", () => {
             e.stopPropagation();
             console.log("Create a Pineapple clicked");
             createForm.style.display = "flex";
+        });
+    }
+
+    if (createPineappleLink) {
+        createPineappleLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Create Pineapple link clicked");
+            resetScreenDisplays();
+            gameSelectScreen.style.display = "flex";
+            privateTab.classList.add("active");
+            officialTab.classList.remove("active");
+            privateContent.classList.add("active");
+            officialContent.classList.remove("active");
+            if (createForm) createForm.style.display = "none";
+            displayGameList();
+            adjustBackground();
         });
     }
 
@@ -395,7 +413,8 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             gaveUp = true;
-            saveGameResult("pineapple", currentGameNumber, secretWord, "Gave Up");
+            const gameType = currentGameNumber.includes("P") ? "privatePineapple" : "pineapple";
+            saveGameResult(gameType, currentGameNumber, secretWord, "Gave Up");
             endGame(false, true);
         });
 
@@ -512,7 +531,8 @@ document.addEventListener("DOMContentLoaded", () => {
             guessLine.style.opacity = "0";
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
-                saveGameResult(currentGameNumber.includes("P") ? "privatePineapple" : "pineapple", currentGameNumber, secretWord, score);
+                const gameType = currentGameNumber.includes("P") ? "privatePineapple" : "pineapple";
+                saveGameResult(gameType, currentGameNumber, secretWord, score);
                 endGame(true);
             }, 1500);
         } else {
@@ -545,6 +565,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const results = JSON.parse(localStorage.getItem(key) || "{}");
         results[gameNumber] = { secretWord, guesses };
         localStorage.setItem(key, JSON.stringify(results));
+        console.log(`Saved ${gameType} result for game ${gameNumber}:`, results[gameNumber]);
     }
 
     function endGame(won, gaveUp = false) {
