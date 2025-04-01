@@ -259,9 +259,12 @@ document.addEventListener("DOMContentLoaded", () => {
             });
 
             privateGames = parsed.data
-                .filter(game => game["Game Name"] && game["Secret Word"])
-                .map((game, index) => ({ ...game, "Game Number": (index + 1).toString() }))
-                .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+                .filter(game => game["Game #"] && game["Game Name"] && game["Secret Word"])
+                .sort((a, b) => {
+                    const numA = parseInt(a["Game #"].replace("P", ""));
+                    const numB = parseInt(b["Game #"].replace("P", ""));
+                    return numB - numA; // Sort descending
+                });
             console.log("Parsed private games:", privateGames);
         } catch (error) {
             console.error("Error fetching private games:", error);
@@ -316,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
                 privateGames.forEach(game => {
-                    const gameNumber = game["Game Number"];
+                    const gameNumber = game["Game #"];
                     const gameName = game["Game Name"];
                     const secretWord = game["Secret Word"].toUpperCase();
                     const pastResult = results[gameNumber];
@@ -625,9 +628,9 @@ document.addEventListener("DOMContentLoaded", () => {
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
 
-        // Refresh game list to reflect updated private game results
+        // Refresh private games list if it's a private game
         if (currentGameNumber.includes("P")) {
-            displayGameList();
+            fetchPrivateGames().then(() => displayGameList());
         }
         adjustBackground();
     }
@@ -665,7 +668,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function loadGame(game) {
         resetGame();
-        currentGameNumber = game["Game Number"] || `P${privateGames.findIndex(g => g["Secret Word"] === game["Secret Word"] && g["Game Name"] === game["Game Name"]) + 1}`;
+        currentGameNumber = game["Game #"] || game["Game Number"]; // Use "Game #" for private, "Game Number" for official
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"], game["Hint 2"], game["Hint 3"],
