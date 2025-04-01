@@ -564,10 +564,6 @@ a {
   grid-template-columns: 1fr 1fr 1fr; /* Official keeps 3 columns */
 }
 
-#private-list-header {
-  grid-template-columns: 1fr 1fr 1fr; /* Adjusted for Private: Game Name, Secret Word, Guesses */
-}
-
 .game-list {
   display: flex;
   flex-direction: column;
@@ -588,10 +584,6 @@ a {
 
 #official-list .game-list-row {
   grid-template-columns: 1fr 1fr 1fr; /* Official keeps 3 columns */
-}
-
-#private-list .game-list-row {
-  grid-template-columns: 1fr 1fr 1fr; /* Adjusted for Private: Game Name, Secret Word, Guesses */
 }
 
 .game-list-row span {
