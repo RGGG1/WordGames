@@ -262,9 +262,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
                     ...game,
-                    "Game Number": `P_${game["Game Name"]}_${game["Secret Word"]}` // Composite key
+                    "Game Number": `P_${game["Game Name"]}_${game["Secret Word"]}` // Composite key for internal use
                 }))
-                .sort((a, b) => b["Game Number"].localeCompare(a["Game Number"])); // Sort by composite key
+                .reverse(); // Reverse to show newest games first
             console.log("Parsed private games:", privateGames);
         } catch (error) {
             console.error("Error fetching private games:", error);
@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
                 privateGames.forEach(game => {
-                    const gameNumber = game["Game Number"];
+                    const gameNumber = game["Game Number"]; // Keep in background
                     const gameName = game["Game Name"];
                     const secretWord = game["Secret Word"].toUpperCase();
                     const pastResult = results[gameNumber];
@@ -330,11 +330,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     const gameItem = document.createElement("div");
                     gameItem.className = "game-list-row";
                     gameItem.innerHTML = `
-                        <span>${gameName}</span> <!-- Show Game Name in # column -->
                         <span>${gameName}</span>
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
                     `;
+                    gameItem.dataset.gameNumber = gameNumber; // Store Game Number in dataset for background use
                     gameItem.addEventListener("click", () => {
                         loadGame(game);
                         resetScreenDisplays();

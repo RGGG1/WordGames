@@ -552,7 +552,7 @@ a {
 
 .game-list-header {
   display: grid;
-  grid-template-columns: 0.3fr 2fr 1fr 0.5fr; /* Reduced # to 0.3fr (~5 chars), Guesses to 0.5fr (~9 chars) */
+  grid-template-columns: 1fr 1fr 1fr; /* Unified to 3 columns for both official and private */
   width: 85vw;
   font-size: 1.8vh;
   font-weight: bold;
@@ -561,7 +561,7 @@ a {
 }
 
 #official-list-header {
-  grid-template-columns: 1fr 1fr 1fr; /* Official keeps 3 columns */
+  grid-template-columns: 1fr 1fr 1fr; /* Kept for clarity */
 }
 
 .game-list {
@@ -575,7 +575,7 @@ a {
 
 .game-list-row {
   display: grid;
-  grid-template-columns: 0.3fr 2fr 1fr 0.5fr; /* Match header: #, Name, Secret Word, Guesses */
+  grid-template-columns: 1fr 1fr 1fr; /* Unified to 3 columns for both official and private */
   width: 85vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
@@ -583,7 +583,7 @@ a {
 }
 
 #official-list .game-list-row {
-  grid-template-columns: 1fr 1fr 1fr; /* Official keeps 3 columns */
+  grid-template-columns: 1fr 1fr 1fr; /* Kept for clarity */
 }
 
 .game-list-row span {
