@@ -18,7 +18,7 @@
             <div id="score">0</div>
         </div>
         <div id="guess-area">
-            <div id="prompt">The secret word is....</div>
+            <div id="prompt">The secret word is...</div>
             <div id="guess-background"></div>
             <input id="guess-input" type="text" placeholder="type guess here">
             <div id="guess-line"></div>
@@ -89,8 +89,8 @@
         <div id="game-select-content">
             <div id="game-list-title">All Games</div>
             <div id="tabs">
-                <button id="official-tab" class="tab-btn active">Official</button>
-                <button id="private-tab" class="tab-btn">Private</button>
+                <span id="official-tab" class="tab-text active">Official</span>
+                <span id="private-tab" class="tab-text">Private</span>
             </div>
             <div id="official-games" class="tab-content active">
                 <div id="official-list-header" class="game-list-header">
@@ -101,16 +101,19 @@
                 <div id="official-list" class="game-list"></div>
             </div>
             <div id="private-games" class="tab-content">
-                <button id="create-pineapple" class="footer-btn">Create a Pineapple<br><span class="plus">+</span></button>
+                <button id="create-pineapple" class="footer-btn animate__animated animate__pulse animate__infinite">Create a Pineapple<br><span class="plus">+</span></button>
+                <div class="spacer"></div>
                 <div id="private-list-header" class="game-list-header">
-                    <span>Game #</span>
-                    <span>Game Name</span>
+                    <span>#</span>
+                    <span>Name</span>
                     <span>Secret Word</span>
                     <span>Guesses</span>
                 </div>
                 <div id="private-list" class="game-list"></div>
             </div>
-            <button id="back-btn" class="footer-btn">Back</button>
+            <div class="back-btn-container">
+                <button id="back-btn" class="footer-btn">Back</button>
+            </div>
         </div>
         <div id="create-form" class="create-form" style="display: none;">
             <input id="secret-word" class="form-input" type="text" placeholder="Secret Word">

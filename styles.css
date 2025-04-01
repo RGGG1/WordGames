@@ -445,9 +445,13 @@ a {
   transform: scale(1.05);
 }
 
+#create-pineapple {
+  border-radius: 1vh; /* Slightly rounded corners */
+}
+
 .small-btn {
-  font-size: 1.5vh; /* Smaller than footer-btn's 2.25vh */
-  padding: 0.5vh 1vw; /* Reduced padding */
+  font-size: 1.5vh;
+  padding: 0.5vh 1vw;
 }
 
 .arrow-btn {
@@ -513,40 +517,26 @@ a {
 
 #tabs {
   display: flex;
-  gap: 0;
+  gap: 2vw;
   margin-bottom: 2vh;
 }
 
-.tab-btn {
+.tab-text {
   font-size: 2vh;
-  padding: 0.75vh 1.5vw;
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-  border-radius: 0;
+  color: #000000;
   cursor: pointer;
-  transition: background 0.3s ease, color 0.3s ease, opacity 0.3s ease;
-  opacity: 0.6;
+  opacity: 0.5; /* Faded when inactive */
+  transition: opacity 0.3s ease;
 }
 
-.tab-btn.active {
-  background: #FFFFFF;
-  color: #000000;
-  opacity: 1;
+.tab-text.active {
+  text-decoration: underline;
+  opacity: 1; /* Fully opaque when active */
   font-weight: bold;
 }
 
-.dark-mode .tab-btn {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
-  opacity: 0.6;
-}
-
-.dark-mode .tab-btn.active {
-  background: #000000;
+.dark-mode .tab-text {
   color: #FFFFFF;
-  opacity: 1;
 }
 
 .tab-content {
@@ -562,7 +552,7 @@ a {
 
 .game-list-header {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr; /* Adjusted for Private: Game #, Game Name (wider), Secret Word, Guesses */
+  grid-template-columns: 0.5fr 2fr 1fr 1fr; /* Adjusted for Private: #, Name (wider), Secret Word, Guesses */
   width: 85vw;
   font-size: 1.8vh;
   font-weight: bold;
@@ -585,7 +575,7 @@ a {
 
 .game-list-row {
   display: grid;
-  grid-template-columns: 1fr 2fr 1fr 1fr; /* Adjusted for Private */
+  grid-template-columns: 0.5fr 2fr 1fr 1fr; /* Adjusted for Private */
   width: 85vw;
   font-size: 1.5vh;
   margin: 0.5vh 0;
@@ -633,7 +623,6 @@ a {
   line-height: 1;
 }
 
-/* Create Form Styles */
 .create-form {
   position: fixed;
   top: 6vh;
@@ -700,19 +689,23 @@ a {
   background: #FFFFFF;
 }
 
+.back-btn-container {
+  margin-top: 2vh; /* Moves Back button down */
+}
+
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
       width: 90vw;
   }
   #game-name, #score {
-      font-size: clamp(1.5vh, 2vw, 2vh);
+      font-size: clamp(2.25vh, 3vw, 3vh); /* 50% increase from 1.5vh */
   }
   #mode-toggle {
-      font-size: clamp(1.2vh, 1.5vw, 1.5vh);
+      font-size: clamp(1.8vh, 2.25vw, 2.25vh); /* 50% increase from 1.2vh */
   }
   .footer-btn {
-      font-size: clamp(1.5vh, 1.8vw, 1.8vh);
-      padding: clamp(0.5vh, 0.6vw, 0.6vh) clamp(1vh, 1.2vw, 1.2vw);
+      font-size: clamp(2.25vh, 2.7vw, 2.7vh); /* 50% increase from 1.5vh */
+      padding: clamp(0.75vh, 0.9vw, 0.9vh) clamp(1.5vh, 1.8vw, 1.8vw);
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
