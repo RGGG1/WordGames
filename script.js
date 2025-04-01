@@ -260,11 +260,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             privateGames = parsed.data
                 .filter(game => game["Game Name"] && game["Secret Word"])
-                .map((game, index) => ({
-                    ...game,
-                    "Game Number": `P_${game["Game Name"]}_${game["Secret Word"]}` // Composite key for internal use
-                }))
-                .reverse(); // Reverse to show newest games first
+                .map((game, index) => ({ ...game, "Game Number": (index + 1).toString() }))
+                .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
         } catch (error) {
             console.error("Error fetching private games:", error);
@@ -319,7 +316,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
                 privateGames.forEach(game => {
-                    const gameNumber = game["Game Number"]; // Keep in background
+                    const gameNumber = game["Game Number"];
                     const gameName = game["Game Name"];
                     const secretWord = game["Secret Word"].toUpperCase();
                     const pastResult = results[gameNumber];
@@ -330,11 +327,11 @@ document.addEventListener("DOMContentLoaded", () => {
                     const gameItem = document.createElement("div");
                     gameItem.className = "game-list-row";
                     gameItem.innerHTML = `
+                        <span>${gameNumber}</span>
                         <span>${gameName}</span>
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
                     `;
-                    gameItem.dataset.gameNumber = gameNumber; // Store Game Number in dataset for background use
                     gameItem.addEventListener("click", () => {
                         loadGame(game);
                         resetScreenDisplays();
@@ -628,9 +625,9 @@ document.addEventListener("DOMContentLoaded", () => {
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
 
-        // Refresh private games list if it's a private game
+        // Refresh game list to reflect updated private game results
         if (currentGameNumber.includes("P")) {
-            fetchPrivateGames().then(() => displayGameList());
+            displayGameList();
         }
         adjustBackground();
     }
@@ -668,7 +665,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function loadGame(game) {
         resetGame();
-        currentGameNumber = game["Game Number"] || `P_${game["Game Name"]}_${game["Secret Word"]}`;
+        currentGameNumber = game["Game Number"] || `P${privateGames.findIndex(g => g["Secret Word"] === game["Secret Word"] && g["Game Name"] === game["Game Name"]) + 1}`;
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"], game["Hint 2"], game["Hint 3"],
