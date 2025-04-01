@@ -30,8 +30,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const privateContent = document.getElementById("private-games");
 
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
-    const privateUrl = "https://docs.google.com/spreadsheets/d/1e8Pilu2RuE12xfdQoGlFCdWltupEGKPnVhH1d35KJXk/pub?output=csv&gid=639966570";
-    const webAppUrl = "https://script.google.com/macros/s/AKfycby-DbeDaDOcqip5FZr60NsHfnF6F4iOulGf47LOaK7BSKrE6InqKx5INbcmnxs-G9-b/exec";
+    const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
+    const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (confirmBtn) {
-        confirmBtn.addEventListener("click", (e) => {
+        confirmBtn.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Confirm button clicked");
@@ -116,28 +116,20 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const tempForm = document.createElement("form");
-            tempForm.method = "POST";
-            tempForm.action = webAppUrl;
-            tempForm.style.display = "none";
-            tempForm.target = "hiddenFrame"; // Send response to hidden iframe
+            try {
+                const response = await fetch(webAppUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: "data=" + encodeURIComponent(JSON.stringify(formData))
+                });
+                const result = await response.text();
+                console.log("Web App response:", result);
 
-            const input = document.createElement("input");
-            input.type = "hidden";
-            input.name = "data";
-            input.value = JSON.stringify(formData);
-            tempForm.appendChild(input);
+                if (result !== "Success") {
+                    throw new Error(result || "Unknown error from Web App");
+                }
 
-            // Create hidden iframe to handle response
-            const iframe = document.createElement("iframe");
-            iframe.name = "hiddenFrame";
-            iframe.style.display = "none";
-            document.body.appendChild(iframe);
-
-            document.body.appendChild(tempForm);
-            tempForm.submit();
-
-            setTimeout(() => {
+                console.log("Game created successfully");
                 createForm.style.display = "none";
                 resetScreenDisplays();
                 gameSelectScreen.style.display = "flex";
@@ -145,11 +137,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 officialTab.classList.remove("active");
                 privateContent.classList.add("active");
                 officialContent.classList.remove("active");
-                fetchPrivateGames().then(() => displayGameList());
+                await fetchPrivateGames();
+                displayGameList();
                 adjustBackground();
-                document.body.removeChild(iframe); // Clean up
-                document.body.removeChild(tempForm);
-            }, 1000);
+            } catch (error) {
+                console.error("Error submitting form:", error);
+                alert("Failed to create game: " + error.message);
+            }
         });
     }
 
