@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => { // Added async
     console.log("DOM fully loaded");
 
     let score = 0;
@@ -227,17 +227,13 @@ document.addEventListener("DOMContentLoaded", () => {
             const text = await response.text();
             console.log("Official CSV fetched:", text);
 
-            const parsed = Papa.parse(text, {
-                header: true,
-                skipEmptyLines: true,
-                quoteChar: '"',
-                dynamicTyping: false
-            });
+            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
+            console.log("Parsed official games data:", parsed.data);
 
             allGames = parsed.data
                 .filter(game => game["Game Number"] && game["Secret Word"])
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            console.log("Parsed official games:", allGames);
+            console.log("Filtered and sorted allGames:", allGames);
 
             if (allGames.length === 0) throw new Error("No valid games in CSV");
 
@@ -266,6 +262,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "DATA", "Hint 5": "CHECK" }];
+            console.log("Fallback allGames:", allGames);
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
@@ -284,13 +281,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const text = await response.text();
             console.log("Private CSV fetched:", text);
 
-            const parsed = Papa.parse(text, {
-                header: true,
-                skipEmptyLines: true,
-                quoteChar: '"',
-                dynamicTyping: false
-            });
-
+            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
             privateGames = parsed.data
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
@@ -307,15 +298,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function displayGameList() {
         const officialList = document.getElementById("official-list");
+        console.log("Official list element:", officialList);
+        console.log("allGames before populating official list:", allGames);
         if (officialList) {
             officialList.innerHTML = "";
             document.getElementById("game-name").textContent = "PINEAPPLE";
             console.log("Populating official games list");
 
             if (!allGames.length) {
+                console.log("No official games to display");
                 officialList.innerHTML = "<div>No official games available</div>";
             } else {
                 const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
+                console.log("Local storage results for official games:", results);
                 allGames.forEach(game => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"].toUpperCase();
@@ -339,15 +334,20 @@ document.addEventListener("DOMContentLoaded", () => {
                     });
                     officialList.appendChild(gameItem);
                 });
+                console.log("Official list populated with HTML:", officialList.innerHTML);
             }
+        } else {
+            console.error("official-list element not found");
         }
 
         const privateList = document.getElementById("private-list");
+        console.log("Private list element:", privateList);
         if (privateList) {
             privateList.innerHTML = "";
             console.log("Populating my games list");
 
             const myGames = JSON.parse(localStorage.getItem("myPineappleGames") || "[]");
+            console.log("myGames from local storage:", myGames);
             if (!myGames.length) {
                 privateList.innerHTML = "<div>You haven't created any games yet</div>";
             } else {
@@ -726,6 +726,8 @@ document.addEventListener("DOMContentLoaded", () => {
         return originalGameNumber;
     }
 
-    fetchGameData();
-    fetchPrivateGames();
+    // Wait for fetches to complete before proceeding
+    await fetchGameData();
+    await fetchPrivateGames();
+    showGameSelectScreen(); // Show the select screen after data is loaded
 });
