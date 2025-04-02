@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
     console.log("DOM fully loaded");
 
     let score = 0;
@@ -52,6 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
             officialContent.classList.add("active");
             privateContent.classList.remove("active");
             if (createForm) createForm.style.display = "none";
+            displayGameList(); // Ensure list updates
         });
 
         privateTab.addEventListener("click", () => {
@@ -59,8 +60,9 @@ document.addEventListener("DOMContentLoaded", () => {
             privateTab.classList.add("active");
             officialTab.classList.remove("active");
             privateContent.classList.add("active");
-            privateContent.classList.remove("active");
+            officialContent.classList.remove("active"); // Fixed typo
             if (createForm) createForm.style.display = "none";
+            displayGameList(); // Ensure list updates
         });
     }
 
@@ -218,9 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "GET",
                 mode: "cors",
                 cache: "no-cache",
-                headers: {
-                    "Accept": "text/csv"
-                }
+                headers: { "Accept": "text/csv" }
             });
             if (!response.ok) {
                 console.log("Response status:", response.status);
@@ -266,9 +266,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 method: "GET",
                 mode: "cors",
                 cache: "no-cache",
-                headers: {
-                    "Accept": "text/csv"
-                }
+                headers: { "Accept": "text/csv" }
             });
             if (!response.ok) {
                 console.log("Private response status:", response.status);
@@ -288,6 +286,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }))
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
+            if (privateGames.length === 0) console.log("No valid private games found in CSV");
         } catch (error) {
             console.error("Error fetching private games:", error);
             privateGames = [];
@@ -479,23 +478,23 @@ document.addEventListener("DOMContentLoaded", () => {
             endGame(false, true);
         });
 
-        document.getElementById("guess-input").addEventListener("input", (e) => {
-            if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(e.target.value.trim());
-            if (e.target.value.length > 0) e.target.placeholder = "";
+        input.addEventListener("input", (e) => {
+            if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trim());
+            if (input.value.length > 0) input.placeholder = "";
         });
 
-        document.getElementById("guess-input").addEventListener("keydown", (e) => {
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) handleGuess(e.target.value.trim());
+        input.addEventListener("keydown", (e) => {
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) handleGuess(input.value.trim());
         });
 
-        document.getElementById("guess-input").addEventListener("focus", (e) => {
-            if (e.target.value === "") e.target.placeholder = "type guess here";
+        input.addEventListener("focus", () => {
+            if (input.value === "") input.placeholder = "type guess here";
             if (firstGuessMade) document.getElementById("game-controls").style.bottom = "calc(40vh)";
         });
 
-        document.getElementById("guess-input").addEventListener("blur", (e) => {
-            if (e.target.value === "") e.target.placeholder = "type guess here";
-            if (firstGuessMade && !gameOver) e.target.focus();
+        input.addEventListener("blur", () => {
+            if (input.value === "") input.placeholder = "type guess here";
+            if (firstGuessMade && !gameOver) input.focus();
             else if (!firstGuessMade) document.getElementById("game-controls").style.bottom = "4.5vh";
         });
     }
@@ -745,6 +744,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return originalGameNumber;
     }
 
-    fetchGameData();
-    fetchPrivateGames();
+    // Ensure both fetches complete before initial display
+    await Promise.all([fetchGameData(), fetchPrivateGames()]);
+    displayGameList();
 });
