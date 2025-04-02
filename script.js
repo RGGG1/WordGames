@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         privateTab.addEventListener("click", () => {
-            console.log("Private tab clicked");
+            console.log("My Games tab clicked");
             privateTab.classList.add("active");
             officialTab.classList.remove("active");
             privateContent.classList.add("active");
@@ -153,7 +153,22 @@ document.addEventListener("DOMContentLoaded", () => {
                     throw new Error(result || "Unknown error from Web App");
                 }
 
-                console.log("Game created successfully");
+                const myGames = JSON.parse(localStorage.getItem("myPineappleGames") || "[]");
+                const gameNumber = `P_${formData.gameName}_${myGames.length + 1}`;
+                const newGame = {
+                    "Game Name": formData.gameName,
+                    "Secret Word": formData.secretWord,
+                    "Hint 1": formData.hint1,
+                    "Hint 2": formData.hint2,
+                    "Hint 3": formData.hint3,
+                    "Hint 4": formData.hint4,
+                    "Hint 5": formData.hint5,
+                    "Game Number": gameNumber
+                };
+                myGames.push(newGame);
+                localStorage.setItem("myPineappleGames", JSON.stringify(myGames));
+
+                console.log("Game created successfully and saved locally:", newGame);
                 createForm.style.display = "none";
                 resetScreenDisplays();
                 gameSelectScreen.style.display = "flex";
@@ -203,6 +218,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function fetchGameData() {
         try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const gameId = urlParams.get("game");
+
             console.log("Fetching official games from:", officialUrl);
             const response = await fetch(officialUrl);
             if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
@@ -222,6 +240,21 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log("Parsed official games:", allGames);
 
             if (allGames.length === 0) throw new Error("No valid games in CSV");
+
+            await fetchPrivateGames();
+
+            if (gameId && gameId.startsWith("P_")) {
+                const targetGame = privateGames.find(game => game["Game Number"] === gameId);
+                if (targetGame) {
+                    loadGame(targetGame);
+                    resetScreenDisplays();
+                    gameScreen.style.display = "flex";
+                    updateHintCountdown();
+                    adjustBackground();
+                    setupEventListeners();
+                    return;
+                }
+            }
 
             const latestGame = allGames[0];
             loadGame(latestGame);
@@ -262,7 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
                     ...game,
-                    "Game Number": `P_${game["Game Name"]}_${game["Secret Word"]}` // Composite key
+                    "Game Number": `P_${game["Game Name"]}_${index + 1}`
                 }))
                 .sort((a, b) => b["Game Number"].localeCompare(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
@@ -312,17 +345,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const privateList = document.getElementById("private-list");
         if (privateList) {
             privateList.innerHTML = "";
-            console.log("Populating private games list");
+            console.log("Populating my games list");
 
-            if (!privateGames.length) {
-                privateList.innerHTML = "<div>No private games yet</div>";
+            const myGames = JSON.parse(localStorage.getItem("myPineappleGames") || "[]");
+            if (!myGames.length) {
+                privateList.innerHTML = "<div>You haven't created any games yet</div>";
             } else {
                 const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
-                privateGames.forEach(game => {
-                    const gameNumber = game["Game Number"];
+                myGames.forEach((game, index) => {
+                    const gameNumber = index + 1;
                     const gameName = game["Game Name"];
+                    const displayGameName = `Game #${gameNumber} - ${gameName}`;
                     const secretWord = game["Secret Word"].toUpperCase();
-                    const pastResult = results[gameNumber];
+                    const pastResult = results[game["Game Number"]];
                     const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
                     const isCompleted = pastResult && pastResult.guesses !== "Gave Up" && pastResult.secretWord === secretWord;
                     const displayWord = isCompleted || (pastResult && pastResult.guesses === "Gave Up") ? secretWord : "Play Now";
@@ -330,7 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     const gameItem = document.createElement("div");
                     gameItem.className = "game-list-row";
                     gameItem.innerHTML = `
-                        <span>${gameName}</span>
+                        <span>${displayGameName}</span>
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
                     `;
@@ -429,7 +464,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input.addEventListener("input", (e) => {
             if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trim());
-            if (input.value.length > 0) input.placeholder = ""; // Clear placeholder when typing begins
+            if (input.value.length > 0) input.placeholder = "";
         });
 
         input.addEventListener("keydown", (e) => {
@@ -437,12 +472,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         input.addEventListener("focus", () => {
-            if (input.value === "") input.placeholder = "type guess here"; // Show placeholder on focus if empty
+            if (input.value === "") input.placeholder = "type guess here";
             if (firstGuessMade) document.getElementById("footer").style.bottom = "calc(40vh)";
         });
 
         input.addEventListener("blur", () => {
-            if (input.value === "") input.placeholder = "type guess here"; // Restore placeholder on blur if empty
+            if (input.value === "") input.placeholder = "type guess here";
             if (firstGuessMade && !gameOver) input.focus();
             else if (!firstGuessMade) document.getElementById("footer").style.bottom = "1vh";
         });
@@ -622,13 +657,16 @@ document.addEventListener("DOMContentLoaded", () => {
             shareScore.textContent = `${score}`;
         }
 
+        const gameUrl = currentGameNumber.includes("Private") 
+            ? `https://your-game-url.com?game=${encodeURIComponent(originalGameNumber)}`
+            : "https://your-game-url.com";
         const shareMessage = gaveUp
-            ? `PLAY PINEAPPLE\n\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+            ? `PLAY PINEAPPLE\n\nThe Big Brain Word Game\n${currentGameNumber}\nCan you beat my score? Click here: ${gameUrl}`
             : won
-            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
-            : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
+            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\n${currentGameNumber}\nCan you beat my score? Click here: ${gameUrl}`
+            : `${shareText.textContent}\n${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: ${gameUrl}`;
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
-        shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
+        shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent(gameUrl)}&text=${encodeURIComponent(shareMessage)}`;
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
 
         if (currentGameNumber.includes("Private")) {
@@ -673,7 +711,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const originalGameNumber = game["Game Number"];
         if (originalGameNumber && originalGameNumber.includes("P")) {
             const privateIndex = privateGames.findIndex(g => g["Game Number"] === originalGameNumber);
-            currentGameNumber = `Private Game #${privateIndex + 1}`;
+            const gameName = privateGames[privateIndex]["Game Name"];
+            currentGameNumber = `Game #${privateIndex + 1} - ${gameName}`;
         } else {
             currentGameNumber = originalGameNumber;
         }
