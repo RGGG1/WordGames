@@ -251,8 +251,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             if (allGames.length === 0) throw new Error("No valid games in CSV");
 
-            await fetchPrivateGames();
-            const loadedFromUrl = await loadGameFromUrl();
+            await fetchPrivateGames(); // Fetch private games after official games
+            const loadedFromUrl = await loadGameFromUrl(); // Try URL parameter
             if (!loadedFromUrl) {
                 const latestGame = allGames[0];
                 loadGame(latestGame);
@@ -731,6 +731,5 @@ document.addEventListener("DOMContentLoaded", () => {
         return originalGameNumber;
     }
 
-    fetchGameData();
-    fetchPrivateGames();
+    fetchGameData(); // Start with official games
 });
