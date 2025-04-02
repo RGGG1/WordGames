@@ -262,9 +262,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
                     ...game,
-                    "Game Number": `P_${game["Game Name"]}_${game["Secret Word"]}` // Composite key
+                    "Game Number": index + 1, // Simple incremental number starting at 1
+                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}` // Precompute display name
                 }))
-                .sort((a, b) => b["Game Number"].localeCompare(a["Game Number"]));
+                .sort((a, b) => b["Game Number"] - a["Game Number"]); // Sort descending by game number
             console.log("Parsed private games:", privateGames);
         } catch (error) {
             console.error("Error fetching private games:", error);
@@ -387,15 +388,25 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-            if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
+            if (currentGameNumber.includes("Game #")) { // Private game
+                const currentIndex = privateGames.findIndex(game => game["Display Name"] === currentGameNumber);
+                if (currentIndex + 1 < privateGames.length) loadGame(privateGames[currentIndex + 1]);
+            } else { // Official game
+                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+                if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
+            }
         });
 
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-            if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
+            if (currentGameNumber.includes("Game #")) { // Private game
+                const currentIndex = privateGames.findIndex(game => game["Display Name"] === currentGameNumber);
+                if (currentIndex - 1 >= 0) loadGame(privateGames[currentIndex - 1]);
+            } else { // Official game
+                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+                if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
+            }
         });
 
         let touchStartX = 0;
@@ -409,11 +420,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function handleSwipe() {
             const swipeThreshold = 50;
-            const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-            if (touchStartX - touchEndX > swipeThreshold && currentIndex - 1 >= 0) {
-                loadGame(allGames[currentIndex - 1]);
-            } else if (touchEndX - touchStartX > swipeThreshold && currentIndex + 1 < allGames.length) {
-                loadGame(allGames[currentIndex + 1]);
+            if (currentGameNumber.includes("Game #")) { // Private game
+                const currentIndex = privateGames.findIndex(game => game["Display Name"] === currentGameNumber);
+                if (touchStartX - touchEndX > swipeThreshold && currentIndex - 1 >= 0) {
+                    loadGame(privateGames[currentIndex - 1]);
+                } else if (touchEndX - touchStartX > swipeThreshold && currentIndex + 1 < privateGames.length) {
+                    loadGame(privateGames[currentIndex + 1]);
+                }
+            } else { // Official game
+                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+                if (touchStartX - touchEndX > swipeThreshold && currentIndex - 1 >= 0) {
+                    loadGame(allGames[currentIndex - 1]);
+                } else if (touchEndX - touchStartX > swipeThreshold && currentIndex + 1 < allGames.length) {
+                    loadGame(allGames[currentIndex + 1]);
+                }
             }
         }
 
@@ -421,15 +441,15 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             gaveUp = true;
-            const originalGameNumber = currentGameNumber.includes("Private") ? privateGames.find(g => `Private Game #${privateGames.indexOf(g) + 1}` === currentGameNumber)["Game Number"] : currentGameNumber;
-            const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
+            const originalGameNumber = currentGameNumber.includes("Game #") ? privateGames.find(g => g["Display Name"] === currentGameNumber)["Game Number"] : currentGameNumber;
+            const gameType = currentGameNumber.includes("Game #") ? "privatePineapple" : "pineapple";
             saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
             endGame(false, true);
         });
 
         input.addEventListener("input", (e) => {
             if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trim());
-            if (input.value.length > 0) input.placeholder = ""; // Clear placeholder when typing begins
+            if (input.value.length > 0) input.placeholder = "";
         });
 
         input.addEventListener("keydown", (e) => {
@@ -437,12 +457,12 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         input.addEventListener("focus", () => {
-            if (input.value === "") input.placeholder = "type guess here"; // Show placeholder on focus if empty
+            if (input.value === "") input.placeholder = "type guess here";
             if (firstGuessMade) document.getElementById("footer").style.bottom = "calc(40vh)";
         });
 
         input.addEventListener("blur", () => {
-            if (input.value === "") input.placeholder = "type guess here"; // Restore placeholder on blur if empty
+            if (input.value === "") input.placeholder = "type guess here";
             if (firstGuessMade && !gameOver) input.focus();
             else if (!firstGuessMade) document.getElementById("footer").style.bottom = "1vh";
         });
@@ -538,8 +558,8 @@ document.addEventListener("DOMContentLoaded", () => {
             guessLine.style.opacity = "0";
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
-                const originalGameNumber = currentGameNumber.includes("Private") ? privateGames.find(g => `Private Game #${privateGames.indexOf(g) + 1}` === currentGameNumber)["Game Number"] : currentGameNumber;
-                const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
+                const originalGameNumber = currentGameNumber.includes("Game #") ? privateGames.find(g => g["Display Name"] === currentGameNumber)["Game Number"] : currentGameNumber;
+                const gameType = currentGameNumber.includes("Game #") ? "privatePineapple" : "pineapple";
                 saveGameResult(gameType, originalGameNumber, secretWord, score);
                 endGame(true);
             }, 1500);
@@ -594,8 +614,6 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("guess-input").blur();
         document.getElementById("game-name").textContent = "PINEAPPLE";
 
-        const originalGameNumber = currentGameNumber.includes("Private") ? privateGames.find(g => `Private Game #${privateGames.indexOf(g) + 1}` === currentGameNumber)["Game Number"] : currentGameNumber;
-
         gameNumberSpan.textContent = currentGameNumber;
         todaysWord.textContent = secretWord;
 
@@ -603,7 +621,7 @@ document.addEventListener("DOMContentLoaded", () => {
             endGraphic.src = "pineapple_gif.gif";
             endGraphic.style.display = "block";
             const guessText = score === 1 ? "guess" : "guesses";
-            shareText.innerHTML = `I solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}\nGame #${currentGameNumber}`;
+            shareText.innerHTML = `I solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}\n${currentGameNumber}`;
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
@@ -611,27 +629,27 @@ document.addEventListener("DOMContentLoaded", () => {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n\n<span class="italic">The Big Brain Word Game</span>';
-            shareGameNumber.textContent = `Game #${currentGameNumber}`;
+            shareGameNumber.textContent = currentGameNumber;
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
         } else {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.textContent = "I didn’t solve the pineapple";
-            shareGameNumber.textContent = `Game #${currentGameNumber}`;
+            shareGameNumber.textContent = currentGameNumber;
             shareScore.textContent = `${score}`;
         }
 
         const shareMessage = gaveUp
-            ? `PLAY PINEAPPLE\n\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+            ? `PLAY PINEAPPLE\n\nThe Big Brain Word Game\n${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
             : won
-            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
-            : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
+            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\n${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+            : `${shareText.textContent}\n${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
 
-        if (currentGameNumber.includes("Private")) {
+        if (currentGameNumber.includes("Game #")) {
             fetchPrivateGames().then(() => displayGameList());
         }
         adjustBackground();
@@ -671,10 +689,10 @@ document.addEventListener("DOMContentLoaded", () => {
     function loadGame(game) {
         resetGame();
         const originalGameNumber = game["Game Number"];
-        if (originalGameNumber && originalGameNumber.includes("P")) {
-            const privateIndex = privateGames.findIndex(g => g["Game Number"] === originalGameNumber);
-            currentGameNumber = `Private Game #${privateIndex + 1}`;
-        } else {
+        if (originalGameNumber && originalGameNumber.toString().includes("P")) { // Private game
+            const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
+            currentGameNumber = privateGame["Display Name"]; // Use precomputed display name
+        } else { // Official game
             currentGameNumber = originalGameNumber;
         }
         secretWord = game["Secret Word"].toUpperCase();
