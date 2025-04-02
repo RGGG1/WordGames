@@ -161,7 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 officialTab.classList.remove("active");
                 privateContent.classList.add("active");
                 officialContent.classList.remove("active");
-                await fetchPrivateGames();
+                await fetchPrivateGames(); // Refresh private games after creation
                 displayGameList();
                 adjustBackground();
             } catch (error) {
@@ -262,10 +262,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
                     ...game,
-                    "Game Number": index + 1, // Simple incremental number starting at 1
-                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}` // Precompute display name
+                    "Game Number": index + 1,
+                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}`
                 }))
-                .sort((a, b) => b["Game Number"] - a["Game Number"]); // Sort descending by game number
+                .sort((a, b) => b["Game Number"] - a["Game Number"]);
             console.log("Parsed private games:", privateGames);
         } catch (error) {
             console.error("Error fetching private games:", error);
@@ -388,10 +388,10 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (currentGameNumber.includes("Game #")) { // Private game
+            if (currentGameNumber.includes("Game #")) {
                 const currentIndex = privateGames.findIndex(game => game["Display Name"] === currentGameNumber);
                 if (currentIndex + 1 < privateGames.length) loadGame(privateGames[currentIndex + 1]);
-            } else { // Official game
+            } else {
                 const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
                 if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
             }
@@ -400,10 +400,10 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (currentGameNumber.includes("Game #")) { // Private game
+            if (currentGameNumber.includes("Game #")) {
                 const currentIndex = privateGames.findIndex(game => game["Display Name"] === currentGameNumber);
                 if (currentIndex - 1 >= 0) loadGame(privateGames[currentIndex - 1]);
-            } else { // Official game
+            } else {
                 const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
                 if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
             }
@@ -420,14 +420,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function handleSwipe() {
             const swipeThreshold = 50;
-            if (currentGameNumber.includes("Game #")) { // Private game
+            if (currentGameNumber.includes("Game #")) {
                 const currentIndex = privateGames.findIndex(game => game["Display Name"] === currentGameNumber);
                 if (touchStartX - touchEndX > swipeThreshold && currentIndex - 1 >= 0) {
                     loadGame(privateGames[currentIndex - 1]);
                 } else if (touchEndX - touchStartX > swipeThreshold && currentIndex + 1 < privateGames.length) {
                     loadGame(privateGames[currentIndex + 1]);
                 }
-            } else { // Official game
+            } else {
                 const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
                 if (touchStartX - touchEndX > swipeThreshold && currentIndex - 1 >= 0) {
                     loadGame(allGames[currentIndex - 1]);
@@ -441,10 +441,22 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             gaveUp = true;
-            const originalGameNumber = currentGameNumber.includes("Game #") ? privateGames.find(g => g["Display Name"] === currentGameNumber)["Game Number"] : currentGameNumber;
+            let originalGameNumber;
+            if (currentGameNumber.includes("Game #")) {
+                const privateGame = privateGames.find(g => g["Display Name"] === currentGameNumber);
+                originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
+                console.log("Give Up - Private Game:", { currentGameNumber, originalGameNumber, privateGame });
+            } else {
+                originalGameNumber = currentGameNumber;
+                console.log("Give Up - Official Game:", { currentGameNumber, originalGameNumber });
+            }
             const gameType = currentGameNumber.includes("Game #") ? "privatePineapple" : "pineapple";
-            saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
-            endGame(false, true);
+            try {
+                saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
+                endGame(false, true);
+            } catch (error) {
+                console.error("Error in give up:", error);
+            }
         });
 
         input.addEventListener("input", (e) => {
@@ -558,10 +570,22 @@ document.addEventListener("DOMContentLoaded", () => {
             guessLine.style.opacity = "0";
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
-                const originalGameNumber = currentGameNumber.includes("Game #") ? privateGames.find(g => g["Display Name"] === currentGameNumber)["Game Number"] : currentGameNumber;
+                let originalGameNumber;
+                if (currentGameNumber.includes("Game #")) {
+                    const privateGame = privateGames.find(g => g["Display Name"] === currentGameNumber);
+                    originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
+                    console.log("Correct Guess - Private Game:", { currentGameNumber, originalGameNumber, privateGame });
+                } else {
+                    originalGameNumber = currentGameNumber;
+                    console.log("Correct Guess - Official Game:", { currentGameNumber, originalGameNumber });
+                }
                 const gameType = currentGameNumber.includes("Game #") ? "privatePineapple" : "pineapple";
-                saveGameResult(gameType, originalGameNumber, secretWord, score);
-                endGame(true);
+                try {
+                    saveGameResult(gameType, originalGameNumber, secretWord, score);
+                    endGame(true);
+                } catch (error) {
+                    console.error("Error in correct guess:", error);
+                }
             }, 1500);
         } else {
             guessDisplay.classList.add("wrong-guess");
@@ -691,7 +715,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const originalGameNumber = game["Game Number"];
         if (originalGameNumber && originalGameNumber.toString().includes("P")) { // Private game
             const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
-            currentGameNumber = privateGame["Display Name"]; // Use precomputed display name
+            currentGameNumber = privateGame ? privateGame["Display Name"] : originalGameNumber;
         } else { // Official game
             currentGameNumber = originalGameNumber;
         }
@@ -705,6 +729,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return originalGameNumber;
     }
 
+    // Initial fetches
     fetchGameData();
     fetchPrivateGames();
 });
