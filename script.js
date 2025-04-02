@@ -30,9 +30,19 @@ document.addEventListener("DOMContentLoaded", () => {
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
 
-    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZM9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
+    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
+
+    // Debug fetch test
+    fetch(officialUrl)
+        .then(response => {
+            console.log("Debug fetch status:", response.status);
+            console.log("Debug fetch ok:", response.ok);
+            return response.text();
+        })
+        .then(text => console.log("Debug fetch content:", text))
+        .catch(error => console.error("Debug fetch error:", error));
 
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
@@ -49,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
             privateTab.classList.add("active");
             officialTab.classList.remove("active");
             privateContent.classList.add("active");
-            officialContent.classList.remove("active");
+            privateContent.classList.remove("active");
             if (createForm) createForm.style.display = "none";
         });
     }
@@ -204,18 +214,23 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchGameData() {
         try {
             console.log("Fetching official games from:", officialUrl);
-            const response = await fetch(officialUrl);
-            if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
+            const response = await fetch(officialUrl, {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                headers: {
+                    "Accept": "text/csv"
+                }
+            });
+            if (!response.ok) {
+                console.log("Response status:", response.status);
+                console.log("Response headers:", [...response.headers.entries()]);
+                throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
+            }
             const text = await response.text();
             console.log("Official CSV fetched:", text);
 
-            const parsed = Papa.parse(text, {
-                header: true,
-                skipEmptyLines: true,
-                quoteChar: '"',
-                dynamicTyping: false
-            });
-
+            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
             allGames = parsed.data
                 .filter(game => game["Game Number"] && game["Secret Word"])
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
@@ -233,13 +248,14 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "DATA", "Hint 5": "CHECK" }];
+            console.log("Using fallback game:", allGames);
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            alert("Failed to load game data. Using fallback game.");
+            alert("Failed to load official games data. Using fallback game. Please check the console for details.");
         }
     }
 
@@ -251,21 +267,15 @@ document.addEventListener("DOMContentLoaded", () => {
             const text = await response.text();
             console.log("Private CSV fetched:", text);
 
-            const parsed = Papa.parse(text, {
-                header: true,
-                skipEmptyLines: true,
-                quoteChar: '"',
-                dynamicTyping: false
-            });
-
+            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
             privateGames = parsed.data
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
                     ...game,
-                    "Game Number": index + 1, // Numeric ID starting at 1
-                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}` // UI format
+                    "Game Number": index + 1,
+                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}`
                 }))
-                .sort((a, b) => b["Game Number"] - a["Game Number"]); // Latest first
+                .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
         } catch (error) {
             console.error("Error fetching private games:", error);
@@ -278,7 +288,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (officialList) {
             officialList.innerHTML = "";
             document.getElementById("game-name").textContent = "PINEAPPLE";
-            console.log("Populating official games list");
+            console.log("Populating official games list", allGames);
 
             if (!allGames.length) {
                 officialList.innerHTML = "<div>No official games available</div>";
@@ -351,7 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function setupEventListeners() {
         const input = document.getElementById("guess-input");
-        const gameControls = document.getElementById("game-controls"); // Updated from footer
+        const gameControls = document.getElementById("game-controls");
         let keyboardInitiated = false;
 
         document.querySelectorAll("#mode-toggle").forEach(button => {
@@ -364,11 +374,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        if (gameControls) gameControls.addEventListener("click", (e) => e.stopPropagation()); // Updated from footer
+        if (gameControls) gameControls.addEventListener("click", (e) => e.stopPropagation());
 
         document.addEventListener("click", (e) => {
             if (!gameOver && gameScreen.style.display === "flex" && 
-                !gameControls.contains(e.target) && !e.target.closest("button") && e.target.id !== "game-name") { // Updated from footer
+                !gameControls.contains(e.target) && !e.target.closest("button") && e.target.id !== "game-name") {
                 if (!keyboardInitiated) {
                     input.focus();
                     keyboardInitiated = true;
@@ -468,13 +478,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input.addEventListener("focus", () => {
             if (input.value === "") input.placeholder = "type guess here";
-            if (firstGuessMade) document.getElementById("game-controls").style.bottom = "calc(40vh)"; // Updated from footer
+            if (firstGuessMade) document.getElementById("game-controls").style.bottom = "calc(40vh)";
         });
 
         input.addEventListener("blur", () => {
             if (input.value === "") input.placeholder = "type guess here";
             if (firstGuessMade && !gameOver) input.focus();
-            else if (!firstGuessMade) document.getElementById("game-controls").style.bottom = "4.5vh"; // Updated from footer
+            else if (!firstGuessMade) document.getElementById("game-controls").style.bottom = "4.5vh";
         });
     }
 
@@ -551,7 +561,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("how-to-play-1").remove();
             document.getElementById("how-to-play-2").remove();
             document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
-            document.getElementById("game-controls").style.bottom = "calc(40vh)"; // Updated from footer
+            document.getElementById("game-controls").style.bottom = "calc(40vh)";
             adjustHintsAfterGuess();
         }
 
@@ -685,11 +695,11 @@ document.addEventListener("DOMContentLoaded", () => {
         guessInput.value = "";
         guessInput.placeholder = "type guess here";
         document.getElementById("guess-line").style.opacity = "1";
-        document.getElementById("game-controls").style.bottom = "4.5vh"; // Updated from footer
+        document.getElementById("game-controls").style.bottom = "4.5vh";
         if (!document.getElementById("how-to-play-1")) {
             const hintsBox = document.getElementById("hints");
             hintsBox.innerHTML = `
-                <div class="hint-line" id="hint-row-1"><span></span></div>
+                <div class="hint-line" id="hintzinha-row-1"><span></span></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
@@ -709,9 +719,9 @@ document.addEventListener("DOMContentLoaded", () => {
         const originalGameNumber = game["Game Number"];
         const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
         if (privateGame) {
-            currentGameNumber = privateGame["Display Name"]; // e.g., "Game #1 - TestGame"
+            currentGameNumber = privateGame["Display Name"];
         } else {
-            currentGameNumber = originalGameNumber; // Official game number, e.g., "1"
+            currentGameNumber = originalGameNumber;
         }
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
