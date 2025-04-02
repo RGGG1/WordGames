@@ -472,7 +472,13 @@ document.addEventListener("DOMContentLoaded", () => {
             span.textContent = hints[index] || "";
             span.style.visibility = index === 0 ? "visible" : "hidden";
         });
-        document.getElementById("current-game-number").textContent = currentGameNumber;
+        // Dynamically set the game number label
+        const gameNumberLabel = document.getElementById("game-number-label");
+        if (currentGameNumber.includes("Private")) {
+            gameNumberLabel.textContent = currentGameNumber; // "Private Game #Y"
+        } else {
+            gameNumberLabel.textContent = `Game #${currentGameNumber}`; // "Game #Y" for official games
+        }
     }
 
     function adjustBackground() {
