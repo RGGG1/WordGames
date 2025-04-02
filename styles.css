@@ -553,8 +553,8 @@ a {
 .game-list-header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
-  width: 85vw; /* Matches game-select-content width */
-  font-size: clamp(1.2vh, 1.5vw, 1.5vh); /* Reduced for better fit */
+  width: 85vw;
+  font-size: clamp(1.5vh, 1.8vw, 1.8vh); /* Increased for readability */
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
@@ -575,7 +575,7 @@ a {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
   width: 85vw;
-  font-size: clamp(1vh, 1.2vw, 1.2vh); /* Reduced for better fit */
+  font-size: clamp(1.2vh, 1.5vw, 1.5vh); /* Increased for readability */
   margin: 0.5vh 0;
   cursor: pointer;
   overflow: hidden;
@@ -586,7 +586,7 @@ a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; /* Truncate long text */
-  padding: 0 0.5vw; /* Slight padding for readability */
+  padding: 0 0.2vw; /* Reduced padding for narrower columns */
 }
 
 .green { color: #006400; }
