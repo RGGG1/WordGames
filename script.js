@@ -34,15 +34,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
-    // Debug fetch test
-    fetch(officialUrl)
+    // Debug fetch test for privateUrl
+    fetch(privateUrl)
         .then(response => {
-            console.log("Debug fetch status:", response.status);
-            console.log("Debug fetch ok:", response.ok);
+            console.log("Debug private fetch status:", response.status);
+            console.log("Debug private fetch ok:", response.ok);
             return response.text();
         })
-        .then(text => console.log("Debug fetch content:", text))
-        .catch(error => console.error("Debug fetch error:", error));
+        .then(text => console.log("Debug private fetch content:", text))
+        .catch(error => console.error("Debug private fetch error:", error));
 
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
@@ -262,8 +262,19 @@ document.addEventListener("DOMContentLoaded", () => {
     async function fetchPrivateGames() {
         try {
             console.log("Fetching private games from:", privateUrl);
-            const response = await fetch(privateUrl);
-            if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
+            const response = await fetch(privateUrl, {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                headers: {
+                    "Accept": "text/csv"
+                }
+            });
+            if (!response.ok) {
+                console.log("Private response status:", response.status);
+                console.log("Private response headers:", [...response.headers.entries()]);
+                throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
+            }
             const text = await response.text();
             console.log("Private CSV fetched:", text);
 
@@ -280,6 +291,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } catch (error) {
             console.error("Error fetching private games:", error);
             privateGames = [];
+            console.log("Private games set to empty array due to error");
         }
     }
 
@@ -324,7 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const privateList = document.getElementById("private-list");
         if (privateList) {
             privateList.innerHTML = "";
-            console.log("Populating private games list");
+            console.log("Populating private games list", privateGames);
 
             if (!privateGames.length) {
                 privateList.innerHTML = "<div>No private games yet</div>";
@@ -467,23 +479,23 @@ document.addEventListener("DOMContentLoaded", () => {
             endGame(false, true);
         });
 
-        input.addEventListener("input", (e) => {
-            if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trim());
-            if (input.value.length > 0) input.placeholder = "";
+        document.getElementById("guess-input").addEventListener("input", (e) => {
+            if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(e.target.value.trim());
+            if (e.target.value.length > 0) e.target.placeholder = "";
         });
 
-        input.addEventListener("keydown", (e) => {
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) handleGuess(input.value.trim());
+        document.getElementById("guess-input").addEventListener("keydown", (e) => {
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) handleGuess(e.target.value.trim());
         });
 
-        input.addEventListener("focus", () => {
-            if (input.value === "") input.placeholder = "type guess here";
+        document.getElementById("guess-input").addEventListener("focus", (e) => {
+            if (e.target.value === "") e.target.placeholder = "type guess here";
             if (firstGuessMade) document.getElementById("game-controls").style.bottom = "calc(40vh)";
         });
 
-        input.addEventListener("blur", () => {
-            if (input.value === "") input.placeholder = "type guess here";
-            if (firstGuessMade && !gameOver) input.focus();
+        document.getElementById("guess-input").addEventListener("blur", (e) => {
+            if (e.target.value === "") e.target.placeholder = "type guess here";
+            if (firstGuessMade && !gameOver) e.target.focus();
             else if (!firstGuessMade) document.getElementById("game-controls").style.bottom = "4.5vh";
         });
     }
@@ -699,7 +711,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!document.getElementById("how-to-play-1")) {
             const hintsBox = document.getElementById("hints");
             hintsBox.innerHTML = `
-                <div class="hint-line" id="hintzinha-row-1"><span></span></div>
+                <div class="hint-line" id="hint-row-1"><span></span></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
