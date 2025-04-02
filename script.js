@@ -262,8 +262,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
                     ...game,
-                    "Game Number": index + 1, // Simple numeric ID starting at 1
-                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}` // Display format
+                    "Game Number": index + 1, // Numeric ID starting at 1
+                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}` // UI format
                 }))
                 .sort((a, b) => b["Game Number"] - a["Game Number"]); // Latest first
             console.log("Parsed private games:", privateGames);
@@ -300,6 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span>${guesses}</span>
                     `;
                     gameItem.addEventListener("click", () => {
+                        console.log("Clicked official game:", game);
                         loadGame(game);
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
@@ -336,6 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <span>${guesses}</span>
                     `;
                     gameItem.addEventListener("click", () => {
+                        console.log("Clicked private game:", game);
                         loadGame(game);
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
@@ -705,11 +707,12 @@ document.addEventListener("DOMContentLoaded", () => {
     function loadGame(game) {
         resetGame();
         const originalGameNumber = game["Game Number"];
-        if (originalGameNumber && originalGameNumber.includes("P")) { // Private game
-            const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
-            currentGameNumber = privateGame ? privateGame["Display Name"] : originalGameNumber;
-        } else { // Official game
-            currentGameNumber = originalGameNumber;
+        // Check if it's a private game by looking for "Game Number" in privateGames
+        const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
+        if (privateGame) {
+            currentGameNumber = privateGame["Display Name"]; // e.g., "Game #1 - TestGame"
+        } else {
+            currentGameNumber = originalGameNumber; // Official game number, e.g., "1"
         }
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
