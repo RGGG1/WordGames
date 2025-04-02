@@ -247,6 +247,7 @@ a {
   align-items: center;
   padding: 2vh;
   background: #FFFFFF;
+  padding-bottom: 4.5vh; /* Ensures content doesn't overlap ad-box */
 }
 
 .dark-mode #game-over {
@@ -421,7 +422,7 @@ a {
   justify-content: center;
   align-items: center;
   position: fixed;
-  bottom: 5.5vh; /* Adjusted from 1vh to account for ad-box */
+  bottom: 11.5vh; /* Moved up from 5.5vh by 6vh (approx. 4 lines) */
   left: 50%;
   transform: translateX(-50%);
   z-index: 15;
@@ -491,7 +492,7 @@ a {
   justify-content: flex-start;
   align-items: center;
   z-index: 100;
-  padding-bottom: 4.5vh; /* Added to prevent overlap with ad-box */
+  padding-bottom: 4.5vh; /* Ensures content doesn't overlap ad-box */
 }
 
 .dark-mode #game-select-screen {
@@ -727,11 +728,6 @@ a {
     color: #CCCCCC; /* Lighter gray for dark mode */
 }
 
-/* Adjust game-over to avoid overlap with ad-box */
-#game-over {
-    padding-bottom: 4.5vh; /* Match ad-box height */
-}
-
 /* Ensure game-screen footer adjusts with input focus */
 #game-screen #footer {
     transition: bottom 0.3s ease;
@@ -762,7 +758,7 @@ a {
   }
   #footer {
       width: 90vw;
-      bottom: 5vh; /* Adjusted for smaller ad-box */
+      bottom: 10vh; /* Adjusted from 5vh to 10vh (approx. 4 lines up from ad-box) */
   }
   .game-list-header, .game-list-row {
       width: 90vw;
@@ -781,7 +777,7 @@ a {
   }
   #game-select-screen,
   #game-over {
-      padding-bottom: 4vh;
+      padding-bottom: 4vh; /* Matches smaller ad-box height */
   }
 }
 
