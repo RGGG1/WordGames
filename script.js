@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
             gameScreen.style.display = "flex";
             updateHintCountdown();
             adjustBackground();
-            setupEventListeners(); // This will now work with #game-controls
+            setupEventListeners();
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "DATA", "Hint 5": "CHECK" }];
@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
             gameScreen.style.display = "flex";
             updateHintCountdown();
             adjustBackground();
-            setupEventListeners(); // This will now work with #game-controls
+            setupEventListeners();
             alert("Failed to load game data. Using fallback game.");
         }
     }
@@ -351,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function setupEventListeners() {
         const input = document.getElementById("guess-input");
-        const gameControls = document.getElementById("game-controls"); // Replaced #footer
+        const gameControls = document.getElementById("game-controls"); // Updated from footer
         let keyboardInitiated = false;
 
         document.querySelectorAll("#mode-toggle").forEach(button => {
@@ -474,7 +474,7 @@ document.addEventListener("DOMContentLoaded", () => {
         input.addEventListener("blur", () => {
             if (input.value === "") input.placeholder = "type guess here";
             if (firstGuessMade && !gameOver) input.focus();
-            else if (!firstGuessMade) document.getElementById("game-controls").style.bottom = "4.5vh"; // Updated from footer, matches CSS
+            else if (!firstGuessMade) document.getElementById("game-controls").style.bottom = "4.5vh"; // Updated from footer
         });
     }
 
@@ -685,7 +685,7 @@ document.addEventListener("DOMContentLoaded", () => {
         guessInput.value = "";
         guessInput.placeholder = "type guess here";
         document.getElementById("guess-line").style.opacity = "1";
-        document.getElementById("game-controls").style.bottom = "4.5vh"; // Updated from footer, matches CSS
+        document.getElementById("game-controls").style.bottom = "4.5vh"; // Updated from footer
         if (!document.getElementById("how-to-play-1")) {
             const hintsBox = document.getElementById("hints");
             hintsBox.innerHTML = `
@@ -707,7 +707,6 @@ document.addEventListener("DOMContentLoaded", () => {
     function loadGame(game) {
         resetGame();
         const originalGameNumber = game["Game Number"];
-        // Check if it's a private game by looking for "Game Number" in privateGames
         const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
         if (privateGame) {
             currentGameNumber = privateGame["Display Name"]; // e.g., "Game #1 - TestGame"
