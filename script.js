@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
 
-    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
+    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZM9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
@@ -229,7 +229,7 @@ document.addEventListener("DOMContentLoaded", () => {
             gameScreen.style.display = "flex";
             updateHintCountdown();
             adjustBackground();
-            setupEventListeners();
+            setupEventListeners(); // This will now work with #game-controls
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "DATA", "Hint 5": "CHECK" }];
@@ -238,7 +238,7 @@ document.addEventListener("DOMContentLoaded", () => {
             gameScreen.style.display = "flex";
             updateHintCountdown();
             adjustBackground();
-            setupEventListeners();
+            setupEventListeners(); // This will now work with #game-controls
             alert("Failed to load game data. Using fallback game.");
         }
     }
@@ -351,7 +351,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function setupEventListeners() {
         const input = document.getElementById("guess-input");
-        const footer = document.getElementById("footer");
+        const gameControls = document.getElementById("game-controls"); // Replaced #footer
         let keyboardInitiated = false;
 
         document.querySelectorAll("#mode-toggle").forEach(button => {
@@ -364,11 +364,11 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         });
 
-        if (footer) footer.addEventListener("click", (e) => e.stopPropagation());
+        if (gameControls) gameControls.addEventListener("click", (e) => e.stopPropagation()); // Updated from footer
 
         document.addEventListener("click", (e) => {
             if (!gameOver && gameScreen.style.display === "flex" && 
-                !footer.contains(e.target) && !e.target.closest("button") && e.target.id !== "game-name") {
+                !gameControls.contains(e.target) && !e.target.closest("button") && e.target.id !== "game-name") { // Updated from footer
                 if (!keyboardInitiated) {
                     input.focus();
                     keyboardInitiated = true;
@@ -468,13 +468,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
         input.addEventListener("focus", () => {
             if (input.value === "") input.placeholder = "type guess here";
-            if (firstGuessMade) document.getElementById("footer").style.bottom = "calc(40vh)";
+            if (firstGuessMade) document.getElementById("game-controls").style.bottom = "calc(40vh)"; // Updated from footer
         });
 
         input.addEventListener("blur", () => {
             if (input.value === "") input.placeholder = "type guess here";
             if (firstGuessMade && !gameOver) input.focus();
-            else if (!firstGuessMade) document.getElementById("footer").style.bottom = "1vh";
+            else if (!firstGuessMade) document.getElementById("game-controls").style.bottom = "4.5vh"; // Updated from footer, matches CSS
         });
     }
 
@@ -551,7 +551,7 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("how-to-play-1").remove();
             document.getElementById("how-to-play-2").remove();
             document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
-            document.getElementById("footer").style.bottom = "calc(40vh)";
+            document.getElementById("game-controls").style.bottom = "calc(40vh)"; // Updated from footer
             adjustHintsAfterGuess();
         }
 
@@ -685,7 +685,7 @@ document.addEventListener("DOMContentLoaded", () => {
         guessInput.value = "";
         guessInput.placeholder = "type guess here";
         document.getElementById("guess-line").style.opacity = "1";
-        document.getElementById("footer").style.bottom = "1vh";
+        document.getElementById("game-controls").style.bottom = "4.5vh"; // Updated from footer, matches CSS
         if (!document.getElementById("how-to-play-1")) {
             const hintsBox = document.getElementById("hints");
             hintsBox.innerHTML = `
