@@ -152,7 +152,7 @@ a {
 #guess-input::placeholder {
   font-size: 2vh;
   color: #AAAAAA;
-  text-align: left; /* Fixed: Removed erroneous "A" and added colon */
+  text-align: left;
   font-weight: normal;
   text-transform: none;
 }
@@ -576,10 +576,9 @@ a {
   grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
   width: 85vw;
   font-size: clamp(1vh, 1.2vw, 1.2vh); /* Reduced for better fit */
-  margin: 1vh 0; /* Increased for better spacing */
+  margin: 0.5vh 0;
   cursor: pointer;
   overflow: hidden;
-  line-height: 2vh; /* Added for text fit */
 }
 
 .game-list-row span {
@@ -588,8 +587,6 @@ a {
   overflow: hidden;
   text-overflow: ellipsis; /* Truncate long text */
   padding: 0 0.5vw; /* Slight padding for readability */
-  max-width: 33%; /* Ensure each column takes up roughly equal space */
-  box-sizing: border-box;
 }
 
 .green { color: #006400; }
@@ -725,29 +722,14 @@ a {
   #footer {
       width: 90vw;
   }
-  .game-list-header {
+  .game-list-header, .game-list-row {
       width: 90vw;
-      font-size: clamp(1.2vh, 1.5vw, 1.5vh);
-  }
-  .game-list-row {
-      width: 90vw;
-      font-size: clamp(1.5vh, 1.8vw, 1.5vh); /* Increased for mobile */
-      margin: 1vh 0;
-      line-height: 2vh;
-  }
-  .game-list-row span {
-      padding: 0 0.3vw; /* Reduced to prevent overflow */
-      max-width: 33%;
-      box-sizing: border-box;
   }
   .form-input {
       font-size: clamp(1.8vh, 2.5vw, 2.5vh);
   }
   .form-line {
       width: 90vw;
-  }
-  .tab-text {
-      font-size: 2vh;
   }
 }
 

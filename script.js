@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", async () => { // Added async
+document.addEventListener("DOMContentLoaded", () => {
     console.log("DOM fully loaded");
 
     let score = 0;
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
         });
 
         privateTab.addEventListener("click", () => {
-            console.log("My Games tab clicked");
+            console.log("Private tab clicked");
             privateTab.classList.add("active");
             officialTab.classList.remove("active");
             privateContent.classList.add("active");
@@ -153,22 +153,7 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
                     throw new Error(result || "Unknown error from Web App");
                 }
 
-                const myGames = JSON.parse(localStorage.getItem("myPineappleGames") || "[]");
-                const gameNumber = `P_${formData.gameName}_${myGames.length + 1}`;
-                const newGame = {
-                    "Game Name": formData.gameName,
-                    "Secret Word": formData.secretWord,
-                    "Hint 1": formData.hint1,
-                    "Hint 2": formData.hint2,
-                    "Hint 3": formData.hint3,
-                    "Hint 4": formData.hint4,
-                    "Hint 5": formData.hint5,
-                    "Game Number": gameNumber
-                };
-                myGames.push(newGame);
-                localStorage.setItem("myPineappleGames", JSON.stringify(myGames));
-
-                console.log("Game created successfully and saved locally:", newGame);
+                console.log("Game created successfully");
                 createForm.style.display = "none";
                 resetScreenDisplays();
                 gameSelectScreen.style.display = "flex";
@@ -218,39 +203,25 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
 
     async function fetchGameData() {
         try {
-            const urlParams = new URLSearchParams(window.location.search);
-            const gameId = urlParams.get("game");
-
             console.log("Fetching official games from:", officialUrl);
             const response = await fetch(officialUrl);
             if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
             const text = await response.text();
             console.log("Official CSV fetched:", text);
 
-            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
-            console.log("Parsed official games data:", parsed.data);
+            const parsed = Papa.parse(text, {
+                header: true,
+                skipEmptyLines: true,
+                quoteChar: '"',
+                dynamicTyping: false
+            });
 
             allGames = parsed.data
                 .filter(game => game["Game Number"] && game["Secret Word"])
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            console.log("Filtered and sorted allGames:", allGames);
+            console.log("Parsed official games:", allGames);
 
             if (allGames.length === 0) throw new Error("No valid games in CSV");
-
-            await fetchPrivateGames();
-
-            if (gameId && gameId.startsWith("P_")) {
-                const targetGame = privateGames.find(game => game["Game Number"] === gameId);
-                if (targetGame) {
-                    loadGame(targetGame);
-                    resetScreenDisplays();
-                    gameScreen.style.display = "flex";
-                    updateHintCountdown();
-                    adjustBackground();
-                    setupEventListeners();
-                    return;
-                }
-            }
 
             const latestGame = allGames[0];
             loadGame(latestGame);
@@ -262,7 +233,6 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [{ "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "DATA", "Hint 5": "CHECK" }];
-            console.log("Fallback allGames:", allGames);
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
@@ -281,12 +251,18 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
             const text = await response.text();
             console.log("Private CSV fetched:", text);
 
-            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
+            const parsed = Papa.parse(text, {
+                header: true,
+                skipEmptyLines: true,
+                quoteChar: '"',
+                dynamicTyping: false
+            });
+
             privateGames = parsed.data
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
                     ...game,
-                    "Game Number": `P_${game["Game Name"]}_${index + 1}`
+                    "Game Number": `P_${game["Game Name"]}_${game["Secret Word"]}` // Composite key
                 }))
                 .sort((a, b) => b["Game Number"].localeCompare(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
@@ -298,19 +274,15 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
 
     function displayGameList() {
         const officialList = document.getElementById("official-list");
-        console.log("Official list element:", officialList);
-        console.log("allGames before populating official list:", allGames);
         if (officialList) {
             officialList.innerHTML = "";
             document.getElementById("game-name").textContent = "PINEAPPLE";
             console.log("Populating official games list");
 
             if (!allGames.length) {
-                console.log("No official games to display");
                 officialList.innerHTML = "<div>No official games available</div>";
             } else {
                 const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
-                console.log("Local storage results for official games:", results);
                 allGames.forEach(game => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"].toUpperCase();
@@ -334,30 +306,23 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
                     });
                     officialList.appendChild(gameItem);
                 });
-                console.log("Official list populated with HTML:", officialList.innerHTML);
             }
-        } else {
-            console.error("official-list element not found");
         }
 
         const privateList = document.getElementById("private-list");
-        console.log("Private list element:", privateList);
         if (privateList) {
             privateList.innerHTML = "";
-            console.log("Populating my games list");
+            console.log("Populating private games list");
 
-            const myGames = JSON.parse(localStorage.getItem("myPineappleGames") || "[]");
-            console.log("myGames from local storage:", myGames);
-            if (!myGames.length) {
-                privateList.innerHTML = "<div>You haven't created any games yet</div>";
+            if (!privateGames.length) {
+                privateList.innerHTML = "<div>No private games yet</div>";
             } else {
                 const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
-                myGames.forEach((game, index) => {
-                    const gameNumber = index + 1;
+                privateGames.forEach(game => {
+                    const gameNumber = game["Game Number"];
                     const gameName = game["Game Name"];
-                    const displayGameName = `Game #${gameNumber} - ${gameName}`;
                     const secretWord = game["Secret Word"].toUpperCase();
-                    const pastResult = results[game["Game Number"]];
+                    const pastResult = results[gameNumber];
                     const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
                     const isCompleted = pastResult && pastResult.guesses !== "Gave Up" && pastResult.secretWord === secretWord;
                     const displayWord = isCompleted || (pastResult && pastResult.guesses === "Gave Up") ? secretWord : "Play Now";
@@ -365,7 +330,7 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
                     const gameItem = document.createElement("div");
                     gameItem.className = "game-list-row";
                     gameItem.innerHTML = `
-                        <span>${displayGameName}</span>
+                        <span>${gameName}</span>
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
                     `;
@@ -464,7 +429,7 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
 
         input.addEventListener("input", (e) => {
             if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trim());
-            if (input.value.length > 0) input.placeholder = "";
+            if (input.value.length > 0) input.placeholder = ""; // Clear placeholder when typing begins
         });
 
         input.addEventListener("keydown", (e) => {
@@ -472,12 +437,12 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
         });
 
         input.addEventListener("focus", () => {
-            if (input.value === "") input.placeholder = "type guess here";
+            if (input.value === "") input.placeholder = "type guess here"; // Show placeholder on focus if empty
             if (firstGuessMade) document.getElementById("footer").style.bottom = "calc(40vh)";
         });
 
         input.addEventListener("blur", () => {
-            if (input.value === "") input.placeholder = "type guess here";
+            if (input.value === "") input.placeholder = "type guess here"; // Restore placeholder on blur if empty
             if (firstGuessMade && !gameOver) input.focus();
             else if (!firstGuessMade) document.getElementById("footer").style.bottom = "1vh";
         });
@@ -657,16 +622,13 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
             shareScore.textContent = `${score}`;
         }
 
-        const gameUrl = currentGameNumber.includes("Private") 
-            ? `https://your-game-url.com?game=${encodeURIComponent(originalGameNumber)}`
-            : "https://your-game-url.com";
         const shareMessage = gaveUp
-            ? `PLAY PINEAPPLE\n\nThe Big Brain Word Game\n${currentGameNumber}\nCan you beat my score? Click here: ${gameUrl}`
+            ? `PLAY PINEAPPLE\n\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
             : won
-            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\n${currentGameNumber}\nCan you beat my score? Click here: ${gameUrl}`
-            : `${shareText.textContent}\n${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: ${gameUrl}`;
+            ? `I solved the pineapple in\n${score}\n${score === 1 ? "guess" : "guesses"}\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`
+            : `${shareText.textContent}\nGame #${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
-        shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent(gameUrl)}&text=${encodeURIComponent(shareMessage)}`;
+        shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
 
         if (currentGameNumber.includes("Private")) {
@@ -711,8 +673,7 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
         const originalGameNumber = game["Game Number"];
         if (originalGameNumber && originalGameNumber.includes("P")) {
             const privateIndex = privateGames.findIndex(g => g["Game Number"] === originalGameNumber);
-            const gameName = privateGames[privateIndex]["Game Name"];
-            currentGameNumber = `Game #${privateIndex + 1} - ${gameName}`;
+            currentGameNumber = `Private Game #${privateIndex + 1}`;
         } else {
             currentGameNumber = originalGameNumber;
         }
@@ -726,8 +687,6 @@ document.addEventListener("DOMContentLoaded", async () => { // Added async
         return originalGameNumber;
     }
 
-    // Wait for fetches to complete before proceeding
-    await fetchGameData();
-    await fetchPrivateGames();
-    showGameSelectScreen(); // Show the select screen after data is loaded
+    fetchGameData();
+    fetchPrivateGames();
 });
