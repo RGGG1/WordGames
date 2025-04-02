@@ -264,7 +264,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     ...game,
                     "Game Number": `P_${game["Game Name"]}_${game["Secret Word"]}` // Composite key
                 }))
-                .sort((a, b) => b["Game Number"].localeCompare(a["Game Number"])); // Sort by composite key
+                .sort((a, b) => b["Game Number"].localeCompare(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
         } catch (error) {
             console.error("Error fetching private games:", error);
@@ -421,8 +421,9 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             gaveUp = true;
+            const originalGameNumber = currentGameNumber.includes("Private") ? privateGames.find(g => `Private Game #${privateGames.indexOf(g) + 1}` === currentGameNumber)["Game Number"] : currentGameNumber;
             const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
-            saveGameResult(gameType, currentGameNumber, secretWord, "Gave Up");
+            saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
             endGame(false, true);
         });
 
@@ -537,8 +538,9 @@ document.addEventListener("DOMContentLoaded", () => {
             guessLine.style.opacity = "0";
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
+                const originalGameNumber = currentGameNumber.includes("Private") ? privateGames.find(g => `Private Game #${privateGames.indexOf(g) + 1}` === currentGameNumber)["Game Number"] : currentGameNumber;
                 const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
-                saveGameResult(gameType, currentGameNumber, secretWord, score);
+                saveGameResult(gameType, originalGameNumber, secretWord, score);
                 endGame(true);
             }, 1500);
         } else {
@@ -592,6 +594,8 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("guess-input").blur();
         document.getElementById("game-name").textContent = "PINEAPPLE";
 
+        const originalGameNumber = currentGameNumber.includes("Private") ? privateGames.find(g => `Private Game #${privateGames.indexOf(g) + 1}` === currentGameNumber)["Game Number"] : currentGameNumber;
+
         gameNumberSpan.textContent = currentGameNumber;
         todaysWord.textContent = secretWord;
 
@@ -643,7 +647,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
-        guessInput.placeholder = "type guess here"; // Reset placeholder on game reset
+        guessInput.placeholder = "type guess here";
         document.getElementById("guess-line").style.opacity = "1";
         document.getElementById("footer").style.bottom = "1vh";
         if (!document.getElementById("how-to-play-1")) {
@@ -666,19 +670,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function loadGame(game) {
         resetGame();
-        if (game["Game Number"] && game["Game Number"].includes("P")) {
-            const privateIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
-            currentGameNumber = `Private_Game_#${privateIndex + 1}`;
+        const originalGameNumber = game["Game Number"];
+        if (originalGameNumber && originalGameNumber.includes("P")) {
+            const privateIndex = privateGames.findIndex(g => g["Game Number"] === originalGameNumber);
+            currentGameNumber = `Private Game #${privateIndex + 1}`;
         } else {
-            currentGameNumber = game["Game Number"];
+            currentGameNumber = originalGameNumber;
         }
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"], game["Hint 2"], game["Hint 3"],
             game["Hint 4"], game["Hint 5"]
         ].filter(hint => hint).map(hint => hint.toUpperCase());
-        console.log("Loaded game:", { currentGameNumber, secretWord, hints });
+        console.log("Loaded game:", { currentGameNumber, originalGameNumber, secretWord, hints });
         setupHints();
+        return originalGameNumber;
     }
 
     fetchGameData();

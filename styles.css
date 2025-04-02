@@ -552,16 +552,13 @@ a {
 
 .game-list-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* Default to 3 columns for both official and private */
-  width: 85vw;
-  font-size: 1.8vh;
+  grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
+  width: 85vw; /* Matches game-select-content width */
+  font-size: clamp(1.2vh, 1.5vw, 1.5vh); /* Reduced for better fit */
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
-}
-
-#private-list-header {
-    grid-template-columns: 1fr 1fr 1fr; /* Explicitly 3 columns for private games */
+  overflow: hidden;
 }
 
 .game-list {
@@ -571,15 +568,17 @@ a {
   width: 85vw;
   max-height: 50vh;
   overflow-y: auto;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .game-list-row {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr; /* 3 columns for both official and private */
+  grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
   width: 85vw;
-  font-size: 1.5vh;
+  font-size: clamp(1vh, 1.2vw, 1.2vh); /* Reduced for better fit */
   margin: 0.5vh 0;
   cursor: pointer;
+  overflow: hidden;
 }
 
 .game-list-row span {
@@ -587,10 +586,7 @@ a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis; /* Truncate long text */
-}
-
-.game-list-row:hover {
-  text-decoration: underline;
+  padding: 0 0.5vw; /* Slight padding for readability */
 }
 
 .green { color: #006400; }
@@ -705,13 +701,13 @@ a {
       width: 90vw;
   }
   #game-name, #score {
-      font-size: clamp(2.25vh, 3vw, 3vh); /* 50% increase from 1.5vh */
+      font-size: clamp(2.25vh, 3vw, 3vh);
   }
   #mode-toggle {
-      font-size: clamp(1.8vh, 2.25vw, 2.25vh); /* 50% increase from 1.2vh */
+      font-size: clamp(1.8vh, 2.25vw, 2.25vh);
   }
   .footer-btn {
-      font-size: clamp(2.25vh, 2.7vw, 2.7vh); /* 50% increase from 1.5vh */
+      font-size: clamp(2.25vh, 2.7vw, 2.7vh);
       padding: clamp(0.75vh, 0.9vw, 0.9vh) clamp(1.5vh, 1.8vw, 1.8vw);
   }
   #guess-input {
