@@ -120,8 +120,8 @@ document.addEventListener("DOMContentLoaded", () => {
             e.stopPropagation();
             console.log("Confirm button clicked");
             const secretWordInput = document.getElementById("secret-word").value.trim();
-            if (secretWordInput.includes(" ")) {
-                alert("Secret Word must be one word (no spaces allowed).");
+            if (secretWordInput.includes(" ") || secretWordInput === "") {
+                alert("Secret Word must be one word (no spaces) and cannot be empty.");
                 return;
             }
 
@@ -330,7 +330,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     const gameItem = document.createElement("div");
                     gameItem.className = "game-list-row";
                     gameItem.innerHTML = `
-                        <span>${gameName}</span> <!-- Show Game Name in # column -->
                         <span>${gameName}</span>
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
@@ -422,7 +421,7 @@ document.addEventListener("DOMContentLoaded", () => {
             e.preventDefault();
             e.stopPropagation();
             gaveUp = true;
-            const gameType = currentGameNumber.includes("P") ? "privatePineapple" : "pineapple";
+            const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
             saveGameResult(gameType, currentGameNumber, secretWord, "Gave Up");
             endGame(false, true);
         });
@@ -538,7 +537,7 @@ document.addEventListener("DOMContentLoaded", () => {
             guessLine.style.opacity = "0";
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
-                const gameType = currentGameNumber.includes("P") ? "privatePineapple" : "pineapple";
+                const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
                 saveGameResult(gameType, currentGameNumber, secretWord, score);
                 endGame(true);
             }, 1500);
@@ -628,8 +627,7 @@ document.addEventListener("DOMContentLoaded", () => {
         shareTelegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://your-game-url.com")}&text=${encodeURIComponent(shareMessage)}`;
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
 
-        // Refresh private games list if it's a private game
-        if (currentGameNumber.includes("P")) {
+        if (currentGameNumber.includes("Private")) {
             fetchPrivateGames().then(() => displayGameList());
         }
         adjustBackground();
@@ -668,7 +666,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function loadGame(game) {
         resetGame();
-        currentGameNumber = game["Game Number"] || `P_${game["Game Name"]}_${game["Secret Word"]}`;
+        if (game["Game Number"] && game["Game Number"].includes("P")) {
+            const privateIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
+            currentGameNumber = `Private_Game_#${privateIndex + 1}`;
+        } else {
+            currentGameNumber = game["Game Number"];
+        }
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"], game["Hint 2"], game["Hint 3"],
