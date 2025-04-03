@@ -571,6 +571,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("how-to-play-1").remove();
             document.getElementById("how-to-play-2").remove();
             document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
+            document.getElementById("game-controls").remove();
             adjustHintsAfterGuess();
         }
 
@@ -709,13 +710,26 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsBox.innerHTML = `
                 <div class="hint-line" id="hint-row-1"><span></span></div>
                 <div class="hint-line spacer"></div>
-                <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
+                <div class="hint-line" id="how W-to-play-1"><b>How to Play</b></div>
                 <div class="hint-line" id="how-to-play-2">Guess secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
+                <div class="hint-line spacer"></div>
+                <div class="hint-line spacer"></div>
+                <div id="game-controls">
+                    <div class="controls-center">
+                        <button id="give-up-btn" class="control-btn">Give Up</button>
+                        <div class="control-nav">
+                            <button id="prev-arrow-btn" class="control-btn arrow-btn"><i class="fas fa-arrow-left"></i></button>
+                            <button id="all-games-btn" class="control-btn">All Games</button>
+                            <button id="next-arrow-btn" class="control-btn arrow-btn"><i class="fas fa-arrow-right"></i></button>
+                        </div>
+                    </div>
+                </div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>
                 <div class="hint-line" id="hint-row-3"><span></span></div>
                 <div class="hint-line" id="hint-row-4"><span></span></div>
                 <div class="hint-line" id="hint-row-5"><span></span></div>
             `;
+            setupEventListeners(); // Re-attach event listeners to newly created buttons
         }
         setupHints();
         updateHintCountdown();

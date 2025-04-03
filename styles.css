@@ -34,6 +34,8 @@ a {
   background: #FFFFFF;
   box-sizing: border-box;
   overflow: hidden; /* No scrolling */
+  margin: 0;
+  padding: 2vh; /* Restored padding */
 }
 
 .dark-mode #game-screen {
@@ -52,6 +54,8 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin: 0;
+  padding: 0 2vw; /* Restored padding */
 }
 
 #mode-toggle {
@@ -95,6 +99,8 @@ a {
   flex-direction: column;
   justify-content: flex-start;
   background: none;
+  margin: 5vh auto 0 auto; /* Restored margin */
+  padding: 0; /* Restored padding */
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -180,6 +186,8 @@ a {
   height: 27vh; /* 9 lines ≈ 3vh each */
   background: none;
   overflow: hidden; /* No scrolling */
+  margin: 1vh auto; /* Restored margin */
+  padding: 0; /* Restored padding */
 }
 
 .game-number-label {
@@ -235,6 +243,8 @@ a {
 #game-controls {
   width: 85vw;
   background: none;
+  margin: 0; /* Adjusted for new position */
+  padding: 0; /* Adjusted for new position */
 }
 
 .controls-center {
@@ -251,7 +261,7 @@ a {
 }
 
 .control-btn {
-  font-size: 1.8vh; /* Reduced 20% from 2.25vh */
+  font-size: 1.8vh; /* Still reduced by 20% from 2.25vh */
   padding: 0.75vh 1.5vw;
   background: #000000;
   color: #FFFFFF;
@@ -549,7 +559,7 @@ a {
 }
 
 .game-list {
-  display: flex;
+  display: flexjord;
   flex-direction: column;
   align-items: center;
   width: 85vw;
@@ -695,6 +705,8 @@ a {
   align-items: center;
   z-index: 20;
   border-top: 0.1vh solid #CCCCCC;
+  margin: 0; /* Restored margin */
+  padding: 0; /* Restored padding */
 }
 
 .dark-mode #ad-box {
