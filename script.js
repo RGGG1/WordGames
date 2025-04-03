@@ -275,9 +275,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const text = await response.text();
             console.log("Private CSV fetched:", text);
 
-            const parsed = Papa.parse(text, { header: 
-   
-true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
+            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
             privateGames = parsed.data
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
@@ -528,7 +526,9 @@ true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
     function adjustBackground() {
         const screens = [gameScreen, gameOverScreen, gameSelectScreen];
         screens.forEach(screen => {
-            if (screen && screen.style.display === "flex") screen.style.height = "100vh";
+            if (screen && screen.style.display === "flex") {
+                screen.style.minHeight = "100vh";
+            }
         });
     }
 
