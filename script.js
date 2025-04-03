@@ -34,7 +34,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
-    // Debug fetch test for privateUrl
     fetch(privateUrl)
         .then(response => {
             console.log("Debug private fetch status:", response.status);
@@ -52,7 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             officialContent.classList.add("active");
             privateContent.classList.remove("active");
             if (createForm) createForm.style.display = "none";
-            displayGameList(); // Ensure list updates
+            displayGameList();
         });
 
         privateTab.addEventListener("click", () => {
@@ -60,9 +59,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateTab.classList.add("active");
             officialTab.classList.remove("active");
             privateContent.classList.add("active");
-            officialContent.classList.remove("active"); // Fixed typo
+            officialContent.classList.remove("active");
             if (createForm) createForm.style.display = "none";
-            displayGameList(); // Ensure list updates
+            displayGameList();
         });
     }
 
@@ -276,7 +275,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const text = await response.text();
             console.log("Private CSV fetched:", text);
 
-            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
+            const parsed = Papa.parse(text, { header: 
+   
+true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
             privateGames = parsed.data
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
@@ -489,13 +490,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         input.addEventListener("focus", () => {
             if (input.value === "") input.placeholder = "type guess here";
-            if (firstGuessMade) document.getElementById("game-controls").style.bottom = "calc(40vh)";
         });
 
         input.addEventListener("blur", () => {
             if (input.value === "") input.placeholder = "type guess here";
             if (firstGuessMade && !gameOver) input.focus();
-            else if (!firstGuessMade) document.getElementById("game-controls").style.bottom = "4.5vh";
         });
     }
 
@@ -572,7 +571,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("how-to-play-1").remove();
             document.getElementById("how-to-play-2").remove();
             document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
-            document.getElementById("game-controls").style.bottom = "calc(40vh)";
             adjustHintsAfterGuess();
         }
 
@@ -706,7 +704,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.value = "";
         guessInput.placeholder = "type guess here";
         document.getElementById("guess-line").style.opacity = "1";
-        document.getElementById("game-controls").style.bottom = "4.5vh";
         if (!document.getElementById("how-to-play-1")) {
             const hintsBox = document.getElementById("hints");
             hintsBox.innerHTML = `
@@ -744,7 +741,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         return originalGameNumber;
     }
 
-    // Ensure both fetches complete before initial display
     await Promise.all([fetchGameData(), fetchPrivateGames()]);
     displayGameList();
 });

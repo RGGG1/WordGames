@@ -155,10 +155,12 @@ a {
   text-align: left;
   font-weight: normal;
   text-transform: none;
+  padding-top: 0.5vh; /* Moves placeholder down half a line */
 }
 
 .dark-mode #guess-input::placeholder {
   color: #CCCCCC;
+  padding-top: 0.5vh;
 }
 
 #guess-line {
@@ -235,13 +237,8 @@ a {
 
 #game-controls {
   width: 85vw;
-  margin: 0 auto;
-  padding: 1vh 0;
-  position: fixed;
-  bottom: 4.5vh; /* Sits just above the ad-box (4.5vh tall) */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 15;
+  margin: 2vh auto 1vh auto; /* Space below hints, above ad-box */
+  padding: 0;
   background: none;
 }
 
@@ -548,8 +545,8 @@ a {
 .game-list-header {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
-  width: 85vw; /* Matches game-select-content width */
-  font-size: clamp(1.2vh, 1.5vw, 1.5vh); /* Reduced for better fit */
+  width: 85vw;
+  font-size: clamp(1.5vh, 2vw, 2vh); /* Increased font size */
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
@@ -570,7 +567,7 @@ a {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
   width: 85vw;
-  font-size: clamp(1vh, 1.2vw, 1.2vh); /* Reduced for better fit */
+  font-size: clamp(1.3vh, 1.8vw, 1.8vh); /* Increased font size */
   margin: 0.5vh 0;
   cursor: pointer;
   overflow: hidden;
@@ -743,7 +740,7 @@ a {
   }
   #game-controls {
     width: 90vw;
-    bottom: 4vh; /* Adjusted for smaller ad-box */
+    margin: 2vh auto 1vh auto; /* Adjusted for smaller screens */
   }
   .hint-line span {
     font-size: clamp(1.5vh, 1.8vw, 1.8vh);
