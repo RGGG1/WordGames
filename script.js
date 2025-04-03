@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         officialContent.classList.add("active");
         privateContent.classList.remove("active");
         if (createForm) createForm.style.display = "none";
-        displayGameList();
+        displayGameList(); // Fixed typo here
     }
 
     function resetScreenDisplays() {
@@ -222,7 +222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 headers: { "Accept": "text/csv" }
             });
             if (!response.ok) {
-                console.log("Response status:", response.status);
+                console.error("Fetch failed with status:", response.status, response.statusText);
                 console.log("Response headers:", [...response.headers.entries()]);
                 throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
             }
@@ -230,12 +230,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Official CSV fetched:", text);
 
             const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
+            console.log("Parsed CSV data:", parsed.data);
             allGames = parsed.data
                 .filter(game => game["Game Number"] && game["Secret Word"])
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            console.log("Parsed official games:", allGames);
+            console.log("Filtered and sorted official games:", allGames);
 
-            if (allGames.length === 0) throw new Error("No valid games in CSV");
+            if (allGames.length === 0) {
+                console.warn("No valid games found in CSV after filtering");
+                throw new Error("No valid games in CSV");
+            }
 
             const latestGame = allGames[0];
             loadGame(latestGame);
@@ -280,8 +284,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
                     ...game,
-                    "Game Number": String(index + 1), // Ensure string for consistency
-                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}` // Internal use only
+                    "Game Number": String(index + 1),
+                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}`
                 }))
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
@@ -298,9 +302,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (officialList) {
             officialList.innerHTML = "";
             document.getElementById("game-name").textContent = "PINEAPPLE";
-            console.log("Populating official games list", allGames);
+            console.log("Populating official games list with:", allGames);
 
             if (!allGames.length) {
+                console.log("No official games to display");
                 officialList.innerHTML = "<div>No official games available</div>";
             } else {
                 const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
@@ -328,6 +333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     });
                     officialList.appendChild(gameItem);
                 });
+                console.log("Official list populated with", allGames.length, "games");
             }
         }
 
@@ -482,12 +488,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         input.addEventListener("input", (e) => {
-            if (!gameOver && e.data && e.inputType === "insertReplacementText") handleGuess(input.value.trim());
+            if (!gameOver && e.inputType === "insertReplacementText") {
+                handleGuess(input.value.trim());
+            }
             if (input.value.length > 0) input.placeholder = "";
         });
 
         input.addEventListener("keydown", (e) => {
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) handleGuess(input.value.trim());
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) {
+                handleGuess(input.value.trim());
+            }
         });
 
         input.addEventListener("focus", () => {
@@ -531,7 +541,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const screens = [gameScreen, gameOverScreen, gameSelectScreen];
         screens.forEach(screen => {
             if (screen && screen.style.display === "flex") {
-                screen.style.height = "100vh"; // Fixed height
+                screen.style.height = "100vh";
             }
         });
     }
@@ -665,7 +675,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.style.display = "block";
             const guessText = score === 1 ? "guess" : "guesses";
             const gameNum = currentGameNumber.includes("Private Game #") ? 
-                currentGameNumber.replace("Private ", "") : 
+                currentGameNumber : 
                 currentGameNumber;
             shareText.innerHTML = `<span class="small-game-number">${gameNum}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
             shareGameNumber.style.display = "none";
@@ -724,8 +734,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div class="hint-line" id="hint-row-4"><span></span></div>
             <div class="hint-line" id="hint-row-5"><span></span></div>
         `;
-        // #game-controls is now outside #hints, no need to recreate it here
-        setupEventListeners(); // Ensure listeners are attached
+        setupEventListeners();
         setupHints();
         updateHintCountdown();
     }
@@ -735,9 +744,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const originalGameNumber = game["Game Number"];
         const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
         if (privateGame) {
-            currentGameNumber = `Private Game #${privateGame["Game Number"]}`; // e.g., "Private Game #1"
+            currentGameNumber = `Private Game #${privateGame["Game Number"]}`;
         } else {
-            currentGameNumber = originalGameNumber; // Official game number
+            currentGameNumber = originalGameNumber;
         }
         secretWord = game["Secret Word"].toUpperCase();
         hints = [

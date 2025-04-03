@@ -243,7 +243,7 @@ a {
   width: 85vw;
   background: none;
   position: absolute;
-  top: 18vh; /* 6 lines ≈ 18vh below first hint (hint-row-1 at ~0vh) */
+  top: 27vh; /* 9 lines below first hint */
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -633,6 +633,7 @@ a {
   justify-content: center;
   z-index: 200;
   padding: 2vh;
+  padding-bottom: 4.5vh; /* Adjusted to accommodate ad-box */
   box-sizing: border-box;
 }
 
@@ -711,8 +712,8 @@ a {
   align-items: center;
   z-index: 20;
   border-top: 0.1vh solid #CCCCCC;
-  margin: 0; /* Restored margin */
-  padding: 0; /* Restored padding */
+  margin: 0;
+  padding: 0;
 }
 
 .dark-mode #ad-box {
@@ -773,7 +774,8 @@ a {
     font-size: 1.2vh;
   }
   #game-select-screen,
-  #game-over {
+  #game-over,
+  .create-form {
     padding-bottom: 4vh;
   }
 }
