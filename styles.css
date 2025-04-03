@@ -572,6 +572,7 @@ a {
   max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
+  opacity: 1; /* Ensure container is fully opaque */
 }
 
 .game-list-row {
@@ -590,11 +591,13 @@ a {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 0.5vw;
-  color: #000000; /* Explicitly black in light mode */
+  color: #000000 !important; /* Force black in light mode */
+  visibility: visible; /* Ensure visibility */
 }
 
 .dark-mode .game-list-row span {
-  color: #FFFFFF; /* White in dark mode */
+  color: #FFFFFF !important; /* Force white in dark mode */
+  visibility: visible;
 }
 
 .green { color: #006400; }

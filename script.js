@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
 
-    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
+    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6sqCd/pub?output=csv";
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
@@ -333,6 +333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
                     `;
+                    gameItem.style.visibility = "visible"; // Ensure visibility
                     gameItem.addEventListener("click", () => {
                         console.log("Clicked official game:", game);
                         loadGame(game);
@@ -372,6 +373,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
                     `;
+                    gameItem.style.visibility = "visible"; // Ensure visibility
                     gameItem.addEventListener("click", () => {
                         console.log("Clicked private game:", game);
                         loadGame(game);
@@ -495,10 +497,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
             saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
             endGame(false, true);
-        });
-
-        input.addEventListener("input", (e) => {
-            if (input.value.length > 0) input.placeholder = "";
         });
 
         input.addEventListener("keydown", (e) => {
@@ -673,7 +671,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("guess-input").blur();
         document.getElementById("game-name").textContent = "PINEAPPLE";
 
-        gameNumberSpan.textContent = currentGameNumber;
+        gameNumberSpan.textContent = currentGameNumber; // Displays "Private Game #Y" or official number
         todaysWord.textContent = secretWord;
 
         let shareMessage;
@@ -681,14 +679,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.src = "pineapple_gif.gif";
             endGraphic.style.display = "block";
             const guessText = score === 1 ? "guess" : "guesses";
-            const gameNum = currentGameNumber.includes("Private Game #") ? 
-                currentGameNumber : 
-                currentGameNumber;
-            shareText.innerHTML = `<span class="small-game-number">${gameNum}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+            shareText.innerHTML = `<span class="small-game-number">${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
-            shareMessage = `${gameNum}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
+            shareMessage = `${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
         } else if (gaveUp) {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
@@ -751,9 +746,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const originalGameNumber = game["Game Number"];
         const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
         if (privateGame) {
-            currentGameNumber = `Private Game #${privateGame["Game Number"]}`;
+            currentGameNumber = `Private Game #${privateGame["Game Number"]}`; // Only "Private Game #Y"
         } else {
-            currentGameNumber = originalGameNumber;
+            currentGameNumber = originalGameNumber; // Official game number as-is
         }
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
