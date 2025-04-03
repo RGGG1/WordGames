@@ -203,7 +203,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         officialContent.classList.add("active");
         privateContent.classList.remove("active");
         if (createForm) createForm.style.display = "none";
-        displayGameList(); // Fixed typo here
+        displayGameList();
     }
 
     function resetScreenDisplays() {
@@ -228,16 +228,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             const text = await response.text();
             console.log("Official CSV fetched:", text);
+            if (!text.trim()) {
+                console.warn("CSV is empty");
+                throw new Error("Empty CSV response");
+            }
 
             const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
             console.log("Parsed CSV data:", parsed.data);
+            if (!parsed.data.length) {
+                console.warn("No rows parsed from CSV");
+                throw new Error("No data parsed from CSV");
+            }
+
             allGames = parsed.data
                 .filter(game => game["Game Number"] && game["Secret Word"])
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Filtered and sorted official games:", allGames);
-
             if (allGames.length === 0) {
-                console.warn("No valid games found in CSV after filtering");
+                console.warn("No valid games after filtering. Expected headers: 'Game Number', 'Secret Word'");
                 throw new Error("No valid games in CSV");
             }
 
@@ -304,14 +312,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("game-name").textContent = "PINEAPPLE";
             console.log("Populating official games list with:", allGames);
 
-            if (!allGames.length) {
+            if (!allGames || allGames.length === 0) {
                 console.log("No official games to display");
                 officialList.innerHTML = "<div>No official games available</div>";
             } else {
                 const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
-                allGames.forEach(game => {
+                console.log("Rendering", allGames.length, "official games");
+                allGames.forEach((game, index) => {
                     const gameNumber = game["Game Number"];
-                    const secretWord = game["Secret Word"].toUpperCase();
+                    const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
                     const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
                     const isCompleted = pastResult && pastResult.guesses !== "Gave Up" && pastResult.secretWord === secretWord;
@@ -332,6 +341,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         adjustBackground();
                     });
                     officialList.appendChild(gameItem);
+                    console.log(`Added game ${index + 1}:`, { gameNumber, secretWord, guesses });
                 });
                 console.log("Official list populated with", allGames.length, "games");
             }
@@ -488,9 +498,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         input.addEventListener("input", (e) => {
-            if (!gameOver && e.inputType === "insertReplacementText") {
-                handleGuess(input.value.trim());
-            }
             if (input.value.length > 0) input.placeholder = "";
         });
 
@@ -759,5 +766,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await Promise.all([fetchGameData(), fetchPrivateGames()]);
+    console.log("Initial fetch complete, calling displayGameList");
     displayGameList();
 });

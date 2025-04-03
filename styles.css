@@ -590,6 +590,11 @@ a {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 0.5vw;
+  color: #000000; /* Explicitly black in light mode */
+}
+
+.dark-mode .game-list-row span {
+  color: #FFFFFF; /* White in dark mode */
 }
 
 .green { color: #006400; }
