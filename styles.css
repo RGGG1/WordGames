@@ -32,7 +32,6 @@ a {
   flex-direction: column;
   height: 100vh; /* Fixed height, no scrolling */
   background: #FFFFFF;
-  padding-bottom: 6.5vh; /* Space for ad-box plus 2vh gap */
   box-sizing: border-box;
   overflow: hidden; /* No scrolling */
 }
@@ -43,12 +42,10 @@ a {
 
 #header {
   width: 85vw;
-  margin: 0.5vh auto 0 auto;
   position: fixed;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
-  padding-bottom: 1vh;
   z-index: 10;
   height: 5vh;
   background: none;
@@ -93,7 +90,6 @@ a {
 #guess-area {
   width: 85vw;
   height: 10vh;
-  margin: 7vh auto 2vh auto; /* Below header, 2vh gap */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -182,8 +178,6 @@ a {
 #hints-box {
   width: 85vw;
   height: 27vh; /* 9 lines ≈ 3vh each */
-  margin: 2vh auto; /* Consistent spacing */
-  padding: 1vh;
   background: none;
   overflow: hidden; /* No scrolling */
 }
@@ -240,8 +234,6 @@ a {
 
 #game-controls {
   width: 85vw;
-  margin: 2vh auto; /* Consistent spacing */
-  padding: 0;
   background: none;
 }
 
@@ -259,7 +251,7 @@ a {
 }
 
 .control-btn {
-  font-size: 2.25vh; /* Original size; reduce to 1.8vh if needed */
+  font-size: 1.8vh; /* Reduced 20% from 2.25vh */
   padding: 0.75vh 1.5vw;
   background: #000000;
   color: #FFFFFF;
@@ -732,7 +724,7 @@ a {
     font-size: clamp(1.8vh, 2.25vw, 2.25vh);
   }
   .control-btn {
-    font-size: clamp(2.25vh, 2.7vw, 2.7vh);
+    font-size: clamp(1.8vh, 2.2vw, 2.2vh);
     padding: clamp(0.75vh, 0.9vw, 0.9vh) clamp(1.5vh, 1.8vw, 1.8vw);
   }
   #guess-input {
@@ -743,7 +735,6 @@ a {
   }
   #game-controls {
     width: 90vw;
-    margin: 2vh auto;
   }
   .hint-line span {
     font-size: clamp(1.5vh, 1.8vw, 1.8vh);

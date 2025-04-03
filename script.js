@@ -708,6 +708,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const hintsBox = document.getElementById("hints");
             hintsBox.innerHTML = `
                 <div class="hint-line" id="hint-row-1"><span></span></div>
+                <div class="hint-line spacer"></div>
                 <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
                 <div class="hint-line" id="how-to-play-2">Guess secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>
