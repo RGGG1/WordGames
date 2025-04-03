@@ -186,6 +186,7 @@ a {
   background: none;
   margin: 1vh auto; /* Restored margin */
   padding: 0; /* Restored padding */
+  position: relative; /* For absolute positioning of game-controls */
 }
 
 .game-number-label {
@@ -241,8 +242,11 @@ a {
 #game-controls {
   width: 85vw;
   background: none;
-  margin: 0; /* Adjusted for new position */
-  padding: 0; /* Adjusted for new position */
+  position: absolute;
+  top: 18vh; /* 6 lines ≈ 18vh below first hint (hint-row-1 at ~0vh) */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
 }
 
 .controls-center {
@@ -259,7 +263,7 @@ a {
 }
 
 .control-btn {
-  font-size: 1.8vh; /* Still reduced by 20% from 2.25vh */
+  font-size: 1.8vh;
   padding: 0.75vh 1.5vw;
   background: #000000;
   color: #FFFFFF;
@@ -359,7 +363,7 @@ a {
 }
 
 #share-text .small-game-number {
-  font-size: 1.5vh; /* Smaller font for game number */
+  font-size: 1.5vh;
 }
 
 #share-text.big {
@@ -556,7 +560,7 @@ a {
   font-size: clamp(1.5vh, 2vw, 2vh);
   font-weight: bold;
   margin-bottom: 1vh;
-  text-align: center; /* Ensure titles are centered */
+  text-align: center;
   overflow: hidden;
 }
 
@@ -581,7 +585,7 @@ a {
 }
 
 .game-list-row span {
-  text-align: center; /* Ensure content is centered */
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

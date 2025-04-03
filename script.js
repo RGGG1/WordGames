@@ -280,8 +280,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .filter(game => game["Game Name"] && game["Secret Word"])
                 .map((game, index) => ({
                     ...game,
-                    "Game Number": index + 1,
-                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}` // Used internally
+                    "Game Number": String(index + 1), // Ensure string for consistency
+                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}` // Internal use only
                 }))
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
@@ -410,9 +410,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (currentGameNumber.includes("Private")) {
-                const currentName = currentGameNumber.replace("Private ", "");
-                const currentIndex = privateGames.findIndex(game => game["Game Name"] === currentName);
+            if (currentGameNumber.includes("Private Game #")) {
+                const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
+                const currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
                 if (currentIndex + 1 < privateGames.length) loadGame(privateGames[currentIndex + 1]);
             } else {
                 const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
@@ -423,9 +423,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (currentGameNumber.includes("Private")) {
-                const currentName = currentGameNumber.replace("Private ", "");
-                const currentIndex = privateGames.findIndex(game => game["Game Name"] === currentName);
+            if (currentGameNumber.includes("Private Game #")) {
+                const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
+                const currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
                 if (currentIndex - 1 >= 0) loadGame(privateGames[currentIndex - 1]);
             } else {
                 const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
@@ -444,9 +444,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         function handleSwipe() {
             const swipeThreshold = 50;
-            if (currentGameNumber.includes("Private")) {
-                const currentName = currentGameNumber.replace("Private ", "");
-                const currentIndex = privateGames.findIndex(game => game["Game Name"] === currentName);
+            if (currentGameNumber.includes("Private Game #")) {
+                const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
+                const currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
                 if (touchStartX - touchEndX > swipeThreshold && currentIndex - 1 >= 0) {
                     loadGame(privateGames[currentIndex - 1]);
                 } else if (touchEndX - touchStartX > swipeThreshold && currentIndex + 1 < privateGames.length) {
@@ -467,9 +467,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             gaveUp = true;
             let originalGameNumber;
-            if (currentGameNumber.includes("Private")) {
-                const currentName = currentGameNumber.replace("Private ", "");
-                const privateGame = privateGames.find(g => g["Game Name"] === currentName);
+            if (currentGameNumber.includes("Private Game #")) {
+                const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
+                const privateGame = privateGames.find(g => g["Game Number"] === String(currentNum));
                 originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
                 console.log("Give Up - Private Game:", { currentGameNumber, originalGameNumber, privateGame });
             } else {
@@ -575,7 +575,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("how-to-play-1").remove();
             document.getElementById("how-to-play-2").remove();
             document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
-            // Do NOT remove #game-controls
             adjustHintsAfterGuess();
         }
 
@@ -593,9 +592,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
                 let originalGameNumber;
-                if (currentGameNumber.includes("Private")) {
-                    const currentName = currentGameNumber.replace("Private ", "");
-                    const privateGame = privateGames.find(g => g["Game Name"] === currentName);
+                if (currentGameNumber.includes("Private Game #")) {
+                    const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
+                    const privateGame = privateGames.find(g => g["Game Number"] === String(currentNum));
                     originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
                     console.log("Correct Guess - Private Game:", { currentGameNumber, originalGameNumber, privateGame });
                 } else {
@@ -665,14 +664,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.src = "pineapple_gif.gif";
             endGraphic.style.display = "block";
             const guessText = score === 1 ? "guess" : "guesses";
-            const gameNum = currentGameNumber.includes("Private") ? 
+            const gameNum = currentGameNumber.includes("Private Game #") ? 
                 currentGameNumber.replace("Private ", "") : 
                 currentGameNumber;
-            shareText.innerHTML = `<span class="small-game-number">Game #${gameNum}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+            shareText.innerHTML = `<span class="small-game-number">${gameNum}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
-            shareMessage = `Game #${gameNum}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
+            shareMessage = `${gameNum}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
         } else if (gaveUp) {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
@@ -712,32 +711,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.value = "";
         guessInput.placeholder = "type guess here";
         document.getElementById("guess-line").style.opacity = "1";
-        if (!document.getElementById("how-to-play-1")) {
-            const hintsBox = document.getElementById("hints");
-            hintsBox.innerHTML = `
-                <div class="hint-line" id="hint-row-1"><span></span></div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-                <div class="hint-line" id="how-to-play-2">Guess secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line spacer"></div>
-                <div id="game-controls">
-                    <div class="controls-center">
-                        <button id="give-up-btn" class="control-btn">Give Up</button>
-                        <div class="control-nav">
-                            <button id="prev-arrow-btn" class="control-btn arrow-btn"><i class="fas fa-arrow-left"></i></button>
-                            <button id="all-games-btn" class="control-btn">All Games</button>
-                            <button id="next-arrow-btn" class="control-btn arrow-btn"><i class="fas fa-arrow-right"></i></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="hint-line" id="hint-row-2"><span></span></div>
-                <div class="hint-line" id="hint-row-3"><span></span></div>
-                <div class="hint-line" id="hint-row-4"><span></span></div>
-                <div class="hint-line" id="hint-row-5"><span></span></div>
-            `;
-            setupEventListeners(); // Re-attach event listeners to newly created buttons
-        }
+        const hintsBox = document.getElementById("hints");
+        hintsBox.innerHTML = `
+            <div class="hint-line" id="hint-row-1"><span></span></div>
+            <div class="hint-line spacer"></div>
+            <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
+            <div class="hint-line" id="how-to-play-2">Guess secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
+            <div class="hint-line spacer"></div>
+            <div class="hint-line spacer"></div>
+            <div class="hint-line" id="hint-row-2"><span></span></div>
+            <div class="hint-line" id="hint-row-3"><span></span></div>
+            <div class="hint-line" id="hint-row-4"><span></span></div>
+            <div class="hint-line" id="hint-row-5"><span></span></div>
+        `;
+        // #game-controls is now outside #hints, no need to recreate it here
+        setupEventListeners(); // Ensure listeners are attached
         setupHints();
         updateHintCountdown();
     }
@@ -747,7 +735,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const originalGameNumber = game["Game Number"];
         const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
         if (privateGame) {
-            currentGameNumber = `Private ${privateGame["Game Name"]}`; // Display as "Private (Name)"
+            currentGameNumber = `Private Game #${privateGame["Game Number"]}`; // e.g., "Private Game #1"
         } else {
             currentGameNumber = originalGameNumber; // Official game number
         }
