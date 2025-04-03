@@ -186,7 +186,6 @@ a {
   background: none;
   margin: 1vh auto; /* Restored margin */
   padding: 0; /* Restored padding */
-  /* Removed height: 27vh and overflow: hidden */
 }
 
 .game-number-label {
@@ -357,6 +356,10 @@ a {
 #share-text .big-score {
   font-size: 6.25vh;
   margin-top: 0.25vh;
+}
+
+#share-text .small-game-number {
+  font-size: 1.5vh; /* Smaller font for game number */
 }
 
 #share-text.big {
@@ -553,12 +556,12 @@ a {
   font-size: clamp(1.5vh, 2vw, 2vh);
   font-weight: bold;
   margin-bottom: 1vh;
-  text-align: center;
+  text-align: center; /* Ensure titles are centered */
   overflow: hidden;
 }
 
 .game-list {
-  display: flexjord;
+  display: flex;
   flex-direction: column;
   align-items: center;
   width: 85vw;
@@ -578,7 +581,7 @@ a {
 }
 
 .game-list-row span {
-  text-align: center;
+  text-align: center; /* Ensure content is centered */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
