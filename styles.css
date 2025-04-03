@@ -10,6 +10,7 @@ body {
   flex-direction: column;
   width: 100vw;
   overflow-x: hidden;
+  overflow-y: hidden; /* Prevent body scrolling */
 }
 
 .dark-mode {
@@ -29,10 +30,11 @@ a {
 #game-screen {
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  height: 100vh; /* Fixed height, no scrolling */
   background: #FFFFFF;
   padding-bottom: 6.5vh; /* Space for ad-box plus 2vh gap */
   box-sizing: border-box;
+  overflow: hidden; /* No scrolling */
 }
 
 .dark-mode #game-screen {
@@ -91,7 +93,7 @@ a {
 #guess-area {
   width: 85vw;
   height: 10vh;
-  margin: 7vh auto 2vh auto; /* Below header, 2vh gap below */
+  margin: 7vh auto 2vh auto; /* Below header, 2vh gap */
   position: relative;
   display: flex;
   flex-direction: column;
@@ -179,11 +181,11 @@ a {
 
 #hints-box {
   width: 85vw;
-  height: 36vh; /* Fixed height for ~12 lines */
-  margin: 2vh auto; /* Equal spacing */
+  height: 27vh; /* 9 lines ≈ 3vh each */
+  margin: 2vh auto; /* Consistent spacing */
   padding: 1vh;
   background: none;
-  overflow-y: auto;
+  overflow: hidden; /* No scrolling */
 }
 
 .game-number-label {
@@ -238,7 +240,7 @@ a {
 
 #game-controls {
   width: 85vw;
-  margin: 2vh auto; /* Equal spacing */
+  margin: 2vh auto; /* Consistent spacing */
   padding: 0;
   background: none;
 }
@@ -257,7 +259,7 @@ a {
 }
 
 .control-btn {
-  font-size: 2.25vh;
+  font-size: 2.25vh; /* Original size; reduce to 1.8vh if needed */
   padding: 0.75vh 1.5vw;
   background: #000000;
   color: #FFFFFF;
