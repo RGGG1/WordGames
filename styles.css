@@ -183,11 +183,10 @@ a {
 
 #hints-box {
   width: 85vw;
-  height: 27vh; /* 9 lines ≈ 3vh each */
   background: none;
-  overflow: hidden; /* No scrolling */
   margin: 1vh auto; /* Restored margin */
   padding: 0; /* Restored padding */
+  /* Removed height: 27vh and overflow: hidden */
 }
 
 .game-number-label {
