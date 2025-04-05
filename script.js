@@ -37,13 +37,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    // Declare modeToggles at top level
     let modeToggles = document.querySelectorAll("#mode-toggle");
 
-    // Initialize mode and buttons
     initializeMode();
 
-    // Bind mode toggle listeners once
     modeToggles.forEach(modeToggle => {
         modeToggle.addEventListener("click", toggleMode);
     });
@@ -61,7 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Toggled to", isDarkMode ? "dark mode" : "light mode");
     }
 
-    // One-time keydown listener setup
     const input = document.getElementById("guess-input");
     input.addEventListener("keydown", function handleGuessKeydown(e) {
         if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver && !input.disabled && !isProcessingGuess) {
@@ -726,8 +722,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.src = "pineapple_gif.gif";
             endGraphic.style.display = "block";
             const guessText = score === 1 ? "guess" : "guesses";
-            shareText.innerHTML = `<span class="small-game-number">${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
-            shareMessage = `${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
+            const shareGamePrefix = currentGameNumber.includes("Private") ? "" : "Game #";
+            shareText.innerHTML = `<span class="small-game-number">${shareGamePrefix}${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+            shareMessage = `${shareGamePrefix}${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
