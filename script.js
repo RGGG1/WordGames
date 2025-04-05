@@ -34,13 +34,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
+    // Auto-open keyboard on mobile
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    if (isMobile) {
+        setTimeout(() => keepKeyboardOpen(), 100); // Delay to ensure DOM readiness
+    }
+
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
             console.log("Official tab clicked");
             officialTab.classList.add("active");
             privateTab.classList.remove("active");
             officialContent.classList.add("active");
+            officialContent.style.display = "flex"; // Explicitly set display
             privateContent.classList.remove("active");
+            privateContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
             displayGameList();
         });
@@ -50,7 +58,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateTab.classList.add("active");
             officialTab.classList.remove("active");
             privateContent.classList.add("active");
+            privateContent.style.display = "flex"; // Explicitly set display
             officialContent.classList.remove("active");
+            officialContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
             displayGameList();
         });
@@ -74,7 +84,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         officialTab.classList.add("active");
         privateTab.classList.remove("active");
         officialContent.classList.add("active");
+        officialContent.style.display = "flex";
         privateContent.classList.remove("active");
+        privateContent.style.display = "none";
         if (createForm) createForm.style.display = "none";
         displayGameList();
         adjustBackground();
@@ -88,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameScreen.style.display = "flex";
         adjustBackground();
         if (createForm) createForm.style.display = "none";
-        keepKeyboardOpen(); // Keep keyboard open when returning to game screen
+        keepKeyboardOpen();
     });
 
     if (createPineappleBtn && createForm) {
@@ -110,7 +122,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateTab.classList.add("active");
             officialTab.classList.remove("active");
             privateContent.classList.add("active");
+            privateContent.style.display = "flex";
             officialContent.classList.remove("active");
+            officialContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
             displayGameList();
             adjustBackground();
@@ -163,7 +177,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 privateTab.classList.add("active");
                 officialTab.classList.remove("active");
                 privateContent.classList.add("active");
+                privateContent.style.display = "flex";
                 officialContent.classList.remove("active");
+                officialContent.style.display = "none";
                 await fetchPrivateGames();
                 displayGameList();
                 adjustBackground();
@@ -183,7 +199,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             adjustBackground();
-            keepKeyboardOpen(); // Keep keyboard open when returning to game screen
+            keepKeyboardOpen();
         });
     }
 
@@ -194,7 +210,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         officialTab.classList.add("active");
         privateTab.classList.remove("active");
         officialContent.classList.add("active");
+        officialContent.style.display = "flex"; // Ensure visibility
         privateContent.classList.remove("active");
+        privateContent.style.display = "none";
         if (createForm) createForm.style.display = "none";
         displayGameList();
     }
@@ -240,7 +258,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            keepKeyboardOpen(); // Ensure keyboard opens on load
+            keepKeyboardOpen();
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
@@ -292,6 +310,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const officialList = document.getElementById("official-list");
         if (officialList) {
             officialList.innerHTML = "";
+            // Add a spacer to mimic My Games structure
+            const spacer = document.createElement("div");
+            spacer.className = "spacer";
+            officialList.parentNode.insertBefore(spacer, officialList);
             document.getElementById("game-name").textContent = "PINEAPPLE";
             console.log("Populating official games list with:", allGames);
 
@@ -316,7 +338,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <span>${guesses}</span>
                     `;
                     gameItem.style.visibility = "visible";
-                    gameItem.style.display = "grid"; // Ensure grid display
+                    gameItem.style.display = "grid";
+                    gameItem.style.opacity = "1";
                     gameItem.addEventListener("click", () => {
                         console.log("Clicked official game:", game);
                         loadGame(game);
@@ -326,8 +349,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                         keepKeyboardOpen();
                     });
                     officialList.appendChild(gameItem);
-                    console.log(`Rendered game ${gameNumber}: ${secretWord}, Guesses: ${guesses}`);
+                    console.log(`Rendered official game ${gameNumber}: ${secretWord}, Guesses: ${guesses}`);
                 });
+                // Force reflow to ensure rendering
+                officialContent.style.display = "none";
+                void officialContent.offsetHeight;
+                officialContent.style.display = "flex";
             }
         }
 
@@ -358,6 +385,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     `;
                     gameItem.style.visibility = "visible";
                     gameItem.style.display = "grid";
+                    gameItem.style.opacity = "1";
                     gameItem.addEventListener("click", () => {
                         console.log("Clicked private game:", game);
                         loadGame(game);
@@ -377,7 +405,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gameControls = document.getElementById("game-controls");
         let keyboardInitiated = false;
 
-        // Fixed mode toggle
         document.querySelectorAll("#mode-toggle").forEach(button => {
             button.addEventListener("click", (e) => {
                 e.preventDefault();
@@ -503,14 +530,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         input.addEventListener("focus", () => {
             if (input.value === "") input.placeholder = "type guess here";
         });
-
-        // Removed blur listener to keep keyboard open
     }
 
     function keepKeyboardOpen() {
         const input = document.getElementById("guess-input");
-        if (!gameOver && gameScreen.style.display === "flex") {
+        if (!gameOver && gameScreen.style.display === "flex" && !input.disabled) {
             input.focus();
+            console.log("Keyboard kept open");
         }
     }
 
@@ -627,7 +653,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
                 guessDisplay.disabled = false;
-                keepKeyboardOpen(); // Keep keyboard open after wrong guess
+                keepKeyboardOpen(); // Keep keyboard open after guess
             }, 500);
         }
     }

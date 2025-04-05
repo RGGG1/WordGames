@@ -243,10 +243,17 @@ a {
   width: 85vw;
   background: none;
   position: absolute;
-  top: 27vh;
+  top: 27vh; /* Default position */
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
+}
+
+/* Move game controls two lines lower on desktop (approx 2vh per line) */
+@media (min-width: 601px) {
+  #game-controls {
+    top: 31vh; /* 27vh + 4vh */
+  }
 }
 
 .controls-center {
@@ -551,8 +558,8 @@ a {
   display: flex !important;
   flex-direction: column;
   align-items: center;
-  visibility: visible !important; /* Ensure visibility */
-  opacity: 1 !important; /* Ensure opacity */
+  visibility: visible !important;
+  opacity: 1 !important;
 }
 
 .game-list-header {
@@ -574,8 +581,8 @@ a {
   max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
-  opacity: 1 !important; /* Ensure opacity */
-  visibility: visible !important; /* Ensure visibility */
+  opacity: 1 !important;
+  visibility: visible !important;
 }
 
 .game-list-row {
@@ -588,22 +595,21 @@ a {
   overflow: hidden;
   visibility: visible !important;
   opacity: 1 !important;
-  height: auto !important; /* Ensure height is not collapsed */
+  height: auto !important;
 }
 
-/* Updated color handling for light and dark modes */
 .game-list-row span {
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 0.5vw;
-  color: #000000; /* Default to black in light mode */
+  color: #000000;
   visibility: visible !important;
 }
 
 .dark-mode .game-list-row span {
-  color: #FFFFFF; /* White in dark mode */
+  color: #FFFFFF;
   visibility: visible !important;
 }
 
@@ -769,6 +775,7 @@ a {
   }
   #game-controls {
     width: 90vw;
+    top: 27vh; /* Keep original position on mobile */
   }
   .hint-line span {
     font-size: clamp(1.5vh, 1.8vw, 1.8vh);
