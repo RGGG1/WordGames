@@ -59,7 +59,7 @@ a {
   padding: 0 2vw;
 }
 
-.mode-btn { /* Changed from #mode-toggle to match class in HTML */
+.mode-btn {
   font-size: 1.875vh;
   background: none;
   border: none;

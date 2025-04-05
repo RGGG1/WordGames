@@ -296,8 +296,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
         } catch (error) {
-avaş
-
             console.error("Error fetching private games:", error);
             privateGames = [];
         }
@@ -532,7 +530,7 @@ avaş
             if (isMobile) {
                 setTimeout(() => {
                     if (document.activeElement !== input) input.focus();
-                }, 50); // Reduced delay for quicker recovery
+                }, 50);
             }
         }
     }
@@ -616,8 +614,8 @@ avaş
         }
 
         guessCount++;
-        score += 1;
-        document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
+        score = guessCount; // Score is simply the number of guesses
+        document.getElementById("score").textContent = `${score}`;
 
         if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
         else updateHintCountdown();
@@ -649,7 +647,7 @@ avaş
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
-                keepKeyboardOpen(); // Immediate focus, no disable
+                keepKeyboardOpen();
             }, 500);
         }
     }
@@ -692,7 +690,14 @@ avaş
         gameOverScreen.style.display = "flex";
         document.getElementById("guess-input").blur();
 
-        gameNumberSpan.textContent = currentGameNumber;
+        // Consistent naming for private games on end screen
+        let displayGameNumber = currentGameNumber;
+        if (currentGameNumber.includes("Private Game #")) {
+            displayGameNumber = currentGameNumber; // Already "Private Game #Y"
+        } else {
+            displayGameNumber = `Game #${currentGameNumber}`;
+        }
+        gameNumberSpan.textContent = displayGameNumber;
         todaysWord.textContent = secretWord;
 
         let shareMessage;
@@ -701,11 +706,11 @@ avaş
             endGraphic.style.display = "block";
             const guessText = score === 1 ? "guess" : "guesses";
             if (currentGameNumber.includes("Private Game #")) {
-                shareText.innerHTML = `<span class="small-game-number">${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
-                shareMessage = `${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
+                shareText.innerHTML = `<span class="small-game-number">${displayGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+                shareMessage = `${displayGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
             } else {
-                shareText.innerHTML = `<span class="small-game-number">Game #${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
-                shareMessage = `Game #${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
+                shareText.innerHTML = `<span class="small-game-number">${displayGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+                shareMessage = `${displayGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
             }
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
@@ -714,17 +719,17 @@ avaş
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n\n<span class="italic">The Big Brain Word Game</span>';
-            shareGameNumber.textContent = currentGameNumber;
+            shareGameNumber.textContent = displayGameNumber;
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
-            shareMessage = `PLAY PINEAPPLE\n\nThe Big Brain Word Game\n${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`;
+            shareMessage = `PLAY PINEAPPLE\n\nThe Big Brain Word Game\n${displayGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`;
         } else {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.textContent = "I didn’t solve the pineapple";
-            shareGameNumber.textContent = currentGameNumber;
+            shareGameNumber.textContent = displayGameNumber;
             shareScore.textContent = `${score}`;
-            shareMessage = `${shareText.textContent}\n${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
+            shareMessage = `${shareText.textContent}\n${displayGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
         }
 
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
@@ -744,7 +749,7 @@ avaş
         firstGuessMade = false;
         guessCount = 0;
         gaveUp = false;
-        document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
+        document.getElementById("score").textContent = `${score}`;
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
         guessInput.placeholder = "type guess here";
@@ -774,7 +779,7 @@ avaş
         const originalGameNumber = game["Game Number"];
         const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
         if (privateGame) {
-            currentGameNumber = `Private Game #${privateGame["Game Number"]}`;
+            currentGameNumber = `Private Game #${privateGame["Game Number"]}`; // Consistent naming
         } else {
             currentGameNumber = originalGameNumber;
         }
