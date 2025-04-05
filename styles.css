@@ -548,9 +548,11 @@ a {
 }
 
 .tab-content.active {
-  display: flex !important; /* Force display on active tab */
+  display: flex !important;
   flex-direction: column;
   align-items: center;
+  visibility: visible !important; /* Ensure visibility */
+  opacity: 1 !important; /* Ensure opacity */
 }
 
 .game-list-header {
@@ -572,33 +574,36 @@ a {
   max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
-  opacity: 1;
+  opacity: 1 !important; /* Ensure opacity */
+  visibility: visible !important; /* Ensure visibility */
 }
 
 .game-list-row {
-  display: grid !important; /* Force grid display */
+  display: grid !important;
   grid-template-columns: 1fr 1fr 1fr;
   width: 85vw;
   font-size: clamp(1.3vh, 1.8vw, 1.8vh);
   margin: 0.5vh 0;
   cursor: pointer;
   overflow: hidden;
-  visibility: visible !important; /* Ensure visibility */
-  opacity: 1 !important; /* Ensure opacity */
+  visibility: visible !important;
+  opacity: 1 !important;
+  height: auto !important; /* Ensure height is not collapsed */
 }
 
+/* Updated color handling for light and dark modes */
 .game-list-row span {
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 0.5vw;
-  color: #000000 !important;
+  color: #000000; /* Default to black in light mode */
   visibility: visible !important;
 }
 
 .dark-mode .game-list-row span {
-  color: #FFFFFF !important;
+  color: #FFFFFF; /* White in dark mode */
   visibility: visible !important;
 }
 
