@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            if (isMobile) keepKeyboardOpen(); // Immediate keyboard open
+            if (isMobile) keepKeyboardOpen();
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
@@ -267,7 +267,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            if (isMobile) keepKeyboardOpen(); // Immediate keyboard open
+            if (isMobile) keepKeyboardOpen();
             alert("Failed to load official games data. Using fallback game.");
         }
     }
@@ -296,6 +296,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
         } catch (error) {
+avaş
+
             console.error("Error fetching private games:", error);
             privateGames = [];
         }
@@ -392,9 +394,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gameControls = document.getElementById("game-controls");
         let keyboardInitiated = false;
 
-        // Fix dark mode toggle
         const modeToggle = document.getElementById("mode-toggle");
         if (modeToggle) {
+            console.log("Mode toggle found, binding event");
             modeToggle.addEventListener("click", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
@@ -405,7 +407,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Toggled to", isDarkMode ? "dark mode" : "light mode");
             });
         } else {
-            console.error("Mode toggle button not found");
+            console.error("Mode toggle button not found in DOM");
         }
 
         if (gameControls) gameControls.addEventListener("click", (e) => e.stopPropagation());
@@ -512,7 +514,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 e.preventDefault();
                 const guess = input.value.trim();
                 if (guess) {
-                    input.disabled = true;
                     handleGuess(guess);
                 }
             }
@@ -528,11 +529,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!gameOver && gameScreen.style.display === "flex" && !input.disabled) {
             input.focus();
             console.log("Keyboard kept open");
-            // Fallback for mobile persistence
             if (isMobile) {
                 setTimeout(() => {
                     if (document.activeElement !== input) input.focus();
-                }, 100);
+                }, 50); // Reduced delay for quicker recovery
             }
         }
     }
@@ -649,8 +649,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
-                guessDisplay.disabled = false;
-                keepKeyboardOpen(); // Immediate focus after guess
+                keepKeyboardOpen(); // Immediate focus, no disable
             }, 500);
         }
     }
@@ -679,7 +678,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function endGame(won, gaveUp = false) {
         gameOver = true;
         const endGraphic = document.getElementById("end-graphic");
-        const todayWord = document.getElementById("todays-word");
+        const todaysWord = document.getElementById("todays-word");
         const gameNumberSpan = document.getElementById("game-number");
         const shareText = document.getElementById("share-text");
         const shareGameNumber = document.getElementById("share-game-number");
@@ -694,23 +693,28 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("guess-input").blur();
 
         gameNumberSpan.textContent = currentGameNumber;
-        todayWord.textContent = secretWord;
+        todaysWord.textContent = secretWord;
 
         let shareMessage;
         if (won) {
             endGraphic.src = "pineapple_gif.gif";
             endGraphic.style.display = "block";
             const guessText = score === 1 ? "guess" : "guesses";
-            shareText.innerHTML = `<span class="small-game-number">${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+            if (currentGameNumber.includes("Private Game #")) {
+                shareText.innerHTML = `<span class="small-game-number">${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+                shareMessage = `${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
+            } else {
+                shareText.innerHTML = `<span class="small-game-number">Game #${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+                shareMessage = `Game #${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
+            }
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
-            shareMessage = `${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
         } else if (gaveUp) {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n\n<span class="italic">The Big Brain Word Game</span>';
-            shareGameNumber.textContent = `${currentGameNumber}`;
+            shareGameNumber.textContent = currentGameNumber;
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
             shareMessage = `PLAY PINEAPPLE\n\nThe Big Brain Word Game\n${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`;
@@ -718,7 +722,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.textContent = "I didn’t solve the pineapple";
-            shareGameNumber.textContent = `${currentGameNumber}`;
+            shareGameNumber.textContent = currentGameNumber;
             shareScore.textContent = `${score}`;
             shareMessage = `${shareText.textContent}\n${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
         }
@@ -781,7 +785,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ].filter(hint => hint).map(hint => hint.toUpperCase());
         console.log("Loaded game:", { currentGameNumber, originalGameNumber, secretWord, hints });
         setupHints();
-        if (isMobile) keepKeyboardOpen(); // Immediate keyboard open
+        if (isMobile) keepKeyboardOpen();
         return originalGameNumber;
     }
 

@@ -36,6 +36,7 @@ a {
   overflow: hidden;
   margin: 0;
   padding: 2vh;
+  padding-bottom: 5vh; /* Space for ad box */
 }
 
 .dark-mode #game-screen {
@@ -58,7 +59,7 @@ a {
   padding: 0 2vw;
 }
 
-#mode-toggle {
+.mode-btn { /* Changed from #mode-toggle to match class in HTML */
   font-size: 1.875vh;
   background: none;
   border: none;
@@ -67,7 +68,7 @@ a {
   z-index: 11;
 }
 
-.dark-mode #mode-toggle {
+.dark-mode .mode-btn {
   color: #FFFFFF;
 }
 
@@ -243,16 +244,15 @@ a {
   width: 85vw;
   background: none;
   position: absolute;
-  top: 27vh; /* Default for mobile */
+  top: 27vh; /* Mobile */
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
 }
 
-/* Move controls 2 lines lower on desktop (assuming 2vh per line) */
 @media (min-width: 601px) {
   #game-controls {
-    top: 31vh; /* 27vh + 4vh */
+    top: 31vh; /* Desktop, ~4vh lower */
   }
 }
 
@@ -313,7 +313,7 @@ a {
   align-items: center;
   padding: 2vh;
   background: #FFFFFF;
-  padding-bottom: 4.5vh;
+  padding-bottom: 5vh; /* Space for ad box */
 }
 
 .dark-mode #game-over {
@@ -426,13 +426,13 @@ a {
   color: #FFFFFF;
 }
 
-.inverted {
+.control-btn.animate__animated.animate__pulse.animate__infinite {
   background: #FFFFFF;
   color: #000000;
   border: 0.1vh solid #000000;
 }
 
-.dark-mode .inverted {
+.dark-mode .control-btn.animate__animated.animate__pulse.animate__infinite {
   background: #000000;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
@@ -500,7 +500,7 @@ a {
   justify-content: flex-start;
   align-items: center;
   z-index: 100;
-  padding-bottom: 4.5vh;
+  padding-bottom: 5vh; /* Space for ad box */
 }
 
 .dark-mode #game-select-screen {
@@ -618,7 +618,7 @@ a {
   color: #000000;
   text-decoration: none;
   cursor: pointer;
-  animation: pulse 1.5s infinite ease-in-out;
+  font-weight: bold; /* Crisp text, no animation */
 }
 
 .dark-mode .play-now {
@@ -643,8 +643,7 @@ a {
   justify-content: center;
   z-index: 200;
   padding: 2vh;
-  padding-bottom: 4.5vh;
-  box-sizing: border-box;
+  padding-bottom: 5vh; /* Space for ad box */
 }
 
 .dark-mode .create-form {
@@ -749,7 +748,7 @@ a {
   #game-name, #score {
     font-size: clamp(2.25vh, 3vw, 3vh);
   }
-  #mode-toggle {
+  .mode-btn {
     font-size: clamp(1.8vh, 2.25vw, 2.25vh);
   }
   .control-btn {
@@ -788,10 +787,4 @@ a {
   .create-form {
     padding-bottom: 4vh;
   }
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
 }
