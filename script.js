@@ -36,13 +36,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    // Load saved mode preference
-    const savedMode = localStorage.getItem("pineappleMode");
-    if (savedMode === "dark") {
-        document.body.classList.add("dark-mode");
-    } else {
-        document.body.classList.remove("dark-mode");
-    }
+    // Initialize mode and buttons
+    initializeMode();
 
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
@@ -395,28 +390,42 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    function initializeMode() {
+        const savedMode = localStorage.getItem("pineappleMode");
+        if (savedMode === "dark") {
+            document.body.classList.add("dark-mode");
+        } else {
+            document.body.classList.remove("dark-mode");
+        }
+        const modeToggles = document.querySelectorAll("#mode-toggle");
+        modeToggles.forEach(btn => {
+            btn.innerHTML = document.body.classList.contains("dark-mode") ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+        adjustBackground();
+    }
+
     function setupEventListeners() {
         const input = document.getElementById("guess-input");
         const gameControls = document.getElementById("game-controls");
         let keyboardInitiated = false;
 
-        const modeToggle = document.getElementById("mode-toggle");
-        if (modeToggle) {
-            console.log("Mode toggle found, binding event");
-            modeToggle.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                document.body.classList.toggle("dark-mode");
-                const isDarkMode = document.body.classList.contains("dark-mode");
-                modeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-                localStorage.setItem("pineappleMode", isDarkMode ? "dark" : "light"); // Save preference
-                adjustBackground();
-                console.log("Toggled to", isDarkMode ? "dark mode" : "light mode");
+        const modeToggles = document.querySelectorAll("#mode-toggle");
+        modeToggles.forEach(modeToggle => {
+            modeToggle.removeEventListener("click", toggleMode);
+            modeToggle.addEventListener("click", toggleMode);
+        });
+
+        function toggleMode(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            document.body.classList.toggle("dark-mode");
+            const isDarkMode = document.body.classList.contains("dark-mode");
+            modeToggles.forEach(btn => {
+                btn.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
             });
-            // Set initial icon based on loaded mode
-            modeToggle.innerHTML = document.body.classList.contains("dark-mode") ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-        } else {
-            console.error("Mode toggle button not found in DOM");
+            localStorage.setItem("pineappleMode", isDarkMode ? "dark" : "light");
+            adjustBackground();
+            console.log("Toggled to", isDarkMode ? "dark mode" : "light mode");
         }
 
         if (gameControls) gameControls.addEventListener("click", (e) => e.stopPropagation());
@@ -518,15 +527,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGame(false, true);
         });
 
-        input.addEventListener("keydown", (e) => {
+        input.removeEventListener("keydown", handleGuessKeydown);
+        input.addEventListener("keydown", handleGuessKeydown);
+
+        function handleGuessKeydown(e) {
             if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver && !input.disabled) {
                 e.preventDefault();
                 const guess = input.value.trim();
                 if (guess) {
+                    console.log("Guess submitted:", guess);
                     handleGuess(guess);
                 }
             }
-        });
+        }
 
         input.addEventListener("focus", () => {
             if (input.value === "") input.placeholder = "type guess here";
@@ -609,6 +622,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function handleGuess(guess) {
+        console.log("handleGuess called, guessCount before:", guessCount);
         const guessDisplay = document.getElementById("guess-input");
         const guessLine = document.getElementById("guess-line");
         guessDisplay.value = guess.toUpperCase();
@@ -626,7 +640,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         guessCount++;
         score = guessCount;
-        document.getElementById("score").textContent = `${score}`;
+        document.getElementById("score").textContent = score;
+        console.log("guessCount after:", guessCount, "score:", score);
 
         if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
         else updateHintCountdown();
@@ -701,7 +716,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameOverScreen.style.display = "flex";
         document.getElementById("guess-input").blur();
 
-        // Use currentGameNumber directly for consistency
         gameNumberSpan.textContent = currentGameNumber;
         todaysWord.textContent = secretWord;
 
@@ -749,7 +763,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         firstGuessMade = false;
         guessCount = 0;
         gaveUp = false;
-        document.getElementById("score").textContent = `${score}`;
+        document.getElementById("score").textContent = score;
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
         guessInput.placeholder = "type guess here";
