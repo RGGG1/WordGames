@@ -10,7 +10,7 @@ body {
   flex-direction: column;
   width: 100vw;
   overflow-x: hidden;
-  overflow-y: hidden; /* Prevent body scrolling */
+  overflow-y: hidden;
 }
 
 .dark-mode {
@@ -30,12 +30,12 @@ a {
 #game-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Fixed height, no scrolling */
+  height: 100vh;
   background: #FFFFFF;
   box-sizing: border-box;
-  overflow: hidden; /* No scrolling */
+  overflow: hidden;
   margin: 0;
-  padding: 2vh; /* Restored padding */
+  padding: 2vh;
 }
 
 .dark-mode #game-screen {
@@ -55,7 +55,7 @@ a {
   justify-content: space-between;
   align-items: center;
   margin: 0;
-  padding: 0 2vw; /* Restored padding */
+  padding: 0 2vw;
 }
 
 #mode-toggle {
@@ -99,8 +99,8 @@ a {
   flex-direction: column;
   justify-content: flex-start;
   background: none;
-  margin: 5vh auto 0 auto; /* Restored margin */
-  padding: 0; /* Restored padding */
+  margin: 5vh auto 0 auto;
+  padding: 0;
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -184,9 +184,9 @@ a {
 #hints-box {
   width: 85vw;
   background: none;
-  margin: 1vh auto; /* Restored margin */
-  padding: 0; /* Restored padding */
-  position: relative; /* For absolute positioning of game-controls */
+  margin: 1vh auto;
+  padding: 0;
+  position: relative;
 }
 
 .game-number-label {
@@ -243,7 +243,7 @@ a {
   width: 85vw;
   background: none;
   position: absolute;
-  top: 27vh; /* 9 lines below first hint */
+  top: 27vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -572,7 +572,7 @@ a {
   max-height: 50vh;
   overflow-y: auto;
   overflow-x: hidden;
-  opacity: 1; /* Ensure container is fully opaque */
+  opacity: 1;
 }
 
 .game-list-row {
@@ -591,12 +591,12 @@ a {
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 0.5vw;
-  color: #000000 !important; /* Force black in light mode */
-  visibility: visible; /* Ensure visibility */
+  color: #000000 !important;
+  visibility: visible;
 }
 
 .dark-mode .game-list-row span {
-  color: #FFFFFF !important; /* Force white in dark mode */
+  color: #FFFFFF !important;
   visibility: visible;
 }
 
@@ -641,7 +641,7 @@ a {
   justify-content: center;
   z-index: 200;
   padding: 2vh;
-  padding-bottom: 4.5vh; /* Adjusted to accommodate ad-box */
+  padding-bottom: 4.5vh;
   box-sizing: border-box;
 }
 

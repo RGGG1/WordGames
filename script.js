@@ -30,7 +30,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
 
-    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6sqCd/pub?output=csv";
+    // Updated officialUrl with the correct link
+    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
@@ -245,7 +246,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Filtered and sorted official games:", allGames);
             if (allGames.length === 0) {
-                console.warn("No valid games after filtering. Expected headers: 'Game Number', 'Secret Word'");
+                console.warn("No valid games after filtering");
                 throw new Error("No valid games in CSV");
             }
 
@@ -266,7 +267,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            alert("Failed to load official games data. Using fallback game. Please check the console for details.");
+            displayGameList();
+            alert("Failed to load official games data. Using fallback game.");
         }
     }
 
@@ -281,7 +283,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
             if (!response.ok) {
                 console.log("Private response status:", response.status);
-                console.log("Private response headers:", [...response.headers.entries()]);
                 throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
             }
             const text = await response.text();
@@ -297,11 +298,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }))
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
-            if (privateGames.length === 0) console.log("No valid private games found in CSV");
         } catch (error) {
             console.error("Error fetching private games:", error);
             privateGames = [];
-            console.log("Private games set to empty array due to error");
         }
     }
 
@@ -317,7 +316,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 officialList.innerHTML = "<div>No official games available</div>";
             } else {
                 const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
-                console.log("Rendering", allGames.length, "official games");
                 allGames.forEach((game, index) => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
@@ -333,7 +331,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
                     `;
-                    gameItem.style.visibility = "visible"; // Ensure visibility
+                    gameItem.style.visibility = "visible";
                     gameItem.addEventListener("click", () => {
                         console.log("Clicked official game:", game);
                         loadGame(game);
@@ -342,9 +340,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         adjustBackground();
                     });
                     officialList.appendChild(gameItem);
-                    console.log(`Added game ${index + 1}:`, { gameNumber, secretWord, guesses });
                 });
-                console.log("Official list populated with", allGames.length, "games");
             }
         }
 
@@ -373,7 +369,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
                     `;
-                    gameItem.style.visibility = "visible"; // Ensure visibility
+                    gameItem.style.visibility = "visible";
                     gameItem.addEventListener("click", () => {
                         console.log("Clicked private game:", game);
                         loadGame(game);
@@ -489,19 +485,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
                 const privateGame = privateGames.find(g => g["Game Number"] === String(currentNum));
                 originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
-                console.log("Give Up - Private Game:", { currentGameNumber, originalGameNumber, privateGame });
             } else {
                 originalGameNumber = currentGameNumber;
-                console.log("Give Up - Official Game:", { currentGameNumber, originalGameNumber });
             }
             const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
             saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
             endGame(false, true);
         });
 
+        // Updated keydown listener to prevent double scoring
         input.addEventListener("keydown", (e) => {
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver) {
-                handleGuess(input.value.trim());
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver && !input.disabled) {
+                e.preventDefault();
+                const guess = input.value.trim();
+                if (guess) {
+                    input.disabled = true; // Disable input to prevent multiple submissions
+                    handleGuess(guess);
+                }
             }
         });
 
@@ -594,7 +594,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         guessCount++;
-        score += 1;
+        score += 1; // Increment score only once per guess
         document.querySelectorAll("#score").forEach(scoreDisplay => scoreDisplay.textContent = `${score}`);
 
         if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
@@ -604,17 +604,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessDisplay.classList.add("correct-guess");
             rainConfetti();
             guessLine.style.opacity = "0";
+            gameOver = true;
             setTimeout(() => {
                 guessDisplay.classList.remove("correct-guess");
+                guessDisplay.disabled = false; // Re-enable input after animation
                 let originalGameNumber;
                 if (currentGameNumber.includes("Private Game #")) {
                     const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
                     const privateGame = privateGames.find(g => g["Game Number"] === String(currentNum));
                     originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
-                    console.log("Correct Guess - Private Game:", { currentGameNumber, originalGameNumber, privateGame });
                 } else {
                     originalGameNumber = currentGameNumber;
-                    console.log("Correct Guess - Official Game:", { currentGameNumber, originalGameNumber });
                 }
                 const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
                 saveGameResult(gameType, originalGameNumber, secretWord, score);
@@ -627,6 +627,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
+                guessDisplay.disabled = false; // Re-enable input after animation
                 if (!gameOver) guessDisplay.focus();
             }, 500);
         }
@@ -671,7 +672,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("guess-input").blur();
         document.getElementById("game-name").textContent = "PINEAPPLE";
 
-        gameNumberSpan.textContent = currentGameNumber; // Displays "Private Game #Y" or official number
+        gameNumberSpan.textContent = currentGameNumber;
         todaysWord.textContent = secretWord;
 
         let shareMessage;
@@ -722,6 +723,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
         guessInput.placeholder = "type guess here";
+        guessInput.disabled = false; // Ensure input is enabled on reset
         document.getElementById("guess-line").style.opacity = "1";
         const hintsBox = document.getElementById("hints");
         hintsBox.innerHTML = `
@@ -746,9 +748,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const originalGameNumber = game["Game Number"];
         const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
         if (privateGame) {
-            currentGameNumber = `Private Game #${privateGame["Game Number"]}`; // Only "Private Game #Y"
+            currentGameNumber = `Private Game #${privateGame["Game Number"]}`;
         } else {
-            currentGameNumber = originalGameNumber; // Official game number as-is
+            currentGameNumber = originalGameNumber;
         }
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
