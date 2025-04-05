@@ -36,7 +36,7 @@ a {
   overflow: hidden;
   margin: 0;
   padding: 2vh;
-  padding-bottom: 5vh; /* Space for ad box */
+  padding-bottom: 5vh;
 }
 
 .dark-mode #game-screen {
@@ -244,7 +244,7 @@ a {
   width: 85vw;
   background: none;
   position: absolute;
-  top: 27vh; /* Mobile */
+  top: 27vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -252,7 +252,7 @@ a {
 
 @media (min-width: 601px) {
   #game-controls {
-    top: 31vh; /* Desktop, ~4vh lower */
+    top: 31vh;
   }
 }
 
@@ -313,7 +313,7 @@ a {
   align-items: center;
   padding: 2vh;
   background: #FFFFFF;
-  padding-bottom: 5vh; /* Space for ad box */
+  padding-bottom: 5vh;
 }
 
 .dark-mode #game-over {
@@ -426,18 +426,6 @@ a {
   color: #FFFFFF;
 }
 
-.control-btn.animate__animated.animate__pulse.animate__infinite {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
-}
-
-.dark-mode .control-btn.animate__animated.animate__pulse.animate__infinite {
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
-}
-
 #guess-input.wrong-guess {
   animation: wrongGuess 0.5s ease-out forwards;
 }
@@ -500,7 +488,7 @@ a {
   justify-content: flex-start;
   align-items: center;
   z-index: 100;
-  padding-bottom: 5vh; /* Space for ad box */
+  padding-bottom: 5vh;
 }
 
 .dark-mode #game-select-screen {
@@ -618,7 +606,7 @@ a {
   color: #000000;
   text-decoration: none;
   cursor: pointer;
-  font-weight: bold; /* Crisp text, no animation */
+  font-weight: bold;
 }
 
 .dark-mode .play-now {
@@ -643,7 +631,7 @@ a {
   justify-content: center;
   z-index: 200;
   padding: 2vh;
-  padding-bottom: 5vh; /* Space for ad box */
+  padding-bottom: 5vh;
 }
 
 .dark-mode .create-form {
