@@ -34,11 +34,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
-    // Auto-open keyboard on mobile
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-    if (isMobile) {
-        setTimeout(() => keepKeyboardOpen(), 100);
-    }
 
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
@@ -258,7 +254,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            keepKeyboardOpen();
+            if (isMobile) keepKeyboardOpen(); // Immediate keyboard open
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
@@ -271,8 +267,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            displayGameList();
-            keepKeyboardOpen();
+            if (isMobile) keepKeyboardOpen(); // Immediate keyboard open
             alert("Failed to load official games data. Using fallback game.");
         }
     }
@@ -344,7 +339,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     officialList.appendChild(gameItem);
                     console.log(`Rendered official game ${gameNumber}: ${secretWord}, Guesses: ${guesses}`);
                 });
-                // Force repaint for official list only
                 setTimeout(() => {
                     officialList.style.display = "none";
                     officialList.offsetHeight; // Trigger reflow
@@ -398,17 +392,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gameControls = document.getElementById("game-controls");
         let keyboardInitiated = false;
 
-        document.querySelectorAll("#mode-toggle").forEach(button => {
-            button.addEventListener("click", (e) => {
+        // Fix dark mode toggle
+        const modeToggle = document.getElementById("mode-toggle");
+        if (modeToggle) {
+            modeToggle.addEventListener("click", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 document.body.classList.toggle("dark-mode");
                 const isDarkMode = document.body.classList.contains("dark-mode");
-                button.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+                modeToggle.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
                 adjustBackground();
                 console.log("Toggled to", isDarkMode ? "dark mode" : "light mode");
             });
-        });
+        } else {
+            console.error("Mode toggle button not found");
+        }
 
         if (gameControls) gameControls.addEventListener("click", (e) => e.stopPropagation());
 
@@ -530,6 +528,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!gameOver && gameScreen.style.display === "flex" && !input.disabled) {
             input.focus();
             console.log("Keyboard kept open");
+            // Fallback for mobile persistence
+            if (isMobile) {
+                setTimeout(() => {
+                    if (document.activeElement !== input) input.focus();
+                }, 100);
+            }
         }
     }
 
@@ -646,7 +650,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
                 guessDisplay.disabled = false;
-                keepKeyboardOpen();
+                keepKeyboardOpen(); // Immediate focus after guess
             }, 500);
         }
     }
@@ -675,7 +679,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function endGame(won, gaveUp = false) {
         gameOver = true;
         const endGraphic = document.getElementById("end-graphic");
-        const todaysWord = document.getElementById("todays-word");
+        const todayWord = document.getElementById("todays-word");
         const gameNumberSpan = document.getElementById("game-number");
         const shareText = document.getElementById("share-text");
         const shareGameNumber = document.getElementById("share-game-number");
@@ -690,7 +694,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("guess-input").blur();
 
         gameNumberSpan.textContent = currentGameNumber;
-        todaysWord.textContent = secretWord;
+        todayWord.textContent = secretWord;
 
         let shareMessage;
         if (won) {
@@ -777,6 +781,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ].filter(hint => hint).map(hint => hint.toUpperCase());
         console.log("Loaded game:", { currentGameNumber, originalGameNumber, secretWord, hints });
         setupHints();
+        if (isMobile) keepKeyboardOpen(); // Immediate keyboard open
         return originalGameNumber;
     }
 
