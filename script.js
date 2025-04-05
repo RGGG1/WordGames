@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let currentGameNumber = null;
     let guessCount = 0;
     let gaveUp = false;
+    let isProcessingGuess = false;
 
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
@@ -38,6 +39,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Initialize mode and buttons
     initializeMode();
+
+    // Bind mode toggle listeners once
+    const modeToggles = document.querySelectorAll("#mode-toggle");
+    modeToggles.forEach(modeToggle => {
+        modeToggle.addEventListener("click", toggleMode);
+    });
+
+    function toggleMode(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        document.body.classList.toggle("dark-mode");
+        const isDarkMode = document.body.classList.contains("dark-mode");
+        modeToggles.forEach(btn => {
+            btn.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        });
+        localStorage.setItem("pineappleMode", isDarkMode ? "dark" : "light");
+        adjustBackground();
+        console.log("Toggled to", isDarkMode ? "dark mode" : "light mode");
+    }
+
+    // One-time keydown listener setup
+    const input = document.getElementById("guess-input");
+    input.addEventListener("keydown", function handleGuessKeydown(e) {
+        if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver && !input.disabled && !isProcessingGuess) {
+            e.preventDefault();
+            const guess = input.value.trim();
+            if (guess) {
+                isProcessingGuess = true;
+                console.log("Guess submitted:", guess);
+                handleGuess(guess);
+                setTimeout(() => { isProcessingGuess = false; }, 100);
+            }
+        }
+    });
 
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
@@ -397,7 +432,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             document.body.classList.remove("dark-mode");
         }
-        const modeToggles = document.querySelectorAll("#mode-toggle");
         modeToggles.forEach(btn => {
             btn.innerHTML = document.body.classList.contains("dark-mode") ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
         });
@@ -405,28 +439,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function setupEventListeners() {
-        const input = document.getElementById("guess-input");
         const gameControls = document.getElementById("game-controls");
         let keyboardInitiated = false;
-
-        const modeToggles = document.querySelectorAll("#mode-toggle");
-        modeToggles.forEach(modeToggle => {
-            modeToggle.removeEventListener("click", toggleMode);
-            modeToggle.addEventListener("click", toggleMode);
-        });
-
-        function toggleMode(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            document.body.classList.toggle("dark-mode");
-            const isDarkMode = document.body.classList.contains("dark-mode");
-            modeToggles.forEach(btn => {
-                btn.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-            });
-            localStorage.setItem("pineappleMode", isDarkMode ? "dark" : "light");
-            adjustBackground();
-            console.log("Toggled to", isDarkMode ? "dark mode" : "light mode");
-        }
 
         if (gameControls) gameControls.addEventListener("click", (e) => e.stopPropagation());
 
@@ -526,20 +540,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
             endGame(false, true);
         });
-
-        input.removeEventListener("keydown", handleGuessKeydown);
-        input.addEventListener("keydown", handleGuessKeydown);
-
-        function handleGuessKeydown(e) {
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver && !input.disabled) {
-                e.preventDefault();
-                const guess = input.value.trim();
-                if (guess) {
-                    console.log("Guess submitted:", guess);
-                    handleGuess(guess);
-                }
-            }
-        }
 
         input.addEventListener("focus", () => {
             if (input.value === "") input.placeholder = "type guess here";
