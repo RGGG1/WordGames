@@ -10,7 +10,6 @@ body {
   flex-direction: column;
   width: 100vw;
   overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 .dark-mode {
@@ -31,11 +30,8 @@ a {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  position: relative;
   background: #FFFFFF;
-  box-sizing: border-box;
-  overflow: hidden;
-  margin: 0;
-  padding: 2vh;
 }
 
 .dark-mode #game-screen {
@@ -44,18 +40,18 @@ a {
 
 #header {
   width: 85vw;
+  margin: 0.5vh auto 0 auto;
   position: fixed;
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  padding-bottom: 1vh;
   z-index: 10;
   height: 5vh;
   background: none;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0;
-  padding: 0 2vw;
 }
 
 #mode-toggle {
@@ -94,13 +90,12 @@ a {
 #guess-area {
   width: 85vw;
   height: 10vh;
+  margin: 7vh auto 0 auto;
   position: relative;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   background: none;
-  margin: 5vh auto 0 auto;
-  padding: 0;
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -160,7 +155,7 @@ a {
   text-align: left;
   font-weight: normal;
   text-transform: none;
-  padding-top: 0.5vh;
+  padding-top: 0.5vh; /* Moves placeholder down half a line */
 }
 
 .dark-mode #guess-input::placeholder {
@@ -183,9 +178,10 @@ a {
 
 #hints-box {
   width: 85vw;
+  margin: 0 auto;
+  padding: 1vh;
   background: none;
-  margin: 1vh auto;
-  padding: 0;
+  flex-grow: 1; /* Allows it to expand but not overlap game-controls */
   position: relative;
 }
 
@@ -241,19 +237,9 @@ a {
 
 #game-controls {
   width: 85vw;
+  margin: 2vh auto 1vh auto; /* Space below hints, above ad-box */
+  padding: 0;
   background: none;
-  position: absolute;
-  top: 27vh; /* Default position */
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 10;
-}
-
-/* Move game controls two lines lower on desktop (approx 2vh per line) */
-@media (min-width: 601px) {
-  #game-controls {
-    top: 31vh; /* 27vh + 4vh */
-  }
 }
 
 .controls-center {
@@ -270,7 +256,7 @@ a {
 }
 
 .control-btn {
-  font-size: 1.8vh;
+  font-size: 2.25vh;
   padding: 0.75vh 1.5vw;
   background: #000000;
   color: #FFFFFF;
@@ -313,7 +299,7 @@ a {
   align-items: center;
   padding: 2vh;
   background: #FFFFFF;
-  padding-bottom: 4.5vh;
+  padding-bottom: 4.5vh; /* Ensures content doesn't overlap ad-box */
 }
 
 .dark-mode #game-over {
@@ -367,10 +353,6 @@ a {
 #share-text .big-score {
   font-size: 6.25vh;
   margin-top: 0.25vh;
-}
-
-#share-text .small-game-number {
-  font-size: 1.5vh;
 }
 
 #share-text.big {
@@ -485,7 +467,7 @@ a {
 }
 
 #create-pineapple {
-  border-radius: 1vh;
+  border-radius: 1vh; /* Slightly rounded corners */
 }
 
 #game-select-screen {
@@ -500,7 +482,7 @@ a {
   justify-content: flex-start;
   align-items: center;
   z-index: 100;
-  padding-bottom: 4.5vh;
+  padding-bottom: 4.5vh; /* Ensures content doesn't overlap ad-box */
 }
 
 .dark-mode #game-select-screen {
@@ -535,13 +517,13 @@ a {
   font-size: 2vh;
   color: #000000;
   cursor: pointer;
-  opacity: 0.5;
+  opacity: 0.5; /* Faded when inactive */
   transition: opacity 0.3s ease;
 }
 
 .tab-text.active {
   text-decoration: underline;
-  opacity: 1;
+  opacity: 1; /* Fully opaque when active */
   font-weight: bold;
 }
 
@@ -555,18 +537,16 @@ a {
 }
 
 .tab-content.active {
-  display: flex !important;
+  display: flex;
   flex-direction: column;
   align-items: center;
-  visibility: visible !important;
-  opacity: 1 !important;
 }
 
 .game-list-header {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
   width: 85vw;
-  font-size: clamp(1.5vh, 2vw, 2vh);
+  font-size: clamp(1.5vh, 2vw, 2vh); /* Increased font size */
   font-weight: bold;
   margin-bottom: 1vh;
   text-align: center;
@@ -580,37 +560,25 @@ a {
   width: 85vw;
   max-height: 50vh;
   overflow-y: auto;
-  overflow-x: hidden;
-  opacity: 1 !important;
-  visibility: visible !important;
+  overflow-x: hidden; /* Prevent horizontal scrolling */
 }
 
 .game-list-row {
-  display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; /* Equal columns */
   width: 85vw;
-  font-size: clamp(1.3vh, 1.8vw, 1.8vh);
+  font-size: clamp(1.3vh, 1.8vw, 1.8vh); /* Increased font size */
   margin: 0.5vh 0;
   cursor: pointer;
   overflow: hidden;
-  visibility: visible !important;
-  opacity: 1 !important;
-  height: auto !important;
 }
 
 .game-list-row span {
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
-  text-overflow: ellipsis;
-  padding: 0 0.5vw;
-  color: #000000;
-  visibility: visible !important;
-}
-
-.dark-mode .game-list-row span {
-  color: #FFFFFF;
-  visibility: visible !important;
+  text-overflow: ellipsis; /* Truncate long text */
+  padding: 0 0.5vw; /* Slight padding for readability */
 }
 
 .green { color: #006400; }
@@ -654,7 +622,6 @@ a {
   justify-content: center;
   z-index: 200;
   padding: 2vh;
-  padding-bottom: 4.5vh;
   box-sizing: border-box;
 }
 
@@ -709,7 +676,7 @@ a {
 }
 
 .back-btn-container {
-  margin-top: 2vh;
+  margin-top: 2vh; /* Moves Back button down */
 }
 
 #create-link {
@@ -723,34 +690,32 @@ a {
 
 #ad-box {
   width: 100%;
-  height: 4.5vh;
+  height: 4.5vh; /* Approximately three lines of text height */
   position: fixed;
   bottom: 0;
   left: 0;
-  background: #F0F0F0;
+  background: #F0F0F0; /* Light gray background */
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 20;
-  border-top: 0.1vh solid #CCCCCC;
-  margin: 0;
-  padding: 0;
+  z-index: 20; /* Above most elements but below popups */
+  border-top: 0.1vh solid #CCCCCC; /* Subtle border */
 }
 
 .dark-mode #ad-box {
-  background: #333333;
+  background: #333333; /* Darker gray for dark mode */
   border-top: 0.1vh solid #666666;
 }
 
 #ad-box p {
   margin: 0;
-  font-size: 1.5vh;
-  color: #666666;
+  font-size: 1.5vh; /* Matches previous footer font size */
+  color: #666666; /* Gray text */
   text-align: center;
 }
 
 .dark-mode #ad-box p {
-  color: #CCCCCC;
+  color: #CCCCCC; /* Lighter gray for dark mode */
 }
 
 @media (max-width: 600px) or (max-height: 600px) {
@@ -764,7 +729,7 @@ a {
     font-size: clamp(1.8vh, 2.25vw, 2.25vh);
   }
   .control-btn {
-    font-size: clamp(1.8vh, 2.2vw, 2.2vh);
+    font-size: clamp(2.25vh, 2.7vw, 2.7vh);
     padding: clamp(0.75vh, 0.9vw, 0.9vh) clamp(1.5vh, 1.8vw, 1.8vw);
   }
   #guess-input {
@@ -775,7 +740,7 @@ a {
   }
   #game-controls {
     width: 90vw;
-    top: 27vh; /* Keep original position on mobile */
+    margin: 2vh auto 1vh auto; /* Adjusted for smaller screens */
   }
   .hint-line span {
     font-size: clamp(1.5vh, 1.8vw, 1.8vh);
@@ -790,15 +755,14 @@ a {
     width: 90vw;
   }
   #ad-box {
-    height: 4vh;
+    height: 4vh; /* Slightly smaller on small screens */
   }
   #ad-box p {
-    font-size: 1.2vh;
+    font-size: 1.2vh; /* Smaller text on small screens */
   }
   #game-select-screen,
-  #game-over,
-  .create-form {
-    padding-bottom: 4vh;
+  #game-over {
+    padding-bottom: 4vh; /* Matches smaller ad-box height */
   }
 }
 
