@@ -548,7 +548,7 @@ a {
 }
 
 .tab-content.active {
-  display: flex;
+  display: flex !important; /* Force display on active tab */
   flex-direction: column;
   align-items: center;
 }
@@ -576,13 +576,15 @@ a {
 }
 
 .game-list-row {
-  display: grid;
+  display: grid !important; /* Force grid display */
   grid-template-columns: 1fr 1fr 1fr;
   width: 85vw;
   font-size: clamp(1.3vh, 1.8vw, 1.8vh);
   margin: 0.5vh 0;
   cursor: pointer;
   overflow: hidden;
+  visibility: visible !important; /* Ensure visibility */
+  opacity: 1 !important; /* Ensure opacity */
 }
 
 .game-list-row span {
@@ -592,12 +594,12 @@ a {
   text-overflow: ellipsis;
   padding: 0 0.5vw;
   color: #000000 !important;
-  visibility: visible;
+  visibility: visible !important;
 }
 
 .dark-mode .game-list-row span {
   color: #FFFFFF !important;
-  visibility: visible;
+  visibility: visible !important;
 }
 
 .green { color: #006400; }
