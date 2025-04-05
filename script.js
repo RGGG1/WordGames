@@ -37,11 +37,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
+    // Declare modeToggles at top level
+    let modeToggles = document.querySelectorAll("#mode-toggle");
+
     // Initialize mode and buttons
     initializeMode();
 
     // Bind mode toggle listeners once
-    const modeToggles = document.querySelectorAll("#mode-toggle");
     modeToggles.forEach(modeToggle => {
         modeToggle.addEventListener("click", toggleMode);
     });
