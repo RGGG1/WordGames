@@ -239,7 +239,7 @@ a {
 #hints-box {
   width: 85vw;
   background: none;
-  margin: 0.5vh auto;
+  margin: 0vh auto; /* Previous adjustment kept */
   padding: 0;
   position: relative;
 }
@@ -263,7 +263,7 @@ a {
 .hint-countdown {
   font-size: 1.5vh;
   color: #666;
-  margin-bottom: 1vh;
+  margin-bottom: 0.5vh; /* Reduced from 1vh to 0.5vh */
 }
 
 .dark-mode .hint-countdown {
@@ -277,7 +277,7 @@ a {
 }
 
 .hint-line {
-  margin: 0.3vh 0;
+  margin: 0.05vh 0; /* Previous adjustment kept */
 }
 
 .hint-line.spacer {
@@ -298,7 +298,7 @@ a {
   width: 85vw;
   background: none;
   position: absolute;
-  top: 26.5vh; /* Reduced from 27vh to 26.5vh */
+  top: 27vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -306,7 +306,7 @@ a {
 
 @media (min-width: 601px) {
   #game-controls {
-      top: 30.5vh; /* Reduced from 31vh to 30.5vh */
+      top: 31vh;
   }
 }
 
@@ -862,7 +862,7 @@ a {
   }
   #game-controls {
       width: 90vw;
-      top: 26.5vh; /* Matches the adjusted value */
+      top: 27vh;
   }
   .hint-line span {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
