@@ -129,12 +129,13 @@ a {
 
 #guess-container {
   position: absolute;
-  top: 2.5vh; /* Added 0.5vh above */
+  top: 2.5vh;
   width: 85vw;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: center; /* Center the children */
   z-index: 1;
+  overflow-x: hidden; /* Prevent overflow */
 }
 
 #guess-input {
@@ -142,18 +143,16 @@ a {
   font-weight: bold;
   background: none;
   border: none;
+  flex-grow: 1; /* Take available space */
   width: calc(85vw - 6vw); /* Adjusted for smaller button */
   text-align: center;
   padding: 0;
-  margin: 0 auto;
+  margin: 0 0.5vw 0 0; /* Small margin to separate from button */
   color: #000000;
   outline: none;
   caret-color: black;
   text-transform: uppercase;
   animation: blink 1s step-end infinite;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
 }
 
 @keyframes blink {
@@ -181,16 +180,17 @@ a {
 
 .guess-btn {
   font-size: 1.5vh;
-  font-weight: bold; /* Bold text */
-  padding: 0.5vh 0.5vw;
-  background: #FFB300; /* Deeper yellow */
+  font-weight: bold;
+  padding: 0.3vh 0.3vw; /* Reduced padding */
+  background: #FFB300;
   color: #000000;
   border: 0.1vh solid #000000;
   border-radius: 0.6vh;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: 4vw; /* Reduced width */
+  width: 3vw; /* Further reduced width */
   flex-shrink: 0;
+  margin-right: 0.5vw; /* Reduced margin */
 }
 
 .guess-btn:hover {
@@ -208,7 +208,7 @@ a {
   height: 0.2vh;
   background: #000000;
   position: absolute;
-  top: 8.5vh; /* Removed 0.5vh below */
+  top: 8.5vh;
   transition: opacity 0.5s ease-out;
 }
 
@@ -335,11 +335,11 @@ a {
 }
 
 #create-pineapple {
-  background: #FFB300; /* Deeper yellow */
+  background: #FFB300;
   color: #000000;
   border: 0.1vh solid #000000;
   border-radius: 1vh;
-  font-weight: bold; /* Bold text */
+  font-weight: bold;
 }
 
 .dark-mode #create-pineapple {
@@ -483,14 +483,14 @@ a {
 }
 
 @keyframes wrongGuess {
-  0% { color: #FF0000; transform: translate(-50%, 0); } /* Keep centered */
-  100% { color: #FF0000; transform: translate(-50%, -20px); opacity: 0; }
+  0% { color: #FF0000; transform: translateY(0); }
+  100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
 }
 
 @keyframes pulseGuess {
-  0% { transform: translate(-50%, 0) scale(1); }
-  50% { transform: translate(-50%, 0) scale(1.1); }
-  100% { transform: translate(-50%, 0) scale(1); }
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
 }
 
 .pineapple-rain {
@@ -805,11 +805,13 @@ a {
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
       width: calc(90vw - 6vw);
+      margin-right: 0.5vw;
   }
   .guess-btn {
       font-size: clamp(1.2vh, 1.5vw, 1.5vh);
-      padding: clamp(0.4vh, 0.5vw, 0.5vh) clamp(0.4vh, 0.5vw, 0.5vh);
-      width: 4vw;
+      padding: 0.3vh 0.3vw;
+      width: 3vw;
+      margin-right: 0.5vw;
   }
   #guess-line {
       width: 90vw;
