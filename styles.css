@@ -130,10 +130,10 @@ a {
 #guess-container {
   position: absolute;
   top: 3vh;
-  width: 100%;
+  width: 85vw; /* Match #guess-area */
   display: flex;
   align-items: center;
-  justify-content: center; /* Center the container */
+  justify-content: flex-end; /* Push button to right */
   z-index: 1;
 }
 
@@ -142,15 +142,18 @@ a {
   font-weight: bold;
   background: none;
   border: none;
-  width: calc(85vw - 6vw); /* Adjusted for button space */
+  width: calc(85vw - 8vw); /* Leave space for button */
   text-align: center;
   padding: 0;
-  margin: 0;
+  margin: 0 auto; /* Center within its space */
   color: #000000;
   outline: none;
   caret-color: black;
   text-transform: uppercase;
   animation: blink 1s step-end infinite;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 @keyframes blink {
@@ -165,7 +168,7 @@ a {
 #guess-input::placeholder {
   font-size: 2vh;
   color: #AAAAAA;
-  text-align: center; /* Center placeholder */
+  text-align: left; /* Reverted to original */
   font-weight: normal;
   text-transform: none;
   padding-top: 0.5vh;
@@ -177,16 +180,15 @@ a {
 }
 
 .guess-btn {
-  font-size: 1.8vh;
-  padding: 0.5vh 0.5vw; /* Reduced padding for fit */
-  background: #FFC107; /* Deeper yellow (Amber) */
-  color: #000000; /* Black text */
-  border: 0.1vh solid #000000; /* Black outline */
+  font-size: 1.5vh; /* Smaller for mobile fit */
+  padding: 0.5vh 0.5vw;
+  background: #FFC107; /* Deeper yellow */
+  color: #000000;
+  border: 0.1vh solid #000000;
   border-radius: 0.6vh;
   cursor: pointer;
   transition: transform 0.2s ease;
-  margin-left: 1vw;
-  width: 5vw; /* Smaller fixed width */
+  width: 6vw; /* Fixed width */
   flex-shrink: 0;
 }
 
@@ -195,9 +197,9 @@ a {
 }
 
 .dark-mode .guess-btn {
-  background: #FFC107; /* Deeper yellow */
-  color: #000000; /* Black text */
-  border: 0.1vh solid #FFFFFF; /* White outline */
+  background: #FFC107;
+  color: #000000;
+  border: 0.1vh solid #FFFFFF;
 }
 
 #guess-line {
@@ -332,16 +334,16 @@ a {
 }
 
 #create-pineapple {
-  background: #FFC107; /* Deeper yellow */
-  color: #000000; /* Black text */
-  border: 0.1vh solid #000000; /* Black outline */
+  background: #FFC107;
+  color: #000000;
+  border: 0.1vh solid #000000;
   border-radius: 1vh;
 }
 
 .dark-mode #create-pineapple {
-  background: #FFC107; /* Deeper yellow */
-  color: #000000; /* Black text */
-  border: 0.1vh solid #FFFFFF; /* White outline */
+  background: #FFC107;
+  color: #000000;
+  border: 0.1vh solid #FFFFFF;
 }
 
 #game-over {
@@ -504,6 +506,7 @@ a {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   animation: fall linear forwards;
   line-height: 1;
+  top: -5vh; /* Start above screen */
 }
 
 .dark-mode .pineapple-piece {
@@ -515,7 +518,7 @@ a {
       opacity: 1; 
   }
   100% { 
-      transform: translateY(100vh); 
+      transform: translateY(105vh); /* Adjusted for starting above */
       opacity: 0; 
   }
 }
@@ -791,17 +794,23 @@ a {
       font-size: clamp(1.8vh, 2.2vw, 2.2vh);
       padding: clamp(0.75vh, 0.9vw, 0.9vh) clamp(1.5vh, 1.8vw, 1.8vw);
   }
+  #guess-area {
+      width: 90vw;
+  }
+  #guess-container {
+      width: 90vw;
+  }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      width: calc(90vw - 6vw); /* Adjusted for mobile */
+      width: calc(90vw - 8vw);
   }
   .guess-btn {
-      font-size: clamp(1.5vh, 1.8vw, 1.8vh);
-      padding: clamp(0.5vh, 0.6vw, 0.6vh) clamp(0.5vh, 0.6vw, 0.6vh);
-      width: 5vw;
+      font-size: clamp(1.2vh, 1.5vw, 1.5vh);
+      padding: clamp(0.4vh, 0.5vw, 0.5vh) clamp(0.4vh, 0.5vw, 0.5vw);
+      width: 6vw;
   }
   #guess-line {
-      width: 90vw; /* Match mobile width */
+      width: 90vw;
   }
   #hints-box {
       width: 90vw;

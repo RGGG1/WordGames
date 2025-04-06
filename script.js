@@ -650,10 +650,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
-        createPineappleWave(0); // First wave immediately
-        createPineappleWave(1); // Second wave after 1s for vertical stagger
+        // 4 waves to cover 3.5s
+        createPineappleWave(0);    // Start immediately
+        createPineappleWave(0.875); // After 0.875s
+        createPineappleWave(1.75);  // After 1.75s
+        createPineappleWave(2.625); // After 2.625s
         
-        setTimeout(() => pineappleContainer.remove(), 2000); // Remove after 2 seconds
+        setTimeout(() => pineappleContainer.remove(), 3500); // Remove after 3.5s
     }
 
     function handleGuess(guess) {
@@ -700,7 +703,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
                 saveGameResult(gameType, originalGameNumber, secretWord, score);
                 endGame(true);
-            }, 2000);
+            }, 3500); // Match 3.5s pineapple rain
         } else {
             guessDisplay.classList.add("wrong-guess");
             setTimeout(() => {
