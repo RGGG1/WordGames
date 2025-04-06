@@ -133,6 +133,7 @@ a {
   width: 100%;
   display: flex;
   align-items: center;
+  justify-content: flex-start; /* Align items to the left */
   z-index: 1;
 }
 
@@ -141,7 +142,7 @@ a {
   font-weight: bold;
   background: none;
   border: none;
-  flex-grow: 1;
+  width: calc(85vw - 8vw); /* Adjusted to leave space for the button */
   text-align: center;
   padding: 0;
   margin: 0;
@@ -178,13 +179,15 @@ a {
 .guess-btn {
   font-size: 1.8vh;
   padding: 0.5vh 1vw;
-  background: #000000;
-  color: #FFFFFF;
-  border: 0.1vh solid #FFFFFF;
+  background: #FFD700; /* Yellow background */
+  color: #000000; /* Black text */
+  border: 0.1vh solid #000000; /* Black border */
   border-radius: 0.6vh;
   cursor: pointer;
   transition: transform 0.2s ease;
   margin-left: 1vw;
+  width: 6vw; /* Fixed width to align with guess-line */
+  flex-shrink: 0; /* Prevent shrinking */
 }
 
 .guess-btn:hover {
@@ -192,13 +195,13 @@ a {
 }
 
 .dark-mode .guess-btn {
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
+  background: #FFD700; /* Yellow background */
+  color: #FFFFFF; /* White text */
+  border: 0.1vh solid #FFFFFF; /* White border */
 }
 
 #guess-line {
-  width: 100%;
+  width: 85vw;
   height: 0.2vh;
   background: #000000;
   position: absolute;
@@ -326,6 +329,19 @@ a {
   background: #FFFFFF;
   color: #000000;
   border: 0.1vh solid #000000;
+}
+
+#create-pineapple {
+  background: #FFD700; /* Yellow background */
+  color: #000000; /* Black text */
+  border: 0.1vh solid #000000; /* Black border */
+  border-radius: 1vh;
+}
+
+.dark-mode #create-pineapple {
+  background: #FFD700; /* Yellow background */
+  color: #FFFFFF; /* White text */
+  border: 0.1vh solid #FFFFFF; /* White border */
 }
 
 #game-over {
@@ -506,10 +522,6 @@ a {
 
 .spacer {
   height: 1vh;
-}
-
-#create-pineapple {
-  border-radius: 1vh;
 }
 
 #game-select-screen {
@@ -781,10 +793,15 @@ a {
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
+      width: calc(90vw - 8vw); /* Adjusted for mobile */
   }
   .guess-btn {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
       padding: clamp(0.5vh, 0.6vw, 0.6vh) clamp(1vh, 1.2vw, 1.2vw);
+      width: 6vw; /* Fixed width */
+  }
+  #guess-line {
+      width: 90vw; /* Match mobile width */
   }
   #hints-box {
       width: 90vw;

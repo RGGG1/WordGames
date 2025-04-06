@@ -89,21 +89,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Handle autocomplete (debounced to avoid rapid submissions)
-    let autocompleteTimeout;
-    input.addEventListener("input", () => {
-        clearTimeout(autocompleteTimeout);
-        autocompleteTimeout = setTimeout(() => {
-            if (!gameOver && !input.disabled && !isProcessingGuess) {
-                const guess = input.value.trim();
-                if (guess) {
-                    isProcessingGuess = true;
-                    console.log("Guess submitted via autocomplete:", guess);
-                    handleGuess(guess);
-                    setTimeout(() => { isProcessingGuess = false; }, 100);
-                }
+    // Handle mobile autocomplete (compositionend for input method completion)
+    input.addEventListener("compositionend", (e) => {
+        if (!gameOver && !input.disabled && !isProcessingGuess && isMobile) {
+            const guess = input.value.trim();
+            if (guess) {
+                isProcessingGuess = true;
+                console.log("Guess submitted via mobile autocomplete:", guess);
+                handleGuess(guess);
+                setTimeout(() => { isProcessingGuess = false; }, 100);
             }
-        }, 500); // 500ms debounce to confirm autocomplete selection
+        }
     });
 
     if (officialTab && privateTab && officialContent && privateContent) {
@@ -649,12 +645,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             pineapple.style.left = `${Math.random() * 100}vw`;
             pineapple.style.fontSize = `${Math.random() * 20 + 10}px`;
             pineapple.style.transform = `rotate(${Math.random() * 360}deg)`;
-            pineapple.style.animationDuration = `${Math.random() * 1 + 1}s`;
+            pineapple.style.animationDuration = `${Math.random() * 2 + 2}s`; // Slower: 2-4s
             pineapple.style.animationDelay = `${Math.random() * 0.5}s`;
             pineappleContainer.appendChild(pineapple);
         }
         
-        setTimeout(() => pineappleContainer.remove(), 2000);
+        setTimeout(() => pineappleContainer.remove(), 2000); // Remove after 2 seconds
     }
 
     function handleGuess(guess) {
@@ -701,7 +697,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
                 saveGameResult(gameType, originalGameNumber, secretWord, score);
                 endGame(true);
-            }, 1500);
+            }, 2000); // Delay win screen by 2 seconds to match pineapple rain
         } else {
             guessDisplay.classList.add("wrong-guess");
             setTimeout(() => {
