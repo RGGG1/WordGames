@@ -127,22 +127,28 @@ a {
   background: none;
 }
 
+#guess-container {
+  position: absolute;
+  top: 3vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 1;
+}
+
 #guess-input {
   font-size: clamp(4vh, 5vw, 5vh);
   font-weight: bold;
   background: none;
   border: none;
-  width: 100%;
+  flex-grow: 1;
   text-align: center;
   padding: 0;
   margin: 0;
-  position: absolute;
-  top: 3vh;
   color: #000000;
   outline: none;
   caret-color: black;
   text-transform: uppercase;
-  z-index: 1;
   animation: blink 1s step-end infinite;
 }
 
@@ -167,6 +173,28 @@ a {
 .dark-mode #guess-input::placeholder {
   color: #CCCCCC;
   padding-top: 0.5vh;
+}
+
+.guess-btn {
+  font-size: 1.8vh;
+  padding: 0.5vh 1vw;
+  background: #000000;
+  color: #FFFFFF;
+  border: 0.1vh solid #FFFFFF;
+  border-radius: 0.6vh;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin-left: 1vw;
+}
+
+.guess-btn:hover {
+  transform: scale(1.05);
+}
+
+.dark-mode .guess-btn {
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
 }
 
 #guess-line {
@@ -252,7 +280,7 @@ a {
 
 @media (min-width: 601px) {
   #game-controls {
-    top: 31vh;
+      top: 31vh;
   }
 }
 
@@ -445,7 +473,7 @@ a {
   100% { transform: scale(1); }
 }
 
-.confetti {
+.pineapple-rain {
   position: fixed;
   top: 0;
   left: 0;
@@ -455,17 +483,25 @@ a {
   z-index: 1000;
 }
 
-.confetti-piece {
+.pineapple-piece {
   position: absolute;
-  width: 10px;
-  height: 10px;
-  background: #ff0000;
-  animation: fall 2s linear forwards;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  animation: fall linear forwards;
+  line-height: 1;
+}
+
+.dark-mode .pineapple-piece {
+  text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
 }
 
 @keyframes fall {
-  0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-  100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+  0% { 
+      opacity: 1; 
+  }
+  100% { 
+      transform: translateY(100vh); 
+      opacity: 0; 
+  }
 }
 
 .spacer {
@@ -731,48 +767,52 @@ a {
 
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
-    width: 90vw;
+      width: 90vw;
   }
   #game-name, #score {
-    font-size: clamp(2.25vh, 3vw, 3vh);
+      font-size: clamp(2.25vh, 3vw, 3vh);
   }
   .mode-btn {
-    font-size: clamp(1.8vh, 2.25vw, 2.25vh);
+      font-size: clamp(1.8vh, 2.25vw, 2.25vh);
   }
   .control-btn {
-    font-size: clamp(1.8vh, 2.2vw, 2.2vh);
-    padding: clamp(0.75vh, 0.9vw, 0.9vh) clamp(1.5vh, 1.8vw, 1.8vw);
+      font-size: clamp(1.8vh, 2.2vw, 2.2vh);
+      padding: clamp(0.75vh, 0.9vw, 0.9vh) clamp(1.5vh, 1.8vw, 1.8vw);
   }
   #guess-input {
-    font-size: clamp(3vh, 4vw, 4vh);
+      font-size: clamp(3vh, 4vw, 4vh);
+  }
+  .guess-btn {
+      font-size: clamp(1.5vh, 1.8vw, 1.8vh);
+      padding: clamp(0.5vh, 0.6vw, 0.6vh) clamp(1vh, 1.2vw, 1.2vw);
   }
   #hints-box {
-    width: 90vw;
+      width: 90vw;
   }
   #game-controls {
-    width: 90vw;
+      width: 90vw;
   }
   .hint-line span {
-    font-size: clamp(1.5vh, 1.8vw, 1.8vh);
+      font-size: clamp(1.5vh, 1.8vw, 1.8vh);
   }
   .game-list-header, .game-list-row {
-    width: 90vw;
+      width: 90vw;
   }
   .form-input {
-    font-size: clamp(1.8vh, 2.5vw, 2.5vh);
+      font-size: clamp(1.8vh, 2.5vw, 2.5vh);
   }
   .form-line {
-    width: 90vw;
+      width: 90vw;
   }
   #ad-box {
-    height: 4vh;
+      height: 4vh;
   }
   #ad-box p {
-    font-size: 1.2vh;
+      font-size: 1.2vh;
   }
   #game-select-screen,
   #game-over,
   .create-form {
-    padding-bottom: 4vh;
+      padding-bottom: 4vh;
   }
 }

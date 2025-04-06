@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const confirmBtn = document.getElementById("confirm-btn");
     const formBackBtn = document.getElementById("form-back-btn");
     const createPineappleLink = document.getElementById("create-pineapple-link");
+    const guessBtn = document.getElementById("guess-btn");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -65,11 +66,44 @@ document.addEventListener("DOMContentLoaded", async () => {
             const guess = input.value.trim();
             if (guess) {
                 isProcessingGuess = true;
-                console.log("Guess submitted:", guess);
+                console.log("Guess submitted via Enter:", guess);
                 handleGuess(guess);
                 setTimeout(() => { isProcessingGuess = false; }, 100);
             }
         }
+    });
+
+    // Handle "GUESS" button click
+    if (guessBtn) {
+        guessBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (!gameOver && !input.disabled && !isProcessingGuess) {
+                const guess = input.value.trim();
+                if (guess) {
+                    isProcessingGuess = true;
+                    console.log("Guess submitted via button:", guess);
+                    handleGuess(guess);
+                    setTimeout(() => { isProcessingGuess = false; }, 100);
+                }
+            }
+        });
+    }
+
+    // Handle autocomplete (debounced to avoid rapid submissions)
+    let autocompleteTimeout;
+    input.addEventListener("input", () => {
+        clearTimeout(autocompleteTimeout);
+        autocompleteTimeout = setTimeout(() => {
+            if (!gameOver && !input.disabled && !isProcessingGuess) {
+                const guess = input.value.trim();
+                if (guess) {
+                    isProcessingGuess = true;
+                    console.log("Guess submitted via autocomplete:", guess);
+                    handleGuess(guess);
+                    setTimeout(() => { isProcessingGuess = false; }, 100);
+                }
+            }
+        }, 500); // 500ms debounce to confirm autocomplete selection
     });
 
     if (officialTab && privateTab && officialContent && privateContent) {
@@ -266,7 +300,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
             if (!response.ok) {
                 console.error("Fetch failed with status:", response.status, response.statusText);
-                console.log("Response headers:", [...response.headers.entries()]);
                 throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
             }
             const text = await response.text();
@@ -604,19 +637,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         updateHintCountdown();
     }
 
-    function rainConfetti() {
-        const confettiContainer = document.createElement("div");
-        confettiContainer.className = "confetti";
-        document.body.appendChild(confettiContainer);
+    function rainPineapples() {
+        const pineappleContainer = document.createElement("div");
+        pineappleContainer.className = "pineapple-rain";
+        document.body.appendChild(pineappleContainer);
+        
         for (let i = 0; i < 50; i++) {
-            const piece = document.createElement("div");
-            piece.className = "confetti-piece";
-            piece.style.left = `${Math.random() * 100}vw`;
-            piece.style.background = `hsl(${Math.random() * 360}, 100%, 50%)`;
-            piece.style.animationDelay = `${Math.random() * 1}s`;
-            confettiContainer.appendChild(piece);
+            const pineapple = document.createElement("div");
+            pineapple.className = "pineapple-piece";
+            pineapple.textContent = "🍍";
+            pineapple.style.left = `${Math.random() * 100}vw`;
+            pineapple.style.fontSize = `${Math.random() * 20 + 10}px`;
+            pineapple.style.transform = `rotate(${Math.random() * 360}deg)`;
+            pineapple.style.animationDuration = `${Math.random() * 1 + 1}s`;
+            pineapple.style.animationDelay = `${Math.random() * 0.5}s`;
+            pineappleContainer.appendChild(pineapple);
         }
-        setTimeout(() => confettiContainer.remove(), 2000);
+        
+        setTimeout(() => pineappleContainer.remove(), 2000);
     }
 
     function handleGuess(guess) {
@@ -646,7 +684,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guess.toUpperCase() === secretWord) {
             guessDisplay.classList.add("correct-guess");
-            rainConfetti();
+            rainPineapples();
             guessLine.style.opacity = "0";
             gameOver = true;
             setTimeout(() => {
