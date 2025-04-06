@@ -371,7 +371,7 @@ a {
 #create-pineapple .plus {
   font-size: 3vh;
   line-height: 1;
-  margin-top: 0; /* Remove extra space above the + */
+  margin-top: 0;
 }
 
 .dark-mode #create-pineapple {
@@ -431,13 +431,13 @@ a {
   border-radius: 1vh;
   padding: 1.5vh;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border: 0.2vh solid #FFB300; /* Yellow outline */
+  border: 0.4vh solid #FFB300; /* Increased yellow outline width */
 }
 
 .dark-mode #share-panel {
   background: #FFFFFF;
   color: #000000;
-  border: 0.2vh solid #FFB300; /* Yellow outline in dark mode */
+  border: 0.4vh solid #FFB300; /* Increased yellow outline width in dark mode */
 }
 
 #share-text {
@@ -766,11 +766,11 @@ a {
 }
 
 #back-btn {
-  border: 0.2vh solid #FFB300; /* Yellow outline for Play Again button */
+  border: 0.2vh solid #FFB300;
 }
 
 .dark-mode #back-btn {
-  border: 0.2vh solid #FFB300; /* Yellow outline in dark mode */
+  border: 0.2vh solid #FFB300;
 }
 
 #create-link {
@@ -840,28 +840,27 @@ a {
       align-items: center;
       justify-content: center;
       box-sizing: border-box;
-      position: relative; /* Ensure fixed positioning context */
+      position: relative;
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      flex: 0 0 80%; /* Adjusted to 80% to accommodate larger button */
+      flex: 0 0 80%;
       width: 80%;
       margin: 0;
       text-align: center;
       box-sizing: border-box;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%); /* Center the input exactly */
+      position: static; /* Revert to static to prevent overlap */
+      z-index: 1; /* Ensure input is above other elements */
   }
   .guess-btn {
-      font-size: clamp(1.5vh, 1.8vw, 1.8vh); /* Increased by 50% from 1vh */
-      padding: 0.3vh 0.45vw; /* Increased by 50% from 0.2vh 0.3vw */
-      flex: 0 0 15%; /* Adjusted to 15% to fit within 90vw */
+      font-size: clamp(1.5vh, 1.8vw, 1.8vh);
+      padding: 0.3vh 0.45vw;
+      flex: 0 0 15%;
       width: 15%;
       margin: 0;
       box-sizing: border-box;
-      position: absolute;
-      right: 0; /* Fixed position on the right */
+      position: static; /* Revert to static to prevent overlap */
+      z-index: 1; /* Ensure button is above other elements */
   }
   #guess-line {
       width: 90vw;
@@ -898,9 +897,9 @@ a {
       padding-bottom: 4vh;
   }
   #create-pineapple .tap-here {
-      margin: 0; /* Remove extra margin to reduce space */
+      margin: 0;
   }
   #create-pineapple .plus {
-      margin-top: 0; /* Ensure no extra space above the + */
+      margin-top: 0;
   }
 }

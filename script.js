@@ -571,7 +571,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGame(false, true);
         });
 
-        // Removed the "type guess here" placeholder event listener
         input.addEventListener("focus", () => {
             // No placeholder text to set
         });
@@ -581,10 +580,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const input = document.getElementById("guess-input");
         if (!gameOver && gameScreen.style.display === "flex" && !input.disabled) {
             input.focus();
-            console.log("Keyboard kept open");
+            console.log("Keyboard kept open, input disabled:", input.disabled);
             if (isMobile) {
                 setTimeout(() => {
-                    if (document.activeElement !== input) input.focus();
+                    if (document.activeElement !== input) {
+                        input.focus();
+                        console.log("Forced focus on mobile");
+                    }
                 }, 50);
             }
         }
@@ -805,8 +807,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("score").textContent = score;
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
-        guessInput.placeholder = ""; // Removed "type guess here"
+        guessInput.placeholder = "";
         guessInput.disabled = false;
+        console.log("resetGame: Input disabled set to false");
         document.getElementById("guess-line").style.opacity = "1";
         const hintsBox = document.getElementById("hints");
         hintsBox.innerHTML = `
