@@ -65,20 +65,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const input = document.getElementById("guess-input");
-    input.addEventListener("keydown", function handleGuessKeydown(e) {
-        if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver && !input.disabled && !isProcessingGuess) {
-            e.preventDefault();
-            const guess = input.value.trim();
-            if (guess) {
-                isProcessingGuess = true;
-                console.log("Guess submitted via Enter:", guess);
-                handleGuess(guess);
-                setTimeout(() => { isProcessingGuess = false; }, 100);
+    console.log("guess-input element:", input);
+    if (input) {
+        input.addEventListener("keydown", function handleGuessKeydown(e) {
+            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver && !input.disabled && !isProcessingGuess) {
+                e.preventDefault();
+                const guess = input.value.trim();
+                if (guess) {
+                    isProcessingGuess = true;
+                    console.log("Guess submitted via Enter:", guess);
+                    handleGuess(guess);
+                    setTimeout(() => { isProcessingGuess = false; }, 100);
+                }
             }
-        }
-    });
+        });
+
+        input.addEventListener("input", (e) => {
+            console.log("Input value changed:", input.value);
+        });
+    } else {
+        console.error("guess-input not found in DOM");
+    }
 
     if (guessBtn) {
+        console.log("guess-btn element:", guessBtn);
         guessBtn.addEventListener("click", (e) => {
             e.preventDefault();
             if (!gameOver && !input.disabled && !isProcessingGuess) {
@@ -91,19 +101,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
         });
+    } else {
+        console.error("guess-btn not found in DOM");
     }
 
-    input.addEventListener("compositionend", (e) => {
-        if (!gameOver && !input.disabled && !isProcessingGuess && isMobile) {
-            const guess = input.value.trim();
-            if (guess) {
-                isProcessingGuess = true;
-                console.log("Guess submitted via mobile autocomplete:", guess);
-                handleGuess(guess);
-                setTimeout(() => { isProcessingGuess = false; }, 100);
+    if (input) {
+        input.addEventListener("compositionend", (e) => {
+            if (!gameOver && !input.disabled && !isProcessingGuess && isMobile) {
+                const guess = input.value.trim();
+                if (guess) {
+                    isProcessingGuess = true;
+                    console.log("Guess submitted via mobile autocomplete:", guess);
+                    handleGuess(guess);
+                    setTimeout(() => { isProcessingGuess = false; }, 100);
+                }
             }
-        }
-    });
+        });
+    }
 
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
@@ -480,8 +494,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (!keyboardInitiated) {
                     input.focus();
                     keyboardInitiated = true;
+                    console.log("Input focused on click");
                 }
-                if (firstGuessMade && !gameOver) input.focus();
+                if (firstGuessMade && !gameOver) {
+                    input.focus();
+                    console.log("Input refocused after first guess");
+                }
             }
         });
 
@@ -572,7 +590,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
 
         input.addEventListener("focus", () => {
-            // No placeholder text to set
+            console.log("Input focused");
         });
     }
 
@@ -589,6 +607,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                 }, 50);
             }
+        } else {
+            console.log("Cannot keep keyboard open:", { gameOver, gameScreenDisplay: gameScreen.style.display, inputDisabled: input.disabled });
         }
     }
 
@@ -673,6 +693,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessDisplay.value = guess.toUpperCase();
         guessDisplay.classList.remove("wrong-guess");
         guessDisplay.style.opacity = "1";
+        guessDisplay.style.visibility = "visible";
         void guessDisplay.offsetWidth;
 
         if (!firstGuessMade) {
@@ -710,6 +731,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             setTimeout(() => {
                 guessDisplay.classList.remove("wrong-guess");
                 guessDisplay.style.opacity = "1";
+                guessDisplay.style.visibility = "visible";
                 guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
                 keepKeyboardOpen();
@@ -809,7 +831,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.value = "";
         guessInput.placeholder = "";
         guessInput.disabled = false;
-        console.log("resetGame: Input disabled set to false");
+        guessInput.style.opacity = "1";
+        guessInput.style.visibility = "visible";
+        console.log("resetGame: Input disabled set to false, visibility:", guessInput.style.visibility);
+
+        const guessBtn = document.getElementById("guess-btn");
+        if (guessBtn) {
+            guessBtn.style.opacity = "1";
+            guessBtn.style.visibility = "visible";
+            console.log("resetGame: Guess button visibility:", guessBtn.style.visibility);
+        }
+
         document.getElementById("guess-line").style.opacity = "1";
         const hintsBox = document.getElementById("hints");
         hintsBox.innerHTML = `

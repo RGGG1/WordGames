@@ -136,7 +136,7 @@ a {
   align-items: center;
   justify-content: center;
   z-index: 1;
-  overflow-x: hidden;
+  overflow-x: visible; /* Changed to visible to prevent clipping */
 }
 
 #guess-input {
@@ -149,11 +149,14 @@ a {
   text-align: center;
   padding: 0;
   margin: 0 0.5vw 0 0;
-  color: #000000;
+  color: #000000 !important; /* Ensure text is visible */
   outline: none;
-  caret-color: black;
+  caret-color: black !important; /* Ensure cursor is visible */
   text-transform: uppercase;
   animation: blink 0.5s step-end infinite;
+  opacity: 1; /* Ensure input is visible */
+  visibility: visible; /* Ensure input is visible */
+  z-index: 2; /* Ensure input is above other elements */
 }
 
 @keyframes blink {
@@ -161,8 +164,8 @@ a {
 }
 
 .dark-mode #guess-input {
-  color: #FFFFFF;
-  caret-color: white;
+  color: #FFFFFF !important; /* Ensure text is visible in dark mode */
+  caret-color: white !important; /* Ensure cursor is visible in dark mode */
 }
 
 #guess-input::placeholder {
@@ -192,6 +195,10 @@ a {
   width: 3vw;
   flex-shrink: 0;
   margin-right: 0.5vw;
+  display: block; /* Ensure button is visible */
+  opacity: 1; /* Ensure button is visible */
+  visibility: visible; /* Ensure button is visible */
+  z-index: 2; /* Ensure button is above other elements */
 }
 
 .guess-btn:hover {
@@ -223,6 +230,7 @@ a {
   position: absolute;
   top: 8.5vh;
   transition: opacity 0.5s ease-out;
+  z-index: 0; /* Ensure line is below input and button */
 }
 
 .dark-mode #guess-line {
@@ -431,13 +439,13 @@ a {
   border-radius: 1vh;
   padding: 1.5vh;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border: 0.4vh solid #FFB300; /* Increased yellow outline width */
+  border: 0.4vh solid #FFB300;
 }
 
 .dark-mode #share-panel {
   background: #FFFFFF;
   color: #000000;
-  border: 0.4vh solid #FFB300; /* Increased yellow outline width in dark mode */
+  border: 0.4vh solid #FFB300;
 }
 
 #share-text {
@@ -841,6 +849,7 @@ a {
       justify-content: center;
       box-sizing: border-box;
       position: relative;
+      z-index: 1; /* Ensure container is above other elements */
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
@@ -849,8 +858,11 @@ a {
       margin: 0;
       text-align: center;
       box-sizing: border-box;
-      position: static; /* Revert to static to prevent overlap */
-      z-index: 1; /* Ensure input is above other elements */
+      position: static;
+      z-index: 2;
+      display: block; /* Ensure input is visible */
+      opacity: 1;
+      visibility: visible;
   }
   .guess-btn {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
@@ -859,8 +871,11 @@ a {
       width: 15%;
       margin: 0;
       box-sizing: border-box;
-      position: static; /* Revert to static to prevent overlap */
-      z-index: 1; /* Ensure button is above other elements */
+      position: static;
+      z-index: 2;
+      display: block; /* Ensure button is visible */
+      opacity: 1;
+      visibility: visible;
   }
   #guess-line {
       width: 90vw;
