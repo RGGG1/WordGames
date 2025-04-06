@@ -115,7 +115,7 @@ a {
   top: 0;
   left: 0;
   text-align: left;
-  margin-top: 1vh;
+  margin-top: 0; /* Removed extra space above */
 }
 
 #guess-background {
@@ -136,7 +136,7 @@ a {
   align-items: center;
   justify-content: center;
   z-index: 1;
-  overflow-x: visible; /* Changed to visible to prevent clipping */
+  overflow-x: visible;
 }
 
 #guess-input {
@@ -149,14 +149,17 @@ a {
   text-align: center;
   padding: 0;
   margin: 0 0.5vw 0 0;
-  color: #000000 !important; /* Ensure text is visible */
+  color: #000000 !important;
   outline: none;
-  caret-color: black !important; /* Ensure cursor is visible */
+  caret-color: black !important;
   text-transform: uppercase;
   animation: blink 0.5s step-end infinite;
-  opacity: 1; /* Ensure input is visible */
-  visibility: visible; /* Ensure input is visible */
-  z-index: 2; /* Ensure input is above other elements */
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+  position: absolute; /* Position independently for centering */
+  left: 50%;
+  transform: translateX(-50%); /* Center based on 85vw */
 }
 
 @keyframes blink {
@@ -164,8 +167,8 @@ a {
 }
 
 .dark-mode #guess-input {
-  color: #FFFFFF !important; /* Ensure text is visible in dark mode */
-  caret-color: white !important; /* Ensure cursor is visible in dark mode */
+  color: #FFFFFF !important;
+  caret-color: white !important;
 }
 
 #guess-input::placeholder {
@@ -195,10 +198,12 @@ a {
   width: 3vw;
   flex-shrink: 0;
   margin-right: 0.5vw;
-  display: block; /* Ensure button is visible */
-  opacity: 1; /* Ensure button is visible */
-  visibility: visible; /* Ensure button is visible */
-  z-index: 2; /* Ensure button is above other elements */
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+  position: absolute; /* Position independently */
+  right: 0; /* Align to the right of the 85vw container */
 }
 
 .guess-btn:hover {
@@ -230,7 +235,7 @@ a {
   position: absolute;
   top: 8.5vh;
   transition: opacity 0.5s ease-out;
-  z-index: 0; /* Ensure line is below input and button */
+  z-index: 0;
 }
 
 .dark-mode #guess-line {
@@ -373,7 +378,7 @@ a {
 #create-pineapple .tap-here {
   font-size: 1.2vh;
   font-weight: normal;
-  margin: 0.2vh 0;
+  margin: 0;
 }
 
 #create-pineapple .plus {
@@ -849,31 +854,32 @@ a {
       justify-content: center;
       box-sizing: border-box;
       position: relative;
-      z-index: 1; /* Ensure container is above other elements */
+      z-index: 1;
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      flex: 0 0 80%;
-      width: 80%;
+      width: 90vw; /* Full width for centering */
       margin: 0;
       text-align: center;
       box-sizing: border-box;
-      position: static;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%); /* Center based on 90vw */
       z-index: 2;
-      display: block; /* Ensure input is visible */
+      display: block;
       opacity: 1;
       visibility: visible;
   }
   .guess-btn {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
       padding: 0.3vh 0.45vw;
-      flex: 0 0 15%;
       width: 15%;
       margin: 0;
       box-sizing: border-box;
-      position: static;
+      position: absolute;
+      right: 0;
       z-index: 2;
-      display: block; /* Ensure button is visible */
+      display: block;
       opacity: 1;
       visibility: visible;
   }
