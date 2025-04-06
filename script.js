@@ -73,7 +73,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     });
 
-    // Handle "GUESS" button click
     if (guessBtn) {
         guessBtn.addEventListener("click", (e) => {
             e.preventDefault();
@@ -89,7 +88,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Handle mobile autocomplete (compositionend for input method completion)
     input.addEventListener("compositionend", (e) => {
         if (!gameOver && !input.disabled && !isProcessingGuess && isMobile) {
             const guess = input.value.trim();
@@ -637,18 +635,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         const pineappleContainer = document.createElement("div");
         pineappleContainer.className = "pineapple-rain";
         document.body.appendChild(pineappleContainer);
-        
-        for (let i = 0; i < 50; i++) {
-            const pineapple = document.createElement("div");
-            pineapple.className = "pineapple-piece";
-            pineapple.textContent = "🍍";
-            pineapple.style.left = `${Math.random() * 100}vw`;
-            pineapple.style.fontSize = `${Math.random() * 20 + 10}px`;
-            pineapple.style.transform = `rotate(${Math.random() * 360}deg)`;
-            pineapple.style.animationDuration = `${Math.random() * 2 + 2}s`; // Slower: 2-4s
-            pineapple.style.animationDelay = `${Math.random() * 0.5}s`;
-            pineappleContainer.appendChild(pineapple);
+
+        function createPineappleWave(startDelay) {
+            for (let i = 0; i < 50; i++) {
+                const pineapple = document.createElement("div");
+                pineapple.className = "pineapple-piece";
+                pineapple.textContent = "🍍";
+                pineapple.style.left = `${Math.random() * 100}vw`;
+                pineapple.style.fontSize = `${Math.random() * 20 + 10}px`;
+                pineapple.style.transform = `rotate(${Math.random() * 360}deg)`;
+                pineapple.style.animationDuration = `${Math.random() * 2 + 2}s`; // 2-4s
+                pineapple.style.animationDelay = `${startDelay + Math.random() * 0.5}s`;
+                pineappleContainer.appendChild(pineapple);
+            }
         }
+
+        createPineappleWave(0); // First wave immediately
+        createPineappleWave(1); // Second wave after 1s for vertical stagger
         
         setTimeout(() => pineappleContainer.remove(), 2000); // Remove after 2 seconds
     }
@@ -697,7 +700,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
                 saveGameResult(gameType, originalGameNumber, secretWord, score);
                 endGame(true);
-            }, 2000); // Delay win screen by 2 seconds to match pineapple rain
+            }, 2000);
         } else {
             guessDisplay.classList.add("wrong-guess");
             setTimeout(() => {

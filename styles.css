@@ -133,7 +133,7 @@ a {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: flex-start; /* Align items to the left */
+  justify-content: center; /* Center the container */
   z-index: 1;
 }
 
@@ -142,7 +142,7 @@ a {
   font-weight: bold;
   background: none;
   border: none;
-  width: calc(85vw - 8vw); /* Adjusted to leave space for the button */
+  width: calc(85vw - 6vw); /* Adjusted for button space */
   text-align: center;
   padding: 0;
   margin: 0;
@@ -165,7 +165,7 @@ a {
 #guess-input::placeholder {
   font-size: 2vh;
   color: #AAAAAA;
-  text-align: left;
+  text-align: center; /* Center placeholder */
   font-weight: normal;
   text-transform: none;
   padding-top: 0.5vh;
@@ -178,16 +178,16 @@ a {
 
 .guess-btn {
   font-size: 1.8vh;
-  padding: 0.5vh 1vw;
-  background: #FFD700; /* Yellow background */
+  padding: 0.5vh 0.5vw; /* Reduced padding for fit */
+  background: #FFC107; /* Deeper yellow (Amber) */
   color: #000000; /* Black text */
-  border: 0.1vh solid #000000; /* Black border */
+  border: 0.1vh solid #000000; /* Black outline */
   border-radius: 0.6vh;
   cursor: pointer;
   transition: transform 0.2s ease;
   margin-left: 1vw;
-  width: 6vw; /* Fixed width to align with guess-line */
-  flex-shrink: 0; /* Prevent shrinking */
+  width: 5vw; /* Smaller fixed width */
+  flex-shrink: 0;
 }
 
 .guess-btn:hover {
@@ -195,9 +195,9 @@ a {
 }
 
 .dark-mode .guess-btn {
-  background: #FFD700; /* Yellow background */
-  color: #FFFFFF; /* White text */
-  border: 0.1vh solid #FFFFFF; /* White border */
+  background: #FFC107; /* Deeper yellow */
+  color: #000000; /* Black text */
+  border: 0.1vh solid #FFFFFF; /* White outline */
 }
 
 #guess-line {
@@ -332,16 +332,16 @@ a {
 }
 
 #create-pineapple {
-  background: #FFD700; /* Yellow background */
+  background: #FFC107; /* Deeper yellow */
   color: #000000; /* Black text */
-  border: 0.1vh solid #000000; /* Black border */
+  border: 0.1vh solid #000000; /* Black outline */
   border-radius: 1vh;
 }
 
 .dark-mode #create-pineapple {
-  background: #FFD700; /* Yellow background */
-  color: #FFFFFF; /* White text */
-  border: 0.1vh solid #FFFFFF; /* White border */
+  background: #FFC107; /* Deeper yellow */
+  color: #000000; /* Black text */
+  border: 0.1vh solid #FFFFFF; /* White outline */
 }
 
 #game-over {
@@ -793,12 +793,12 @@ a {
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      width: calc(90vw - 8vw); /* Adjusted for mobile */
+      width: calc(90vw - 6vw); /* Adjusted for mobile */
   }
   .guess-btn {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
-      padding: clamp(0.5vh, 0.6vw, 0.6vh) clamp(1vh, 1.2vw, 1.2vw);
-      width: 6vw; /* Fixed width */
+      padding: clamp(0.5vh, 0.6vw, 0.6vh) clamp(0.5vh, 0.6vw, 0.6vh);
+      width: 5vw;
   }
   #guess-line {
       width: 90vw; /* Match mobile width */
