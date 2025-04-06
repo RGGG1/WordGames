@@ -129,11 +129,11 @@ a {
 
 #guess-container {
   position: absolute;
-  top: 3vh;
-  width: 85vw; /* Match #guess-area */
+  top: 2.5vh; /* Added 0.5vh above */
+  width: 85vw;
   display: flex;
   align-items: center;
-  justify-content: flex-end; /* Push button to right */
+  justify-content: flex-end;
   z-index: 1;
 }
 
@@ -142,10 +142,10 @@ a {
   font-weight: bold;
   background: none;
   border: none;
-  width: calc(85vw - 8vw); /* Leave space for button */
+  width: calc(85vw - 6vw); /* Adjusted for smaller button */
   text-align: center;
   padding: 0;
-  margin: 0 auto; /* Center within its space */
+  margin: 0 auto;
   color: #000000;
   outline: none;
   caret-color: black;
@@ -168,7 +168,7 @@ a {
 #guess-input::placeholder {
   font-size: 2vh;
   color: #AAAAAA;
-  text-align: left; /* Reverted to original */
+  text-align: left;
   font-weight: normal;
   text-transform: none;
   padding-top: 0.5vh;
@@ -180,15 +180,16 @@ a {
 }
 
 .guess-btn {
-  font-size: 1.5vh; /* Smaller for mobile fit */
+  font-size: 1.5vh;
+  font-weight: bold; /* Bold text */
   padding: 0.5vh 0.5vw;
-  background: #FFC107; /* Deeper yellow */
+  background: #FFB300; /* Deeper yellow */
   color: #000000;
   border: 0.1vh solid #000000;
   border-radius: 0.6vh;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: 6vw; /* Fixed width */
+  width: 4vw; /* Reduced width */
   flex-shrink: 0;
 }
 
@@ -197,7 +198,7 @@ a {
 }
 
 .dark-mode .guess-btn {
-  background: #FFC107;
+  background: #FFB300;
   color: #000000;
   border: 0.1vh solid #FFFFFF;
 }
@@ -207,7 +208,7 @@ a {
   height: 0.2vh;
   background: #000000;
   position: absolute;
-  top: 9vh;
+  top: 8.5vh; /* Removed 0.5vh below */
   transition: opacity 0.5s ease-out;
 }
 
@@ -334,14 +335,15 @@ a {
 }
 
 #create-pineapple {
-  background: #FFC107;
+  background: #FFB300; /* Deeper yellow */
   color: #000000;
   border: 0.1vh solid #000000;
   border-radius: 1vh;
+  font-weight: bold; /* Bold text */
 }
 
 .dark-mode #create-pineapple {
-  background: #FFC107;
+  background: #FFB300;
   color: #000000;
   border: 0.1vh solid #FFFFFF;
 }
@@ -481,14 +483,14 @@ a {
 }
 
 @keyframes wrongGuess {
-  0% { color: #FF0000; transform: translateY(0); }
-  100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
+  0% { color: #FF0000; transform: translate(-50%, 0); } /* Keep centered */
+  100% { color: #FF0000; transform: translate(-50%, -20px); opacity: 0; }
 }
 
 @keyframes pulseGuess {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
+  0% { transform: translate(-50%, 0) scale(1); }
+  50% { transform: translate(-50%, 0) scale(1.1); }
+  100% { transform: translate(-50%, 0) scale(1); }
 }
 
 .pineapple-rain {
@@ -506,7 +508,7 @@ a {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   animation: fall linear forwards;
   line-height: 1;
-  top: -5vh; /* Start above screen */
+  top: -5vh;
 }
 
 .dark-mode .pineapple-piece {
@@ -518,7 +520,7 @@ a {
       opacity: 1; 
   }
   100% { 
-      transform: translateY(105vh); /* Adjusted for starting above */
+      transform: translateY(105vh);
       opacity: 0; 
   }
 }
@@ -802,12 +804,12 @@ a {
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      width: calc(90vw - 8vw);
+      width: calc(90vw - 6vw);
   }
   .guess-btn {
       font-size: clamp(1.2vh, 1.5vw, 1.5vh);
-      padding: clamp(0.4vh, 0.5vw, 0.5vh) clamp(0.4vh, 0.5vw, 0.5vw);
-      width: 6vw;
+      padding: clamp(0.4vh, 0.5vw, 0.5vh) clamp(0.4vh, 0.5vw, 0.5vh);
+      width: 4vw;
   }
   #guess-line {
       width: 90vw;

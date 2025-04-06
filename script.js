@@ -452,10 +452,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function initializeMode() {
         const savedMode = localStorage.getItem("pineappleMode");
-        if (savedMode === "dark") {
-            document.body.classList.add("dark-mode");
-        } else {
+        if (savedMode === "light") {
             document.body.classList.remove("dark-mode");
+        } else {
+            document.body.classList.add("dark-mode"); // Default to dark mode
         }
         modeToggles.forEach(btn => {
             btn.innerHTML = document.body.classList.contains("dark-mode") ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
@@ -644,19 +644,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 pineapple.style.left = `${Math.random() * 100}vw`;
                 pineapple.style.fontSize = `${Math.random() * 20 + 10}px`;
                 pineapple.style.transform = `rotate(${Math.random() * 360}deg)`;
-                pineapple.style.animationDuration = `${Math.random() * 2 + 2}s`; // 2-4s
+                pineapple.style.animationDuration = `${Math.random() * 2 + 2}s`;
                 pineapple.style.animationDelay = `${startDelay + Math.random() * 0.5}s`;
                 pineappleContainer.appendChild(pineapple);
             }
         }
 
-        // 4 waves to cover 3.5s
-        createPineappleWave(0);    // Start immediately
-        createPineappleWave(0.875); // After 0.875s
-        createPineappleWave(1.75);  // After 1.75s
-        createPineappleWave(2.625); // After 2.625s
+        createPineappleWave(0);
+        createPineappleWave(0.875);
+        createPineappleWave(1.75);
+        createPineappleWave(2.625);
         
-        setTimeout(() => pineappleContainer.remove(), 3500); // Remove after 3.5s
+        setTimeout(() => pineappleContainer.remove(), 3500);
     }
 
     function handleGuess(guess) {
@@ -686,7 +685,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guess.toUpperCase() === secretWord) {
             guessDisplay.classList.add("correct-guess");
-            rainPineapples();
             guessLine.style.opacity = "0";
             gameOver = true;
             setTimeout(() => {
@@ -703,7 +701,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
                 saveGameResult(gameType, originalGameNumber, secretWord, score);
                 endGame(true);
-            }, 3500); // Match 3.5s pineapple rain
+            }, 1000); // Immediate transition to end screen
         } else {
             guessDisplay.classList.add("wrong-guess");
             setTimeout(() => {
@@ -761,6 +759,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (won) {
             endGraphic.src = "pineapple_gif.gif";
             endGraphic.style.display = "block";
+            rainPineapples(); // Trigger pineapple rain on end screen
             const guessText = score === 1 ? "guess" : "guesses";
             const shareGamePrefix = currentGameNumber.includes("Private") ? "" : "Game #";
             shareText.innerHTML = `<span class="small-game-number">${shareGamePrefix}${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
