@@ -198,8 +198,20 @@ a {
   transform: scale(1.05);
 }
 
+.guess-btn:active {
+  background: #FFFFFF;
+  color: #000000;
+  border: 0.1vh solid #000000;
+}
+
 .dark-mode .guess-btn {
   background: #FFB300;
+  color: #000000;
+  border: 0.1vh solid #FFFFFF;
+}
+
+.dark-mode .guess-btn:active {
+  background: #FFFFFF;
   color: #000000;
   border: 0.1vh solid #FFFFFF;
 }
@@ -359,6 +371,7 @@ a {
 #create-pineapple .plus {
   font-size: 3vh;
   line-height: 1;
+  margin-top: 0; /* Remove extra space above the + */
 }
 
 .dark-mode #create-pineapple {
@@ -418,11 +431,13 @@ a {
   border-radius: 1vh;
   padding: 1.5vh;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border: 0.2vh solid #FFB300; /* Yellow outline */
 }
 
 .dark-mode #share-panel {
   background: #FFFFFF;
   color: #000000;
+  border: 0.2vh solid #FFB300; /* Yellow outline in dark mode */
 }
 
 #share-text {
@@ -750,6 +765,14 @@ a {
   margin-top: 2vh;
 }
 
+#back-btn {
+  border: 0.2vh solid #FFB300; /* Yellow outline for Play Again button */
+}
+
+.dark-mode #back-btn {
+  border: 0.2vh solid #FFB300; /* Yellow outline in dark mode */
+}
+
 #create-link {
   font-size: 1.8vh;
   color: #000000;
@@ -815,28 +838,30 @@ a {
       flex-direction: row;
       flex-wrap: nowrap;
       align-items: center;
-      justify-content: center; /* Center the entire container */
+      justify-content: center;
       box-sizing: border-box;
+      position: relative; /* Ensure fixed positioning context */
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      flex: 0 0 85%;
-      width: 85%;
+      flex: 0 0 80%; /* Adjusted to 80% to accommodate larger button */
+      width: 80%;
       margin: 0;
       text-align: center;
       box-sizing: border-box;
-      /* Ensure the input itself is centered within the game screen */
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%); /* Center the input exactly */
   }
   .guess-btn {
-      font-size: clamp(1vh, 1.2vw, 1.2vh);
-      padding: 0.2vh 0.3vw;
-      flex: 0 0 15%;
+      font-size: clamp(1.5vh, 1.8vw, 1.8vh); /* Increased by 50% from 1vh */
+      padding: 0.3vh 0.45vw; /* Increased by 50% from 0.2vh 0.3vw */
+      flex: 0 0 15%; /* Adjusted to 15% to fit within 90vw */
       width: 15%;
       margin: 0;
       box-sizing: border-box;
+      position: absolute;
+      right: 0; /* Fixed position on the right */
   }
   #guess-line {
       width: 90vw;
@@ -871,5 +896,11 @@ a {
   #game-over,
   .create-form {
       padding-bottom: 4vh;
+  }
+  #create-pineapple .tap-here {
+      margin: 0; /* Remove extra margin to reduce space */
+  }
+  #create-pineapple .plus {
+      margin-top: 0; /* Ensure no extra space above the + */
   }
 }
