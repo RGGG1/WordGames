@@ -83,15 +83,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         input.addEventListener("input", (e) => {
             console.log("Input value changed:", input.value);
         });
-
-        // Prevent blur to keep keyboard open
-        input.addEventListener("blur", (e) => {
-            if (!gameOver && gameScreen.style.display === "flex") {
-                e.preventDefault();
-                setTimeout(() => input.focus(), 0);
-                console.log("Prevented input blur to keep keyboard open");
-            }
-        });
     } else {
         console.error("guess-input not found in DOM");
     }
@@ -743,7 +734,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.style.visibility = "visible";
                 guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
-                keepKeyboardOpen(); // Ensure keyboard stays open
+                keepKeyboardOpen();
             }, 500);
         }
     }
