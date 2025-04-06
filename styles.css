@@ -115,7 +115,7 @@ a {
   top: 0;
   left: 0;
   text-align: left;
-  margin-top: 0; /* Removed extra space above */
+  margin-top: 1vh;
 }
 
 #guess-background {
@@ -132,8 +132,8 @@ a {
   top: 2.5vh;
   width: 85vw;
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column; /* Changed to column to stack input and button */
+  align-items: flex-end; /* Align button to the right */
   justify-content: center;
   z-index: 1;
   overflow-x: visible;
@@ -144,11 +144,10 @@ a {
   font-weight: bold;
   background: none;
   border: none;
-  flex-grow: 1;
-  width: calc(85vw - 6vw);
+  width: 85vw; /* Full width of container */
   text-align: center;
   padding: 0;
-  margin: 0 0.5vw 0 0;
+  margin: 0;
   color: #000000 !important;
   outline: none;
   caret-color: black !important;
@@ -157,9 +156,6 @@ a {
   opacity: 1;
   visibility: visible;
   z-index: 2;
-  position: absolute; /* Position independently for centering */
-  left: 50%;
-  transform: translateX(-50%); /* Center based on 85vw */
 }
 
 @keyframes blink {
@@ -195,15 +191,12 @@ a {
   border-radius: 0.6vh;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: 3vw;
-  flex-shrink: 0;
-  margin-right: 0.5vw;
+  width: auto; /* Adjusted to fit content */
+  margin-top: 0.5vh; /* Space between input and button */
   display: block;
   opacity: 1;
   visibility: visible;
   z-index: 2;
-  position: absolute; /* Position independently */
-  right: 0; /* Align to the right of the 85vw container */
 }
 
 .guess-btn:hover {
@@ -378,7 +371,7 @@ a {
 #create-pineapple .tap-here {
   font-size: 1.2vh;
   font-weight: normal;
-  margin: 0;
+  margin: 0.2vh 0;
 }
 
 #create-pineapple .plus {
@@ -526,8 +519,8 @@ a {
 }
 
 @keyframes wrongGuess {
-  0% { color: #FF0000; transform: translateY(0); }
-  100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
+  0% { color: #FF0000 !important; transform: translateY(0); } /* Ensure red color */
+  100% { color: #FF0000 !important; transform: translateY(-20px); opacity: 0; }
 }
 
 .pineapple-rain {
@@ -848,9 +841,8 @@ a {
   #guess-container {
       width: 90vw;
       top: 3vh;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
+      flex-direction: column; /* Stack input and button */
+      align-items: flex-end; /* Align button to the right */
       justify-content: center;
       box-sizing: border-box;
       position: relative;
@@ -862,9 +854,6 @@ a {
       margin: 0;
       text-align: center;
       box-sizing: border-box;
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%); /* Center based on 90vw */
       z-index: 2;
       display: block;
       opacity: 1;
@@ -873,11 +862,8 @@ a {
   .guess-btn {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
       padding: 0.3vh 0.45vw;
-      width: 15%;
-      margin: 0;
-      box-sizing: border-box;
-      position: absolute;
-      right: 0;
+      width: auto; /* Adjusted to fit content */
+      margin-top: 0.5vh; /* Space between input and button */
       z-index: 2;
       display: block;
       opacity: 1;

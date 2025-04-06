@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
 
-    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
+    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2 MOSFET-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
@@ -82,15 +82,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         input.addEventListener("input", (e) => {
             console.log("Input value changed:", input.value);
-        });
-
-        // Prevent blur to keep keyboard open
-        input.addEventListener("blur", (e) => {
-            if (!gameOver && gameScreen.style.display === "flex") {
-                e.preventDefault();
-                setTimeout(() => input.focus(), 0);
-                console.log("Prevented input blur to keep keyboard open");
-            }
         });
     } else {
         console.error("guess-input not found in DOM");
@@ -741,9 +732,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.classList.remove("wrong-guess");
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.visibility = "visible";
-                guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
+                guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000"; // Reset color after animation
                 guessDisplay.value = "";
-                keepKeyboardOpen(); // Ensure keyboard stays open
+                keepKeyboardOpen();
             }, 500);
         }
     }
