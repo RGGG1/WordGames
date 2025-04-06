@@ -345,12 +345,19 @@ a {
   align-items: center;
   justify-content: center;
   padding: 0.5vh 1vw;
+  font-size: 1.8vh;
+  line-height: 1.2;
 }
 
 #create-pineapple .tap-here {
   font-size: 1.2vh;
   font-weight: normal;
-  margin-bottom: 0.2vh;
+  margin: 0.2vh 0;
+}
+
+#create-pineapple .plus {
+  font-size: 3vh;
+  line-height: 1;
 }
 
 .dark-mode #create-pineapple {
@@ -489,7 +496,6 @@ a {
   animation: wrongGuess 0.5s ease-out forwards;
 }
 
-/* Removed pulseGuess animation */
 @keyframes wrongGuess {
   0% { color: #FF0000; transform: translateY(0); }
   100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
@@ -800,37 +806,40 @@ a {
   }
   #guess-area {
       width: 90vw;
-      height: 12vh; /* Increased to accommodate button below */
+      height: 10vh; /* Reverted to original height since button is on same line */
   }
   #guess-container {
       width: 90vw;
-      top: 3vh; /* Added 0.5vh space above */
-      flex-direction: column; /* Stack vertically */
+      top: 3vh;
+      flex-direction: row; /* Keep on same line */
       align-items: center;
       justify-content: center;
+      box-sizing: border-box;
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      width: 90vw; /* Full width */
+      width: 85%; /* 85% of the container */
       margin: 0;
-      margin-bottom: 0.5vh; /* Space between input and button */
+      text-align: center; /* Center text within the input */
+      box-sizing: border-box;
   }
   .guess-btn {
-      font-size: clamp(1.2vh, 1.5vw, 1.5vh);
-      padding: 0.3vh 0.5vw; /* Adjusted padding */
-      width: auto; /* Let content determine width */
+      font-size: clamp(1vh, 1.2vw, 1.2vh); /* Smaller font */
+      padding: 0.2vh 0.3vw; /* Reduced padding */
+      width: 15%; /* 15% of the container */
       margin: 0;
+      box-sizing: border-box;
   }
   #guess-line {
       width: 90vw;
-      top: 9vh; /* Adjusted for new layout */
+      top: 8.5vh; /* Reverted to original position */
   }
   #hints-box {
       width: 90vw;
   }
   #game-controls {
       width: 90vw;
-      top: 29vh; /* Adjusted for increased guess-area height */
+      top: 27vh; /* Reverted to original position */
   }
   .hint-line span {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
