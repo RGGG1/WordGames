@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const privateList = document.getElementById("private-list");
         if (privateList) {
             privateList.innerHTML = "";
-            console.log("Populatingg private games list", privateGames);
+            console.log("Populating private games list", privateGames);
 
             if (!privateGames.length) {
                 privateList.innerHTML = "<div>No private games yet</div>";
@@ -693,7 +693,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessDisplay.classList.remove("wrong-guess");
         guessDisplay.style.opacity = "1";
         guessDisplay.style.visibility = "visible";
-        void guessDisplay.offsetWidth;
+        guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000"; // Reset color explicitly
+        void guessDisplay.offsetWidth; // Force reflow
 
         if (!firstGuessMade) {
             firstGuessMade = true;
@@ -704,7 +705,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         guessCount++;
-        score = guessCount; // Fixed typo: 'score-builtin' -> 'score'
+        score = guessCount;
         document.getElementById("score").textContent = score;
         console.log("guessCount after:", guessCount, "score:", score);
 
@@ -731,7 +732,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.classList.remove("wrong-guess");
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.visibility = "visible";
-                guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
+                guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000"; // Reset color explicitly
                 guessDisplay.value = "";
                 keepKeyboardOpen();
             }, 500);

@@ -24,7 +24,7 @@ a {
 }
 
 .dark-mode a {
-  color: #2993fd;
+  color: #1E90FF;
 }
 
 #game-screen {
@@ -100,7 +100,7 @@ a {
   flex-direction: column;
   justify-content: flex-start;
   background: none;
-  margin: 5vh auto 0 auto;
+  margin: 4.5vh auto 0 auto;
   padding: 0;
 }
 
@@ -192,8 +192,8 @@ a {
   transition: transform 0.2s ease;
   width: 10vw;
   max-width: 60px;
-  align-self: center;
-  margin: 0.5vh 0;
+  align-self: flex-end; /* Changed from center to flex-end */
+  margin: 0.5vh 0 0.5vh auto; /* Adjusted to push it right */
   display: block;
   opacity: 1;
   visibility: visible;
@@ -239,7 +239,7 @@ a {
 #hints-box {
   width: 85vw;
   background: none;
-  margin: 1vh auto;
+  margin: 0.5vh auto;
   padding: 0;
   position: relative;
 }
@@ -345,7 +345,7 @@ a {
 
 .small-btn {
   font-size: 1.5vh;
-  padding: 0.5vh 1vw; /* Fixed typo: 'Tennis' -> 'padding' */
+  padding: 0.5vh 1vw;
 }
 
 .dark-mode .control-btn {
@@ -516,6 +516,7 @@ a {
 }
 
 #guess-input.wrong-guess {
+  color: #FF0000 !important;
   animation: wrongGuess 0.5s ease-out forwards;
 }
 
