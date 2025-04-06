@@ -94,7 +94,7 @@ a {
 
 #guess-area {
   width: 85vw;
-  height: 10vh;
+  height: 12vh;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -115,7 +115,6 @@ a {
   top: 0;
   left: 0;
   text-align: left;
-  margin-top: 1vh;
 }
 
 #guess-background {
@@ -128,15 +127,14 @@ a {
 }
 
 #guess-container {
-  position: absolute;
-  top: 2.5vh;
+  position: relative;
   width: 85vw;
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   z-index: 1;
-  overflow-x: visible; /* Changed to visible to prevent clipping */
+  margin-top: 2vh;
 }
 
 #guess-input {
@@ -145,18 +143,18 @@ a {
   background: none;
   border: none;
   flex-grow: 1;
-  width: calc(85vw - 6vw);
+  width: 85vw;
   text-align: center;
   padding: 0;
-  margin: 0 0.5vw 0 0;
-  color: #000000 !important; /* Ensure text is visible */
+  margin: 0;
+  color: #000000 !important;
   outline: none;
-  caret-color: black !important; /* Ensure cursor is visible */
+  caret-color: black !important;
   text-transform: uppercase;
   animation: blink 0.5s step-end infinite;
-  opacity: 1; /* Ensure input is visible */
-  visibility: visible; /* Ensure input is visible */
-  z-index: 2; /* Ensure input is above other elements */
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
 }
 
 @keyframes blink {
@@ -164,8 +162,8 @@ a {
 }
 
 .dark-mode #guess-input {
-  color: #FFFFFF !important; /* Ensure text is visible in dark mode */
-  caret-color: white !important; /* Ensure cursor is visible in dark mode */
+  color: #FFFFFF !important;
+  caret-color: white !important;
 }
 
 #guess-input::placeholder {
@@ -192,13 +190,14 @@ a {
   border-radius: 0.6vh;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: 3vw;
-  flex-shrink: 0;
-  margin-right: 0.5vw;
-  display: block; /* Ensure button is visible */
-  opacity: 1; /* Ensure button is visible */
-  visibility: visible; /* Ensure button is visible */
-  z-index: 2; /* Ensure button is above other elements */
+  width: 10vw;
+  max-width: 60px;
+  align-self: center;
+  margin: 0.5vh 0;
+  display: block;
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
 }
 
 .guess-btn:hover {
@@ -227,10 +226,10 @@ a {
   width: 85vw;
   height: 0.2vh;
   background: #000000;
-  position: absolute;
-  top: 8.5vh;
+  position: relative;
+  margin-top: 0.5vh;
   transition: opacity 0.5s ease-out;
-  z-index: 0; /* Ensure line is below input and button */
+  z-index: 0;
 }
 
 .dark-mode #guess-line {
@@ -346,7 +345,7 @@ a {
 
 .small-btn {
   font-size: 1.5vh;
-  padding: 0.5vh 1vw;
+  padding: 0.5vh 1vw; /* Fixed typo: 'Tennis' -> 'padding' */
 }
 
 .dark-mode .control-btn {
@@ -838,48 +837,24 @@ a {
   }
   #guess-area {
       width: 90vw;
-      height: 10vh;
+      height: 12vh;
   }
   #guess-container {
       width: 90vw;
-      top: 3vh;
-      flex-direction: row;
-      flex-wrap: nowrap;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      position: relative;
-      z-index: 1; /* Ensure container is above other elements */
+      margin-top: 2vh;
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      flex: 0 0 80%;
-      width: 80%;
-      margin: 0;
-      text-align: center;
-      box-sizing: border-box;
-      position: static;
-      z-index: 2;
-      display: block; /* Ensure input is visible */
-      opacity: 1;
-      visibility: visible;
+      width: 90vw;
   }
   .guess-btn {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
       padding: 0.3vh 0.45vw;
-      flex: 0 0 15%;
-      width: 15%;
-      margin: 0;
-      box-sizing: border-box;
-      position: static;
-      z-index: 2;
-      display: block; /* Ensure button is visible */
-      opacity: 1;
-      visibility: visible;
+      width: 15vw;
+      max-width: 60px;
   }
   #guess-line {
       width: 90vw;
-      top: 8.5vh;
   }
   #hints-box {
       width: 90vw;

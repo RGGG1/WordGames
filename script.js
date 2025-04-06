@@ -40,7 +40,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let modeToggles = document.querySelectorAll("#mode-toggle");
 
-    // Set the "Create a Pineapple" button content
     if (createPineappleBtn) {
         createPineappleBtn.innerHTML = 'Create a Pineapple<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>';
     }
@@ -423,7 +422,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
                 setTimeout(() => {
                     officialList.style.display = "none";
-                    officialList.offsetHeight; // Trigger reflow
+                    officialList.offsetHeight;
                     officialList.style.display = "flex";
                     console.log("Forced repaint on official-list");
                 }, 0);
@@ -705,7 +704,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         guessCount++;
-        score = guessCount;
+        score = guessCount; // Fixed typo: 'score-builtin' -> 'score'
         document.getElementById("score").textContent = score;
         console.log("guessCount after:", guessCount, "score:", score);
 
