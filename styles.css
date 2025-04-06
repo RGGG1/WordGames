@@ -132,7 +132,7 @@ a {
   top: 2.5vh;
   width: 85vw;
   display: flex;
-  flex-direction: row; /* Ensure row layout by default */
+  flex-direction: row;
   align-items: center;
   justify-content: center;
   z-index: 1;
@@ -153,7 +153,7 @@ a {
   outline: none;
   caret-color: black;
   text-transform: uppercase;
-  animation: blink 0.5s step-end infinite; /* Faster blink */
+  animation: blink 0.5s step-end infinite;
 }
 
 @keyframes blink {
@@ -812,24 +812,28 @@ a {
   #guess-container {
       width: 90vw;
       top: 3vh;
-      flex-direction: row; /* Force row layout on mobile */
-      flex-wrap: nowrap; /* Prevent wrapping */
+      flex-direction: row;
+      flex-wrap: nowrap;
       align-items: center;
-      justify-content: center;
+      justify-content: center; /* Center the entire container */
       box-sizing: border-box;
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      flex: 0 0 85%; /* 85% of the container */
+      flex: 0 0 85%;
       width: 85%;
       margin: 0;
       text-align: center;
       box-sizing: border-box;
+      /* Ensure the input itself is centered within the game screen */
+      display: flex;
+      justify-content: center;
+      align-items: center;
   }
   .guess-btn {
       font-size: clamp(1vh, 1.2vw, 1.2vh);
       padding: 0.2vh 0.3vw;
-      flex: 0 0 15%; /* 15% of the container */
+      flex: 0 0 15%;
       width: 15%;
       margin: 0;
       box-sizing: border-box;

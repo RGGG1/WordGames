@@ -571,8 +571,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGame(false, true);
         });
 
+        // Removed the "type guess here" placeholder event listener
         input.addEventListener("focus", () => {
-            if (input.value === "") input.placeholder = "type guess here";
+            // No placeholder text to set
         });
     }
 
@@ -804,7 +805,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("score").textContent = score;
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
-        guessInput.placeholder = "type guess here";
+        guessInput.placeholder = ""; // Removed "type guess here"
         guessInput.disabled = false;
         document.getElementById("guess-line").style.opacity = "1";
         const hintsBox = document.getElementById("hints");
