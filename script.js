@@ -42,7 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Set the "Create a Pineapple" button content
     if (createPineappleBtn) {
-        createPineappleBtn.innerHTML = '<span class="tap-here">(tap here)</span><span class="plus">+</span>';
+        createPineappleBtn.innerHTML = 'Create a Pineapple<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>';
     }
 
     initializeMode();
@@ -701,7 +701,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
             saveGameResult(gameType, originalGameNumber, secretWord, score);
-            endGame(true); // Immediate transition to end screen
+            endGame(true);
         } else {
             guessDisplay.classList.add("wrong-guess");
             setTimeout(() => {
