@@ -40,6 +40,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let modeToggles = document.querySelectorAll("#mode-toggle");
 
+    // Set the "Create a Pineapple" button content
+    if (createPineappleBtn) {
+        createPineappleBtn.innerHTML = '<span class="tap-here">(tap here)</span><span class="plus">+</span>';
+    }
+
     initializeMode();
 
     modeToggles.forEach(modeToggle => {
@@ -455,7 +460,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (savedMode === "light") {
             document.body.classList.remove("dark-mode");
         } else {
-            document.body.classList.add("dark-mode"); // Default to dark mode
+            document.body.classList.add("dark-mode");
         }
         modeToggles.forEach(btn => {
             btn.innerHTML = document.body.classList.contains("dark-mode") ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
@@ -663,7 +668,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const guessDisplay = document.getElementById("guess-input");
         const guessLine = document.getElementById("guess-line");
         guessDisplay.value = guess.toUpperCase();
-        guessDisplay.classList.remove("wrong-guess", "correct-guess");
+        guessDisplay.classList.remove("wrong-guess");
         guessDisplay.style.opacity = "1";
         void guessDisplay.offsetWidth;
 
@@ -684,24 +689,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         else updateHintCountdown();
 
         if (guess.toUpperCase() === secretWord) {
-            guessDisplay.classList.add("correct-guess");
             guessLine.style.opacity = "0";
             gameOver = true;
-            setTimeout(() => {
-                guessDisplay.classList.remove("correct-guess");
-                guessDisplay.disabled = false;
-                let originalGameNumber;
-                if (currentGameNumber.includes("Private Game #")) {
-                    const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
-                    const privateGame = privateGames.find(g => g["Game Number"] === String(currentNum));
-                    originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
-                } else {
-                    originalGameNumber = currentGameNumber;
-                }
-                const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
-                saveGameResult(gameType, originalGameNumber, secretWord, score);
-                endGame(true);
-            }, 1000); // Immediate transition to end screen
+            let originalGameNumber;
+            if (currentGameNumber.includes("Private Game #")) {
+                const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
+                const privateGame = privateGames.find(g => g["Game Number"] === String(currentNum));
+                originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
+            } else {
+                originalGameNumber = currentGameNumber;
+            }
+            const gameType = currentGameNumber.includes("Private") ? "privatePineapple" : "pineapple";
+            saveGameResult(gameType, originalGameNumber, secretWord, score);
+            endGame(true); // Immediate transition to end screen
         } else {
             guessDisplay.classList.add("wrong-guess");
             setTimeout(() => {
@@ -759,7 +759,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (won) {
             endGraphic.src = "pineapple_gif.gif";
             endGraphic.style.display = "block";
-            rainPineapples(); // Trigger pineapple rain on end screen
+            rainPineapples();
             const guessText = score === 1 ? "guess" : "guesses";
             const shareGamePrefix = currentGameNumber.includes("Private") ? "" : "Game #";
             shareText.innerHTML = `<span class="small-game-number">${shareGamePrefix}${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;

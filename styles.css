@@ -133,9 +133,9 @@ a {
   width: 85vw;
   display: flex;
   align-items: center;
-  justify-content: center; /* Center the children */
+  justify-content: center;
   z-index: 1;
-  overflow-x: hidden; /* Prevent overflow */
+  overflow-x: hidden;
 }
 
 #guess-input {
@@ -143,11 +143,11 @@ a {
   font-weight: bold;
   background: none;
   border: none;
-  flex-grow: 1; /* Take available space */
-  width: calc(85vw - 6vw); /* Adjusted for smaller button */
+  flex-grow: 1;
+  width: calc(85vw - 6vw);
   text-align: center;
   padding: 0;
-  margin: 0 0.5vw 0 0; /* Small margin to separate from button */
+  margin: 0 0.5vw 0 0;
   color: #000000;
   outline: none;
   caret-color: black;
@@ -181,16 +181,16 @@ a {
 .guess-btn {
   font-size: 1.5vh;
   font-weight: bold;
-  padding: 0.3vh 0.3vw; /* Reduced padding */
+  padding: 0.3vh 0.3vw;
   background: #FFB300;
   color: #000000;
   border: 0.1vh solid #000000;
   border-radius: 0.6vh;
   cursor: pointer;
   transition: transform 0.2s ease;
-  width: 3vw; /* Further reduced width */
+  width: 3vw;
   flex-shrink: 0;
-  margin-right: 0.5vw; /* Reduced margin */
+  margin-right: 0.5vw;
 }
 
 .guess-btn:hover {
@@ -340,6 +340,17 @@ a {
   border: 0.1vh solid #000000;
   border-radius: 1vh;
   font-weight: bold;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5vh 1vw;
+}
+
+#create-pineapple .tap-here {
+  font-size: 1.2vh;
+  font-weight: normal;
+  margin-bottom: 0.2vh;
 }
 
 .dark-mode #create-pineapple {
@@ -478,19 +489,10 @@ a {
   animation: wrongGuess 0.5s ease-out forwards;
 }
 
-#guess-input.correct-guess {
-  animation: pulseGuess 1s ease-out forwards;
-}
-
+/* Removed pulseGuess animation */
 @keyframes wrongGuess {
   0% { color: #FF0000; transform: translateY(0); }
   100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
-}
-
-@keyframes pulseGuess {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
 }
 
 .pineapple-rain {
@@ -798,29 +800,37 @@ a {
   }
   #guess-area {
       width: 90vw;
+      height: 12vh; /* Increased to accommodate button below */
   }
   #guess-container {
       width: 90vw;
+      top: 3vh; /* Added 0.5vh space above */
+      flex-direction: column; /* Stack vertically */
+      align-items: center;
+      justify-content: center;
   }
   #guess-input {
       font-size: clamp(3vh, 4vw, 4vh);
-      width: calc(90vw - 6vw);
-      margin-right: 0.5vw;
+      width: 90vw; /* Full width */
+      margin: 0;
+      margin-bottom: 0.5vh; /* Space between input and button */
   }
   .guess-btn {
       font-size: clamp(1.2vh, 1.5vw, 1.5vh);
-      padding: 0.3vh 0.3vw;
-      width: 3vw;
-      margin-right: 0.5vw;
+      padding: 0.3vh 0.5vw; /* Adjusted padding */
+      width: auto; /* Let content determine width */
+      margin: 0;
   }
   #guess-line {
       width: 90vw;
+      top: 9vh; /* Adjusted for new layout */
   }
   #hints-box {
       width: 90vw;
   }
   #game-controls {
       width: 90vw;
+      top: 29vh; /* Adjusted for increased guess-area height */
   }
   .hint-line span {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
