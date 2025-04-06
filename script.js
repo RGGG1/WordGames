@@ -432,7 +432,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const privateList = document.getElementById("private-list");
         if (privateList) {
             privateList.innerHTML = "";
-            console.log("Populating private games list", privateGames);
+            console.log("Populatingg private games list", privateGames);
 
             if (!privateGames.length) {
                 privateList.innerHTML = "<div>No private games yet</div>";
