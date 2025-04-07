@@ -297,7 +297,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 keepKeyboardOpen();
             } else {
                 guessesList.innerHTML = guesses.length > 0 
-                    ? guesses.join("   |   ")
+                    ? guesses.join(' <span class="separator">|</span>   ')
                     : "No guesses yet!";
                 guessesScreen.style.display = "flex";
             }
@@ -312,7 +312,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             keepKeyboardOpen();
         });
 
-        // Add click outside guesses screen to close it
         document.addEventListener("click", (e) => {
             if (guessesScreen.style.display === "flex" && 
                 !guessesScreen.contains(e.target) && 
@@ -561,13 +560,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Previous arrow clicked, currentGameNumber:", currentGameNumber);
+            let currentIndex;
+            let gameList;
             if (currentGameNumber.includes("Private Game #")) {
                 const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
-                const currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                if (currentIndex + 1 < privateGames.length) loadGame(privateGames[currentIndex + 1]);
+                currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
+                gameList = privateGames;
             } else {
-                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                if (currentIndex + 1 < allGames.length) loadGame(allGames[currentIndex + 1]);
+                currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+                gameList = allGames;
+            }
+            if (currentIndex < gameList.length - 1) {
+                loadGame(gameList[currentIndex + 1]);
+                console.log("Loading previous game, new index:", currentIndex + 1);
             }
             keepKeyboardOpen();
         });
@@ -575,13 +581,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Next arrow clicked, currentGameNumber:", currentGameNumber);
+            let currentIndex;
+            let gameList;
             if (currentGameNumber.includes("Private Game #")) {
                 const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
-                const currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                if (currentIndex - 1 >= 0) loadGame(privateGames[currentIndex - 1]);
+                currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
+                gameList = privateGames;
             } else {
-                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                if (currentIndex - 1 >= 0) loadGame(allGames[currentIndex - 1]);
+                currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+                gameList = allGames;
+            }
+            if (currentIndex > 0) {
+                loadGame(gameList[currentIndex - 1]);
+                console.log("Loading next game, new index:", currentIndex - 1);
             }
             keepKeyboardOpen();
         });
@@ -589,9 +602,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         let touchStartX = 0;
         let touchEndX = 0;
 
-        gameScreen.addEventListener("touchstart", e => touchStartX = e.changedTouches[0].screenX);
+        gameScreen.addEventListener("touchstart", e => {
+            touchStartX = e.changedTouches[0].screenX;
+            console.log("Touch start, X:", touchStartX);
+        });
         gameScreen.addEventListener("touchend", e => {
             touchEndX = e.changedTouches[0].screenX;
+            console.log("Touch end, X:", touchEndX);
             handleSwipe();
         });
 
@@ -609,10 +626,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameList = allGames;
             }
 
+            console.log("Swipe detected, currentIndex:", currentIndex, "gameList length:", gameList.length);
             if (touchStartX - touchEndX > swipeThreshold && currentIndex > 0) {
                 loadGame(gameList[currentIndex - 1]);
+                console.log("Swiped left, loading next game, new index:", currentIndex - 1);
             } else if (touchEndX - touchStartX > swipeThreshold && currentIndex < gameList.length - 1) {
                 loadGame(gameList[currentIndex + 1]);
+                console.log("Swiped right, loading previous game, new index:", currentIndex + 1);
             }
             keepKeyboardOpen();
         }
@@ -886,7 +906,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("guesses-btn").textContent = "Guesses: 0";
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
-        guessInput.placeholder = "type guess here"; // Reset placeholder
+        guessInput.placeholder = "type guess here";
         guessInput.disabled = false;
         guessInput.style.opacity = "1";
         guessInput.style.visibility = "visible";
