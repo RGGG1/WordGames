@@ -298,7 +298,7 @@ a {
   width: 85vw;
   background: none;
   position: absolute;
-  top: 27vh; /* Reverted to original value */
+  top: 27vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -306,7 +306,7 @@ a {
 
 @media (min-width: 601px) {
   #game-controls {
-      top: 31vh; /* Reverted to original value */
+      top: 31vh;
   }
 }
 
@@ -315,6 +315,12 @@ a {
   flex-direction: column;
   align-items: center;
   gap: 1vh;
+}
+
+.control-btn-row {
+    display: flex;
+    gap: 1vw;
+    margin-bottom: 1vh;
 }
 
 .control-nav {
@@ -372,13 +378,13 @@ a {
 #create-pineapple .tap-here {
   font-size: 1.2vh;
   font-weight: normal;
-  margin-bottom: 0; /* Updated: No extra space below */
+  margin-bottom: 0;
 }
 
 #create-pineapple .plus {
   font-size: 3vh;
   line-height: 1;
-  margin-top: 0; /* Updated: No extra space above */
+  margin-top: 0;
 }
 
 .dark-mode #create-pineapple {
@@ -781,13 +787,50 @@ a {
   border: 0.2vh solid #FFB300;
 }
 
-#create-link {
-  font-size: 1.8vh;
-  color: #000000;
+.or-text {
+    font-size: 1.8vh;
+    margin-bottom: 0.5vh;
+    color: #000000;
 }
 
-.dark-mode #create-link {
-  color: #FFFFFF;
+.dark-mode .or-text {
+    color: #FFFFFF;
+}
+
+#guesses-screen {
+    position: fixed;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    height: 50vh;
+    background: rgba(255, 255, 255, 0.95);
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 150;
+}
+
+.dark-mode #guesses-screen {
+    background: rgba(0, 0, 0, 0.95);
+}
+
+#guesses-content {
+    width: 85vw;
+    text-align: center;
+}
+
+#guesses-title {
+    font-size: 2.5vh;
+    font-weight: bold;
+    margin-bottom: 1vh;
+}
+
+#guesses-list {
+    font-size: 2vh;
+    max-height: 30vh;
+    overflow-y: auto;
+    margin-bottom: 1vh;
 }
 
 #ad-box {
@@ -862,7 +905,7 @@ a {
   }
   #game-controls {
       width: 90vw;
-      top: 26vh; /* Moved up by 1vh from 27vh for mobile */
+      top: 26vh;
   }
   .hint-line span {
       font-size: clamp(1.5vh, 1.8vw, 1.8vh);
@@ -888,9 +931,9 @@ a {
       padding-bottom: 4vh;
   }
   #create-pineapple .tap-here {
-      margin-bottom: 0; /* Updated: No extra space on mobile */
+      margin-bottom: 0;
   }
   #create-pineapple .plus {
-      margin-top: 0; /* Updated: No extra space on mobile */
+      margin-top: 0;
   }
 }

@@ -9,7 +9,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
-    <!-- Favicon: Local Pineapple Image -->
     <link rel="icon" type="image/png" href="pineapple_favicon.png">
 </head>
 <body oncontextmenu="return false;">
@@ -20,7 +19,7 @@
             <div id="score">0</div>
         </div>
         <div id="guess-area">
-            <div id="prompt">The secret word is..</div>
+            <div id="prompt">The secret word is...</div>
             <div id="guess-background"></div>
             <div id="guess-container">
                 <input id="guess-input" type="text" placeholder="type guess here">
@@ -46,7 +45,10 @@
             </div>
             <div id="game-controls">
                 <div class="controls-center">
-                    <button id="give-up-btn" class="control-btn">Give Up</button>
+                    <div class="control-btn-row">
+                        <button id="give-up-btn" class="control-btn">Give Up</button>
+                        <button id="guesses-btn" class="control-btn">Guesses: 0</button>
+                    </div>
                     <div class="control-nav">
                         <button id="prev-arrow-btn" class="control-btn arrow-btn"><i class="fas fa-arrow-left"></i></button>
                         <button id="all-games-btn" class="control-btn">All Games</button>
@@ -86,7 +88,10 @@
         <div class="spacer"></div>
         <div class="spacer"></div>
         <div id="create-link">
-            or <a href="#" id="create-pineapple-link">click here to create your own pineapple</a>
+            <div class="or-text">Or</div>
+            <button id="create-pineapple-end" class="control-btn animate__animated animate__pulse animate__infinite">
+                Create a Pineapple<br><span class="plus">+</span>
+            </button>
         </div>
     </div>
 
@@ -100,7 +105,7 @@
             <div id="game-list-title">All Games</div>
             <div id="tabs">
                 <span id="official-tab" class="tab-text active">Official</span>
-                <span id="private-tab" class="tab-text">My Games</span>
+                <span id="private-tab" class="tab-text">Private</span>
             </div>
             <div id="official-games" class="tab-content active">
                 <div id="official-list-header" class="game-list-header">
@@ -145,6 +150,14 @@
         <button id="confirm-btn" class="control-btn">Confirm</button>
         <div class="spacer"></div>
         <button id="form-back-btn" class="control-btn small-btn">Back</button>
+    </div>
+
+    <div id="guesses-screen" style="display: none;">
+        <div id="guesses-content">
+            <div id="guesses-title">Your Guesses</div>
+            <div id="guesses-list"></div>
+            <button id="guesses-close-btn" class="control-btn">Close</button>
+        </div>
     </div>
 
     <div id="ad-box">
