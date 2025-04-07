@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let modeToggles = document.querySelectorAll("#mode-toggle");
 
     if (createPineappleBtn) {
-        createPineappleBtn.innerHTML = 'Create a Pineapple<br><span class="tap-here">(tap here)</span><span class="plus">+</span>'; // Updated: removed <br> before +
+        createPineappleBtn.innerHTML = 'Create a Pineapple<br><span class="tap-here">(tap here)</span><span class="plus">+</span>';
     }
 
     initializeMode();
@@ -372,7 +372,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .map((game, index) => ({
                     ...game,
                     "Game Number": String(index + 1),
-                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}`
+                    "Display Name": `Private Game #${index + 1}` // Updated: Use "Private Game #Y" format
                 }))
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
@@ -440,7 +440,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
                 privateGames.forEach(game => {
                     const gameNumber = game["Game Number"];
-                    const gameName = game["Game Name"];
+                    const displayName = `Private Game #${gameNumber}`; // Updated: Use "Private Game #Y" format
                     const secretWord = game["Secret Word"].toUpperCase();
                     const pastResult = results[gameNumber];
                     const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
@@ -450,7 +450,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameItem = document.createElement("div");
                     gameItem.className = "game-list-row";
                     gameItem.innerHTML = `
-                        <span>${gameName}</span>
+                        <span>${displayName}</span>
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
                         <span>${guesses}</span>
                     `;
@@ -555,10 +555,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
 
             if (touchStartX - touchEndX > swipeThreshold && currentIndex > 0) {
-                // Left swipe: descend (move to previous game)
                 loadGame(allGames[currentIndex - 1]);
             } else if (touchEndX - touchStartX > swipeThreshold && currentIndex < allGames.length - 1) {
-                // Right swipe: ascend (move to next game)
                 loadGame(allGames[currentIndex + 1]);
             }
             keepKeyboardOpen();
@@ -628,7 +626,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             span.textContent = hints[index] || "";
             span.style.visibility = index === 0 ? "visible" : "hidden";
         });
-        document.getElementById("current-game-number").textContent = currentGameNumber;
+        document.getElementById("current-game-number").textContent = currentGameNumber; // Already uses "Private Game #Y" from loadGame
     }
 
     function adjustBackground() {
@@ -686,8 +684,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessDisplay.classList.remove("wrong-guess");
         guessDisplay.style.opacity = "1";
         guessDisplay.style.visibility = "visible";
-        guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000"; // Reset color explicitly
-        void guessDisplay.offsetWidth; // Force reflow
+        guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
+        void guessDisplay.offsetWidth;
 
         if (!firstGuessMade) {
             firstGuessMade = true;
@@ -711,7 +709,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             let originalGameNumber;
             if (currentGameNumber.includes("Private Game #")) {
                 const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
-                const privateGame = privateGames.find(game => game["Game Number"] === String(currentNum));
+                const privateGame = privateGames.find(g => g["Game Number"] === String(currentNum));
                 originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
             } else {
                 originalGameNumber = currentGameNumber;
@@ -725,7 +723,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.classList.remove("wrong-guess");
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.visibility = "visible";
-                guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000"; // Reset color explicitly
+                guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
                 keepKeyboardOpen();
             }, 500);
@@ -770,7 +768,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameOverScreen.style.display = "flex";
         document.getElementById("guess-input").blur();
 
-        gameNumberSpan.textContent = currentGameNumber;
+        gameNumberSpan.textContent = currentGameNumber; // Uses "Private Game #Y" from loadGame
         todaysWord.textContent = secretWord;
 
         let shareMessage;
@@ -779,7 +777,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.style.display = "block";
             rainPineapples();
             const guessText = score === 1 ? "guess" : "guesses";
-            const shareGamePrefix = currentGameNumber.includes("Private") ? "" : "Game #";
+            const shareGamePrefix = currentGameNumber.includes("Private") ? "" : "Game #"; // Still differentiates official vs private
             shareText.innerHTML = `<span class="small-game-number">${shareGamePrefix}${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
             shareMessage = `${shareGamePrefix}${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
             shareGameNumber.style.display = "none";
@@ -789,15 +787,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n\n<span class="italic">The Big Brain Word Game</span>';
-            shareGameNumber.textContent = `Game #${currentGameNumber}`; // Updated: Added "Game #"
+            shareGameNumber.textContent = `Game #${currentGameNumber}`; // Updated: Consistent with "Private Game #Y" format
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
-            shareMessage = `PLAY PINEAPPLE\n\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`; // Updated shareMessage
+            shareMessage = `PLAY PINEAPPLE\n\nThe Big Brain Word Game\nGame #${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`;
         } else {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.textContent = "I didn’t solve the pineapple";
-            shareGameNumber.textContent = currentGameNumber;
+            shareGameNumber.textContent = currentGameNumber; // Uses "Private Game #Y" from loadGame
             shareScore.textContent = `${score}`;
             shareMessage = `${shareText.textContent}\n${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
         }
@@ -860,9 +858,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const originalGameNumber = game["Game Number"];
         const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
         if (privateGame) {
-            currentGameNumber = `Private Game #${privateGame["Game Number"]}`;
+            currentGameNumber = `Private Game #${privateGame["Game Number"]}`; // Updated: Always "Private Game #Y"
         } else {
-            currentGameNumber = originalGameNumber;
+            currentGameNumber = originalGameNumber; // Official games keep their number
         }
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
