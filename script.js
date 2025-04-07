@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Guesses button clicked");
             const guessesList = document.getElementById("guesses-list");
             guessesList.innerHTML = guesses.length > 0 
-                ? guesses.map((g, i) => `${i + 1}. ${g}`).join("<br>")
+                ? guesses.map((g, i) => `${i + 1}. ${g}`).join("   ")
                 : "No guesses yet!";
             guessesScreen.style.display = "flex";
         });
