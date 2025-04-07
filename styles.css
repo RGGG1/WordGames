@@ -372,13 +372,13 @@ a {
 #create-pineapple .tap-here {
   font-size: 1.2vh;
   font-weight: normal;
-  margin: 0.2vh 0;
+  margin-bottom: 0; /* Updated: No extra space below */
 }
 
 #create-pineapple .plus {
   font-size: 3vh;
   line-height: 1;
-  margin-top: 0;
+  margin-top: 0; /* Updated: No extra space above */
 }
 
 .dark-mode #create-pineapple {
@@ -888,9 +888,9 @@ a {
       padding-bottom: 4vh;
   }
   #create-pineapple .tap-here {
-      margin: 0;
+      margin-bottom: 0; /* Updated: No extra space on mobile */
   }
   #create-pineapple .plus {
-      margin-top: 0;
+      margin-top: 0; /* Updated: No extra space on mobile */
   }
 }
