@@ -293,6 +293,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const guessesList = document.getElementById("guesses-list");
             if (guessesScreen.style.display === "flex") {
                 guessesScreen.style.display = "none";
+                gameScreen.style.display = "flex";
+                keepKeyboardOpen();
             } else {
                 guessesList.innerHTML = guesses.length > 0 
                     ? guesses.join("   |   ")
@@ -306,6 +308,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guesses close button clicked");
             guessesScreen.style.display = "none";
+            gameScreen.style.display = "flex";
+            keepKeyboardOpen();
+        });
+
+        // Add click outside guesses screen to close it
+        document.addEventListener("click", (e) => {
+            if (guessesScreen.style.display === "flex" && 
+                !guessesScreen.contains(e.target) && 
+                e.target !== guessesBtn) {
+                console.log("Clicked outside guesses screen");
+                guessesScreen.style.display = "none";
+                gameScreen.style.display = "flex";
+                keepKeyboardOpen();
+            }
         });
     }
 
@@ -327,6 +343,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameScreen) gameScreen.style.display = "none";
         if (gameOverScreen) gameOverScreen.style.display = "none";
         if (gameSelectScreen) gameSelectScreen.style.display = "none";
+        if (guessesScreen) guessesScreen.style.display = "none";
     }
 
     async function fetchGameData() {
@@ -869,7 +886,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("guesses-btn").textContent = "Guesses: 0";
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
-        guessInput.placeholder = "";
+        guessInput.placeholder = "type guess here"; // Reset placeholder
         guessInput.disabled = false;
         guessInput.style.opacity = "1";
         guessInput.style.visibility = "visible";

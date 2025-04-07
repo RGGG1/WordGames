@@ -73,11 +73,11 @@ a {
 }
 
 #game-name {
-  font-family: 'Fredoka One', cursive;
-  font-size: clamp(2vh, 2.5vw, 2.5vh);
+  font-family: 'Luckiest Guy', cursive; /* Changed to Luckiest Guy */
+  font-size: clamp(2vh, 2.5vw, 2.5vh); /* Same as before */
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #FFD700;
+  color: #FFFF00; /* Changed to yellow */
   -webkit-text-stroke: 0.1vh #FF4500;
   cursor: pointer;
   z-index: 11;
@@ -100,7 +100,7 @@ a {
   flex-direction: column;
   justify-content: flex-start;
   background: none;
-  margin: 4.5vh auto 0 auto;
+  margin: 4vh auto 0 auto; /* Reduced from 4.5vh to 4vh (half line less) */
   padding: 0;
 }
 
@@ -119,7 +119,7 @@ a {
 
 #guess-background {
   position: absolute;
-  top: 3vh;
+  top: 2.25vh; /* Adjusted from 3vh to 2.25vh (0.75vh less, accounting for spacing changes) */
   width: 100%;
   height: 5vh;
   z-index: 0;
@@ -134,11 +134,11 @@ a {
   align-items: center;
   justify-content: center;
   z-index: 1;
-  margin-top: 2vh;
+  margin-top: 2.25vh; /* Increased from 2vh to 2.25vh (quarter line more) */
 }
 
 #guess-input {
-  font-size: clamp(6vh, 7.5vw, 7.5vh); /* Increased by 50% from clamp(4vh, 5vw, 5vh) */
+  font-size: clamp(6vh, 7.5vw, 7.5vh);
   font-weight: bold;
   background: none;
   border: none;
@@ -290,7 +290,7 @@ a {
 }
 
 .hint-line span {
-  font-size: clamp(2.43vh, 3.375vw, 3.375vh);
+  font-size: clamp(3.0375vh, 4.21875vw, 4.21875vh); /* Increased 25% from clamp(2.43vh, 3.375vw, 3.375vh) */
   font-weight: bold;
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
@@ -831,7 +831,7 @@ a {
 
 #guesses-list {
     font-size: 2vh;
-    max-height: 18vh;
+    max-height: 17vh; /* Reduced from 18vh to account for extra spacer */
     max-width: 85vw;
     overflow-x: hidden;
     overflow-y: auto;
@@ -888,13 +888,14 @@ a {
   #guess-area {
       width: 90vw;
       height: 12vh;
+      margin: 4vh auto 0 auto; /* Matches main adjustment */
   }
   #guess-container {
       width: 90vw;
-      margin-top: 2vh;
+      margin-top: 2.25vh; /* Matches main adjustment */
   }
   #guess-input {
-      font-size: clamp(4.5vh, 6vw, 6vh); /* Adjusted for smaller screens: 50% increase from clamp(3vh, 4vw, 4vh) */
+      font-size: clamp(4.5vh, 6vw, 6vh);
       width: 90vw;
   }
   .guess-btn {
@@ -914,7 +915,7 @@ a {
       top: 26vh;
   }
   .hint-line span {
-      font-size: clamp(2.025vh, 2.7vw, 2.7vh); /* 35% increase from clamp(1.5vh, 2vw, 2vh) */
+      font-size: clamp(2.53125vh, 3.375vw, 3.375vh); /* 25% increase from clamp(2.025vh, 2.7vw, 2.7vh) */
   }
   .game-list-header, .game-list-row {
       width: 90vw;
