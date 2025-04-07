@@ -291,10 +291,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guesses button clicked");
             const guessesList = document.getElementById("guesses-list");
-            guessesList.innerHTML = guesses.length > 0 
-                ? guesses.map(g => `'${g}'`).join("   |   ")
-                : "No guesses yet!";
-            guessesScreen.style.display = "flex";
+            if (guessesScreen.style.display === "flex") {
+                guessesScreen.style.display = "none";
+            } else {
+                guessesList.innerHTML = guesses.length > 0 
+                    ? guesses.join("   |   ")
+                    : "No guesses yet!";
+                guessesScreen.style.display = "flex";
+            }
         });
 
         guessesCloseBtn.addEventListener("click", (e) => {
@@ -576,12 +580,22 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         function handleSwipe() {
             const swipeThreshold = 50;
-            const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+            let currentIndex;
+            let gameList;
+
+            if (currentGameNumber.includes("Private Game #")) {
+                const currentNum = parseInt(currentGameNumber.replace("Private Game #", ""));
+                currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
+                gameList = privateGames;
+            } else {
+                currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+                gameList = allGames;
+            }
 
             if (touchStartX - touchEndX > swipeThreshold && currentIndex > 0) {
-                loadGame(allGames[currentIndex - 1]);
-            } else if (touchEndX - touchStartX > swipeThreshold && currentIndex < allGames.length - 1) {
-                loadGame(allGames[currentIndex + 1]);
+                loadGame(gameList[currentIndex - 1]);
+            } else if (touchEndX - touchStartX > swipeThreshold && currentIndex < gameList.length - 1) {
+                loadGame(gameList[currentIndex + 1]);
             }
             keepKeyboardOpen();
         }
