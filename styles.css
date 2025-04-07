@@ -890,7 +890,5 @@ a {
   #create-pineapple .tap-here {
       margin-bottom: 0; /* Updated: No extra space on mobile */
   }
-  #create-pineapple .plus {
-      margin-top: 0; /* Updated: No extra space on mobile */
-  }
+  
 }

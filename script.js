@@ -855,26 +855,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         keepKeyboardOpen();
     }
 
-    function loadGame(game) {
-        resetGame();
-        const originalGameNumber = game["Game Number"];
-        const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
-        if (privateGame) {
-            currentGameNumber = `Private Game #${privateGame["Game Number"]}`;
-        } else {
-            currentGameNumber = originalGameNumber;
-        }
-        secretWord = game["Secret Word"].toUpperCase();
-        hints = [
-            game["Hint 1"], game["Hint 2"], game["Hint 3"],
-            game["Hint 4"], game["Hint 5"]
-        ].filter(hint => hint).map(hint => hint.toUpperCase());
-        console.log("Loaded game:", { currentGameNumber, originalGameNumber, secretWord, hints });
-        setupHints();
-        if (isMobile) keepKeyboardOpen();
-        return originalGameNumber;
-    }
-
+    
     await Promise.all([fetchGameData(), fetchPrivateGames()]);
     console.log("Initial fetch complete, calling displayGameList");
     displayGameList();
