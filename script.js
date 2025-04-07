@@ -626,7 +626,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             span.textContent = hints[index] || "";
             span.style.visibility = index === 0 ? "visible" : "hidden";
         });
-        document.getElementById("current-game-number").textContent = currentGameNumber;
+        const gameNumberElement = document.getElementById("current-game-number");
+        if (gameNumberElement) {
+            gameNumberElement.textContent = currentGameNumber; // Just "Private Game #Y" or official game number
+        }
     }
 
     function adjustBackground() {
@@ -768,7 +771,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameOverScreen.style.display = "flex";
         document.getElementById("guess-input").blur();
 
-        gameNumberSpan.textContent = currentGameNumber; // "Private Game #Y" or official game number
+        gameNumberSpan.textContent = currentGameNumber; // Just "Private Game #Y" or official game number
+
         todaysWord.textContent = secretWord;
 
         let shareMessage;
@@ -777,7 +781,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.style.display = "block";
             rainPineapples();
             const guessText = score === 1 ? "guess" : "guesses";
-            const shareGamePrefix = currentGameNumber.includes("Private") ? "" : "Game #"; // No extra prefix for private games
+            const shareGamePrefix = currentGameNumber.includes("Private") ? "" : "Game #";
             shareText.innerHTML = `<span class="small-game-number">${shareGamePrefix}${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
             shareMessage = `${shareGamePrefix}${currentGameNumber}\nI solved the pineapple in\n${score}\n${guessText}\nCan you beat my score? Click here: https://your-game-url.com`;
             shareGameNumber.style.display = "none";
@@ -787,15 +791,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n\n<span class="italic">The Big Brain Word Game</span>';
-            shareGameNumber.textContent = currentGameNumber; // Updated: Just "Private Game #Y", no extra "Game #"
+            shareGameNumber.textContent = currentGameNumber; // Just "Private Game #Y"
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
-            shareMessage = `PLAY PINEAPPLE\n\nThe Big Brain Word Game\n${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`; // Updated: No extra "Game #"
+            shareMessage = `PLAY PINEAPPLE\n\nThe Big Brain Word Game\n${currentGameNumber}\nCan you beat my score? Click here: https://your-game-url.com`;
         } else {
             endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
             endGraphic.style.display = "block";
             shareText.textContent = "I didn’t solve the pineapple";
-            shareGameNumber.textContent = currentGameNumber; // "Private Game #Y" or official game number
+            shareGameNumber.textContent = currentGameNumber; // Just "Private Game #Y" or official game number
             shareScore.textContent = `${score}`;
             shareMessage = `${shareText.textContent}\n${currentGameNumber}\nScore: ${score}\nCan you beat my score? Click here: https://your-game-url.com`;
         }
