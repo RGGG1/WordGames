@@ -292,7 +292,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Guesses button clicked");
             const guessesList = document.getElementById("guesses-list");
             guessesList.innerHTML = guesses.length > 0 
-                ? guesses.map((g, i) => `${i + 1}. ${g}`).join("   ")
+                ? guesses.map(g => `'${g}'`).join("   |   ")
                 : "No guesses yet!";
             guessesScreen.style.display = "flex";
         });
@@ -722,19 +722,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         const upperGuess = guess.toUpperCase();
         const isRepeatGuess = guesses.includes(upperGuess);
 
-        guesses.push(upperGuess);
-
         if (!isRepeatGuess) {
+            guesses.push(upperGuess);
             guessCount++;
             score = guessCount;
-            document.getElementById("score").textContent = score;
             document.getElementById("guesses-btn").textContent = `Guesses: ${guessCount}`;
             console.log("guessCount after:", guessCount, "score:", score);
 
             if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
             else updateHintCountdown();
         } else {
-            console.log("Repeat guess detected, not counting towards score:", upperGuess);
+            console.log("Repeat guess detected, not counting or adding to guesses:", upperGuess);
             document.getElementById("guesses-btn").textContent = `Guesses: ${guessCount}`;
             updateHintCountdown();
         }
@@ -854,7 +852,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessCount = 0;
         gaveUp = false;
         guesses = [];
-        document.getElementById("score").textContent = score;
         document.getElementById("guesses-btn").textContent = "Guesses: 0";
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";

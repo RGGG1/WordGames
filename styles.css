@@ -155,6 +155,7 @@ a {
   opacity: 1;
   visibility: visible;
   z-index: 2;
+  font-family: 'Luckiest Guy', cursive;
 }
 
 @keyframes blink {
@@ -292,6 +293,7 @@ a {
   font-size: clamp(1.8vh, 2.5vw, 2.5vh);
   font-weight: bold;
   text-transform: uppercase;
+  font-family: 'Luckiest Guy', cursive;
 }
 
 #game-controls {
@@ -339,22 +341,6 @@ a {
   cursor: pointer;
   transition: transform 0.2s ease;
   pointer-events: auto;
-}
-
-#give-up-btn {
-  background: #FF0000;
-  color: #000000;
-  border: 0.1vh solid #000000;
-}
-
-#give-up-btn:hover {
-  transform: scale(1.05);
-}
-
-.dark-mode #give-up-btn {
-  background: #FF0000;
-  color: #000000;
-  border: 0.1vh solid #FFFFFF;
 }
 
 .control-btn:hover {
@@ -741,7 +727,7 @@ a {
   padding-bottom: 5vh;
 }
 
-.darkモード .create-form {
+.dark-mode .create-form {
   background: #000000;
 }
 
@@ -796,11 +782,11 @@ a {
 }
 
 #back-btn {
-  border: 0.2vh solid #FFB300;
+  border: 0.1vh solid #000000;
 }
 
 .dark-mode #back-btn {
-  border: 0.2vh solid #FFB300;
+  border: 0.1vh solid #FFFFFF;
 }
 
 .or-text {
@@ -815,7 +801,7 @@ a {
 
 #guesses-screen {
     position: fixed;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
     height: 30vh;
