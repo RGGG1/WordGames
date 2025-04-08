@@ -254,7 +254,7 @@ a {
 #hints-box {
   width: 85vw;
   background: none;
-  margin: 2vh auto 0 auto;
+  margin: 6vh auto 0 auto;
   padding: 0;
   position: relative;
 }
@@ -322,7 +322,7 @@ a {
 
 @media (min-width: 601px) {
   #game-controls {
-    top: 43.25vh;
+    top: 47.25vh;
   }
 }
 
@@ -927,7 +927,7 @@ a {
   }
   #guess-line {
     width: 90vw;
-    bottom: -2.5vh;
+    bottom: -1.5vh;
   }
   #hints-box {
     width: 90vw;

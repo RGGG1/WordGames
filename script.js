@@ -482,11 +482,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 privateList.innerHTML = "<div>No private games yet</div>";
             } else {
                 const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
+                console.log("Private game results from localStorage:", results);
                 privateGames.forEach(game => {
                     const gameNumber = game["Game Number"];
                     const gameName = game["Game Name"].toUpperCase();
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
+                    console.log(`Checking private game ${gameNumber}: pastResult=`, pastResult, `secretWord=`, secretWord);
                     const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResult.guesses : "Gave Up") : "-";
                     const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
@@ -848,6 +850,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         results[gameNumber] = { secretWord, guesses };
         localStorage.setItem(key, JSON.stringify(results));
         console.log(`Saved ${gameType} result for game ${gameNumber}:`, results[gameNumber]);
+        console.log(`Current ${key} in localStorage:`, JSON.parse(localStorage.getItem(key) || "{}"));
     }
 
     function endGame(won, gaveUp = false) {
@@ -904,7 +907,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
 
         if (currentGameNumber.includes("Private")) {
-            fetchPrivateGames().then(() => displayGameList());
+            // Ensure results are saved before fetching and displaying
+            console.log("Private game ended, ensuring results are saved before display");
+            setTimeout(async () => {
+                await fetchPrivateGames();
+                displayGameList();
+            }, 100); // Small delay to ensure localStorage is updated
         }
         adjustBackground();
     }
