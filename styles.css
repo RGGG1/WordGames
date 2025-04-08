@@ -242,7 +242,7 @@ a {
   #guess-line {
     width: 85vw;
     height: 0.3vh;
-    bottom: -3vh;
+    bottom: -4vh; /* Moved down by 1vh from -3vh */
     z-index: 5;
   }
 }
@@ -927,7 +927,7 @@ a {
   }
   #guess-line {
     width: 90vw;
-    bottom: -1.5vh;
+    bottom: -0.5vh; /* Moved up by 1vh from -1.5vh */
   }
   #hints-box {
     width: 90vw;
