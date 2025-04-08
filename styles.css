@@ -230,7 +230,13 @@ a {
   position: relative;
   margin-top: 0.5vh;
   transition: opacity 0.5s ease-out;
-  z-index: 0;
+  z-index: 1; /* Increased to ensure visibility on desktop */
+}
+
+@media (min-width: 601px) {
+  #guess-line {
+    width: 85vw; /* Consistent width on desktop */
+  }
 }
 
 .dark-mode #guess-line {
@@ -363,9 +369,9 @@ a {
 }
 
 #create-pineapple {
-  background: #FFB300;
-  color: #000000;
-  border: 0.1vh solid #000000;
+  background: #000000; /* Changed from #FFB300 to black */
+  color: #FFFFFF; /* White text */
+  border: 0.1vh fala solid #FFFFFF; /* White border */
   border-radius: 1vh;
   font-weight: bold;
   display: flex;
@@ -390,9 +396,9 @@ a {
 }
 
 .dark-mode #create-pineapple {
-  background: #FFB300;
-  color: #000000;
-  border: 0.1vh solid #FFFFFF;
+  background: #FFFFFF; /* White background in dark mode */
+  color: #000000; /* Black text */
+  border: 0.1vh solid #000000; /* Black border */
 }
 
 #game-over {
@@ -545,7 +551,7 @@ a {
 
 .pineapple-piece {
   position: absolute;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+  text-shadow: 1px 1px 2px rgba(0,  signs 0, 0, 0.5);
   animation: fall linear forwards;
   line-height: 1;
   top: -5vh;
@@ -736,16 +742,17 @@ a {
   font-weight: bold;
   background: none;
   border: none;
-  width: 85vw;
+  width: 90vw; /* Adjusted to 90% of viewport width */
   text-align: center;
   padding: 0;
-  margin: 0;
+  margin: 0 auto; /* Center the input */
   color: #000000;
   outline: none;
   caret-color: black;
   text-transform: uppercase;
   position: relative;
   z-index: 1;
+  display: block; /* Ensure it behaves as a block element */
 }
 
 .dark-mode .form-input {
@@ -766,11 +773,11 @@ a {
 }
 
 .form-line {
-  width: 85vw;
+  width: 25ch; /* 25 characters wide */
   height: 0.2vh;
   background: #000000;
   transition: opacity 0.5s ease-out;
-  margin-bottom: 1vh;
+  margin: 0 auto 1vh auto; /* Center horizontally */
 }
 
 .dark-mode .form-line {

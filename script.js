@@ -443,8 +443,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
                     const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
-                    const isCompleted = pastResult && pastResult.guesses !== "Gave Up" && pastResult.secretWord === secretWord;
-                    const displayWord = isCompleted || (pastResult && pastResult.guesses === "Gave Up") ? secretWord : "Play Now";
+                    // Show secret word if the game was completed (guessed correctly) or gave up
+                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
+                    const displayWord = showSecretWord ? secretWord : "Play Now";
 
                     const gameItem = document.createElement("div");
                     gameItem.className = "game-list-row";
@@ -488,8 +489,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const secretWord = game["Secret Word"].toUpperCase();
                     const pastResult = results[gameNumber];
                     const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
-                    const isCompleted = pastResult && pastResult.guesses !== "Gave Up" && pastResult.secretWord === secretWord;
-                    const displayWord = isCompleted || (pastResult && pastResult.guesses === "Gave Up") ? secretWord : "Play Now";
+                    // Show secret word if the game was completed (guessed correctly) or gave up
+                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
+                    const displayWord = showSecretWord ? secretWord : "Play Now";
 
                     const gameItem = document.createElement("div");
                     gameItem.className = "game-list-row";
@@ -720,6 +722,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         const allHintSpan = document.querySelectorAll(".hint-line span");
         if (hintIndex < allHintSpan.length && allHintSpan[hintIndex].textContent) {
             allHintSpan[hintIndex].style.visibility = "visible";
+            const hintText = hints[hintIndex];
+            allHintSpan[hintIndex].textContent = ""; // Clear initially
+            let charIndex = 0;
+
+            function typeLetter() {
+                if (charIndex < hintText.length) {
+                    allHintSpan[hintIndex].textContent += hintText[charIndex];
+                    charIndex++;
+                    setTimeout(typeLetter, 100); // Adjust speed (100ms per letter)
+                }
+            }
+
+            typeLetter();
         }
         updateHintCountdown();
     }
