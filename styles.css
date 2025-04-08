@@ -242,7 +242,7 @@ a {
   #guess-line {
     width: 85vw;
     height: 0.3vh;
-    bottom: -4vh; /* Moved down by 1vh from -3vh */
+    bottom: -4vh;
     z-index: 5;
   }
 }
@@ -927,11 +927,11 @@ a {
   }
   #guess-line {
     width: 90vw;
-    bottom: -0.5vh; /* Moved up by 1vh from -1.5vh */
+    bottom: -2.5vh; /* Moved up by 2vh from -0.5vh to remove the "line of space" */
   }
   #hints-box {
     width: 90vw;
-    margin: 1.5vh auto 0 auto;
+    margin: 1vh auto 0 auto; /* Adjusted from 1.5vh to 1vh to move up by 0.5vh, ensuring 1vh gap with underline */
   }
   #game-controls {
     width: 90vw;
