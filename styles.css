@@ -927,11 +927,11 @@ a {
   }
   #guess-line {
     width: 90vw;
-    bottom: -2.5vh; /* Moved up by 2vh from -0.5vh to remove the "line of space" */
+    bottom: 0vh; /* Moved up to be directly below the Guess button */
   }
   #hints-box {
     width: 90vw;
-    margin: 1vh auto 0 auto; /* Adjusted from 1.5vh to 1vh to move up by 0.5vh, ensuring 1vh gap with underline */
+    margin: 1vh auto 0 auto; /* Ensures 1vh gap between underline and "Game #55" */
   }
   #game-controls {
     width: 90vw;
