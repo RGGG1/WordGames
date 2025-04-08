@@ -330,7 +330,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1vh;
+  gap: 0.5vh; /* Reduced from 1vh to 0.5vh */
 }
 
 .control-btn-row {
