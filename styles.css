@@ -102,7 +102,7 @@ a {
   background: none;
   margin: 4vh auto 0 auto;
   padding: 0;
-  overflow: visible; /* Ensure no clipping */
+  overflow: visible;
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -136,7 +136,7 @@ a {
   justify-content: center;
   z-index: 1;
   margin-top: 2.25vh;
-  overflow: visible; /* Ensure no clipping */
+  overflow: visible;
 }
 
 #guess-input {
@@ -230,7 +230,7 @@ a {
   height: 0.3vh;
   background: #000000;
   position: absolute;
-  bottom: -0.5vh;
+  bottom: -2.5vh;
   left: 50%;
   transform: translateX(-50%);
   transition: opacity 0.5s ease-out;
@@ -242,7 +242,7 @@ a {
   #guess-line {
     width: 85vw;
     height: 0.3vh;
-    bottom: -1vh;
+    bottom: -3vh;
     z-index: 5;
   }
 }
@@ -254,7 +254,7 @@ a {
 #hints-box {
   width: 85vw;
   background: none;
-  margin: 0vh auto;
+  margin: 2vh auto 0 auto;
   padding: 0;
   position: relative;
 }
@@ -322,7 +322,7 @@ a {
 
 @media (min-width: 601px) {
   #game-controls {
-    top: 40.25vh; /* Adjusted for desktop */
+    top: 43.25vh;
   }
 }
 
@@ -927,9 +927,11 @@ a {
   }
   #guess-line {
     width: 90vw;
+    bottom: -2.5vh;
   }
   #hints-box {
     width: 90vw;
+    margin: 1.5vh auto 0 auto;
   }
   #game-controls {
     width: 90vw;

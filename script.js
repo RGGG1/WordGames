@@ -485,7 +485,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 privateGames.forEach(game => {
                     const gameNumber = game["Game Number"];
                     const gameName = game["Game Name"].toUpperCase();
-                    const secretWord = game["Secret Word"].toUpperCase();
+                    const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
                     const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResult.guesses : "Gave Up") : "-";
                     const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
@@ -507,6 +507,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         keepKeyboardOpen();
                     });
                     privateList.appendChild(gameItem);
+                    console.log(`Rendered private game ${gameNumber}: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guesses}`);
                 });
             }
         }
@@ -951,7 +952,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function loadGame(game) {
         resetGame();
-        currentGameNumber = game["Game Number"] || `Private Game #${game["Game Number"]}`;
+        currentGameNumber = game["Game Number"] && !game["Game Name"] ? game["Game Number"] : `Private Game #${game["Game Number"]}`;
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"]?.toUpperCase(),
