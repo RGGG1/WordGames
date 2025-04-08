@@ -442,8 +442,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
-                    const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
-                    // Show secret word if the game was completed (guessed correctly) or gave up
+                    const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResult.guesses : "Gave Up") : "-";
                     const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
@@ -485,11 +484,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
                 privateGames.forEach(game => {
                     const gameNumber = game["Game Number"];
-                    const gameName = game["Game Name"];
+                    const gameName = game["Game Name"].toUpperCase();
                     const secretWord = game["Secret Word"].toUpperCase();
                     const pastResult = results[gameNumber];
-                    const guesses = pastResult && pastResult.guesses !== "Gave Up" ? pastResult.guesses : (pastResult ? "Gave Up" : "-");
-                    // Show secret word if the game was completed (guessed correctly) or gave up
+                    const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResult.guesses : "Gave Up") : "-";
                     const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
@@ -723,14 +721,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (hintIndex < allHintSpan.length && allHintSpan[hintIndex].textContent) {
             allHintSpan[hintIndex].style.visibility = "visible";
             const hintText = hints[hintIndex];
-            allHintSpan[hintIndex].textContent = ""; // Clear initially
+            allHintSpan[hintIndex].textContent = "";
             let charIndex = 0;
 
             function typeLetter() {
                 if (charIndex < hintText.length) {
                     allHintSpan[hintIndex].textContent += hintText[charIndex];
                     charIndex++;
-                    setTimeout(typeLetter, 100); // Adjust speed (100ms per letter)
+                    setTimeout(typeLetter, 100);
                 }
             }
 
@@ -948,33 +946,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div class="hint-line" id="hint-row-4"><span></span></div>
             <div class="hint-line" id="hint-row-5"><span></span></div>
         `;
-        setupEventListeners();
         setupHints();
-        updateHintCountdown();
-        keepKeyboardOpen();
     }
 
     function loadGame(game) {
         resetGame();
-        const originalGameNumber = game["Game Number"];
-        const privateGame = privateGames.find(g => g["Game Number"] === originalGameNumber);
-        if (privateGame) {
-            currentGameNumber = `Private Game #${privateGame["Game Number"]}`;
-        } else {
-            currentGameNumber = originalGameNumber;
-        }
+        currentGameNumber = game["Game Number"] || `Private Game #${game["Game Number"]}`;
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
-            game["Hint 1"], game["Hint 2"], game["Hint 3"],
-            game["Hint 4"], game["Hint 5"]
-        ].filter(hint => hint).map(hint => hint.toUpperCase());
-        console.log("Loaded game:", { currentGameNumber, originalGameNumber, secretWord, hints });
+            game["Hint 1"]?.toUpperCase(),
+            game["Hint 2"]?.toUpperCase(),
+            game["Hint 3"]?.toUpperCase(),
+            game["Hint 4"]?.toUpperCase(),
+            game["Hint 5"]?.toUpperCase()
+        ].filter(hint => hint);
+        console.log("Loaded game:", { currentGameNumber, secretWord, hints });
         setupHints();
-        if (isMobile) keepKeyboardOpen();
-        return originalGameNumber;
     }
 
-    await Promise.all([fetchGameData(), fetchPrivateGames()]);
-    console.log("Initial fetch complete, calling displayGameList");
+    await fetchGameData();
+    await fetchPrivateGames();
     displayGameList();
 });
