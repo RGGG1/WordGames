@@ -935,7 +935,7 @@ a {
   }
   #game-controls {
     width: 90vw;
-    top: 26vh;
+    top: 26vh; /* Restored to ensure visibility on mobile */
   }
   .hint-line span {
     font-size: clamp(3.29125vh, 4.3875vw, 4.3875vh);
