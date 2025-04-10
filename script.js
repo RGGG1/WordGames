@@ -229,7 +229,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 secretWord: secretWordInput.toUpperCase(),
                 hint1: document.getElementById("hint-1").value.trim().toUpperCase(),
                 hint2: document.getElementById("hint-2").value.trim().toUpperCase(),
-                hint3: document.getElementById("hint-3").value.trim().toUpperCase()
+                hint3: document.getElementById("hint-3").value.trim().toUpperCase(),
+                hint4: document.getElementById("hint-4").value.trim().toUpperCase(),
+                hint5: document.getElementById("hint-5").value.trim().toUpperCase()
             };
 
             if (!formData.gameName || !formData.secretWord || !formData.hint1) {
@@ -374,18 +376,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadGame(latestGame);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            updateHintCountdown();
             adjustBackground();
             setupEventListeners();
             if (isMobile) keepKeyboardOpen();
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
-                { "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD" }
+                { "Game Number": "1", "Secret Word": "ERROR", "Hint 1": "UNABLE", "Hint 2": "TO", "Hint 3": "LOAD", "Hint 4": "DATA", "Hint 5": "CHECK" }
             ];
             console.log("Using fallback game:", allGames);
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            updateHintCountdown();
             adjustBackground();
             setupEventListeners();
             if (isMobile) keepKeyboardOpen();
@@ -676,27 +680,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    function updateHintCountdown() {
+        const countdownElement = document.getElementById("hint-countdown");
+        if (!countdownElement) return;
+        if (hintIndex >= hints.length - 1) {
+            countdownElement.textContent = "(All hints are now revealed)";
+        } else {
+            const guessesUntilNextHint = guessCount === 0 ? 5 : 5 - (guessCount % 5);
+            const guessText = guessesUntilNextHint === 1 ? "guess" : "guesses";
+            countdownElement.textContent = `(hint revealed after ${guessesUntilNextHint} ${guessText})`;
+        }
+    }
+
     function setupHints() {
         const hintElements = [
             document.getElementById("hint-row-1")?.children[0],
             document.getElementById("hint-row-2")?.children[0],
-            document.getElementById("hint-row-3")?.children[0]
+            document.getElementById("hint-row-3")?.children[0],
+            document.getElementById("hint-row-4")?.children[0],
+            document.getElementById("hint-row-5")?.children[0]
         ].filter(Boolean);
         hintElements.forEach((span, index) => {
             span.textContent = hints[index] || "";
             span.style.visibility = index === 0 ? "visible" : "hidden";
-            if (index === 0 && !firstGuessMade) {
-                span.classList.add("animate__animated", "animate__pulse", "animate__infinite");
-            }
         });
         document.getElementById("current-game-number").textContent = currentGameNumber;
-
-        // Remove pulse effect when user starts typing
-        const guessInput = document.getElementById("guess-input");
-        guessInput.addEventListener("input", function removePulse() {
-            hintElements[0].classList.remove("animate__animated", "animate__pulse", "animate__infinite");
-            guessInput.removeEventListener("input", removePulse);
-        }, { once: true });
     }
 
     function adjustBackground() {
@@ -717,24 +725,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             allHintSpan[hintIndex].style.visibility = "visible";
             const hintText = hints[hintIndex];
             allHintSpan[hintIndex].textContent = "";
-
-            // Simple typing effect for second and third hints
             let charIndex = 0;
+
             function typeLetter() {
                 if (charIndex < hintText.length) {
                     allHintSpan[hintIndex].textContent += hintText[charIndex];
                     charIndex++;
                     setTimeout(typeLetter, 100);
-                } else {
-                    // Apply heartbeat or tada effect after typing
-                    allHintSpan[hintIndex].classList.add("animate__animated", hintIndex === 1 ? "animate__heartBeat" : "animate__tada");
-                    setTimeout(() => {
-                        allHintSpan[hintIndex].classList.remove("animate__animated", hintIndex === 1 ? "animate__heartBeat" : "animate__tada");
-                    }, 1500);
                 }
             }
+
             typeLetter();
         }
+        updateHintCountdown();
     }
 
     function rainPineapples() {
@@ -793,13 +796,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("guesses-btn").textContent = `Guesses: ${guessCount}`;
             console.log("guessCount after:", guessCount, "score:", score);
 
-            // Reveal hint every 3 guesses (after 3rd and 6th guess)
-            if (guessCount % 3 === 0 && hintIndex < 2) {
-                revealHint();
-            }
+            if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
+            else updateHintCountdown();
         } else {
             console.log("Repeat guess detected, not counting or adding to guesses:", upperGuess);
             document.getElementById("guesses-btn").textContent = `Guesses: ${guessCount}`;
+            updateHintCountdown();
         }
 
         if (upperGuess === secretWord) {
@@ -824,13 +826,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.style.visibility = "visible";
                 guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
-                // Add 0.5s delay before revealing next hint if applicable
-                setTimeout(() => {
-                    if (guessCount % 3 === 0 && hintIndex < 2) {
-                        revealHint();
-                    }
-                    keepKeyboardOpen();
-                }, 500);
+                keepKeyboardOpen();
             }, 500);
         }
     }
@@ -839,7 +835,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const hintElements = [
             document.getElementById("hint-row-1")?.children[0],
             document.getElementById("hint-row-2")?.children[0],
-            document.getElementById("hint-row-3")?.children[0]
+            document.getElementById("hint-row-3")?.children[0],
+            document.getElementById("hint-row-4")?.children[0],
+            document.getElementById("hint-row-5")?.children[0]
         ].filter(Boolean);
         hintElements.forEach((span, index) => {
             span.style.visibility = index <= hintIndex ? "visible" : "hidden";
@@ -871,8 +869,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         resetScreenDisplays();
         gameOverScreen.style.display = "flex";
         document.getElementById("guess-input").blur();
-
-        todaysWord.classList.add("animate__animated", "animate__pulse", "animate__infinite");
 
         gameNumberSpan.textContent = currentGameNumber;
         todaysWord.textContent = secretWord;
@@ -911,11 +907,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         shareTwitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
 
         if (currentGameNumber.includes("Private")) {
+            // Ensure results are saved before fetching and displaying
             console.log("Private game ended, ensuring results are saved before display");
             setTimeout(async () => {
                 await fetchPrivateGames();
                 displayGameList();
-            }, 100);
+            }, 100); // Small delay to ensure localStorage is updated
         }
         adjustBackground();
     }
@@ -950,10 +947,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div class="hint-line" id="hint-row-1"><span></span></div>
             <div class="hint-line spacer"></div>
             <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-            <div class="hint-line" id="how-to-play-2">Guess secret word in as few guesses as possible.<br><br>New hints are revealed after each guess.</div>
+            <div class="hint-line" id="how-to-play-2">Guess secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
+            <div class="hint-line spacer"></div>
             <div class="hint-line spacer"></div>
             <div class="hint-line" id="hint-row-2"><span></span></div>
             <div class="hint-line" id="hint-row-3"><span></span></div>
+            <div class="hint-line" id="hint-row-4"><span></span></div>
+            <div class="hint-line" id="hint-row-5"><span></span></div>
         `;
         setupHints();
     }
@@ -965,7 +965,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         hints = [
             game["Hint 1"]?.toUpperCase(),
             game["Hint 2"]?.toUpperCase(),
-            game["Hint 3"]?.toUpperCase()
+            game["Hint 3"]?.toUpperCase(),
+            game["Hint 4"]?.toUpperCase(),
+            game["Hint 5"]?.toUpperCase()
         ].filter(hint => hint);
         console.log("Loaded game:", { currentGameNumber, secretWord, hints });
         setupHints();
