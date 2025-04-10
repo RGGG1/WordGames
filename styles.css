@@ -275,16 +275,6 @@ a {
   margin-bottom: 0.5vh;
 }
 
-.hint-countdown {
-  font-size: 1.5vh;
-  color: #666;
-  margin-bottom: 1vh;
-}
-
-.dark-mode .hint-countdown {
-  color: #999;
-}
-
 #hints {
   display: flex;
   flex-direction: column;
@@ -304,7 +294,7 @@ a {
 }
 
 .hint-line span {
-  font-size: clamp(3.94875vh, 5.484375vw, 5.484375vh);
+  font-size: clamp(5.923125vh, 8.2265625vw, 8.2265625vh);
   font-weight: bold;
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
@@ -314,7 +304,7 @@ a {
   width: 85vw;
   background: none;
   position: absolute;
-  top: 26.25vh;
+  top: 35vh;
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
@@ -322,7 +312,7 @@ a {
 
 @media (min-width: 601px) {
   #game-controls {
-    top: 47.25vh;
+    top: 35vh;
   }
 }
 
@@ -330,7 +320,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5vh; /* Reduced from 1vh to 0.5vh for all device sizes */
+  gap: 0.5vh;
 }
 
 .control-btn-row {
@@ -892,6 +882,22 @@ a {
   color: #CCCCCC;
 }
 
+@keyframes dropIn {
+  0% {
+    transform: translateY(-1em);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.drop-in-letter {
+  display: inline-block;
+  animation: dropIn 0.3s ease-out forwards;
+}
+
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
     width: 90vw;
@@ -927,18 +933,18 @@ a {
   }
   #guess-line {
     width: 90vw;
-    bottom: 0vh; /* Moved up to be directly below the Guess button */
+    bottom: 0vh;
   }
   #hints-box {
     width: 90vw;
-    margin: 1vh auto 0 auto; /* Ensures 1vh gap between underline and "Game #55" */
+    margin: 1vh auto 0 auto;
   }
   #game-controls {
     width: 90vw;
-    top: 25.5vh; /* Restored to ensure visibility on mobile */
+    top: 20vh;
   }
   .hint-line span {
-    font-size: clamp(3.29125vh, 4.3875vw, 4.3875vh);
+    font-size: clamp(4.936875vh, 6.58125vw, 6.58125vh);
   }
   .game-list-header, .game-list-row {
     width: 90vw;
