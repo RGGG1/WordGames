@@ -717,32 +717,23 @@ document.addEventListener("DOMContentLoaded", async () => {
             allHintSpan[hintIndex].style.visibility = "visible";
             const hintText = hints[hintIndex];
             allHintSpan[hintIndex].textContent = "";
-            
-            if (hintIndex === 1 || hintIndex === 2) {
-                // Drop-in typing effect for second and third hints
-                let charIndex = 0;
-                function typeLetter() {
-                    if (charIndex < hintText.length) {
-                        const letterSpan = document.createElement("span");
-                        letterSpan.textContent = hintText[charIndex];
-                        letterSpan.className = "drop-in-letter";
-                        letterSpan.style.animationDelay = `${charIndex * 100}ms`;
-                        allHintSpan[hintIndex].appendChild(letterSpan);
-                        charIndex++;
-                        setTimeout(typeLetter, 100);
-                    } else {
-                        // Apply heartbeat or tada effect after typing
-                        allHintSpan[hintIndex].classList.add("animate__animated", hintIndex === 1 ? "animate__heartBeat" : "animate__tada");
-                        setTimeout(() => {
-                            allHintSpan[hintIndex].classList.remove("animate__animated", hintIndex === 1 ? "animate__heartBeat" : "animate__tada");
-                        }, 1500);
-                    }
+
+            // Simple typing effect for second and third hints
+            let charIndex = 0;
+            function typeLetter() {
+                if (charIndex < hintText.length) {
+                    allHintSpan[hintIndex].textContent += hintText[charIndex];
+                    charIndex++;
+                    setTimeout(typeLetter, 100);
+                } else {
+                    // Apply heartbeat or tada effect after typing
+                    allHintSpan[hintIndex].classList.add("animate__animated", hintIndex === 1 ? "animate__heartBeat" : "animate__tada");
+                    setTimeout(() => {
+                        allHintSpan[hintIndex].classList.remove("animate__animated", hintIndex === 1 ? "animate__heartBeat" : "animate__tada");
+                    }, 1500);
                 }
-                typeLetter();
-            } else {
-                // Standard typing for first hint (no drop-in)
-                allHintSpan[hintIndex].textContent = hintText;
             }
+            typeLetter();
         }
     }
 
@@ -802,7 +793,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("guesses-btn").textContent = `Guesses: ${guessCount}`;
             console.log("guessCount after:", guessCount, "score:", score);
 
-            if (hintIndex < 2) revealHint();
+            // Reveal hint every 3 guesses (after 3rd and 6th guess)
+            if (guessCount % 3 === 0 && hintIndex < 2) {
+                revealHint();
+            }
         } else {
             console.log("Repeat guess detected, not counting or adding to guesses:", upperGuess);
             document.getElementById("guesses-btn").textContent = `Guesses: ${guessCount}`;
@@ -830,7 +824,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.style.visibility = "visible";
                 guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
                 guessDisplay.value = "";
-                keepKeyboardOpen();
+                // Add 0.5s delay before revealing next hint if applicable
+                setTimeout(() => {
+                    if (guessCount % 3 === 0 && hintIndex < 2) {
+                        revealHint();
+                    }
+                    keepKeyboardOpen();
+                }, 500);
             }, 500);
         }
     }
