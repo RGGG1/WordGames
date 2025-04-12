@@ -853,7 +853,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(`Current ${key} in localStorage:`, JSON.parse(localStorage.getItem(key) || "{}"));
     }
 
-    // Modified: Added "Game #" to private game share text when won
+    // Modified: Simplified share text to use currentGameNumber for both private and official games
     function endGame(won, gaveUp = false) {
         gameOver = true;
         const endGraphic = document.getElementById("end-graphic");
@@ -881,9 +881,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.style.display = "block";
             rainPineapples();
             const guessText = score === 1 ? "guess" : "guesses";
-            const displayGameNumber = currentGameNumber.includes("- Private") ? `Game #${currentGameNumber}` : currentGameNumber;
-            shareText.innerHTML = `<span class="small-game-number">${displayGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
-            shareMessage = `I solved Pineapple ${displayGameNumber} in ${score} ${guessText}! 🍍 Can you beat my score? Play at ${gameUrl}`;
+            shareText.innerHTML = `<span class="small-game-number">${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+            shareMessage = `I solved Pineapple ${currentGameNumber} in ${score} ${guessText}! 🍍 Can you beat my score? Play at ${gameUrl}`;
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
