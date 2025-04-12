@@ -740,6 +740,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         updateHintCountdown();
     }
 
+    // Modified: Ensure pineapples complete their fall to the bottom
     function rainPineapples() {
         const pineappleContainer = document.createElement("div");
         pineappleContainer.className = "pineapple-rain";
@@ -753,18 +754,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                 pineapple.style.left = `${Math.random() * 100}vw`;
                 pineapple.style.fontSize = `${Math.random() * 20 + 10}px`;
                 pineapple.style.transform = `rotate(${Math.random() * 360}deg)`;
-                pineapple.style.animationDuration = `${Math.random() * 2 + 2}s`;
+                const duration = Math.random() * 2 + 2; // 2 to 4 seconds
+                pineapple.style.animationDuration = `${duration}s`;
                 pineapple.style.animationDelay = `${startDelay + Math.random() * 0.5}s`;
                 pineappleContainer.appendChild(pineapple);
+
+                // Remove pineapple after its animation completes
+                setTimeout(() => {
+                    pineapple.remove();
+                }, (duration + startDelay + 0.5) * 1000);
             }
         }
 
+        // Create waves within the first 2.625 seconds to stay within 3.5s total
         createPineappleWave(0);
         createPineappleWave(0.875);
         createPineappleWave(1.75);
-        createPineappleWave(2.625);
-        
-        setTimeout(() => pineappleContainer.remove(), 3500);
+        // No new pineapples after 2.625s to ensure all can fall by ~4s
+
+        // Clean up container after the longest possible animation (4s + 2.625s)
+        setTimeout(() => {
+            pineappleContainer.remove();
+        }, 6625); // 4s (max duration) + 2.625s (last delay)
     }
 
     function handleGuess(guess) {
@@ -853,7 +864,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(`Current ${key} in localStorage:`, JSON.parse(localStorage.getItem(key) || "{}"));
     }
 
-    // Modified: Simplified share text to use currentGameNumber for both private and official games
+    // Modified: Ensure Game # appears in share text for both official and private games
     function endGame(won, gaveUp = false) {
         gameOver = true;
         const endGraphic = document.getElementById("end-graphic");
@@ -881,8 +892,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.style.display = "block";
             rainPineapples();
             const guessText = score === 1 ? "guess" : "guesses";
-            shareText.innerHTML = `<span class="small-game-number">${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
-            shareMessage = `I solved Pineapple ${currentGameNumber} in ${score} ${guessText}! 🍍 Can you beat my score? Play at ${gameUrl}`;
+            const displayGameNumber = currentGameNumber.includes("- Private") 
+                ? `Game #${currentGameNumber}` 
+                : `Game #${currentGameNumber.replace("Game #", "")}`;
+            shareText.innerHTML = `<span class="small-game-number">${displayGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+            shareMessage = `I solved Pineapple ${displayGameNumber} in ${score} ${guessText}! 🍍 Can you beat my score? Play at ${gameUrl}`;
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
