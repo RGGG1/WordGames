@@ -560,7 +560,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-        // Modified: Updated to handle new private game title format (Game #Y - Private)
+        // Modified: Updated to handle new private game title format (Y - Private)
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -568,7 +568,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             let currentIndex;
             let gameList;
             if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.match(/Game #(\d+)/)[1]);
+                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
                 currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
                 gameList = privateGames;
             } else {
@@ -582,7 +582,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             keepKeyboardOpen();
         });
 
-        // Modified: Updated to handle new private game title format (Game #Y - Private)
+        // Modified: Updated to handle new private game title format (Y - Private)
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -590,7 +590,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             let currentIndex;
             let gameList;
             if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.match(/Game #(\d+)/)[1]);
+                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
                 currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
                 gameList = privateGames;
             } else {
@@ -617,14 +617,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             handleSwipe();
         });
 
-        // Modified: Updated to handle new private game title format (Game #Y - Private)
+        // Modified: Updated to handle new private game title format (Y - Private)
         function handleSwipe() {
             const swipeThreshold = 50;
             let currentIndex;
             let gameList;
 
             if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.match(/Game #(\d+)/)[1]);
+                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
                 currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
                 gameList = privateGames;
             } else {
@@ -643,14 +643,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             keepKeyboardOpen();
         }
 
-        // Modified: Updated to handle new private game title format (Game #Y - Private)
+        // Modified: Updated to handle new private game title format (Y - Private)
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             gaveUp = true;
             let originalGameNumber;
             if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.match(/Game #(\d+)/)[1]);
+                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
                 const privateGame = privateGames.find(game => game["Game Number"] === String(currentNum));
                 originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
             } else {
@@ -771,7 +771,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         setTimeout(() => pineappleContainer.remove(), 3500);
     }
 
-    // Modified: Updated to handle new private game title format in share text
+    // Modified: Updated to handle new private game title format (Y - Private)
     function handleGuess(guess) {
         console.log("handleGuess called, guessCount before:", guessCount);
         const guessDisplay = document.getElementById("guess-input");
@@ -814,7 +814,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameOver = true;
             let originalGameNumber;
             if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.match(/Game #(\d+)/)[1]);
+                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
                 const privateGame = privateGames.find(game => game["Game Number"] === String(currentNum));
                 originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
             } else {
@@ -858,7 +858,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(`Current ${key} in localStorage:`, JSON.parse(localStorage.getItem(key) || "{}"));
     }
 
-    // Modified: Updated to handle new private game title format in share text
+    // Modified: Updated to handle new private game title format (Y - Private)
     function endGame(won, gaveUp = false) {
         gameOver = true;
         const endGraphic = document.getElementById("end-graphic");
@@ -963,10 +963,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupHints();
     }
 
-    // Modified: Changed private game title to Game #Y - Private
+    // Modified: Changed private game title to Y - Private
     function loadGame(game) {
         resetGame();
-        currentGameNumber = game["Game Name"] ? `Game #${game["Game Number"]} - Private` : game["Game Number"];
+        currentGameNumber = game["Game Name"] ? `${game["Game Number"]} - Private` : game["Game Number"];
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"]?.toUpperCase(),
