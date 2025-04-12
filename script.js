@@ -560,7 +560,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-        // Modified: Updated to handle new private game title format (Y - Private)
         document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -582,7 +581,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             keepKeyboardOpen();
         });
 
-        // Modified: Updated to handle new private game title format (Y - Private)
         document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -617,7 +615,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             handleSwipe();
         });
 
-        // Modified: Updated to handle new private game title format (Y - Private)
         function handleSwipe() {
             const swipeThreshold = 50;
             let currentIndex;
@@ -643,7 +640,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             keepKeyboardOpen();
         }
 
-        // Modified: Updated to handle new private game title format (Y - Private)
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -771,7 +767,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         setTimeout(() => pineappleContainer.remove(), 3500);
     }
 
-    // Modified: Updated to handle new private game title format (Y - Private)
     function handleGuess(guess) {
         console.log("handleGuess called, guessCount before:", guessCount);
         const guessDisplay = document.getElementById("guess-input");
@@ -858,7 +853,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(`Current ${key} in localStorage:`, JSON.parse(localStorage.getItem(key) || "{}"));
     }
 
-    // Modified: Updated to handle new private game title format (Y - Private)
+    // Modified: Added "Game #" to private game share text when won
     function endGame(won, gaveUp = false) {
         gameOver = true;
         const endGraphic = document.getElementById("end-graphic");
@@ -886,8 +881,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGraphic.style.display = "block";
             rainPineapples();
             const guessText = score === 1 ? "guess" : "guesses";
-            shareText.innerHTML = `<span class="small-game-number">${currentGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
-            shareMessage = `I solved Pineapple ${currentGameNumber} in ${score} ${guessText}! 🍍 Can you beat my score? Play at ${gameUrl}`;
+            const displayGameNumber = currentGameNumber.includes("- Private") ? `Game #${currentGameNumber}` : currentGameNumber;
+            shareText.innerHTML = `<span class="small-game-number">${displayGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
+            shareMessage = `I solved Pineapple ${displayGameNumber} in ${score} ${guessText}! 🍍 Can you beat my score? Play at ${gameUrl}`;
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
@@ -963,7 +959,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupHints();
     }
 
-    // Modified: Changed private game title to Y - Private
     function loadGame(game) {
         resetGame();
         currentGameNumber = game["Game Name"] ? `${game["Game Number"]} - Private` : game["Game Number"];
