@@ -432,6 +432,7 @@ a {
 #end-graphic {
   height: 15.8203125vh;
   margin: 3vh auto;
+  display: none;
 }
 
 #todays-word-label {

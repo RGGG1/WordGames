@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let modeToggles = document.querySelectorAll("#mode-toggle");
 
     if (createPineappleBtn) {
-        createPineappleBtn.innerHTML = 'Create a Pineapple<br><span class="tap-here">(tap here)</span><span class="plus">+</span>';
+        createPineappleBtn.innerHTML = 'Create a Wordy<br><span class="tap-here">(tap here)</span><span class="plus">+</span>';
     }
 
     initializeMode();
@@ -189,7 +189,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         createPineappleBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Create a Pineapple clicked");
+            console.log("Create a Wordy clicked");
             createForm.style.display = "flex";
         });
     }
@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         createPineappleLink.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Create Pineapple end button clicked");
+            console.log("Create Wordy end button clicked");
             resetScreenDisplays();
             gameSelectScreen.style.display = "flex";
             privateTab.classList.add("active");
@@ -430,7 +430,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const officialList = document.getElementById("official-list");
         if (officialList) {
             officialList.innerHTML = "";
-            document.getElementById("game-name").textContent = "PINEAPPLE";
+            document.getElementById("game-name").textContent = "WORDY";
             console.log("Populating official games list with:", allGames);
 
             if (!allGames || allGames.length === 0) {
@@ -740,7 +740,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         updateHintCountdown();
     }
 
-    // Modified: Ensure pineapples complete their fall to the bottom
     function rainPineapples() {
         const pineappleContainer = document.createElement("div");
         pineappleContainer.className = "pineapple-rain";
@@ -864,7 +863,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(`Current ${key} in localStorage:`, JSON.parse(localStorage.getItem(key) || "{}"));
     }
 
-    // Modified: Ensure Game # appears in share text for both official and private games
     function endGame(won, gaveUp = false) {
         gameOver = true;
         const endGraphic = document.getElementById("end-graphic");
@@ -888,33 +886,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gameUrl = "https://pineapple-game.com"; // Replace with your actual game URL
         let shareMessage;
         if (won) {
-            endGraphic.src = "pineapple_gif.gif";
-            endGraphic.style.display = "block";
             rainPineapples();
             const guessText = score === 1 ? "guess" : "guesses";
             const displayGameNumber = currentGameNumber.includes("- Private") 
                 ? `Game #${currentGameNumber}` 
                 : `Game #${currentGameNumber.replace("Game #", "")}`;
-            shareText.innerHTML = `<span class="small-game-number">${displayGameNumber}</span>\nI solved the pineapple in\n<span class="big-score">${score}</span>\n${guessText}`;
-            shareMessage = `I solved Pineapple ${displayGameNumber} in ${score} ${guessText}! 🍍 Can you beat my score? Play at ${gameUrl}`;
+            shareText.innerHTML = `<span class="small-game-number">${displayGameNumber}</span>\nI solved Wordy in\n<span class="big-score">${score}</span>\n${guessText}`;
+            shareMessage = `I solved Wordy ${displayGameNumber} in ${score} ${guessText}! 🍍 Can you beat my score? Play at ${gameUrl}`;
             shareGameNumber.style.display = "none";
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
         } else if (gaveUp) {
-            endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
-            endGraphic.style.display = "block";
-            shareText.innerHTML = '<span class="big">PLAY PINEAPPLE</span>\n\n<span class="italic">The Big Brain Word Game</span>';
+            // No image displayed for gave-up case
+            shareText.innerHTML = '<span class="big">PLAY WORDY</span>\n\n<span class="italic">The Big Brain Word Game</span>';
             shareGameNumber.textContent = currentGameNumber;
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
-            shareMessage = `I tried Pineapple ${currentGameNumber}! 🍍 Can you solve it? Play at ${gameUrl}`;
+            shareMessage = `I tried Wordy ${currentGameNumber}! 🍍 Can you solve it? Play at ${gameUrl}`;
         } else {
-            endGraphic.src = document.body.classList.contains("dark-mode") ? "sad_pineapple_dark.png" : "sad_pineapple_light.png";
-            endGraphic.style.display = "block";
-            shareText.textContent = "I didn’t solve the pineapple";
+            // No image displayed for loss case
+            shareText.textContent = "I didn’t solve Wordy";
             shareGameNumber.textContent = currentGameNumber;
             shareScore.textContent = `${score}`;
-            shareMessage = `I tried Pineapple ${currentGameNumber} but didn't solve it. 🍍 Can you do better? Play at ${gameUrl}`;
+            shareMessage = `I tried Wordy ${currentGameNumber} but didn't solve it. 🍍 Can you do better? Play at ${gameUrl}`;
         }
 
         shareWhatsApp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
@@ -961,7 +955,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             <div class="hint-line" id="hint-row-1"><span></span></div>
             <div class="hint-line spacer"></div>
             <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-            <div class="hint-line" id="how-to-play-2">Guess secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
+            <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
             <div class="hint-line spacer"></div>
             <div class="hint-line spacer"></div>
             <div class="hint-line" id="hint-row-2"><span></span></div>
