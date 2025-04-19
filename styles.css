@@ -50,44 +50,23 @@ a {
   font-size: 2vh;
   background: none;
   border: none;
-  cursor: pointer;
-  color: #000000; /* Black, matching #game-name */
+  cursor: default; /* Placeholder, no interaction */
+  color: #000000;
   margin-right: 1vw;
   z-index: 11;
-  opacity: 1; /* Ensure visibility */
-  visibility: visible; /* Ensure visibility */
+  opacity: 1;
+  visibility: visible;
+  display: inline-block;
+}
+
+.menu-btn i {
+  color: #000000;
+  opacity: 1;
+  visibility: visible;
 }
 
 .hamburger-menu {
-  display: none;
-  position: absolute;
-  top: 5vh;
-  left: 2vw;
-  background: #FFFFFF;
-  border: 0.1vh solid #000000;
-  border-radius: 0.6vh;
-  flex-direction: column;
-  z-index: 12;
-  padding: 1vh;
-}
-
-.hamburger-menu.active {
-  display: flex;
-}
-
-.menu-item {
-  font-size: 1.8vh;
-  background: none;
-  border: none;
-  color: #000000;
-  padding: 0.5vh 1vw;
-  cursor: pointer;
-  text-align: left;
-}
-
-.menu-item:hover {
-  background: #A8D5BA;
-  color: #FFFFFF;
+  display: none; /* Prevent expansion */
 }
 
 #game-name {
@@ -289,7 +268,7 @@ a {
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
   color: #FFFFFF;
-  visibility: visible; /* Ensure initial hint is visible */
+  visibility: visible;
 }
 
 #game-controls {
@@ -747,12 +726,6 @@ a {
   }
   .menu-btn {
       font-size: clamp(1.8vh, 2.25vw, 2.25vh);
-  }
-  .hamburger-menu {
-      left: 2vw;
-  }
-  .menu-item {
-      font-size: 1.8vh;
   }
   #main-content {
       width: 90vw;
