@@ -51,9 +51,11 @@ a {
   background: none;
   border: none;
   cursor: pointer;
-  color: #000000;
+  color: #000000; /* Black, matching #game-name */
   margin-right: 1vw;
   z-index: 11;
+  opacity: 1; /* Ensure visibility */
+  visibility: visible; /* Ensure visibility */
 }
 
 .hamburger-menu {
@@ -146,7 +148,7 @@ a {
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-bottom: 0vh; /* Reduced from 1vh to move hints up */
+  margin-bottom: 0vh;
 }
 
 .guess-input-wrapper {
@@ -247,13 +249,11 @@ a {
 }
 
 .hint-countdown {
-  display: block; /* Reinstated visibility */
+  display: block;
   font-size: 1.2vh;
   color: #FFFFFF;
   margin-bottom: 0.5vh;
 }
-
-
 
 #hints {
   display: flex;
@@ -289,6 +289,7 @@ a {
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
   color: #FFFFFF;
+  visibility: visible; /* Ensure initial hint is visible */
 }
 
 #game-controls {
@@ -335,7 +336,7 @@ a {
 }
 
 #guess-input-container.wrong-guess {
-  animation: flashRed 0.35s ease; /* Reduced to 0.35 seconds */
+  animation: flashRed 0.35s ease;
 }
 
 @keyframes flashRed {

@@ -20,11 +20,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gameOverScreen = document.getElementById("game-over");
     const gameSelectScreen = document.getElementById("game-select-screen");
     const allGamesBtn = document.getElementById("all-games-btn");
-    const allGamesBtnHeader = document.getElementById("all-games-btn-header");
     const homeBtn = document.getElementById("home-btn");
     const backBtn = document.getElementById("back-btn");
     const createPineappleBtn = document.getElementById("create-pineapple");
-    const createPineappleBtnHeader = document.getElementById("create-pineapple-header");
     const createForm = document.getElementById("create-form");
     const confirmBtn = document.getElementById("confirm-btn");
     const formBackBtn = document.getElementById("form-back-btn");
@@ -60,7 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Hamburger menu toggled");
         });
 
-        // Close menu when clicking outside
         document.addEventListener("click", (e) => {
             if (hamburgerMenu.classList.contains("active") && 
                 !hamburgerMenu.contains(e.target) && 
@@ -172,60 +169,44 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    if (allGamesBtnHeader) {
-        allGamesBtnHeader.addEventListener("click", (e) => {
+    if (homeBtn) {
+        homeBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("All Games button (header) clicked");
+            console.log("Home button clicked");
             hamburgerMenu.classList.remove("active");
-            showGameSelectScreen();
+            resetScreenDisplays();
+            gameSelectScreen.style.display = "flex";
+            officialTab.classList.add("active");
+            privateTab.classList.remove("active");
+            officialContent.classList.add("active");
+            officialContent.style.display = "flex";
+            privateContent.classList.remove("active");
+            privateContent.style.display = "none";
+            if (createForm) createForm.style.display = "none";
+            displayGameList();
+            adjustBackground();
         });
     }
 
-    homeBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("Home button clicked");
-        hamburgerMenu.classList.remove("active");
-        resetScreenDisplays();
-        gameSelectScreen.style.display = "flex";
-        officialTab.classList.add("active");
-        privateTab.classList.remove("active");
-        officialContent.classList.add("active");
-        officialContent.style.display = "flex";
-        privateContent.classList.remove("active");
-        privateContent.style.display = "none";
-        if (createForm) createForm.style.display = "none";
-        displayGameList();
-        adjustBackground();
-    });
-
-    backBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("Back button clicked");
-        resetScreenDisplays();
-        gameScreen.style.display = "flex";
-        adjustBackground();
-        if (createForm) createForm.style.display = "none";
-        keepKeyboardOpen();
-    });
+    if (backBtn) {
+        backBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Back button clicked");
+            resetScreenDisplays();
+            gameScreen.style.display = "flex";
+            adjustBackground();
+            if (createForm) createForm.style.display = "none";
+            keepKeyboardOpen();
+        });
+    }
 
     if (createPineappleBtn && createForm) {
         createPineappleBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Create a Wordy clicked");
-            createForm.style.display = "flex";
-        });
-    }
-
-    if (createPineappleBtnHeader && createForm) {
-        createPineappleBtnHeader.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Create a Wordy (header) clicked");
-            hamburgerMenu.classList.remove("active");
             createForm.style.display = "flex";
         });
     }
@@ -327,6 +308,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guesses button clicked");
             const guessesList = document.getElementById("guesses-list");
+            console.log("Current guesses array:", guesses);
             if (guessesScreen.style.display === "flex") {
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
@@ -336,6 +318,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ? guesses.join(' <span class="separator">|</span>   ')
                     : "No guesses yet!";
                 guessesScreen.style.display = "flex";
+                console.log("Guesses screen displayed, content:", guessesList.innerHTML);
             }
         });
 
@@ -376,7 +359,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function resetScreenDisplays() {
         if (gameScreen) gameScreen.style.display = "none";
-        if (gameOverScreen) gameOverScreen.style.display = "none";
+        if (gameOverScreen) gameScreen.style.display = "none";
         if (gameSelectScreen) gameSelectScreen.style.display = "none";
         if (guessesScreen) guessesScreen.style.display = "none";
     }
@@ -583,22 +566,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-        document.getElementById("give-up-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            gaveUp = true;
-            let originalGameNumber;
-            if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                const privateGame = privateGames.find(game => game["Game Number"] === String(currentNum));
-                originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
-            } else {
-                originalGameNumber = currentGameNumber;
-            }
-            const gameType = currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple";
-            saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
-            endGame(false, true);
-        });
+        const giveUpBtn = document.getElementById("give-up-btn");
+        if (giveUpBtn) {
+            giveUpBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                gaveUp = true;
+                let originalGameNumber;
+                if (currentGameNumber.includes("- Private")) {
+                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
+                    const privateGame = privateGames.find(game => game["Game Number"] === String(currentNum));
+                    originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
+                } else {
+                    originalGameNumber = currentGameNumber;
+                }
+                const gameType = currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple";
+                saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
+                endGame(false, true);
+            });
+        }
 
         const prevGameBtn = document.getElementById("prev-game-btn");
         const nextGameBtn = document.getElementById("next-game-btn");
@@ -664,7 +650,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             const guessesUntilNextHint = guessCount === 0 ? 5 : 5 - (guessCount % 5);
             const guessText = guessesUntilNextHint === 1 ? "guess" : "guesses";
-            countdownElement.textContent = `New hint revealed in ${guessesUntilNextHint} ${guessText}`;
+            countdownElement.textContent = `Next hint revealed in ${guessesUntilNextHint} ${guessText}`;
         }
     }
 
@@ -676,11 +662,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("hint-row-4")?.children[0],
             document.getElementById("hint-row-5")?.children[0]
         ].filter(Boolean);
+        console.log("Hint elements:", hintElements);
+        console.log("Hints array:", hints);
         hintElements.forEach((span, index) => {
-            span.textContent = hints[index] || "";
-            span.style.visibility = index === 0 ? "visible" : "hidden";
+            if (span) {
+                span.textContent = hints[index] || "";
+                span.style.visibility = index <= hintIndex ? "visible" : "hidden";
+                console.log(`Hint ${index + 1} set to: ${span.textContent}, visibility: ${span.style.visibility}`);
+            }
         });
-        document.getElementById("current-game-number").textContent = currentGameNumber;
+        const gameNumberElement = document.getElementById("current-game-number");
+        if (gameNumberElement) {
+            gameNumberElement.textContent = currentGameNumber;
+            console.log("Game number set to:", currentGameNumber);
+        }
     }
 
     function adjustBackground() {
@@ -729,12 +724,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 pineapple.style.left = `${Math.random() * 100}vw`;
                 pineapple.style.fontSize = `${Math.random() * 20 + 10}px`;
                 pineapple.style.transform = `rotate(${Math.random() * 360}deg)`;
-                const duration = Math.random() * 2 + 2; // 2 to 4 seconds
+                const duration = Math.random() * 2 + 2;
                 pineapple.style.animationDuration = `${duration}s`;
                 pineapple.style.animationDelay = `${startDelay + Math.random() * 0.5}s`;
                 pineappleContainer.appendChild(pineapple);
 
-                // Remove pineapple after its animation completes
                 setTimeout(() => {
                     pineapple.remove();
                 }, (duration + startDelay + 0.5) * 1000);
@@ -754,8 +748,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("handleGuess called, guessCount before:", guessCount);
         const guessDisplay = document.getElementById("guess-input");
         const guessLine = document.getElementById("guess-line");
-        guessDisplay.value = guess.toUpperCase();
         const guessContainer = document.getElementById("guess-input-container");
+        guessDisplay.value = guess.toUpperCase();
         guessContainer.classList.remove("wrong-guess");
         guessDisplay.style.opacity = "1";
         guessDisplay.style.visibility = "visible";
@@ -817,7 +811,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.value = "";
                 animationTimeout = null;
                 keepKeyboardOpen();
-            }, 350); // Reduced to 350ms to match animation
+            }, 350);
         }
     }
 
@@ -863,7 +857,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameNumberSpan.textContent = currentGameNumber;
         todaysWord.textContent = secretWord;
 
-        const gameUrl = "https://pineapple-game.com"; // Replace with your actual game URL
+        const gameUrl = "https://pineapple-game.com";
         let shareMessage;
         if (won) {
             rainPineapples();
@@ -945,7 +939,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function loadGame(game) {
         resetGame();
-        currentGameNumber = game["Game Name"] ? `${game["Game Number"]} - Private` : game["Game Number"];
+        currentGameNumber = game["Game Name"] ? `${game["Game Number"]} - Private` : `Game #${game["Game Number"]}`;
         secretWord = game["Secret Word"].toUpperCase();
         hints = [
             game["Hint 1"]?.toUpperCase(),
