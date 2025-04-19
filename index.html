@@ -4,31 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wordy - Big Brain Word Game</title>
-    <style>
-        body {
-            background: #FFFFFF;
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            user-select: none;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            width: 100vw;
-            overflow-x: hidden;
-            overflow-y: hidden;
-        }
-        #game-screen {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-            box-sizing: border-box;
-            overflow: hidden;
-            margin: 0;
-            padding: 0;
-        }
-    </style>
     <link rel="stylesheet" href="styles.css">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.rel='stylesheet'" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'" crossorigin>
@@ -170,7 +145,7 @@
         </div>
     </div>
 
-    <div id="create-form" class="create-form" style="display: none;">
+    <div id="create-form" class="create-form">
         <div id="header">
             <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
             <div id="hamburger-menu" class="hamburger-menu">
@@ -180,9 +155,6 @@
         </div>
         <span class="form-input-label">Game Name</span>
         <input type="text" id="game-name-input" class="form-input" placeholder="Enter a name for your game">
-        <div class="form-line"></div>
-        <span class="form-input-label">Secret Word</span>
-        <input type="text" id="secret-word" class="form-input" placeholder="Enter the secret word">
         <div class="form-line"></div>
         <span class="form-input-label">Hint #1</span>
         <input type="text" id="hint-1" class="form-input" placeholder="Enter hint #1">
@@ -204,7 +176,6 @@
             <span class="or-text">or</span>
             <button id="form-back-btn" class="control-btn">Back</button>
         </div>
-        <!-- No ad-box here as per request -->
     </div>
 
     <div id="guesses-screen">
@@ -213,7 +184,6 @@
             <div id="guesses-list"></div>
             <button id="guesses-close-btn" class="control-btn">Close</button>
         </div>
-        <!-- No header or ad-box here as per request -->
     </div>
 
     <script src="script.js"></script>
