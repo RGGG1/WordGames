@@ -142,18 +142,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameSelectScreen.style.display = "flex";
             officialTab.classList.add("active");
             privateTab.classList.remove("active");
-            officialtherwise {
-                console.log("Official tab clicked");
-                officialTab.classList.add("active");
-                privateTab.classList.remove("active");
-                officialContent.classList.add("active");
-                officialContent.style.display = "flex";
-                privateContent.classList.remove("active");
-                privateContent.style.display = "none";
-                if (createForm) createForm.style.display = "none";
-                displayGameList();
-                adjustBackground();
-            }
+            officialContent.classList.add("active");
+            officialContent.style.display = "flex";
+            privateContent.classList.remove("active");
+            privateContent.style.display = "none";
+            if (createForm) createForm.style.display = "none";
+            displayGameList();
+            adjustBackground();
         });
     }
 
