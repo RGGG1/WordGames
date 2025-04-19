@@ -23,8 +23,7 @@ a {
   flex-direction: column;
   height: 100vh;
   background: url('newbackground.png') no-repeat center center;
-  background-size: contain; /* Scales the image to fit fully within the viewport */
-  background-position: center;
+  background-size: 100% 100%; /* Stretches to fit both width and height */
   box-sizing: border-box;
   overflow: hidden;
   margin: 0;
@@ -62,11 +61,11 @@ a {
   font-size: clamp(2vh, 2.5vw, 2.5vh);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #000000; /* Changed to black */
+  color: #000000;
   -webkit-text-stroke: 0;
   cursor: pointer;
   z-index: 11;
-  position: static; /* No longer centered */
+  position: static;
   transform: none;
 }
 
@@ -89,7 +88,7 @@ a {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* Align to the left */
   background: none;
   margin: 0;
   padding: 0;
@@ -101,10 +100,10 @@ a {
 }
 
 #prompt {
-  font-size: 2vh;
+  font-size: 3vh; /* Increased by 1.5x from 2vh */
   color: #FFFFFF;
-  text-align: center;
-  margin-bottom: 1vh;
+  text-align: left;
+  margin-bottom: 0.5vh;
 }
 
 #guess-background {
@@ -115,7 +114,7 @@ a {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start; /* Align to the left */
   width: 100%;
   margin-bottom: 1vh;
 }
@@ -128,24 +127,24 @@ a {
 }
 
 #guess-input {
-  font-size: 6vh; /* Increased 3x from 2vh */
+  font-size: 6vh;
   font-weight: bold;
   background: #A8D5BA; /* Light green background */
   border: none;
-  width: 100%;
-  height: 8vh; /* Adjusted height to match larger size */
+  width: calc(100% - 30%); /* Leave space for the button */
+  height: 8vh;
   text-align: left;
-  padding: 0.5vh 15% 0.5vh 1vw; /* Added padding-right to make space for the button */
+  padding: 0.5vh 1vw;
   color: #FFFFFF;
   outline: none;
   caret-color: white;
   text-transform: uppercase;
-  border-radius: 0.6vh;
+  border-radius: 0.6vh 0 0 0.6vh; /* Rounded only on the left side */
   font-family: 'Luckiest Guy', cursive;
 }
 
 #guess-input::placeholder {
-  font-size: 6vh; /* Increased 3x */
+  font-size: 6vh;
   color: #FFFFFF;
   text-align: left;
   font-weight: normal;
@@ -153,19 +152,20 @@ a {
 }
 
 .guess-btn {
-  font-size: 6vh; /* Increased 3x from 2vh */
+  font-size: 6vh;
   font-weight: bold;
-  padding: 0.5vh 1vw;
+  padding: 0;
   background: #FFB300; /* Orange background */
   color: #000000;
-  border: none; /* Removed border for seamless look */
+  border: none;
   border-radius: 0 0.6vh 0.6vh 0; /* Rounded only on the right side */
   cursor: pointer;
   transition: transform 0.2s ease;
-  position: absolute;
-  right: 0;
-  height: 8vh; /* Match the height of the input */
-  width: 30%; /* Adjusted width */
+  height: 8vh; /* Matches the height of the input */
+  width: 30%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .guess-btn:hover {
@@ -249,7 +249,7 @@ a {
   background: none;
   display: flex;
   justify-content: space-between;
-  margin-top: 0.5vh; /* Reduced from 1vh to move up */
+  margin-top: 0.5vh;
 }
 
 .controls-center {
@@ -286,14 +286,23 @@ a {
   margin-left: 0.5vw;
 }
 
-#guess-input.wrong-guess {
-  color: #FF0000 !important;
-  animation: wrongGuess 0.5s ease-out forwards;
+.guess-input-wrapper.wrong-guess {
+  animation: flashRed 1.5s ease, wobble 1.5s ease;
 }
 
-@keyframes wrongGuess {
-  0% { color: #FF0000; transform: translateY(0); }
-  100% { color: #FF0000; transform: translateY(-20px); opacity: 0; }
+@keyframes flashRed {
+  0%, 100% { background-color: #A8D5BA; }
+  50% { background-color: #FF0000; }
+}
+
+@keyframes wobble {
+  0% { transform: translateX(0); }
+  15% { transform: translateX(-5%) rotate(-5deg); }
+  30% { transform: translateX(4%) rotate(4deg); }
+  45% { transform: translateX(-3%) rotate(-3deg); }
+  60% { transform: translateX(2%) rotate(2deg); }
+  75% { transform: translateX(-1%) rotate(-1deg); }
+  100% { transform: translateX(0); }
 }
 
 .pineapple-rain {
@@ -706,22 +715,28 @@ a {
       bottom: 40vh;
       height: 35vh;
   }
+  .guess-input-wrapper {
+      width: 80%; /* 80% of the screen width on mobile */
+  }
   #guess-input {
-      font-size: 5vh; /* Slightly reduced for smaller screens */
+      font-size: 5vh;
       height: 7vh;
   }
   #guess-input::placeholder {
-      font-size: 5vh;
+      font-size: 4vh; /* Reduced for better fit on mobile */
   }
   .guess-btn {
-      font-size: 5vh;
+      font-size: 4vh; /* Reduced for better fit on mobile */
       height: 7vh;
+  }
+  #prompt {
+      font-size: 2.7vh; /* Adjusted for mobile (1.5x of 1.8vh) */
   }
   .control-btn {
       font-size: 1.6vh;
       padding: 0.5vh 1vw;
   }
-  #prompt, #hints-title, .game-number-label {
+  .game-number-label, #hints-title {
       font-size: 1.8vh;
   }
   #how-to-play-1, #how-to-play-2 {
