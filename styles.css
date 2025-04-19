@@ -80,7 +80,7 @@ a {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
-  height: 35vh; /* Occupies the 35% section */
+  height: 30vh; /* Reduced from 35vh to fit above keyboard */
   z-index: 5;
 }
 
@@ -100,7 +100,7 @@ a {
 }
 
 #prompt {
-  font-size: 3vh; /* Increased by 1.5x from 2vh */
+  font-size: 2vh; /* Reduced from 3vh */
   color: #FFFFFF;
   text-align: left;
   margin-bottom: 0.5vh;
@@ -120,39 +120,42 @@ a {
 }
 
 .guess-input-wrapper {
-  position: relative;
-  width: 70%;
+  width: 80vw; /* Combined width set to 80% of screen width */
   display: flex;
   align-items: center;
 }
 
 #guess-input {
-  font-size: 6vh;
+  font-size: 4vh; /* Reduced from 6vh */
   font-weight: bold;
   background: #A8D5BA; /* Light green background */
   border: none;
   width: calc(100% - 30%); /* Leave space for the button */
-  height: 8vh;
+  height: 6vh; /* Reduced from 8vh */
+  line-height: 6vh; /* Match height to ensure vertical centering */
   text-align: left;
-  padding: 0.5vh 1vw;
+  padding: 0 1vw; /* Simplified padding */
+  margin: 0; /* Remove any margin */
   color: #FFFFFF;
   outline: none;
   caret-color: white;
   text-transform: uppercase;
   border-radius: 0.6vh 0 0 0.6vh; /* Rounded only on the left side */
   font-family: 'Luckiest Guy', cursive;
+  box-sizing: border-box; /* Ensure padding is included in height */
 }
 
 #guess-input::placeholder {
-  font-size: 6vh;
+  font-size: 4vh; /* Reduced from 6vh */
   color: #FFFFFF;
   text-align: left;
   font-weight: normal;
   text-transform: uppercase;
+  line-height: 6vh; /* Match height for vertical centering */
 }
 
 .guess-btn {
-  font-size: 6vh;
+  font-size: 4vh; /* Reduced from 6vh */
   font-weight: bold;
   padding: 0;
   background: #FFB300; /* Orange background */
@@ -161,11 +164,14 @@ a {
   border-radius: 0 0.6vh 0.6vh 0; /* Rounded only on the right side */
   cursor: pointer;
   transition: transform 0.2s ease;
-  height: 8vh; /* Matches the height of the input */
+  height: 6vh; /* Matches the height of the input */
+  line-height: 6vh; /* Match height for vertical centering */
   width: 30%;
+  margin: 0; /* Remove any margin */
   display: flex;
   justify-content: center;
   align-items: center;
+  box-sizing: border-box; /* Ensure height is consistent */
 }
 
 .guess-btn:hover {
@@ -192,13 +198,13 @@ a {
 }
 
 .game-number-label {
-  font-size: 2vh;
+  font-size: 1.5vh; /* Reduced from 2vh */
   color: #FFFFFF;
   margin-bottom: 0.5vh;
 }
 
 #hints-title {
-  font-size: 2vh;
+  font-size: 1.5vh; /* Reduced from 2vh */
   font-weight: bold;
   color: #FFFFFF;
   margin-bottom: 0.5vh;
@@ -223,7 +229,7 @@ a {
 }
 
 #how-to-play-1, #how-to-play-2 {
-  font-size: 1.5vh;
+  font-size: 1.2vh; /* Reduced from 1.5vh */
   color: #FFFFFF;
   text-align: center;
 }
@@ -237,7 +243,7 @@ a {
 }
 
 .hint-line span {
-  font-size: 3vh;
+  font-size: 2.5vh; /* Reduced from 3vh */
   font-weight: bold;
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
@@ -267,7 +273,7 @@ a {
 }
 
 .control-btn {
-  font-size: 1.8vh;
+  font-size: 1.4vh; /* Reduced from 1.8vh */
   padding: 0.5vh 1vw;
   background: #A8D5BA; /* Light green background */
   color: #FFFFFF;
@@ -286,8 +292,8 @@ a {
   margin-left: 0.5vw;
 }
 
-.guess-input-wrapper.wrong-guess {
-  animation: flashRed 1.5s ease, wobble 1.5s ease;
+#guess-input.wrong-guess {
+  animation: flashRed 2s ease; /* Updated to 2 seconds, only on the input */
 }
 
 @keyframes flashRed {
@@ -295,16 +301,7 @@ a {
   50% { background-color: #FF0000; }
 }
 
-@keyframes wobble {
-  0% { transform: translateX(0); }
-  15% { transform: translateX(-5%) rotate(-5deg); }
-  30% { transform: translateX(4%) rotate(4deg); }
-  45% { transform: translateX(-3%) rotate(-3deg); }
-  60% { transform: translateX(2%) rotate(2deg); }
-  75% { transform: translateX(-1%) rotate(-1deg); }
-  100% { transform: translateX(0); }
-}
-
+/* Removed wobble animation as it's no longer needed */
 .pineapple-rain {
   position: fixed;
   top: 0;
@@ -614,7 +611,7 @@ a {
   text-transform: none;
 }
 
-.form-line {
+.form Procurar-line {
   width: 25ch;
   height: 0.2vh;
   background: #000000;
@@ -713,34 +710,33 @@ a {
       width: 90vw;
       top: 25vh;
       bottom: 40vh;
-      height: 35vh;
-  }
-  .guess-input-wrapper {
-      width: 80%; /* 80% of the screen width on mobile */
+      height: 30vh;
   }
   #guess-input {
-      font-size: 5vh;
-      height: 7vh;
+      font-size: 4vh;
+      height: 6vh;
   }
   #guess-input::placeholder {
-      font-size: 4vh; /* Reduced for better fit on mobile */
+      font-size: 3vh; /* Reduced for better fit on mobile */
+      line-height: 6vh;
   }
   .guess-btn {
-      font-size: 4vh; /* Reduced for better fit on mobile */
-      height: 7vh;
+      font-size: 3vh; /* Reduced for better fit on mobile */
+      height: 6vh;
+      line-height: 6vh;
   }
   #prompt {
-      font-size: 2.7vh; /* Adjusted for mobile (1.5x of 1.8vh) */
+      font-size: 2vh;
   }
   .control-btn {
-      font-size: 1.6vh;
+      font-size: 1.4vh;
       padding: 0.5vh 1vw;
   }
   .game-number-label, #hints-title {
-      font-size: 1.8vh;
+      font-size: 1.5vh;
   }
   #how-to-play-1, #how-to-play-2 {
-      font-size: 1.3vh;
+      font-size: 1.2vh;
   }
   #ad-box {
       height: 4vh;

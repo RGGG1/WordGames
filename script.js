@@ -721,9 +721,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.visibility = "visible";
                 guessDisplay.style.color = "#FFFFFF";
-                guessDisplay.value = "";
+                guessDisplay.value = ""; // Clear the input after animation
                 keepKeyboardOpen();
-            }, 500);
+            }, 2000); // Updated to 2 seconds to match the animation duration
         }
     }
 
