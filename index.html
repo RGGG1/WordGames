@@ -14,7 +14,12 @@
 <body>
     <div id="game-screen">
         <div id="header">
-            <button id="home-btn" class="menu-btn"><i class="fa-solid fa-house"></i></button>
+            <button id="hamburger-btn" class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <div id="hamburger-menu" class="hamburger-menu">
+                <button id="home-btn" class="menu-item">Home</button>
+                <button id="all-games-btn-header" class="menu-item">All Games</button>
+                <button id="create-pineapple-header" class="menu-item">Create a Wordy</button>
+            </div>
             <span id="game-name">WORDY</span>
         </div>
         <div id="main-content">
@@ -25,7 +30,7 @@
                             <span id="prompt">The Secret Word Is...</span>
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                         </div>
-                        <button id="guess-btn" class="guess-btn">GUESS</button>
+                        <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
                     </div>
                 </div>
             </div>
@@ -63,7 +68,6 @@
         </div>
     </div>
 
-    <!-- Other sections like game-over-screen, game-select-screen, etc. remain unchanged -->
     <div id="game-over">
         <span id="game-number"></span>
         <span id="todays-word-label">Today's Word</span>
@@ -89,7 +93,12 @@
 
     <div id="game-select-screen">
         <div id="header">
-            <button id="back-btn" class="menu-btn"><i class="fa-solid fa-arrow-left"></i></button>
+            <button id="hamburger-btn" class="menu-btn"><i class="fa-solid fa-bars"></i></button>
+            <div id="hamburger-menu" class="hamburger-menu">
+                <button id="home-btn" class="menu-item">Home</button>
+                <button id="all-games-btn-header" class="menu-item">All Games</button>
+                <button id="create-pineapple-header" class="menu-item">Create a Wordy</button>
+            </div>
             <span id="game-name">WORDY</span>
         </div>
         <div id="game-select-content">

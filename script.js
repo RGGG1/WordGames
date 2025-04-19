@@ -20,9 +20,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gameOverScreen = document.getElementById("game-over");
     const gameSelectScreen = document.getElementById("game-select-screen");
     const allGamesBtn = document.getElementById("all-games-btn");
+    const allGamesBtnHeader = document.getElementById("all-games-btn-header");
     const homeBtn = document.getElementById("home-btn");
     const backBtn = document.getElementById("back-btn");
     const createPineappleBtn = document.getElementById("create-pineapple");
+    const createPineappleBtnHeader = document.getElementById("create-pineapple-header");
     const createForm = document.getElementById("create-form");
     const confirmBtn = document.getElementById("confirm-btn");
     const formBackBtn = document.getElementById("form-back-btn");
@@ -31,6 +33,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const guessesBtn = document.getElementById("guesses-btn");
     const guessesScreen = document.getElementById("guesses-screen");
     const guessesCloseBtn = document.getElementById("guesses-close-btn");
+    const hamburgerBtn = document.getElementById("hamburger-btn");
+    const hamburgerMenu = document.getElementById("hamburger-menu");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -45,6 +49,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (createPineappleBtn) {
         createPineappleBtn.innerHTML = 'Create a Wordy<br><span class="tap-here">(tap here)</span><span class="plus">+</span>';
+    }
+
+    // Hamburger menu toggle
+    if (hamburgerBtn && hamburgerMenu) {
+        hamburgerBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            hamburgerMenu.classList.toggle("active");
+            console.log("Hamburger menu toggled");
+        });
+
+        // Close menu when clicking outside
+        document.addEventListener("click", (e) => {
+            if (hamburgerMenu.classList.contains("active") && 
+                !hamburgerMenu.contains(e.target) && 
+                e.target !== hamburgerBtn) {
+                hamburgerMenu.classList.remove("active");
+                console.log("Hamburger menu closed due to outside click");
+            }
+        });
     }
 
     const input = document.getElementById("guess-input");
@@ -65,7 +89,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         input.addEventListener("input", (e) => {
             console.log("Input value changed:", input.value);
-            // Cancel the animation and clear the previous guess if the user starts typing
             if (animationTimeout) {
                 clearTimeout(animationTimeout);
                 animationTimeout = null;
@@ -74,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 input.style.opacity = "1";
                 input.style.visibility = "visible";
                 input.style.color = "#FFFFFF";
-                input.value = e.target.value; // Clear previous guess and set new input
+                input.value = e.target.value;
                 console.log("Animation cancelled and previous guess cleared due to user typing");
             }
         });
@@ -149,10 +172,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    if (allGamesBtnHeader) {
+        allGamesBtnHeader.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("All Games button (header) clicked");
+            hamburgerMenu.classList.remove("active");
+            showGameSelectScreen();
+        });
+    }
+
     homeBtn.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
         console.log("Home button clicked");
+        hamburgerMenu.classList.remove("active");
         resetScreenDisplays();
         gameSelectScreen.style.display = "flex";
         officialTab.classList.add("active");
@@ -182,6 +216,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Create a Wordy clicked");
+            createForm.style.display = "flex";
+        });
+    }
+
+    if (createPineappleBtnHeader && createForm) {
+        createPineappleBtnHeader.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Create a Wordy (header) clicked");
+            hamburgerMenu.classList.remove("active");
             createForm.style.display = "flex";
         });
     }
@@ -616,11 +660,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         const countdownElement = document.getElementById("hint-countdown");
         if (!countdownElement) return;
         if (hintIndex >= hints.length - 1) {
-            countdownElement.textContent = "(All hints are now revealed)";
+            countdownElement.textContent = "All hints revealed!";
         } else {
             const guessesUntilNextHint = guessCount === 0 ? 5 : 5 - (guessCount % 5);
             const guessText = guessesUntilNextHint === 1 ? "guess" : "guesses";
-            countdownElement.textContent = `(hint revealed after ${guessesUntilNextHint} ${guessText})`;
+            countdownElement.textContent = `New hint revealed in ${guessesUntilNextHint} ${guessText}`;
         }
     }
 
@@ -697,16 +741,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
-        // Create waves within the first 2.625 seconds to stay within 3.5s total
         createPineappleWave(0);
         createPineappleWave(0.875);
         createPineappleWave(1.75);
-        // No new pineapples after 2.625s to ensure all can fall by ~4s
 
-        // Clean up container after the longest possible animation (4s + 2.625s)
         setTimeout(() => {
             pineappleContainer.remove();
-        }, 6625); // 4s (max duration) + 2.625s (last delay)
+        }, 6625);
     }
 
     function handleGuess(guess) {
@@ -721,7 +762,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessDisplay.style.color = "#FFFFFF";
         void guessContainer.offsetWidth;
 
-        // Clear any existing animation timeout
         if (animationTimeout) {
             clearTimeout(animationTimeout);
             animationTimeout = null;
@@ -777,7 +817,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.value = "";
                 animationTimeout = null;
                 keepKeyboardOpen();
-            }, 1000);
+            }, 350); // Reduced to 350ms to match animation
         }
     }
 
@@ -874,7 +914,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("guesses-btn").textContent = "Guesses: 0";
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
-        // Removed placeholder setting
         guessInput.disabled = false;
         guessInput.style.opacity = "1";
         guessInput.style.visibility = "visible";
