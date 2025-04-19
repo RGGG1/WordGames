@@ -74,7 +74,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 input.style.visibility = "visible";
                 input.style.color = "#000000";
                 input.value = e.target.value;
-                console.log("Animation cancelled due to typing");
+                isProcessingGuess = false; // Reset the flag to allow new guesses
+                console.log("Animation cancelled and state reset due to typing");
             }
         });
     } else {
@@ -673,7 +674,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         const hintsTitle = document.getElementById("hints-title");
         if (hintsTitle) {
-            hintsTitle.textContent = "HINTS"; // Ensure it says "HINTS"
+            hintsTitle.textContent = "HINTS";
             console.log("Hints title set to:", hintsTitle.textContent);
         } else {
             console.error("hints-title element not found");
@@ -772,7 +773,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (animationTimeout) {
             clearTimeout(animationTimeout);
             animationTimeout = null;
-            isProcessingGuess = false; // Reset flag if animation is interrupted
         }
 
         if (!firstGuessMade) {
