@@ -31,6 +31,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const guessesScreen = document.getElementById("guesses-screen");
     const guessesCloseBtn = document.getElementById("guesses-close-btn");
     const hamburgerBtn = document.getElementById("hamburger-btn");
+    const nextGameBtnEnd = document.getElementById("next-game-btn-end");
+    const officialBackBtn = document.getElementById("official-back-btn");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -42,10 +44,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-
-    if (createPineappleBtn) {
-        createPineappleBtn.innerHTML = 'Create a Wordy<br><span class="tap-here">(tap here)</span><span class="plus">+</span>';
-    }
 
     if (hamburgerBtn) {
         console.log("Hamburger button found:", hamburgerBtn);
@@ -74,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessContainer.classList.remove("wrong-guess");
                 input.style.opacity = "1";
                 input.style.visibility = "visible";
-                input.style.color = "#FFFFFF";
+                input.style.color = "#000000";
                 input.value = e.target.value;
                 console.log("Animation cancelled due to typing");
             }
@@ -144,13 +142,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameSelectScreen.style.display = "flex";
             officialTab.classList.add("active");
             privateTab.classList.remove("active");
-            officialContent.classList.add("active");
-            officialContent.style.display = "flex";
-            privateContent.classList.remove("active");
-            privateContent.style.display = "none";
-            if (createForm) createForm.style.display = "none";
-            displayGameList();
-            adjustBackground();
+            officialtherwise {
+                console.log("Official tab clicked");
+                officialTab.classList.add("active");
+                privateTab.classList.remove("active");
+                officialContent.classList.add("active");
+                officialContent.style.display = "flex";
+                privateContent.classList.remove("active");
+                privateContent.style.display = "none";
+                if (createForm) createForm.style.display = "none";
+                displayGameList();
+                adjustBackground();
+            }
         });
     }
 
@@ -179,6 +182,37 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (createForm) createForm.style.display = "none";
             displayGameList();
             adjustBackground();
+        });
+    }
+
+    if (nextGameBtnEnd) {
+        nextGameBtnEnd.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Next Game button on end screen clicked");
+            resetScreenDisplays();
+            gameSelectScreen.style.display = "flex";
+            officialTab.classList.add("active");
+            privateTab.classList.remove("active");
+            officialContent.classList.add("active");
+            officialContent.style.display = "flex";
+            privateContent.classList.remove("active");
+            privateContent.style.display = "none";
+            if (createForm) createForm.style.display = "none";
+            displayGameList();
+            adjustBackground();
+        });
+    }
+
+    if (officialBackBtn) {
+        officialBackBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Official Back button clicked");
+            resetScreenDisplays();
+            gameScreen.style.display = "flex";
+            adjustBackground();
+            keepKeyboardOpen();
         });
     }
 
@@ -736,7 +770,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessContainer.classList.remove("wrong-guess");
         guessDisplay.style.opacity = "1";
         guessDisplay.style.visibility = "visible";
-        guessDisplay.style.color = "#FFFFFF";
+        guessDisplay.style.color = "#000000";
 
         if (animationTimeout) {
             clearTimeout(animationTimeout);
@@ -745,8 +779,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!firstGuessMade) {
             firstGuessMade = true;
-            document.getElementById("how-to-play-1")?.remove();
-            document.getElementById("how-to-play-2")?.remove();
             document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
             adjustHintsAfterGuess();
         }
@@ -912,9 +944,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (hintsBox) {
             hintsBox.innerHTML = `
                 <div class="hint-line" id="hint-row-1"><span></span></div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-                <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line spacer"></div>
                 <div class="hint-line" id="hint-row-2"><span></span></div>

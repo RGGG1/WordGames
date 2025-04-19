@@ -63,9 +63,6 @@
                 <div id="hints">
                     <div class="hint-line" id="hint-row-1"><span></span></div>
                     <div class="hint-line spacer"></div>
-                    <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-                    <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
-                    <div class="hint-line spacer"></div>
                     <div class="hint-line spacer"></div>
                     <div class="hint-line" id="hint-row-2"><span></span></div>
                     <div class="hint-line" id="hint-row-3"><span></span></div>
@@ -75,10 +72,12 @@
             </div>
             <div id="game-controls">
                 <div class="controls-center">
-                    <div class="control-btn-row">
-                        <button id="prev-game-btn" class="control-btn">←</button>
-                        <button id="guesses-btn" class="control-btn">Guesses: 0</button>
+                    <div class="control-btn-row top-row">
                         <button id="give-up-btn" class="control-btn">Give Up</button>
+                        <button id="guesses-btn" class="control-btn">Guesses: 0</button>
+                    </div>
+                    <div class="control-btn-row bottom-row">
+                        <button id="prev-game-btn" class="control-btn">←</button>
                         <button id="all-games-btn" class="control-btn">All Games<i class="fas fa-list"></i></button>
                         <button id="next-game-btn" class="control-btn">→</button>
                     </div>
@@ -109,7 +108,13 @@
                 <a id="share-telegram" href="" target="_blank"><i class="fab fa-telegram"></i></a>
                 <a id="share-twitter" href="" target="_blank"><i class="fab fa-x-twitter"></i></a>
             </div>
-            <a id="create-pineapple-end" href="">Create Your Own Wordy</a>
+            <div class="end-buttons">
+                <button id="next-game-btn-end" class="control-btn flash">Next Game</button>
+                <span class="or-text">or</span>
+                <button id="create-pineapple-end" class="control-btn flash">
+                    Create a Wordy<br><span class="tap-here">(tap here)</span><span class="plus">+</span>
+                </button>
+            </div>
         </div>
     </div>
 
@@ -134,6 +139,8 @@
                     <span>Guesses</span>
                 </div>
                 <div id="official-list" class="game-list"></div>
+                <div class="spacer"></div>
+                <button id="official-back-btn" class="control-btn">Back</button>
             </div>
             <div id="private-games" class="tab-content">
                 <div class="game-list-header">
@@ -142,9 +149,11 @@
                     <span>Guesses</span>
                 </div>
                 <div id="private-list" class="game-list"></div>
+                <div class="spacer"></div>
+                <button id="create-pineapple" class="control-btn flash">
+                    Create a Wordy<br><span class="tap-here">(tap here)</span><span class="plus">+</span>
+                </button>
             </div>
-            <div class="spacer"></div>
-            <button id="create-pineapple" class="control-btn"></button>
         </div>
         <div id="ad-box">
             <p>Big Brain Games</p>
@@ -176,7 +185,7 @@
         <button id="confirm-btn" class="control-btn">Create Game</button>
         <div class="back-btn-container">
             <span class="or-text">or</span>
-            <button id="form-back-btn" class="control-btn">Go Back</button>
+            <button id="form-back-btn" class="control-btn">Back</button>
         </div>
     </div>
 
