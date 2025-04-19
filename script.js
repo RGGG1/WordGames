@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let gaveUp = false;
     let isProcessingGuess = false;
     let guesses = [];
+    let animationTimeout = null; // Track the animation timeout
 
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
@@ -64,6 +65,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         input.addEventListener("input", (e) => {
             console.log("Input value changed:", input.value);
+            // Cancel the animation if the user starts typing
+            if (animationTimeout) {
+                clearTimeout(animationTimeout);
+                animationTimeout = null;
+                input.classList.remove("wrong-guess");
+                input.style.opacity = "1";
+                input.style.visibility = "visible";
+                input.style.color = "#FFFFFF";
+                console.log("Animation cancelled due to user typing");
+            }
         });
     } else {
         console.error("guess-input not found in DOM");
@@ -543,6 +554,40 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGame(false, true);
         });
 
+        // Assuming prev-game-btn and next-game-btn exist in the DOM
+        const prevGameBtn = document.getElementById("prev-game-btn");
+        const nextGameBtn = document.getElementById("next-game-btn");
+
+        if (prevGameBtn) {
+            prevGameBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+                if (currentIndex < allGames.length - 1) {
+                    loadGame(allGames[currentIndex + 1]);
+                    resetScreenDisplays();
+                    gameScreen.style.display = "flex";
+                    adjustBackground();
+                    keepKeyboardOpen();
+                }
+            });
+        }
+
+        if (nextGameBtn) {
+            nextGameBtn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                const currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
+                if (currentIndex > 0) {
+                    loadGame(allGames[currentIndex - 1]);
+                    resetScreenDisplays();
+                    gameScreen.style.display = "flex";
+                    adjustBackground();
+                    keepKeyboardOpen();
+                }
+            });
+        }
+
         input.addEventListener("focus", () => {
             console.log("Input focused");
         });
@@ -674,6 +719,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessDisplay.style.color = "#FFFFFF";
         void guessDisplay.offsetWidth;
 
+        // Clear any existing animation timeout
+        if (animationTimeout) {
+            clearTimeout(animationTimeout);
+            animationTimeout = null;
+        }
+
         if (!firstGuessMade) {
             firstGuessMade = true;
             document.getElementById("how-to-play-1").remove();
@@ -716,14 +767,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGame(true);
         } else {
             guessDisplay.classList.add("wrong-guess");
-            setTimeout(() => {
+            animationTimeout = setTimeout(() => {
                 guessDisplay.classList.remove("wrong-guess");
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.visibility = "visible";
                 guessDisplay.style.color = "#FFFFFF";
                 guessDisplay.value = ""; // Clear the input after animation
+                animationTimeout = null;
                 keepKeyboardOpen();
-            }, 2000); // Updated to 2 seconds to match the animation duration
+            }, 1000); // Reduced to 1 second
         }
     }
 
