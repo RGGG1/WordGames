@@ -18,41 +18,38 @@
             <div id="game-name">WORDY</div>
             <div id="score">😊</div>
         </div>
-        <div id="guess-area">
-            <div id="prompt">The secret word is...</div>
-            <div id="guess-background"></div>
-            <div id="guess-container">
-                <input id="guess-input" type="text" placeholder="type guess here">
+        <div id="main-content">
+            <div id="guess-area">
+                <div id="prompt">The secret word is.....</div>
+                <div id="guess-background"></div>
+                <div id="guess-container">
+                    <input id="guess-input" type="text" placeholder="TYPE GUESS HERE">
+                    <button id="guess-btn" class="guess-btn">GUESS</button>
+                </div>
+                <div id="guess-line"></div>
             </div>
-            <button id="guess-btn" class="guess-btn">GUESS</button>
-            <div id="guess-line"></div>
-        </div>
-        <div id="hints-box">
-            <div id="game-number-label" class="game-number-label">Game #<span id="current-game-number"></span></div>
-            <div id="hints-title">Hints</div>
-            <div id="hint-countdown" class="hint-countdown"></div>
-            <div id="hints">
-                <div class="hint-line" id="hint-row-1"><span></span></div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-                <div class="hint-line" id="how-to-play-2">Guess secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line" id="hint-row-2"><span></span></div>
-                <div class="hint-line" id="hint-row-3"><span></span></div>
-                <div class="hint-line" id="hint-row-4"><span></span></div>
-                <div class="hint-line" id="hint-row-5"><span></span></div>
-            </div>
-            <div id="game-controls">
-                <div class="controls-center">
-                    <div class="control-btn-row">
-                        <button id="give-up-btn" class="control-btn">Give Up</button>
-                        <button id="guesses-btn" class="control-btn">Guesses: 0</button>
-                    </div>
-                    <div class="control-nav">
-                        <button id="prev-arrow-btn" class="control-btn arrow-btn"><i class="fas fa-arrow-left"></i></button>
-                        <button id="all-games-btn" class="control-btn">All Games</button>
-                        <button id="next-arrow-btn" class="control-btn arrow-btn"><i class="fas fa-arrow-right"></i></button>
+            <div id="hints-box">
+                <div id="game-number-label" class="game-number-label">Game #<span id="current-game-number"></span></div>
+                <div id="hints-title">Hints</div>
+                <div id="hint-countdown" class="hint-countdown"></div>
+                <div id="hints">
+                    <div class="hint-line" id="hint-row-1"><span></span></div>
+                    <div class="hint-line spacer"></div>
+                    <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
+                    <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
+                    <div class="hint-line spacer"></div>
+                    <div class="hint-line spacer"></div>
+                    <div class="hint-line" id="hint-row-2"><span></span></div>
+                    <div class="hint-line" id="hint-row-3"><span></span></div>
+                    <div class="hint-line" id="hint-row-4"><span></span></div>
+                    <div class="hint-line" id="hint-row-5"><span></span></div>
+                </div>
+                <div id="game-controls">
+                    <div class="controls-center">
+                        <div class="control-btn-row">
+                            <button id="guesses-btn" class="control-btn">Guesses: 0</button>
+                            <button id="all-games-btn" class="control-btn">All Games<i class="fas fa-arrow-right"></i></button>
+                        </div>
                     </div>
                 </div>
             </div>
