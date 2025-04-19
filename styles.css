@@ -1,16 +1,9 @@
 body {
-  background: #FFFFFF;
   font-family: Arial, sans-serif;
   margin: 0;
   padding: 0;
   text-align: center;
   user-select: none;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  width: 100vw;
-  overflow-x: hidden;
-  overflow-y: hidden;
 }
 
 a {
@@ -19,15 +12,8 @@ a {
 }
 
 #game-screen {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
   background: url('newbackground.png') no-repeat center center;
   background-size: 100% 100%;
-  box-sizing: border-box;
-  overflow: hidden;
-  margin: 0;
-  padding: 0;
 }
 
 #header {
