@@ -232,8 +232,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 hint5: document.getElementById("hint-5").value.trim().toUpperCase()
             };
 
-            if (!formData.gameName || !formData.secretWord || !formData.hint1) {
-                alert("Please fill in Game Name, Secret Word, and at least Hint #1");
+            // Require all hints to be filled
+            if (!formData.gameName || !formData.secretWord || !formData.hint1 || !formData.hint2 || !formData.hint3 || !formData.hint4 || !formData.hint5) {
+                alert("Please fill in Game Name, Secret Word, and all Hints (1–5).");
                 return;
             }
 
@@ -672,7 +673,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         const hintsTitle = document.getElementById("hints-title");
         if (hintsTitle) {
-            hintsTitle.textContent = "HINTS";
+            hintsTitle.textContent = "HINTS"; // Ensure it says "HINTS"
             console.log("Hints title set to:", hintsTitle.textContent);
         } else {
             console.error("hints-title element not found");
@@ -767,9 +768,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessDisplay.style.visibility = "visible";
         guessDisplay.style.color = "#000000";
 
+        // Clear any existing animation timeout
         if (animationTimeout) {
             clearTimeout(animationTimeout);
             animationTimeout = null;
+            isProcessingGuess = false; // Reset flag if animation is interrupted
         }
 
         if (!firstGuessMade) {
@@ -807,6 +810,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             saveGameResult(gameType, originalGameNumber, secretWord, score);
             endGame(true);
             rainPineapples();
+            isProcessingGuess = false; // Ensure flag is reset on game over
         } else {
             guessContainer.classList.add("wrong-guess");
             animationTimeout = setTimeout(() => {
@@ -814,6 +818,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.value = "";
                 guessDisplay.focus();
                 isProcessingGuess = false;
+                animationTimeout = null; // Clear the timeout reference
             }, 350);
         }
     }

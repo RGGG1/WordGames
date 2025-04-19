@@ -11,7 +11,11 @@ a {
   text-decoration: underline;
 }
 
-#game-screen {
+#game-screen,
+#game-over,
+#game-select-screen,
+#create-form,
+#guesses-screen {
   background: url('newbackground.png') no-repeat center center;
   background-size: 100% 100%;
 }
@@ -135,7 +139,7 @@ a {
 }
 
 #guess-input {
-  font-size: 4vh;
+  font-size: 3.5vh; /* Reduced from 4vh to prevent clipping */
   font-weight: bold;
   background: transparent;
   border: none;
@@ -161,8 +165,8 @@ a {
   font-size: 4vh;
   font-weight: bold;
   padding: 0;
-  background: #FFB300;
-  color: #000000;
+  background: #FFB300; /* Yellow background */
+  color: #000000; /* Black text */
   border: none;
   border-radius: 0 0.6vh 0.6vh 0;
   cursor: pointer;
@@ -196,7 +200,7 @@ a {
 
 #hints-box {
   width: 100%;
-  background: rgba(255, 255, 255, 0.8); /* Semi-transparent background for readability */
+  background: none; /* Removed semi-transparent background */
   margin: 0;
   padding: 1vh;
   display: flex;
@@ -268,28 +272,26 @@ a {
 }
 
 .control-btn-row {
-  display: flex;
+  display: inline-flex; /* Inline layout with fixed gap */
   justify-content: center;
   width: 100%;
-  gap: 1vw;
+  gap: 0.75ch; /* Roughly three spaces */
   margin-bottom: 0.5vh;
 }
 
 .top-row {
-  justify-content: space-between;
   max-width: 50%;
 }
 
 .bottom-row {
-  justify-content: space-between;
   max-width: 70%;
 }
 
 .control-btn {
   font-size: 1.4vh;
   padding: 0.5vh 1vw;
-  background: #A8D5BA;
-  color: #000000;
+  background: #FFB300; /* Yellow background */
+  color: #000000; /* Black text */
   border: 0.1vh solid #000000;
   border-radius: 0.6vh;
   cursor: pointer;
@@ -317,6 +319,11 @@ a {
 
 .tap-here {
   font-size: 1vh;
+}
+
+.plus {
+  font-size: 4vh; /* Increased font size for "+" */
+  line-height: 1;
 }
 
 #guess-input-container.wrong-guess {
@@ -372,7 +379,6 @@ a {
   justify-content: flex-start;
   align-items: center;
   padding: 2vh;
-  background: #FFFFFF;
   padding-bottom: 5vh;
 }
 
@@ -499,7 +505,6 @@ a {
   left: 0;
   width: 100%;
   height: 100vh;
-  background: #FFFFFF;
   display: none;
   flex-direction: column;
   justify-content: flex-start;
@@ -615,18 +620,12 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-.plus {
-  font-size: 3vh;
-  line-height: 1;
-}
-
 .create-form {
   position: fixed;
   top: 6vh;
   left: 0;
   width: 100%;
   height: calc(100vh - 6vh);
-  background: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -694,7 +693,6 @@ a {
   left: 0;
   width: 100%;
   height: 30vh;
-  background: rgba(255, 255, 255, 0.95);
   display: none;
   flex-direction: column;
   justify-content: flex-start;
@@ -780,7 +778,7 @@ a {
       height: 8vh;
   }
   #guess-input {
-      font-size: 4vh;
+      font-size: 3.5vh; /* Reduced from 4vh */
       height: 6vh;
       line-height: 6vh;
   }
