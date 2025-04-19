@@ -49,7 +49,7 @@
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <span id="prompt">The Secret Word Is....</span>
+                            <span id="prompt">The Secret Word Is...</span>
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                         </div>
                         <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
@@ -90,6 +90,13 @@
     </div>
 
     <div id="game-over">
+        <div id="header">
+            <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
+            <div id="hamburger-menu" class="hamburger-menu">
+                <button id="home-btn" class="menu-item">Home</button>
+            </div>
+            <span id="game-name">WORDY</span>
+        </div>
         <span id="game-number"></span>
         <span id="todays-word-label">Today's Word</span>
         <span id="todays-word"></span>
@@ -115,6 +122,9 @@
                     Create a Wordy<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>
                 </button>
             </div>
+        </div>
+        <div id="ad-box">
+            <p>Big Brain Games</p>
         </div>
     </div>
 
@@ -161,6 +171,13 @@
     </div>
 
     <div id="create-form" class="create-form" style="display: none;">
+        <div id="header">
+            <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
+            <div id="hamburger-menu" class="hamburger-menu">
+                <button id="home-btn" class="menu-item">Home</button>
+            </div>
+            <span id="game-name">WORDY</span>
+        </div>
         <span class="form-input-label">Game Name</span>
         <input type="text" id="game-name-input" class="form-input" placeholder="Enter a name for your game">
         <div class="form-line"></div>
@@ -187,6 +204,7 @@
             <span class="or-text">or</span>
             <button id="form-back-btn" class="control-btn">Back</button>
         </div>
+        <!-- No ad-box here as per request -->
     </div>
 
     <div id="guesses-screen">
@@ -195,6 +213,7 @@
             <div id="guesses-list"></div>
             <button id="guesses-close-btn" class="control-btn">Close</button>
         </div>
+        <!-- No header or ad-box here as per request -->
     </div>
 
     <script src="script.js"></script>

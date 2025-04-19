@@ -6,20 +6,13 @@ body {
   user-select: none;
 }
 
+/* Links styling */
 a {
   color: #00BFFF;
   text-decoration: underline;
 }
 
-#game-screen,
-#game-over,
-#game-select-screen,
-#create-form,
-#guesses-screen {
-  background: url('newbackground.png') no-repeat center center;
-  background-size: 100% 100%;
-}
-
+/* Header styling (ensures visibility on all screens except guesses screen) */
 #header {
   width: 90vw;
   position: fixed;
@@ -74,9 +67,10 @@ a {
   transform: none;
 }
 
+/* Main content on game screen (adjusted to move up 1.5 lines) */
 #main-content {
   position: absolute;
-  top: 22vh;
+  top: 19.5vh; /* Adjusted from 22vh to move up 1.5 lines (2.5vh = ~1.5 lines) */
   bottom: 40vh;
   width: 90vw;
   left: 50%;
@@ -89,6 +83,7 @@ a {
   z-index: 5;
 }
 
+/* Guess area styling */
 #guess-area {
   width: 100%;
   display: flex;
@@ -138,6 +133,7 @@ a {
   box-sizing: border-box;
 }
 
+/* Guess input with reduced font size to prevent clipping */
 #guess-input {
   font-size: 3.5vh; /* Reduced from 4vh to prevent clipping */
   font-weight: bold;
@@ -161,15 +157,22 @@ a {
   box-sizing: border-box;
 }
 
+/* Buttons styling (yellow with black text) */
+.control-btn,
+.guess-btn {
+  background: #FFB300; /* Yellow background */
+  color: #000000; /* Black text */
+  border: 0.1vh solid #000000;
+  border-radius: 0.6vh;
+  cursor: pointer;
+}
+
 .guess-btn {
   font-size: 4vh;
   font-weight: bold;
   padding: 0;
-  background: #FFB300; /* Yellow background */
-  color: #000000; /* Black text */
   border: none;
   border-radius: 0 0.6vh 0.6vh 0;
-  cursor: pointer;
   height: 8vh;
   line-height: 8vh;
   width: 30%;
@@ -198,6 +201,7 @@ a {
   display: none;
 }
 
+/* Hints box with no shading */
 #hints-box {
   width: 100%;
   background: none; /* Removed semi-transparent background */
@@ -222,6 +226,7 @@ a {
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
   margin-bottom: 0.5vh;
+  text-transform: uppercase; /* Ensure "HINTS" displays correctly */
 }
 
 .hint-countdown {
@@ -256,6 +261,7 @@ a {
   visibility: visible;
 }
 
+/* Game controls with buttons spaced closer together */
 #game-controls {
   width: 100%;
   background: none;
@@ -287,19 +293,6 @@ a {
   max-width: 70%;
 }
 
-.control-btn {
-  font-size: 1.4vh;
-  padding: 0.5vh 1vw;
-  background: #FFB300; /* Yellow background */
-  color: #000000; /* Black text */
-  border: 0.1vh solid #000000;
-  border-radius: 0.6vh;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-  pointer-events: auto;
-  display: inline-block;
-}
-
 .control-btn:hover {
   transform: scale(1.05);
 }
@@ -317,6 +310,7 @@ a {
   margin-left: 0.5vw;
 }
 
+/* Create a Wordy button with larger "+" */
 .tap-here {
   font-size: 1vh;
 }
@@ -326,6 +320,7 @@ a {
   line-height: 1;
 }
 
+/* Guess animation */
 #guess-input-container.wrong-guess {
   animation: flashRed 0.35s ease;
 }
@@ -335,6 +330,7 @@ a {
   50% { background-color: #FF0000; }
 }
 
+/* Pineapple rain animation */
 .pineapple-rain {
   position: fixed;
   top: 0;
@@ -367,6 +363,58 @@ a {
   height: 1vh;
 }
 
+/* Backgrounds for all screens */
+#game-screen {
+  background: url('newbackground.png') no-repeat center center;
+  background-size: 100% 100%;
+}
+
+/* Add fade effect to other screens using a pseudo-element overlay */
+#game-over,
+#game-select-screen,
+#create-form {
+  position: relative;
+  background: url('newbackground.png') no-repeat center center;
+  background-size: 100% 100%;
+}
+
+#game-over::before,
+#game-select-screen::before,
+#create-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.5); /* Semi-transparent white overlay for fade effect */
+  z-index: 1;
+}
+
+/* Ensure content on faded screens is above the overlay */
+#game-over > *,
+#game-select-screen > *,
+#create-form > * {
+  position: relative;
+  z-index: 2;
+}
+
+/* Guesses screen with white background */
+#guesses-screen {
+  background: #FFFFFF;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 30vh;
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  z-index: 150;
+}
+
+/* Game over screen */
 #game-over {
   position: fixed;
   top: 0;
@@ -499,6 +547,7 @@ a {
   gap: 0.5vh;
 }
 
+/* Game select screen */
 #game-select-screen {
   position: fixed;
   top: 0;
@@ -606,6 +655,7 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
+/* Color classes */
 .green { color: #006400; }
 .yellow { color: #FFD700; }
 .orange { color: #FF4500; }
@@ -620,6 +670,7 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
+/* Create form styling */
 .create-form {
   position: fixed;
   top: 6vh;
@@ -687,19 +738,7 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-#guesses-screen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 30vh;
-  display: none;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  z-index: 150;
-}
-
+/* Guesses screen content */
 #guesses-content {
   width: 85vw;
   text-align: center;
@@ -731,6 +770,7 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
+/* Ad box styling (visible on all screens except guesses and create screens) */
 #ad-box {
   width: 100%;
   height: 4vh;
@@ -755,6 +795,7 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
+/* Responsive adjustments */
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
       width: 90vw;
@@ -767,7 +808,7 @@ a {
   }
   #main-content {
       width: 90vw;
-      top: 22vh;
+      top: 19.5vh; /* Maintain the 1.5 line adjustment */
       bottom: 40vh;
       height: 30vh;
   }
@@ -778,7 +819,7 @@ a {
       height: 8vh;
   }
   #guess-input {
-      font-size: 3.5vh; /* Reduced from 4vh */
+      font-size: 3.5vh;
       height: 6vh;
       line-height: 6vh;
   }
