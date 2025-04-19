@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let gaveUp = false;
     let isProcessingGuess = false;
     let guesses = [];
-    let animationTimeout = null; // Track the animation timeout
+    let animationTimeout = null;
 
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
@@ -65,15 +65,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         input.addEventListener("input", (e) => {
             console.log("Input value changed:", input.value);
-            // Cancel the animation if the user starts typing
+            // Cancel the animation and clear the previous guess if the user starts typing
             if (animationTimeout) {
                 clearTimeout(animationTimeout);
                 animationTimeout = null;
-                input.classList.remove("wrong-guess");
+                const guessContainer = document.getElementById("guess-input-container");
+                guessContainer.classList.remove("wrong-guess");
                 input.style.opacity = "1";
                 input.style.visibility = "visible";
                 input.style.color = "#FFFFFF";
-                console.log("Animation cancelled due to user typing");
+                input.value = e.target.value; // Clear previous guess and set new input
+                console.log("Animation cancelled and previous guess cleared due to user typing");
             }
         });
     } else {
@@ -554,7 +556,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGame(false, true);
         });
 
-        // Assuming prev-game-btn and next-game-btn exist in the DOM
         const prevGameBtn = document.getElementById("prev-game-btn");
         const nextGameBtn = document.getElementById("next-game-btn");
 
@@ -713,11 +714,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const guessDisplay = document.getElementById("guess-input");
         const guessLine = document.getElementById("guess-line");
         guessDisplay.value = guess.toUpperCase();
-        guessDisplay.classList.remove("wrong-guess");
+        const guessContainer = document.getElementById("guess-input-container");
+        guessContainer.classList.remove("wrong-guess");
         guessDisplay.style.opacity = "1";
         guessDisplay.style.visibility = "visible";
         guessDisplay.style.color = "#FFFFFF";
-        void guessDisplay.offsetWidth;
+        void guessContainer.offsetWidth;
 
         // Clear any existing animation timeout
         if (animationTimeout) {
@@ -766,16 +768,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             saveGameResult(gameType, originalGameNumber, secretWord, score);
             endGame(true);
         } else {
-            guessDisplay.classList.add("wrong-guess");
+            guessContainer.classList.add("wrong-guess");
             animationTimeout = setTimeout(() => {
-                guessDisplay.classList.remove("wrong-guess");
+                guessContainer.classList.remove("wrong-guess");
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.visibility = "visible";
                 guessDisplay.style.color = "#FFFFFF";
-                guessDisplay.value = ""; // Clear the input after animation
+                guessDisplay.value = "";
                 animationTimeout = null;
                 keepKeyboardOpen();
-            }, 1000); // Reduced to 1 second
+            }, 1000);
         }
     }
 
@@ -835,14 +837,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
         } else if (gaveUp) {
-            // No image displayed for gave-up case
             shareText.innerHTML = '<span class="big">PLAY WORDY</span>\n\n<span class="italic">The Big Brain Word Game</span>';
             shareGameNumber.textContent = currentGameNumber;
             shareScoreLabel.style.display = "none";
             shareScore.style.display = "none";
             shareMessage = `I tried Wordy ${currentGameNumber}! 🍍 Can you solve it? Play at ${gameUrl}`;
         } else {
-            // No image displayed for loss case
             shareText.textContent = "I didn’t solve Wordy";
             shareGameNumber.textContent = currentGameNumber;
             shareScore.textContent = `${score}`;
@@ -874,7 +874,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("guesses-btn").textContent = "Guesses: 0";
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
-        guessInput.placeholder = "TYPE GUESS HERE";
+        // Removed placeholder setting
         guessInput.disabled = false;
         guessInput.style.opacity = "1";
         guessInput.style.visibility = "visible";

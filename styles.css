@@ -71,8 +71,8 @@ a {
 
 #main-content {
   position: absolute;
-  top: 22vh; /* Moved up from 25vh by 3vh (1.5 lines, since prompt font-size is 2vh) */
-  bottom: 40vh; /* End 40% from the bottom (above the keyboard) */
+  top: 22vh;
+  bottom: 40vh;
   width: 90vw;
   left: 50%;
   transform: translateX(-50%);
@@ -88,7 +88,7 @@ a {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* Align to the left */
+  align-items: flex-start;
   background: none;
   margin: 0;
   padding: 0;
@@ -102,80 +102,85 @@ a {
 #prompt {
   font-size: 2vh;
   color: #FFFFFF;
+  position: absolute;
+  top: 0.5vh;
+  left: 1vw;
   text-align: left;
-  margin-bottom: 0.5vh;
-}
-
-#guess-background {
-  display: none; /* Not needed in the new design */
 }
 
 #guess-container {
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center; /* Center the guess input and button */
+  justify-content: center;
   width: 100%;
   margin-bottom: 1vh;
 }
 
 .guess-input-wrapper {
-  width: 80vw; /* Combined width set to 80% of screen width by default */
+  width: 80vw;
   display: flex;
   align-items: center;
+}
+
+#guess-input-container {
+  position: relative;
+  width: calc(100% - 30%);
+  height: 8vh; /* Increased height to accommodate both prompt and input */
+  background: #A8D5BA;
+  border-radius: 0.6vh 0 0 0.6vh;
+  box-sizing: border-box;
 }
 
 #guess-input {
   font-size: 4vh;
   font-weight: bold;
-  background: #A8D5BA; /* Light green background */
+  background: transparent; /* Background is handled by the container */
   border: none;
-  width: calc(100% - 30%); /* Leave space for the button */
+  width: 100%;
   height: 6vh;
-  line-height: 6vh; /* Match height to ensure vertical centering */
-  text-align: left;
+  line-height: 6vh;
+  text-align: center; /* Center the user's guess */
+  position: absolute;
+  bottom: 0;
+  left: 0;
   padding: 0 1vw;
   margin: 0;
   color: #FFFFFF;
   outline: none;
   caret-color: white;
   text-transform: uppercase;
-  border-radius: 0.6vh 0 0 0.6vh; /* Rounded only on the left side */
   font-family: 'Luckiest Guy', cursive;
   box-sizing: border-box;
 }
 
-#guess-input::placeholder {
-  font-size: 4vh;
-  color: #FFFFFF;
-  text-align: left;
-  font-weight: normal;
-  text-transform: uppercase;
-  line-height: 6vh; /* Match height for vertical centering */
-}
-
+/* Removed placeholder styling since it's no longer used */
 .guess-btn {
-  font-size: 4vh; /* Match the placeholder font size */
+  font-size: 4vh;
   font-weight: bold;
   padding: 0;
-  background: #FFB300; /* Orange background */
+  background: #FFB300;
   color: #000000;
   border: none;
-  border-radius: 0 0.6vh 0.6vh 0; /* Rounded only on the right side */
+  border-radius: 0 0.6vh 0.6vh 0;
   cursor: pointer;
-  transition: transform 0.2s ease;
-  height: 6vh;
-  line-height: 6vh; /* Match height for vertical centering */
+  height: 8vh; /* Match the new container height */
+  line-height: 8vh;
   width: 30%;
   margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+  transition: none; /* Remove the transform transition */
 }
 
 .guess-btn:hover {
-  transform: scale(1.05);
+  /* Removed transform: scale(1.05); */
+}
+
+.guess-btn:hover span {
+  font-size: 4.5vh; /* Increase text size on hover */
 }
 
 .guess-btn:active {
@@ -183,8 +188,12 @@ a {
   color: #000000;
 }
 
+.guess-btn:active span {
+  font-size: 4.5vh; /* Increase text size on click */
+}
+
 #guess-line {
-  display: none; /* Not shown in the new design */
+  display: none;
 }
 
 #hints-box {
@@ -211,7 +220,7 @@ a {
 }
 
 .hint-countdown {
-  display: none; /* Not shown in the new design */
+  display: none;
 }
 
 #hints {
@@ -225,7 +234,7 @@ a {
 }
 
 .hint-line.spacer {
-  display: none; /* Not needed in the new design */
+  display: none;
 }
 
 #how-to-play-1, #how-to-play-2 {
@@ -275,14 +284,14 @@ a {
 .control-btn {
   font-size: 1.4vh;
   padding: 0.5vh 1vw;
-  background: #A8D5BA; /* Light green background */
+  background: #A8D5BA;
   color: #FFFFFF;
   border: 0.1vh solid #FFFFFF;
   border-radius: 0.6vh;
   cursor: pointer;
   transition: transform 0.2s ease;
   pointer-events: auto;
-  display: inline-block; /* Ensure all buttons are visible */
+  display: inline-block;
 }
 
 .control-btn:hover {
@@ -293,8 +302,8 @@ a {
   margin-left: 0.5vw;
 }
 
-#guess-input.wrong-guess {
-  animation: flashRed 1s ease; /* Reduced from 2s to 1s */
+#guess-input-container.wrong-guess {
+  animation: flashRed 1s ease;
 }
 
 @keyframes flashRed {
@@ -708,27 +717,31 @@ a {
   }
   #main-content {
       width: 90vw;
-      top: 22vh; /* Match the adjustment for mobile */
+      top: 22vh;
       bottom: 40vh;
       height: 30vh;
   }
   .guess-input-wrapper {
-      width: 85vw; /* Adjusted to 85% on mobile */
+      width: 85vw;
+  }
+  #guess-input-container {
+      height: 8vh;
   }
   #guess-input {
       font-size: 4vh;
       height: 6vh;
       line-height: 6vh;
-      padding: 0 1vw; /* Ensure minimal padding to balance space */
-  }
-  #guess-input::placeholder {
-      font-size: 3vh;
-      line-height: 6vh;
   }
   .guess-btn {
-      font-size: 3vh; /* Match the placeholder font size on mobile */
-      height: 6vh;
-      line-height: 6vh;
+      font-size: 3vh;
+      height: 8vh;
+      line-height: 8vh;
+  }
+  .guess-btn:hover span {
+      font-size: 3.5vh;
+  }
+  .guess-btn:active span {
+      font-size: 3.5vh;
   }
   #prompt {
       font-size: 2vh;
