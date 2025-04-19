@@ -42,29 +42,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    let modeToggles = document.querySelectorAll("#mode-toggle");
-
     if (createPineappleBtn) {
         createPineappleBtn.innerHTML = 'Create a Wordy<br><span class="tap-here">(tap here)</span><span class="plus">+</span>';
-    }
-
-    initializeMode();
-
-    modeToggles.forEach(modeToggle => {
-        modeToggle.addEventListener("click", toggleMode);
-    });
-
-    function toggleMode(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        document.body.classList.toggle("dark-mode");
-        const isDarkMode = document.body.classList.contains("dark-mode");
-        modeToggles.forEach(btn => {
-            btn.innerHTML = isDarkMode ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-        });
-        localStorage.setItem("pineappleMode", isDarkMode ? "dark" : "light");
-        adjustBackground();
-        console.log("Toggled to", isDarkMode ? "dark mode" : "light mode");
     }
 
     const input = document.getElementById("guess-input");
@@ -515,19 +494,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    function initializeMode() {
-        const savedMode = localStorage.getItem("pineappleMode");
-        if (savedMode === "light") {
-            document.body.classList.remove("dark-mode");
-        } else {
-            document.body.classList.add("dark-mode");
-        }
-        modeToggles.forEach(btn => {
-            btn.innerHTML = document.body.classList.contains("dark-mode") ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-        });
-        adjustBackground();
-    }
-
     function setupEventListeners() {
         const gameControls = document.getElementById("game-controls");
         let keyboardInitiated = false;
@@ -559,86 +525,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 keepKeyboardOpen();
             });
         });
-
-        document.getElementById("prev-arrow-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Previous arrow clicked, currentGameNumber:", currentGameNumber);
-            let currentIndex;
-            let gameList;
-            if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                gameList = privateGames;
-            } else {
-                currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                gameList = allGames;
-            }
-            if (currentIndex < gameList.length - 1) {
-                loadGame(gameList[currentIndex + 1]);
-                console.log("Loading previous game, new index:", currentIndex + 1);
-            }
-            keepKeyboardOpen();
-        });
-
-        document.getElementById("next-arrow-btn").addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Next arrow clicked, currentGameNumber:", currentGameNumber);
-            let currentIndex;
-            let gameList;
-            if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                gameList = privateGames;
-            } else {
-                currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                gameList = allGames;
-            }
-            if (currentIndex > 0) {
-                loadGame(gameList[currentIndex - 1]);
-                console.log("Loading next game, new index:", currentIndex - 1);
-            }
-            keepKeyboardOpen();
-        });
-
-        let touchStartX = 0;
-        let touchEndX = 0;
-
-        gameScreen.addEventListener("touchstart", e => {
-            touchStartX = e.changedTouches[0].screenX;
-            console.log("Touch start, X:", touchStartX);
-        });
-        gameScreen.addEventListener("touchend", e => {
-            touchEndX = e.changedTouches[0].screenX;
-            console.log("Touch end, X:", touchEndX);
-            handleSwipe();
-        });
-
-        function handleSwipe() {
-            const swipeThreshold = 50;
-            let currentIndex;
-            let gameList;
-
-            if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                gameList = privateGames;
-            } else {
-                currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber);
-                gameList = allGames;
-            }
-
-            console.log("Swipe detected, currentIndex:", currentIndex, "gameList length:", gameList.length);
-            if (touchStartX - touchEndX > swipeThreshold && currentIndex > 0) {
-                loadGame(gameList[currentIndex - 1]);
-                console.log("Swiped left, loading next game, new index:", currentIndex - 1);
-            } else if (touchEndX - touchStartX > swipeThreshold && currentIndex < gameList.length - 1) {
-                loadGame(gameList[currentIndex + 1]);
-                console.log("Swiped right, loading previous game, new index:", currentIndex + 1);
-            }
-            keepKeyboardOpen();
-        }
 
         document.getElementById("give-up-btn").addEventListener("click", (e) => {
             e.preventDefault();
@@ -785,7 +671,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessDisplay.classList.remove("wrong-guess");
         guessDisplay.style.opacity = "1";
         guessDisplay.style.visibility = "visible";
-        guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
+        guessDisplay.style.color = "#FFFFFF";
         void guessDisplay.offsetWidth;
 
         if (!firstGuessMade) {
@@ -834,7 +720,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessDisplay.classList.remove("wrong-guess");
                 guessDisplay.style.opacity = "1";
                 guessDisplay.style.visibility = "visible";
-                guessDisplay.style.color = document.body.classList.contains("dark-mode") ? "#FFFFFF" : "#000000";
+                guessDisplay.style.color = "#FFFFFF";
                 guessDisplay.value = "";
                 keepKeyboardOpen();
             }, 500);
@@ -936,7 +822,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("guesses-btn").textContent = "Guesses: 0";
         const guessInput = document.getElementById("guess-input");
         guessInput.value = "";
-        guessInput.placeholder = "type guess here";
+        guessInput.placeholder = "TYPE GUESS HERE";
         guessInput.disabled = false;
         guessInput.style.opacity = "1";
         guessInput.style.visibility = "visible";
