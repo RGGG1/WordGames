@@ -48,10 +48,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         createPineappleBtn.innerHTML = 'Create a Wordy<br><span class="tap-here">(tap here)</span><span class="plus">+</span>';
     }
 
-    // Hamburger menu as placeholder only
     if (hamburgerBtn) {
         console.log("Hamburger button found:", hamburgerBtn);
-        // No event listener for toggling menu, acts as placeholder
     }
 
     const input = document.getElementById("guess-input");
@@ -388,7 +386,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (isMobile) keepKeyboardOpen();
         } catch (error) {
             console.error("Error fetching official games:", error);
-            // Hardcode a game to test DOM population
             allGames = [
                 { "Game Number": "1", "Secret Word": "TEST", "Hint 1": "SAMPLE", "Hint 2": "WORD", "Hint 3": "GAME", "Hint 4": "PLAY", "Hint 5": "FUN" }
             ];
@@ -413,6 +410,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 cache: "no-cache",
                 headers: { "Accept": "text/csv" }
             });
+            console.log("Fetch response status:", response.status);
             if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
             const text = await response.text();
             console.log("Private CSV fetched:", text);
@@ -437,7 +435,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const officialList = document.getElementById("official-list");
         if (officialList) {
             officialList.innerHTML = "";
-            document.getElementById("game-name").textContent = "WORDY";
+            const gameNameElement = document.getElementById("game-name");
+            if (gameNameElement) {
+                gameNameElement.textContent = "WORDY";
+            }
             console.log("Populating official games list with:", allGames);
 
             if (!allGames || allGames.length === 0) {
@@ -630,7 +631,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function keepKeyboardOpen() {
         const input = document.getElementById("guess-input");
-        if (!gameOver && gameScreen.style.display === "flex" && !input.disabled) {
+        if (!gameOver && gameScreen.style.display === "flex" && input && !input.disabled) {
             input.focus();
             console.log("Keyboard kept open, input disabled:", input.disabled);
             if (isMobile) {
@@ -642,7 +643,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }, 50);
             }
         } else {
-            console.log("Cannot keep keyboard open:", { gameOver, gameScreenDisplay: gameScreen.style.display, inputDisabled: input.disabled });
+            console.log("Cannot keep keyboard open:", { gameOver, gameScreenDisplay: gameScreen.style.display, inputDisabled: input ? input.disabled : "input not found" });
         }
     }
 
@@ -687,6 +688,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Game number set to:", currentGameNumber);
         } else {
             console.error("current-game-number element not found");
+        }
+        const hintsTitle = document.getElementById("hints-title");
+        if (hintsTitle) {
+            hintsTitle.textContent = "HINTS";
+            console.log("Hints title set to:", hintsTitle.textContent);
+        } else {
+            console.error("hints-title element not found");
         }
     }
 
@@ -762,6 +770,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const guessDisplay = document.getElementById("guess-input");
         const guessLine = document.getElementById("guess-line");
         const guessContainer = document.getElementById("guess-input-container");
+        if (!guessDisplay || !guessLine || !guessContainer) {
+            console.error("Required elements for handleGuess not found:", { guessDisplay, guessLine, guessContainer });
+            return;
+        }
         guessDisplay.value = guess.toUpperCase();
         guessContainer.classList.remove("wrong-guess");
         guessDisplay.style.opacity = "1";
@@ -776,8 +788,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!firstGuessMade) {
             firstGuessMade = true;
-            document.getElementById("how-to-play-1").remove();
-            document.getElementById("how-to-play-2").remove();
+            const howToPlay1 = document.getElementById("how-to-play-1");
+            const howToPlay2 = document.getElementById("how-to-play-2");
+            if (howToPlay1) howToPlay1.remove();
+            if (howToPlay2) howToPlay2.remove();
             document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
             adjustHintsAfterGuess();
         }
@@ -789,14 +803,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             guesses.push(upperGuess);
             guessCount++;
             score = guessCount;
-            document.getElementById("guesses-btn").textContent = `Guesses: ${guessCount}`;
+            const guessesBtnElement = document.getElementById("guesses-btn");
+            if (guessesBtnElement) {
+                guessesBtnElement.textContent = `Guesses: ${guessCount}`;
+            } else {
+                console.error("guesses-btn element not found in handleGuess");
+            }
             console.log("guessCount after:", guessCount, "score:", score);
 
             if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
             else updateHintCountdown();
         } else {
             console.log("Repeat guess detected, not counting or adding to guesses:", upperGuess);
-            document.getElementById("guesses-btn").textContent = `Guesses: ${guessCount}`;
+            const guessesBtnElement = document.getElementById("guesses-btn");
+            if (guessesBtnElement) {
+                guessesBtnElement.textContent = `Guesses: ${guessCount}`;
+            } else {
+                console.error("guesses-btn element not found in handleGuess (repeat guess)");
+            }
             updateHintCountdown();
         }
 
@@ -837,8 +861,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("hint-row-5")?.children[0]
         ].filter(Boolean);
         hintElements.forEach((span, index) => {
-            span.style.visibility = index <= hintIndex ? "visible" : "hidden";
-            console.log(`Adjusted hint ${index + 1} visibility: ${span.style.visibility}`);
+            if (span) {
+                span.style.visibility = index <= hintIndex ? "visible" : "hidden";
+                console.log(`Adjusted hint ${index + 1} visibility: ${span.style.visibility}`);
+            }
         });
     }
 
@@ -919,35 +945,47 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessCount = 0;
         gaveUp = false;
         guesses = [];
-        document.getElementById("guesses-btn").textContent = "Guesses: 0";
+        const guessesBtnElement = document.getElementById("guesses-btn");
+        if (guessesBtnElement) {
+            guessesBtnElement.textContent = "Guesses: 0";
+        } else {
+            console.error("guesses-btn element not found in resetGame");
+        }
         const guessInput = document.getElementById("guess-input");
-        guessInput.value = "";
-        guessInput.disabled = false;
-        guessInput.style.opacity = "1";
-        guessInput.style.visibility = "visible";
-        console.log("resetGame: Input disabled set to false, visibility:", guessInput.style.visibility);
-
-        const guessBtn = document.getElementById("guess-btn");
-        if (guessBtn) {
-            guessBtn.style.opacity = "1";
-            guessBtn.style.visibility = "visible";
-            console.log("resetGame: Guess button visibility:", guessBtn.style.visibility);
+        if (guessInput) {
+            guessInput.value = "";
+            guessInput.disabled = false;
+            guessInput.style.opacity = "1";
+            guessInput.style.visibility = "visible";
+            console.log("resetGame: Input disabled set to false, visibility:", guessInput.style.visibility);
         }
 
-        document.getElementById("guess-line").style.opacity = "1";
+        const guessBtnElement = document.getElementById("guess-btn");
+        if (guessBtnElement) {
+            guessBtnElement.style.opacity = "1";
+            guessBtnElement.style.visibility = "visible";
+            console.log("resetGame: Guess button visibility:", guessBtnElement.style.visibility);
+        }
+
+        const guessLine = document.getElementById("guess-line");
+        if (guessLine) {
+            guessLine.style.opacity = "1";
+        }
         const hintsBox = document.getElementById("hints");
-        hintsBox.innerHTML = `
-            <div class="hint-line" id="hint-row-1"><span></span></div>
-            <div class="hint-line spacer"></div>
-            <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
-            <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
-            <div class="hint-line spacer"></div>
-            <div class="hint-line spacer"></div>
-            <div class="hint-line" id="hint-row-2"><span></span></div>
-            <div class="hint-line" id="hint-row-3"><span></span></div>
-            <div class="hint-line" id="hint-row-4"><span></span></div>
-            <div class="hint-line" id="hint-row-5"><span></span></div>
-        `;
+        if (hintsBox) {
+            hintsBox.innerHTML = `
+                <div class="hint-line" id="hint-row-1"><span></span></div>
+                <div class="hint-line spacer"></div>
+                <div class="hint-line" id="how-to-play-1"><b>How to Play</b></div>
+                <div class="hint-line" id="how-to-play-2">Guess the secret word in as few guesses as possible.<br><br>New hints are revealed after every five guesses.</div>
+                <div class="hint-line spacer"></div>
+                <div class="hint-line spacer"></div>
+                <div class="hint-line" id="hint-row-2"><span></span></div>
+                <div class="hint-line" id="hint-row-3"><span></span></div>
+                <div class="hint-line" id="hint-row-4"><span></span></div>
+                <div class="hint-line" id="hint-row-5"><span></span></div>
+            `;
+        }
         setupHints();
     }
 
