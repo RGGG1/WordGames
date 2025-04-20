@@ -33,7 +33,7 @@ a {
   align-items: center;
   margin: 0;
   padding: 0 2vw;
-  box-sizing: border-box; /* Ensure padding doesn't affect width */
+  box-sizing: border-box;
 }
 
 .menu-btn {
@@ -53,7 +53,7 @@ a {
   color: #000000;
   opacity: 1;
   visibility: visible;
-  -webkit-text-stroke: 0.1vh #FFFFFF; /* Changed to white outline */
+  -webkit-text-stroke: 0.1vh #FFFFFF;
 }
 
 .hamburger-menu {
@@ -66,7 +66,7 @@ a {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #000000;
-  -webkit-text-stroke: 0.1vh #FFFFFF; /* Changed to white outline */
+  -webkit-text-stroke: 0.1vh #FFFFFF;
   cursor: pointer;
   z-index: 11;
   position: static;
@@ -108,7 +108,7 @@ a {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 100vw; /* Ensure full width */
+  width: 100vw;
   box-sizing: border-box;
   overflow: hidden;
   margin: 0;
@@ -170,7 +170,7 @@ a {
   position: relative;
   width: calc(100% - 30%);
   height: 8vh;
-  background: #FFFFFF;
+  background: rgba(255, 255, 255, 0.9); /* Made slightly translucent */
   border-radius: 0.6vh 0 0 0.6vh;
   box-sizing: border-box;
   display: flex;
@@ -199,7 +199,7 @@ a {
   line-height: 4.5vh;
   text-align: center;
   position: absolute;
-  bottom: 0.5vh;
+  bottom: 0.2vh; /* Moved down slightly to prevent cutting off tops of letters */
   left: 0;
   padding: 0 1vw;
   margin: 0;
@@ -266,7 +266,7 @@ a {
 .hint-countdown {
   display: block;
   font-size: 1.8vh;
-  color: #FFFFFF; /* Changed to white text */
+  color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   margin-top: 0.5vh;
   text-align: center;
@@ -280,13 +280,14 @@ a {
   font-family: 'Luckiest Guy', cursive;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin-top: 0.5em; /* Moved up one line (from 1.5em to 0.5em) */
+  margin-top: 0.5em;
   text-align: center;
   position: relative;
   z-index: 1;
-  max-width: 90vw; /* Limit to 90% of viewport width */
-  white-space: normal; /* Allow wrapping */
-  line-height: 1.2; /* Adjust line height for better spacing */
+  max-width: 90vw;
+  white-space: normal;
+  line-height: 1.2;
+  display: inline-block; /* Ensures proper centering */
 }
 
 .hints-inline::before {
@@ -296,11 +297,12 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 110%;
-  height: 100%; /* Adjusted to match content height */
+  height: 100%;
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
   padding: 0.5vh 0; /* Equal padding top and bottom */
+  box-sizing: border-box;
 }
 
 .hints-inline span.hint-text {
@@ -308,7 +310,7 @@ a {
 }
 
 .hints-inline span.separator {
-  color: #FFB300; /* Changed to yellow */
+  color: #FFB300;
   text-shadow: 1px 1px 2px #000000;
   margin: 0 0.5ch;
 }
@@ -339,7 +341,7 @@ a {
 }
 
 .control-btn-row.top-row {
-  margin-top: 0em; /* Moved up one line (from 1em to 0em) */
+  margin-top: -0.5em; /* Moved up half a line (previously 0em) */
   max-width: 50%;
 }
 
@@ -359,7 +361,7 @@ a {
 }
 
 @keyframes flashRed {
-  0%, 100% { background-color: #FFFFFF; }
+  0%, 100% { background-color: rgba(255, 255, 255, 0.9); } /* Updated to match translucent background */
   50% { background-color: #FF0000; }
 }
 
@@ -409,7 +411,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw; /* Ensure full width */
+  width: 100vw;
   height: 100vh;
   overflow: hidden;
   background: url('newbackground.png') no-repeat center center;
@@ -445,7 +447,7 @@ a {
   top: 0;
   left: 0;
   width: 100vw;
-  height: 35vh; /* Cover 35% of screen height from top */
+  height: 35vh;
   display: none;
   flex-direction: column;
   justify-content: flex-start;
@@ -854,6 +856,7 @@ a {
       font-size: 3.75vh;
       height: 4.5vh;
       line-height: 4.5vh;
+      bottom: 0.2vh; /* Adjusted for responsive */
   }
   .guess-btn {
       font-size: 3vh;

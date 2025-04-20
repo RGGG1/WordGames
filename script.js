@@ -382,7 +382,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            if (isMobile) keepKeyboardOpen();
+            // Ensure keyboard is open on load
+            setTimeout(() => {
+                keepKeyboardOpen();
+            }, 100); // Small delay to ensure DOM is fully rendered
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
@@ -395,7 +398,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            if (isMobile) keepKeyboardOpen();
+            // Ensure keyboard is open on load (fallback case)
+            setTimeout(() => {
+                keepKeyboardOpen();
+            }, 100);
             alert("Failed to load official games data. Using hardcoded game.");
         }
     }
@@ -668,7 +674,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     hintsContainer.appendChild(separator);
                 }
             });
-            hintsContainer.style.display = "block"; // Ensure container is visible
+            hintsContainer.style.display = "block";
             console.log("Hints displayed:", visibleHints);
         } else {
             hintsContainer.style.display = "none";
@@ -981,8 +987,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             game["Hint 4"]?.toUpperCase(),
             game["Hint 5"]?.toUpperCase()
         ].filter(hint => hint);
-        hintIndex = 0; // Ensure hintIndex starts at 0
-        setupHints(); // Show the first hint immediately
+        hintIndex = 0;
+        setupHints();
         console.log("Loaded game:", { currentGameNumber, secretWord, hints });
     }
 
