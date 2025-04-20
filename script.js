@@ -705,54 +705,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     function buildHintHTML(hintsArray) {
         if (hintsArray.length === 0) return "";
         
-        const tempContainer = document.createElement("div");
-        tempContainer.style.fontSize = "3.25vh";
-        tempContainer.style.fontFamily = "'Luckiest Guy', cursive";
-        tempContainer.style.position = "absolute";
-        tempContainer.style.visibility = "hidden";
-        tempContainer.style.maxWidth = "90vw";
-        tempContainer.style.whiteSpace = "normal";
-        tempContainer.style.lineHeight = "1.2";
-        tempContainer.style.display = "inline-block";
-        
-        hintsArray.forEach((hint, index) => {
-            const span = document.createElement("span");
-            span.textContent = hint;
-            span.dataset.index = index;
-            tempContainer.appendChild(span);
-            if (index < hintsArray.length - 1) {
-                const separator = document.createElement("span");
-                separator.textContent = " | ";
-                separator.className = "separator yellow";
-                separator.dataset.separatorIndex = index;
-                tempContainer.appendChild(separator);
-            }
-        });
-        
-        document.body.appendChild(tempContainer);
-        
-        const hintSpans = tempContainer.querySelectorAll("span:not(.separator)");
-        const positions = Array.from(hintSpans).map(span => ({
-            index: parseInt(span.dataset.index),
-            top: span.getBoundingClientRect().top
-        }));
-        
         const htmlParts = [];
-        let lastTop = positions[0].top;
         hintsArray.forEach((hint, index) => {
             htmlParts.push(hint);
             if (index < hintsArray.length - 1) {
-                const currentTop = positions.find(pos => pos.index === index).top;
-                const nextTop = positions.find(pos => pos.index === index + 1).top;
-                if (currentTop === nextTop) {
-                    htmlParts.push(' <span class="separator yellow">|</span> ');
-                } else {
-                    htmlParts.push(' '); // Add space when omitting separator
-                }
+                htmlParts.push(' <span class="separator yellow">|</span> ');
             }
         });
         
-        document.body.removeChild(tempContainer);
         return htmlParts.join("");
     }
 
@@ -768,23 +728,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (visibleHints.length > 0) {
             hintsContainer.innerHTML = buildHintHTML(visibleHints);
             hintsContainer.style.display = "block";
-            const tempSpan = document.createElement("span");
-            tempSpan.style.fontSize = "3.25vh";
-            tempSpan.style.fontFamily = "'Luckiest Guy', cursive";
-            tempSpan.style.visibility = "hidden";
-            tempSpan.style.position = "absolute";
-            tempSpan.style.whiteSpace = "normal";
-            tempSpan.style.maxWidth = "90vw";
-            tempSpan.textContent = visibleHints.join(" | ");
-            document.body.appendChild(tempSpan);
-            const hintWidth = tempSpan.offsetWidth + 20;
-            document.body.removeChild(tempSpan);
-            hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
             updateHintFade(hintsContainer, visibleHints);
-            console.log("Hints displayed:", visibleHints, "Width:", hintWidth);
+            console.log("Hints displayed:", visibleHints);
         } else {
             hintsContainer.style.display = "block"; // Reserve space
-            hintsContainer.style.setProperty("--hint-width", "0px");
             hintsContainer.classList.add('lines-0');
             console.log("No hints to display yet, reserving space");
         }
@@ -828,24 +775,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                     setTimeout(typeLetter, 100);
                 } else {
                     hintsContainer.innerHTML = buildHintHTML(hints.slice(0, hintIndex + 1));
-                    const tempSpan = document.createElement("span");
-                    tempSpan.style.fontSize = "3.25vh";
-                    tempSpan.style.fontFamily = "'Luckiest Guy', cursive";
-                    tempSpan.style.visibility = "hidden";
-                    tempSpan.style.position = "absolute";
-                    tempSpan.style.whiteSpace = "normal";
-                    tempSpan.style.maxWidth = "90vw";
-                    tempSpan.textContent = hints.slice(0, hintIndex + 1).join(" | ");
-                    document.body.appendChild(tempSpan);
-                    const hintWidth = tempSpan.offsetWidth + 20;
-                    document.body.removeChild(tempSpan);
-                    hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
                     updateHintFade(hintsContainer, hints.slice(0, hintIndex + 1));
-                    console.log("Revealed hint width:", hintWidth);
+                    console.log("Revealed hint:", newHint);
                 }
             }
             typeLetter();
-            console.log("Revealed hint:", newHint);
+            console.log("Revealing hint:", newHint);
         }
         updateHintCountdown();
     }
@@ -860,23 +795,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (visibleHints.length > 0) {
             hintsContainer.innerHTML = buildHintHTML(visibleHints);
             hintsContainer.style.display = "block";
-            const tempSpan = document.createElement("span");
-            tempSpan.style.fontSize = "3.25vh";
-            tempSpan.style.fontFamily = "'Luckiest Guy', cursive";
-            tempSpan.style.visibility = "hidden";
-            tempSpan.style.position = "absolute";
-            tempSpan.style.whiteSpace = "normal";
-            tempSpan.style.maxWidth = "90vw";
-            tempSpan.textContent = visibleHints.join(" | ");
-            document.body.appendChild(tempSpan);
-            const hintWidth = tempSpan.offsetWidth + 20;
-            document.body.removeChild(tempSpan);
-            hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
             updateHintFade(hintsContainer, visibleHints);
-            console.log("Adjusted hints after guess:", visibleHints, "Width:", hintWidth);
+            console.log("Adjusted hints after guess:", visibleHints);
         } else {
             hintsContainer.style.display = "block";
-            hintsContainer.style.setProperty("--hint-width", "0px");
             hintsContainer.classList.add('lines-0');
             console.log("No hints to adjust after guess, reserving space");
         }
