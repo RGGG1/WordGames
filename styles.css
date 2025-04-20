@@ -92,16 +92,15 @@ a {
 
 #main-content {
   position: absolute;
-  top: 17vh;
-  width: 90vw;
+  top: 0;
+  width: 100%;
+  height: 60vh; /* Limit to top 60% to stay above keyboard */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  min-height: 30vh;
-  max-height: 50vh;
   z-index: 5;
 }
 
@@ -110,10 +109,13 @@ a {
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center; /* Center the guess area */
   background: none;
   margin: 0;
   padding: 0;
+  position: absolute;
+  top: 40%; /* Position slightly above center (50% - ~10% for two lines) */
+  transform: translateY(-50%);
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -126,9 +128,9 @@ a {
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
   position: absolute;
-  top: 0.5vh;
-  left: 1vw;
-  text-align: left;
+  top: -3vh; /* Position above the input */
+  text-align: center;
+  width: 100%;
 }
 
 #guess-container {
@@ -137,7 +139,7 @@ a {
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-bottom: 0vh;
+  margin-bottom: 0.5vh;
 }
 
 .guess-input-wrapper {
@@ -150,7 +152,7 @@ a {
   position: relative;
   width: calc(100% - 30%);
   height: 6vh; /* Reduced from 8vh by 25% */
-  background: #A8D5BA;
+  background: #FFFFFF; /* Changed to white */
   border-radius: 0.6vh 0 0 0.6vh;
   box-sizing: border-box;
 }
@@ -228,56 +230,66 @@ a {
   display: none;
 }
 
-/* Hints box */
-#hints-box {
-  width: 100%;
-  background: none;
-  margin: 0;
-  padding: 1vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border-radius: 0.6vh;
-}
-
-.game-number-label {
-  font-size: 1.5vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-  margin-bottom: 0.5vh;
-}
-
-#hints-title {
-  font-size: 2.25vh; /* Increased from 1.5vh by 50% */
-  font-weight: bold;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-  margin-bottom: 0.5vh;
-  text-transform: uppercase;
-}
-
+/* Hint countdown */
 .hint-countdown {
   display: block;
   font-size: 1.8vh; /* Increased from 1.2vh by 50% */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
-  margin-bottom: 0.5vh;
+  margin-top: 0.5vh;
+  text-align: center;
 }
 
-#hints {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
+/* Individual hint styling and positioning */
 .hint-line {
-  margin: 0.05vh 0;
+  position: absolute;
+  margin: 0;
 }
 
-.hint-line.spacer {
-  display: none;
+#hint-1 {
+  top: 10%;
+  left: 10%;
 }
 
+#hint-2 {
+  top: 10%;
+  right: 10%;
+}
+
+#hint-3 {
+  top: 30%;
+  right: 10%;
+}
+
+#hint-4 {
+  top: 50%;
+  left: 10%;
+}
+
+#hint-5 {
+  top: 50%;
+  right: 10%;
+}
+
+/* Add faded background to hints */
+.hint-line {
+  position: relative; /* Required for ::before positioning */
+}
+
+.hint-line::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 110%; /* Slightly wider than the hint text */
+  height: 120%; /* Slightly taller than the hint text */
+  background: rgba(255, 255, 255, 0.4); /* Light fade effect */
+  z-index: -1; /* Place behind the text */
+  border-radius: 0.6vh; /* Match other elements' border radius */
+}
+
+/* Ensure hint text is above the fade */
 .hint-line span {
   font-size: 2.5vh;
   font-weight: bold;
@@ -286,6 +298,8 @@ a {
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
   visibility: visible;
+  position: relative;
+  z-index: 1;
 }
 
 /* Game controls */
@@ -294,7 +308,8 @@ a {
   background: none;
   display: flex;
   justify-content: space-between;
-  margin-top: 0.5vh;
+  position: absolute;
+  bottom: 5vh; /* Position above the keyboard */
 }
 
 .controls-center {
@@ -349,7 +364,7 @@ a {
 }
 
 @keyframes flashRed {
-  0%, 100% { background-color: #A8D5BA; }
+  0%, 100% { background-color: #FFFFFF; } /* Updated to white */
   50% { background-color: #FF0000; }
 }
 
@@ -390,48 +405,6 @@ a {
 #game-screen {
   background: url('newbackground.png') no-repeat center center;
   background-size: 100% 100%;
-}
-
-/* Add fade effect to game screen elements */
-#game-screen #guess-area,
-#game-screen #hints-box,
-#game-screen #game-controls {
-  position: relative;
-}
-
-#game-screen #guess-area::before,
-#game-screen #hints-box::before,
-#game-screen #game-controls::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(255, 255, 255, 0.4); /* Lighter opacity for subtle fade */
-  z-index: -1; /* Place the fade behind the content */
-  border-radius: 0.6vh; /* Match the border radius of other elements */
-}
-
-/* Ensure content within these elements is above the fade */
-#game-screen #guess-area > *,
-#game-screen #hints-box > *,
-#game-screen #game-controls > * {
-  position: relative;
-  z-index: 1;
-}
-
-/* Optional: Adjust padding to ensure the fade looks balanced */
-#game-screen #guess-area,
-#game-screen #hints-box,
-#game-screen #game-controls {
-  padding: 1vh; /* Add padding to create space around the fade */
-  box-sizing: border-box;
-}
-
-/* Ensure guess-input-container doesn't get extra padding */
-#guess-input-container {
-  padding: 0;
 }
 
 /* Add fade effect to other screens */
@@ -871,10 +844,8 @@ a {
       font-size: clamp(1.8vh, 2.25vw, 2.25vh);
   }
   #main-content {
-      width: 90vw;
-      top: 15vh;
-      min-height: 30vh;
-      max-height: 50vh;
+      width: 100%;
+      height: 60vh;
   }
   .guess-input-wrapper {
       width: 85vw;
@@ -907,9 +878,6 @@ a {
       font-size: clamp(2vh, 3vw, 3.15vh); /* Adjusted from 3.375vh to prevent overflow */
       padding: 0.75vh 1.5vw; /* Reduced to fit mobile */
   }
-  .game-number-label, #hints-title {
-      font-size: 2.25vh;
-  }
   .hint-countdown {
       font-size: 1.8vh;
   }
@@ -927,7 +895,7 @@ a {
       width: 90vw;
   }
   .game-list {
-      width: 90vw;
+      width:90vw;
   }
   .game-list-row {
       width: 90vw;

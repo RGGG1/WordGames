@@ -631,54 +631,43 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function updateHintCountdown() {
-        const countdownElement = document.getElementById("hint-countdown");
-        if (!countdownElement) {
-            console.error("hint-countdown element not found");
+        const countdownElement = document.querySelector(".hint-countdown");
+        const countdownSpan = document.getElementById("countdown");
+        if (!countdownElement || !countdownSpan) {
+            console.error("hint-countdown or countdown span element not found");
             return;
         }
-        if (hintIndex >= hints.length - 1) {
-            countdownElement.textContent = "All hints revealed!";
+        if (hintIndex >= hints.length) {
+            countdownElement.style.display = "none";
         } else {
-            const guessesUntilNextHint = guessCount === 0 ? 5 : 5 - (guessCount % 5);
-            const guessText = guessesUntilNextHint === 1 ? "guess" : "guesses";
-            countdownElement.textContent = `Next hint revealed in ${guessesUntilNextHint} ${guessText}`;
-            console.log("Updated hint countdown:", countdownElement.textContent);
+            const guessesUntilNextHint = guessCount === 0 ? 10 : 10 - (guessCount % 10);
+            countdownElement.style.display = "block";
+            countdownSpan.textContent = guessesUntilNextHint;
+            console.log("Updated hint countdown:", countdownSpan.textContent);
         }
     }
 
     function setupHints() {
+        // Target the individual hint containers
         const hintElements = [
-            document.getElementById("hint-row-1")?.children[0],
-            document.getElementById("hint-row-2")?.children[0],
-            document.getElementById("hint-row-3")?.children[0],
-            document.getElementById("hint-row-4")?.children[0],
-            document.getElementById("hint-row-5")?.children[0]
+            document.getElementById("hint-1")?.querySelector("span"),
+            document.getElementById("hint-2")?.querySelector("span"),
+            document.getElementById("hint-3")?.querySelector("span"),
+            document.getElementById("hint-4")?.querySelector("span"),
+            document.getElementById("hint-5")?.querySelector("span")
         ].filter(Boolean);
         console.log("Hint elements found:", hintElements);
         console.log("Hints array:", hints);
         hintElements.forEach((span, index) => {
             if (span) {
+                const hintContainer = span.parentElement;
                 span.textContent = hints[index] || "";
-                span.style.visibility = index <= hintIndex ? "visible" : "hidden";
-                console.log(`Hint ${index + 1} set to: "${span.textContent}", visibility: ${span.style.visibility}`);
+                hintContainer.style.display = index <= hintIndex ? "block" : "none";
+                console.log(`Hint ${index + 1} set to: "${span.textContent}", display: ${hintContainer.style.display}`);
             } else {
                 console.error(`Hint element ${index + 1} not found`);
             }
         });
-        const gameNumberElement = document.getElementById("current-game-number");
-        if (gameNumberElement) {
-            gameNumberElement.textContent = currentGameNumber;
-            console.log("Game number set to:", currentGameNumber);
-        } else {
-            console.error("current-game-number element not found");
-        }
-        const hintsTitle = document.getElementById("hints-title");
-        if (hintsTitle) {
-            hintsTitle.textContent = "HINTS";
-            console.log("Hints title set to:", hintsTitle.textContent);
-        } else {
-            console.error("hints-title element not found");
-        }
     }
 
     function adjustBackground() {
@@ -694,23 +683,33 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function revealHint() {
         hintIndex++;
-        const allHintSpan = document.querySelectorAll(".hint-line span");
-        console.log("Revealing hint, hintIndex:", hintIndex, "total hints:", allHintSpan.length);
-        if (hintIndex < allHintSpan.length && allHintSpan[hintIndex].textContent) {
-            allHintSpan[hintIndex].style.visibility = "visible";
-            const hintText = hints[hintIndex];
-            allHintSpan[hintIndex].textContent = "";
-            let charIndex = 0;
+        const hintElements = [
+            document.getElementById("hint-1"),
+            document.getElementById("hint-2"),
+            document.getElementById("hint-3"),
+            document.getElementById("hint-4"),
+            document.getElementById("hint-5")
+        ].filter(Boolean);
+        console.log("Revealing hint, hintIndex:", hintIndex, "total hints:", hintElements.length);
+        if (hintIndex < hintElements.length) {
+            const hintContainer = hintElements[hintIndex];
+            const hintSpan = hintContainer.querySelector("span");
+            if (hintSpan && hints[hintIndex]) {
+                hintContainer.style.display = "block";
+                hintSpan.textContent = "";
+                const hintText = hints[hintIndex];
+                let charIndex = 0;
 
-            function typeLetter() {
-                if (charIndex < hintText.length) {
-                    allHintSpan[hintIndex].textContent += hintText[charIndex];
-                    charIndex++;
-                    setTimeout(typeLetter, 100);
+                function typeLetter() {
+                    if (charIndex < hintText.length) {
+                        hintSpan.textContent += hintText[charIndex];
+                        charIndex++;
+                        setTimeout(typeLetter, 100);
+                    }
                 }
-            }
 
-            typeLetter();
+                typeLetter();
+            }
         }
         updateHintCountdown();
     }
@@ -777,7 +776,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!firstGuessMade) {
             firstGuessMade = true;
-            document.querySelectorAll(".hint-line.spacer").forEach(spacer => spacer.remove());
             adjustHintsAfterGuess();
         }
 
@@ -794,7 +792,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             console.log("Guess processed:", { guessCount, score });
 
-            if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
+            if (guessCount % 10 === 0 && hintIndex < hints.length - 1) revealHint();
             else updateHintCountdown();
         } else {
             console.log("Repeat guess:", upperGuess);
@@ -825,16 +823,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function adjustHintsAfterGuess() {
         const hintElements = [
-            document.getElementById("hint-row-1")?.children[0],
-            document.getElementById("hint-row-2")?.children[0],
-            document.getElementById("hint-row-3")?.children[0],
-            document.getElementById("hint-row-4")?.children[0],
-            document.getElementById("hint-row-5")?.children[0]
+            document.getElementById("hint-1"),
+            document.getElementById("hint-2"),
+            document.getElementById("hint-3"),
+            document.getElementById("hint-4"),
+            document.getElementById("hint-5")
         ].filter(Boolean);
-        hintElements.forEach((span, index) => {
-            if (span) {
-                span.style.visibility = index <= hintIndex ? "visible" : "hidden";
-                console.log(`Adjusted hint ${index + 1} visibility: ${span.style.visibility}`);
+        hintElements.forEach((hintContainer, index) => {
+            if (hintContainer) {
+                hintContainer.style.display = index <= hintIndex ? "block" : "none";
+                console.log(`Adjusted hint ${index + 1} display: ${hintContainer.style.display}`);
             }
         });
     }
@@ -940,19 +938,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (guessLine) {
             guessLine.style.opacity = "1";
         }
-        const hintsBox = document.getElementById("hints");
-        if (hintsBox) {
-            hintsBox.innerHTML = `
-                <div class="hint-line" id="hint-row-1"><span></span></div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line spacer"></div>
-                <div class="hint-line" id="hint-row-2"><span></span></div>
-                <div class="hint-line" id="hint-row-3"><span></span></div>
-                <div class="hint-line" id="hint-row-4"><span></span></div>
-                <div class="hint-line" id="hint-row-5"><span></span></div>
-            `;
-        }
-        setupHints();
+
+        // Reset individual hint containers
+        const hintElements = [
+            document.getElementById("hint-1"),
+            document.getElementById("hint-2"),
+            document.getElementById("hint-3"),
+            document.getElementById("hint-4"),
+            document.getElementById("hint-5")
+        ].filter(Boolean);
+        hintElements.forEach((hintContainer, index) => {
+            if (hintContainer) {
+                const span = hintContainer.querySelector("span");
+                if (span) {
+                    span.textContent = hints[index] || "";
+                }
+                hintContainer.style.display = "none";
+            }
+        });
+
+        updateHintCountdown();
     }
 
     function loadGame(game) {

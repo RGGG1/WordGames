@@ -21,30 +21,23 @@
         </div>
         <div id="main-content">
             <div id="guess-area">
+                <span id="prompt">The Secret Word is...</span>
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <span id="prompt">The Secret Word is...</span> <!-- Changed "Is" to "is" -->
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                         </div>
                         <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
                     </div>
                 </div>
+                <div class="hint-countdown" style="display: none;">(next hint revealed in <span id="countdown">5</span> guesses)</div>
             </div>
-            <div id="hints-box">
-                <span id="current-game-number" class="game-number-label"></span>
-                <span id="hints-title">HINTS</span>
-                <span id="hint-countdown" class="hint-countdown"></span>
-                <div id="hints">
-                    <div class="hint-line" id="hint-row-1"><span></span></div>
-                    <div class="hint-line spacer"></div>
-                    <div class="hint-line spacer"></div>
-                    <div class="hint-line" id="hint-row-2"><span></span></div>
-                    <div class="hint-line" id="hint-row-3"><span></span></div>
-                    <div class="hint-line" id="hint-row-4"><span></span></div>
-                    <div class="hint-line" id="hint-row-5"><span></span></div>
-                </div>
-            </div>
+            <!-- Individual hint containers -->
+            <div id="hint-1" class="hint-line" style="display: none;"><span></span></div>
+            <div id="hint-2" class="hint-line" style="display: none;"><span></span></div>
+            <div id="hint-3" class="hint-line" style="display: none;"><span></span></div>
+            <div id="hint-4" class="hint-line" style="display: none;"><span></span></div>
+            <div id="hint-5" class="hint-line" style="display: none;"><span></span></div>
             <div id="game-controls">
                 <div class="controls-center">
                     <div class="control-btn-row top-row">
