@@ -27,13 +27,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formBackBtn = document.getElementById("form-back-btn");
     const createPineappleLink = document.getElementById("create-pineapple-end");
     const guessBtn = document.getElementById("guess-btn");
-    const guessesBtn = document.getElementById("guesses-btn");
     const guessesScreen = document.getElementById("guesses-screen");
     const guessesCloseBtn = document.getElementById("guesses-close-btn");
     const hamburgerBtn = document.getElementById("hamburger-btn");
     const nextGameBtnEnd = document.getElementById("next-game-btn-end");
     const officialBackBtn = document.getElementById("official-back-btn");
     const privateBackBtn = document.getElementById("private-back-btn");
+    const giveUpLink = document.getElementById("give-up-link");
+    const giveUpDialog = document.getElementById("give-up-dialog");
+    const giveUpYesBtn = document.getElementById("give-up-yes-btn");
+    const giveUpNoBtn = document.getElementById("give-up-no-btn");
+    const guessesLink = document.getElementById("guesses-link");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -333,6 +337,62 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    if (giveUpLink && giveUpDialog && giveUpYesBtn && giveUpNoBtn) {
+        giveUpLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Give Up link clicked");
+            giveUpDialog.style.display = "flex";
+        });
+
+        giveUpYesBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Give Up Yes button clicked");
+            gaveUp = true;
+            let originalGameNumber;
+            if (currentGameNumber.includes("- Private")) {
+                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
+                const privateGame = privateGames.find(game => game["Game Number"] === String(currentNum));
+                originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
+            } else {
+                originalGameNumber = currentGameNumber;
+            }
+            const gameType = currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple";
+            saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
+            giveUpDialog.style.display = "none";
+            endGame(false, true);
+        });
+
+        giveUpNoBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Give Up No button clicked");
+            giveUpDialog.style.display = "none";
+            gameScreen.style.display = "flex";
+        });
+    }
+
+    if (guessesLink && guessesScreen) {
+        guessesLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guesses link clicked");
+            const guessesList = document.getElementById("guesses-list");
+            console.log("Current guesses array:", guesses);
+            if (guessesScreen.style.display === "flex") {
+                guessesScreen.style.display = "none";
+                gameScreen.style.display = "flex";
+            } else {
+                guessesList.innerHTML = guesses.length > 0 
+                    ? guesses.join(' <span class="separator yellow">|</span>   ')
+                    : "No guesses yet!";
+                guessesScreen.style.display = "flex";
+                console.log("Guesses screen displayed, content:", guessesList.innerHTML);
+            }
+        });
+    }
+
     function showGameSelectScreen() {
         console.log("Showing game select screen");
         resetScreenDisplays();
@@ -352,6 +412,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameOverScreen) gameOverScreen.style.display = "none";
         if (gameSelectScreen) gameSelectScreen.style.display = "none";
         if (guessesScreen) guessesScreen.style.display = "none";
+        if (giveUpDialog) giveUpDialog.style.display = "none";
     }
 
     async function fetchGameData() {
@@ -551,26 +612,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-        const giveUpBtn = document.getElementById("give-up-btn");
-        if (giveUpBtn) {
-            giveUpBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                gaveUp = true;
-                let originalGameNumber;
-                if (currentGameNumber.includes("- Private")) {
-                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                    const privateGame = privateGames.find(game => game["Game Number"] === String(currentNum));
-                    originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
-                } else {
-                    originalGameNumber = currentGameNumber;
-                }
-                const gameType = currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple";
-                saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
-                endGame(false, true);
-            });
-        }
-
         const prevGameBtn = document.getElementById("prev-game-btn");
         const nextGameBtn = document.getElementById("next-game-btn");
 
@@ -652,9 +693,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (visibleHints.length > 0) {
             hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ');
             hintsContainer.style.display = "block";
-            console.log("Hints displayed:", visibleHints);
+            // Calculate width of visible hints
+            const tempSpan = document.createElement("span");
+            tempSpan.style.fontSize = "3.25vh";
+            tempSpan.style.fontFamily = "'Luckiest Guy', cursive";
+            tempSpan.style.visibility = "hidden";
+            tempSpan.style.position = "absolute";
+            tempSpan.textContent = visibleHints.join(" | ");
+            document.body.appendChild(tempSpan);
+            const hintWidth = tempSpan.offsetWidth + 20;
+            document.body.removeChild(tempSpan);
+            hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
+            console.log("Hints displayed:", visibleHints, "Width:", hintWidth);
         } else {
             hintsContainer.style.display = "none";
+            hintsContainer.style.setProperty("--hint-width", "0px");
             console.log("No hints to display yet");
         }
     }
@@ -698,6 +751,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                     hintSpan.textContent += newHint[charIndex];
                     charIndex++;
                     setTimeout(typeLetter, 100);
+                } else {
+                    // Update width after full hint is revealed
+                    const tempSpan = document.createElement("span");
+                    tempSpan.style.fontSize = "3.25vh";
+                    tempSpan.style.fontFamily = "'Luckiest Guy', cursive";
+                    tempSpan.style.visibility = "hidden";
+                    tempSpan.style.position = "absolute";
+                    tempSpan.textContent = hints.slice(0, hintIndex + 1).join(" | ");
+                    document.body.appendChild(tempSpan);
+                    const hintWidth = tempSpan.offsetWidth + 20;
+                    document.body.removeChild(tempSpan);
+                    hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
+                    console.log("Revealed hint width:", hintWidth);
                 }
             }
             typeLetter();
@@ -717,9 +783,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (visibleHints.length > 0) {
             hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ');
             hintsContainer.style.display = "block";
-            console.log("Adjusted hints after guess:", visibleHints);
+            // Recalculate width
+            const tempSpan = document.createElement("span");
+            tempSpan.style.fontSize = "3.25vh";
+            tempSpan.style.fontFamily = "'Luckiest Guy', cursive";
+            tempSpan.style.visibility = "hidden";
+            tempSpan.style.position = "absolute";
+            tempSpan.textContent = visibleHints.join(" | ");
+            document.body.appendChild(tempSpan);
+            const hintWidth = tempSpan.offsetWidth + 20;
+            document.body.removeChild(tempSpan);
+            hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
+            console.log("Adjusted hints after guess:", visibleHints, "Width:", hintWidth);
         } else {
             hintsContainer.style.display = "none";
+            hintsContainer.style.setProperty("--hint-width", "0px");
             console.log("No hints to adjust after guess");
         }
     }
@@ -795,10 +873,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             guesses.push(upperGuess);
             guessCount++;
             score = guessCount;
-            const guessesBtnElement = document.getElementById("guesses-btn");
-            if (guessesBtnElement) {
-                guessesBtnElement.textContent = `Guesses: ${guessCount}`;
-            }
             console.log("Guess processed:", { guessCount, score });
 
             if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
@@ -905,12 +979,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessCount = 0;
         gaveUp = false;
         guesses = [];
-        const guessesBtnElement = document.getElementById("guesses-btn");
-        if (guessesBtnElement) {
-            guessesBtnElement.textContent = "Guesses: 0";
-        } else {
-            console.error("guesses-btn element not found in resetGame");
-        }
         const guessInput = document.getElementById("guess-input");
         if (guessInput) {
             guessInput.value = "";
@@ -958,7 +1026,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Update all game number displays across screens
         const gameNumberDisplays = document.querySelectorAll(".game-number-display");
         gameNumberDisplays.forEach(display => {
-            display.textContent = `Game ${currentGameNumber.replace("Game #", "")}`;
+            display.textContent = `Game #${currentGameNumber.replace("Game #", "")}`;
         });
 
         // Set the background image for the game

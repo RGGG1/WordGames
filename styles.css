@@ -123,11 +123,12 @@ a {
 .game-number-display {
   position: fixed;
   top: 5vh;
-  right: 2vw;
+  right: calc(2vw + 3.6vh);
   font-size: 1.8vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
   z-index: 10;
+  text-align: right;
 }
 
 /* Ensure game number display is above overlays */
@@ -135,6 +136,66 @@ a {
 #game-select-screen .game-number-display,
 #create-form .game-number-display {
   z-index: 2;
+  right: calc(2vw + 3.6vh);
+}
+
+/* Control links (Give Up, Guesses) */
+.control-link {
+  position: fixed;
+  top: 7vh;
+  right: calc(2vw + 3.6vh);
+  font-size: 1.8vh;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  z-index: 10;
+  text-align: right;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#guesses-link {
+  top: 9vh;
+}
+
+/* Give-up confirmation dialog */
+.dialog {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 200;
+}
+
+.dialog-content {
+  background: #FFFFFF;
+  border-radius: 1vh;
+  padding: 2vh 4vw;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  max-width: 80vw;
+}
+
+.dialog-message {
+  font-size: 2.5vh;
+  color: #000000;
+  display: block;
+  margin-bottom: 2vh;
+}
+
+.dialog-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 2vw;
+}
+
+.dialog-buttons .control-btn {
+  font-size: 2.5vh;
+  padding: 0.75vh 2vw;
 }
 
 /* Main content on game screen */
@@ -177,7 +238,7 @@ a {
   margin: 0;
   padding: 0;
   position: absolute;
-  bottom: 13.95vh;
+  bottom: 6.15vh;
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -341,42 +402,13 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 110%;
+  width: var(--hint-width, 110%);
   height: calc(3.25vh * 1.2 * 2 + 1vh);
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
   padding: 0.5vh 0;
   box-sizing: border-box;
-}
-
-/* Game controls */
-#game-controls {
-  width: 100%;
-  background: none;
-  display: flex;
-  justify-content: space-between;
-  position: absolute;
-  bottom: 5vh;
-}
-
-.controls-center {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-}
-
-.control-btn-row {
-  display: inline-flex;
-  justify-content: center;
-  width: 100%;
-  gap: 0.75ch;
-  margin-bottom: 0.5vh;
-}
-
-.control-btn-row.top-row {
-  margin-top: 1em;
 }
 
 /* Create a Wordy button */
@@ -885,8 +917,24 @@ a {
   }
   .game-number-display {
       font-size: 1.6vh;
-      right: 2vw;
+      right: calc(2vw + 4.5vh);
       top: 5vh;
+  }
+  .control-link {
+      font-size: 1.6vh;
+      right: calc(2vw + 4.5vh);
+      top: 7vh;
+  }
+  #guesses-link {
+      top: 9vh;
+  }
+  .dialog-message {
+      font-size: 2vh;
+      margin-bottom: 1.5vh;
+  }
+  .dialog-buttons .control-btn {
+      font-size: 2vh;
+      padding: 0.5vh 1.5vw;
   }
   #main-content {
       width: 100%;
@@ -927,9 +975,6 @@ a {
   }
   .control-btn:hover {
       font-size: clamp(2.5vh, 3.5vw, 3.65vh);
-  }
-  .control-btn-row.top-row {
-      margin-top: 0.5vh;
   }
   .hints-inline::before {
       height: calc(100% + 0.5vh);
