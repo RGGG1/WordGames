@@ -46,14 +46,15 @@ a {
   opacity: 1;
   visibility: visible;
   display: inline-block;
-  text-shadow: 1px 1px 2px #FFFFFF;
+  /* Removed text-shadow to eliminate white outline */
 }
 
 .menu-btn i {
   color: #000000;
   opacity: 1;
   visibility: visible;
-  text-shadow: 1px 1px 2px #FFFFFF;
+  -webkit-text-stroke: 0.1vh #FFB300; /* Added yellow outline */
+  /* Removed text-shadow to eliminate white outline */
 }
 
 .hamburger-menu {
@@ -67,7 +68,7 @@ a {
   text-transform: uppercase;
   color: #000000;
   -webkit-text-stroke: 0.1vh #FFB300; /* Yellow outline */
-  text-shadow: 1px 1px 2px #FFFFFF;
+  /* Removed text-shadow to eliminate white outline */
   cursor: pointer;
   z-index: 11;
   position: static;
@@ -244,35 +245,35 @@ a {
   text-align: center;
 }
 
-/* Individual hint styling and positioning (above guess box) */
+/* Individual hint styling and positioning (adjusted to match mockup) */
 .hint-line {
   position: absolute;
   margin: 0;
 }
 
 #hint-1 {
-  top: 15%;
-  left: 10%;
+  top: 10vh; /* Positioned in top-left corner, above the pineapple */
+  left: 5vw;
 }
 
 #hint-2 {
-  top: 15%;
-  right: 10%;
+  top: 10vh; /* Positioned in top-right corner, above the pineapple */
+  right: 5vw;
 }
 
 #hint-3 {
-  top: 20%;
-  right: 10%;
+  top: 25vh; /* Positioned middle-left, to the left of the pineapple's sunglasses */
+  left: 5vw;
 }
 
 #hint-4 {
-  top: 25%;
-  left: 10%;
+  top: 25vh; /* Positioned middle-right, to the right of the pineapple's sunglasses */
+  right: 5vw;
 }
 
 #hint-5 {
-  top: 25%;
-  right: 10%;
+  top: 40vh; /* Positioned bottom-left, to the left of the pineapple's base, above guess box */
+  left: 5vw;
 }
 
 /* Add faded background and styling to hints */

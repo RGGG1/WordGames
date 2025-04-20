@@ -648,7 +648,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function setupHints() {
-        // Target the individual hint containers (now positioned above the guess box in HTML)
+        // Target the individual hint containers (now positioned as per mockup in CSS)
         const hintElements = [
             document.getElementById("hint-1")?.querySelector("span"),
             document.getElementById("hint-2")?.querySelector("span"),
