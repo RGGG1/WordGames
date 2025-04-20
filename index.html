@@ -24,9 +24,11 @@
                 <button id="next-game-btn" class="header-nav-btn">→</button>
             </div>
         </div>
-        <span id="game-number-display" class="game-number-display"></span>
-        <span id="give-up-link" class="control-link">Give Up</span>
-        <span id="guesses-link" class="control-link">Guesses: 0</span>
+        <div id="game-controls-container">
+            <span id="game-number-display" class="game-number-display"></span>
+            <span id="give-up-link" class="control-link">Give Up</span>
+            <span id="guesses-link" class="control-link">Guesses: 0</span>
+        </div>
         <div id="give-up-dialog" class="dialog" style="display: none;">
             <div class="dialog-content">
                 <span class="dialog-message">Are you sure you want to give up?</span>
@@ -64,7 +66,9 @@
             </div>
             <span id="game-name">WORDY</span>
         </div>
-        <span id="game-number-display" class="game-number-display"></span>
+        <div id="game-controls-container">
+            <span id="game-number-display" class="game-number-display"></span>
+        </div>
         <span id="game-number"></span>
         <span id="todays-word-label">Today's Word</span>
         <span id="todays-word"></span>
@@ -104,7 +108,9 @@
             </div>
             <span id="game-name">WORDY</span>
         </div>
-        <span id="game-number-display" class="game-number-display"></span>
+        <div id="game-controls-container">
+            <span id="game-number-display" class="game-number-display"></span>
+        </div>
         <div id="game-select-content">
             <span id="game-list-title">WORDY GAMES</span>
             <div id="tabs">
@@ -118,7 +124,7 @@
                     <span>Guesses</span>
                 </div>
                 <div id="official-list" class="game-list"></div>
-                <div class="spacer"></div>
+                <div class="spacer"></pond>
                 <button id="official-back-btn" class="control-btn">Back</button>
             </div>
             <div id="private-games" class="tab-content">
@@ -149,7 +155,9 @@
             </div>
             <span id="game-name">WORDY</span>
         </div>
-        <span id="game-number-display" class="game-number-display"></span>
+        <div id="game-controls-container">
+            <span id="game-number-display" class="game-number-display"></span>
+        </div>
         <span class="form-input-label">Game Name</span>
         <input type="text" id="game-name-input" class="form-input" placeholder="Enter a name for your game">
         <div class="form-line"></div>

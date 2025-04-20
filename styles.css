@@ -47,6 +47,19 @@ a {
   margin: 0;
   z-index: 11;
   background: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Add placeholder to balance layout on non-game screens */
+#game-over #header::after,
+#game-select-screen #header::after,
+#create-form #header::after {
+  content: '';
+  width: 12vw; /* Approximate width of .header-nav-buttons */
+  height: 1px;
+  display: block;
 }
 
 /* Menu button styling */
@@ -124,44 +137,46 @@ a {
   font-size: 2.5vh;
 }
 
-/* Game number display and control links */
+/* Game controls container */
+#game-controls-container {
+  width: 95vw;
+  height: 5vh;
+  padding: 0 2vw;
+  margin: 0;
+  z-index: 11;
+  background: none;
+  position: fixed;
+  top: 5vh;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
 .game-number-display,
 .control-link {
   font-family: Arial, sans-serif;
   font-size: 1.8vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  z-index: 11;
   text-align: right;
-  width: 91vw; /* Matches header content area (95vw - 2vw padding on each side) */
-  box-sizing: border-box;
+  position: static;
+  width: auto;
 }
 
 .game-number-display {
-  position: fixed;
-  top: 5vh;
-  right: 2vw;
+  margin-bottom: 0.5vh;
 }
 
 .control-link {
-  position: fixed;
-  top: calc(5vh + 4.32vh); /* Two lines below Game #X (1.8vh * 1.2 * 2) */
-  right: 2vw;
+  margin-bottom: 0.5vh;
   cursor: pointer;
   text-decoration: underline;
-  z-index: 100;
 }
 
 #guesses-link {
-  top: calc(5vh + 4.32vh + 4.32vh); /* Four lines below Game #X */
-}
-
-/* Ensure visibility on all screens */
-#game-over .game-number-display,
-#game-select-screen .game-number-display,
-#create-form .game-number-display {
-  z-index: 11;
-  right: 2vw;
+  margin-bottom: 0;
 }
 
 /* Give-up confirmation dialog */
@@ -331,7 +346,6 @@ a {
   box-sizing: border-box;
 }
 
-/* Remove hover expansion for control buttons on desktop (game screen) */
 @media (min-width: 601px) {
   #game-screen .control-btn:hover {
     font-size: 3.375vh;
@@ -396,7 +410,7 @@ a {
   max-width: 90vw;
   white-space: normal;
   line-height: 1.2;
-  min-height: 0; /* Allow natural growth */
+  min-height: calc(3.25vh * 1.2 * 2); /* Pre-allocate two lines */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -410,12 +424,26 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
   width: var(--hint-width, 110%);
-  height: calc(3.25vh * 1.2 + 1vh);
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
   padding: 0.5vh 0;
   box-sizing: border-box;
+  display: none;
+}
+
+.hints-inline.lines-0::before {
+  display: none;
+}
+
+.hints-inline.lines-1::before {
+  display: block;
+  height: calc(3.25vh * 1.2 + 1vh);
+}
+
+.hints-inline.lines-2::before {
+  display: block;
+  height: calc(3.25vh * 1.2 * 2 + 1vh);
 }
 
 /* Create a Wordy button */
@@ -478,7 +506,6 @@ a {
   background-size: 100% 100%;
 }
 
-/* Standardize all screens to match game-screen */
 #game-over,
 #game-select-screen,
 #create-form {
@@ -503,15 +530,14 @@ a {
 #create-form::before {
   content: '';
   position: absolute;
-  top: 0; /* Adjusted to cover the header */
+  top: 0;
   left: 0;
   width: 100%;
-  height: 100%; /* Adjusted to cover the header */
+  height: 100%;
   background: rgba(255, 255, 255, 0.8);
   z-index: 1;
 }
 
-/* Ensure content on faded screens is above the overlay */
 #game-over > *,
 #game-select-screen > *,
 #create-form > * {
@@ -519,13 +545,11 @@ a {
   z-index: 2;
 }
 
-/* Remove pulse effect from specific buttons */
 #next-game-btn-end,
 #create-pineapple-end {
   animation: none !important;
 }
 
-/* Guesses screen with white background */
 #guesses-screen {
   background: #FFFFFF;
   position: fixed;
@@ -542,19 +566,16 @@ a {
   box-sizing: border-box;
 }
 
-/* Game over screen */
 #game-over {
   justify-content: flex-start;
   align-items: center;
 }
 
-/* Create form styling */
 .create-form {
   align-items: center;
   justify-content: center;
 }
 
-/* Game select screen */
 #game-select-screen {
   justify-content: flex-start;
   align-items: center;
@@ -653,7 +674,6 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Color classes */
 .green { color: #006400; }
 .yellow { color: #FFB300; }
 .orange { color: #FF4500; }
@@ -836,7 +856,6 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Guesses screen content */
 #guesses-content {
   width: 85vw;
   text-align: center;
@@ -868,7 +887,6 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Ad box styling */
 #ad-box {
   width: 100%;
   height: 4vh;
@@ -893,7 +911,6 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Responsive adjustments */
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
       width: 95vw;
@@ -926,17 +943,6 @@ a {
   .control-link {
       font-size: 1.6vh;
   }
-  .game-number-display {
-      right: 2vw;
-      top: 5vh;
-  }
-  .control-link {
-      right: 2vw;
-      top: calc(5vh + 3.84vh); /* Two lines (1.6vh * 1.2 * 2) */
-  }
-  #guesses-link {
-      top: calc(5vh + 3.84vh + 3.84vh); /* Four lines */
-  }
   .dialog-message {
       font-size: 2vh;
       margin-bottom: 1.5vh;
@@ -953,20 +959,20 @@ a {
       width: 85vw;
   }
   #guess-input-container {
-      height: 8vh;
+      height: 9vh;
       width: calc(100% - 30%);
       padding: 1vh 1vw;
   }
   #guess-input {
       font-size: 3.75vh;
-      height: 5vh;
-      line-height: 5vh;
-      bottom: -0.5vh;
+      height: 6vh;
+      line-height: 6vh;
+      bottom: -0.75vh;
   }
   .guess-btn {
       font-size: 3vh;
-      height: 8vh;
-      line-height: 8vh;
+      height: 9vh;
+      line-height: 9vh;
       width: 30%;
   }
   .guess-btn:hover {
