@@ -244,8 +244,14 @@ a {
   box-sizing: border-box;
 }
 
-.control-btn:hover {
-  font-size: 3.875vh; /* Expand text on hover */
+/* Remove hover expansion for control buttons on desktop (game screen) */
+@media (min-width: 601px) {
+  #game-screen .control-btn:hover {
+    font-size: 3.375vh; /* Prevent expansion on hover */
+  }
+  #game-screen .guess-btn:hover {
+    font-size: 4vh; /* Prevent expansion on hover */
+  }
 }
 
 .guess-btn {
@@ -263,10 +269,6 @@ a {
   align-items: center;
   box-sizing: border-box;
   transition: none;
-}
-
-.guess-btn:hover {
-  font-size: 4.5vh; /* Expand text on hover */
 }
 
 .guess-btn:active {
@@ -300,7 +302,7 @@ a {
   font-family: 'Luckiest Guy', cursive;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin-top: 0; /* Reduced to 0 to remove space on mobile */
+  margin-top: 0;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -316,11 +318,11 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 110%;
-  height: calc(100% + 1vh); /* Adjusted to better center vertically */
+  height: calc(100% + 1vh);
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
-  padding: 0.5vh 0; /* Reduced padding to center the background */
+  padding: 0.5vh 0;
   box-sizing: border-box;
 }
 
@@ -350,7 +352,7 @@ a {
 }
 
 .control-btn-row.top-row {
-  margin-top: 1em; /* Moved down one line on desktop */
+  margin-top: 1em; /* Default for desktop */
 }
 
 /* Create a Wordy button */
@@ -413,19 +415,24 @@ a {
   background-size: 100% 100%;
 }
 
-/* Standardize all screens */
+/* Standardize all screens to match game-screen */
 #game-over,
 #game-select-screen,
 #create-form {
+  display: flex; /* Ensure flex display for consistency */
+  flex-direction: column;
+  height: 100vh; /* Match game-screen */
+  width: 100vw; /* Match game-screen */
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 0;
+  padding: 0; /* Match game-screen */
   position: fixed;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
   background: url('newbackground.png') no-repeat center center;
   background-size: 100% 100%;
-  box-sizing: border-box;
+  z-index: 1; /* Match game-screen */
 }
 
 #game-over::before,
@@ -474,34 +481,20 @@ a {
 
 /* Game over screen */
 #game-over {
-  display: none;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-start; /* Already set in base style */
   align-items: center;
-  padding: 2vh;
-  padding-bottom: 5vh;
 }
 
 /* Create form styling */
 .create-form {
-  display: none;
-  flex-direction: column;
-  align-items: center;
+  align-items: center; /* Already set in base style */
   justify-content: center;
-  z-index: 200;
-  padding: 2vh;
-  box-sizing: border-box;
-  overflow: hidden;
 }
 
 /* Game select screen */
 #game-select-screen {
-  display: none;
-  flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-start; /* Already set in base style */
   align-items: center;
-  z-index: 100;
-  padding-bottom: 5vh;
 }
 
 #game-select-content {
@@ -599,7 +592,7 @@ a {
 
 /* Color classes */
 .green { color: #006400; }
-.yellow { color: #FFD700; }
+.yellow { color: #FFB300; }
 .orange { color: #FF4500; }
 .pink { color: #C71585; }
 .red { color: #8B0000; }
@@ -841,10 +834,8 @@ a {
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
       width: 95vw;
-      padding: 0 1vw;
-  }
-  #game-over #header {
-      padding: 0 1vw;
+      padding: 0 2vw; /* Match game-screen */
+      margin: 0; /* Match game-screen */
   }
   #game-name {
       font-size: clamp(2vh, 2.5vw, 2.5vh);
@@ -906,7 +897,7 @@ a {
       font-size: clamp(2.5vh, 3.5vw, 3.65vh);
   }
   .control-btn-row.top-row {
-      margin-top: 0; /* Remove extra space above buttons on mobile */
+      margin-top: 0.5vh; /* 0.5 lines of space (~0.5vh, assuming line height ~1vh) */
   }
   .hints-inline::before {
       height: calc(100% + 0.5vh); /* Fine-tuned for better centering on mobile */

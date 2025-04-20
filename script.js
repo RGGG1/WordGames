@@ -232,7 +232,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 hint3: document.getElementById("hint-3").value.trim().toUpperCase(),
                 hint4: document.getElementById("hint-4").value.trim().toUpperCase(),
                 hint5: document.getElementById("hint-5").value.trim().toUpperCase()
-                // Background is not included, so private games will use the default background
             };
 
             if (!formData.gameName || !formData.secretWord || !formData.hint1 || !formData.hint2 || !formData.hint3 || !formData.hint4 || !formData.hint5) {
@@ -299,7 +298,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 keepKeyboardOpen();
             } else {
                 guessesList.innerHTML = guesses.length > 0 
-                    ? guesses.join(' <span class="separator">|</span>   ')
+                    ? guesses.join(' <span class="separator yellow">|</span>   ')
                     : "No guesses yet!";
                 guessesScreen.style.display = "flex";
                 console.log("Guesses screen displayed, content:", guessesList.innerHTML);
@@ -384,9 +383,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            setTimeout(() => {
-                keepKeyboardOpen();
-            }, 100);
+            // Removed keepKeyboardOpen() to prevent auto-expanding keyboard on initial load
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
@@ -399,9 +396,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            setTimeout(() => {
-                keepKeyboardOpen();
-            }, 100);
+            // Removed keepKeyboardOpen() to prevent auto-expanding keyboard on initial load
             alert("Failed to load official games data. Using hardcoded game.");
         }
     }
@@ -662,7 +657,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintsContainer.innerHTML = "";
         const visibleHints = hints.slice(0, hintIndex + 1);
         if (visibleHints.length > 0) {
-            hintsContainer.innerHTML = visibleHints.join(' <span class="separator">|</span> ');
+            hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ');
             hintsContainer.style.display = "block";
             console.log("Hints displayed:", visibleHints);
         } else {
@@ -694,7 +689,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const visibleHints = hints.slice(0, hintIndex);
             const newHint = hints[hintIndex];
             if (visibleHints.length > 0) {
-                hintsContainer.innerHTML = visibleHints.join(' <span class="separator">|</span> ') + ' <span class="separator">|</span> ';
+                // Add the separator first, styled as yellow
+                hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ') + ' <span class="separator yellow">|</span> ';
             } else {
                 hintsContainer.innerHTML = "";
             }
@@ -727,7 +723,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         const visibleHints = hints.slice(0, hintIndex + 1);
         if (visibleHints.length > 0) {
-            hintsContainer.innerHTML = visibleHints.join(' <span class="separator">|</span> ');
+            hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ');
             hintsContainer.style.display = "block";
             console.log("Adjusted hints after guess:", visibleHints);
         } else {
