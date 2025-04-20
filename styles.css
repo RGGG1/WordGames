@@ -119,42 +119,42 @@ a {
   font-size: 2.5vh;
 }
 
-/* Game number display below header */
+/* Game number display and control links */
+.game-number-display,
+.control-link {
+  font-family: Arial, sans-serif;
+  font-size: 1.8vh;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  z-index: 11; /* Above header */
+  text-align: right;
+}
+
 .game-number-display {
   position: fixed;
   top: 5vh;
-  right: calc(2vw + 3.6vh);
-  font-size: 1.8vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  z-index: 10;
-  text-align: right;
+  right: 2vw;
 }
 
-/* Ensure game number display is above overlays */
-#game-over .game-number-display,
-#game-select-screen .game-number-display,
-#create-form .game-number-display {
-  z-index: 2;
-  right: calc(2vw + 3.6vh);
-}
-
-/* Control links (Give Up, Guesses) */
 .control-link {
   position: fixed;
   top: 7vh;
-  right: calc(2vw + 3.6vh);
-  font-size: 1.8vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  z-index: 10;
-  text-align: right;
+  right: 2vw;
   cursor: pointer;
   text-decoration: underline;
+  z-index: 100; /* Ensure clickability */
 }
 
 #guesses-link {
   top: 9vh;
+}
+
+/* Ensure visibility on all screens */
+#game-over .game-number-display,
+#game-select-screen .game-number-display,
+#create-form .game-number-display {
+  z-index: 11;
+  right: 2vw;
 }
 
 /* Give-up confirmation dialog */
@@ -238,7 +238,7 @@ a {
   margin: 0;
   padding: 0;
   position: absolute;
-  bottom: 6.15vh;
+  bottom: 6.15vh; /* Two lines lower from start */
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -915,14 +915,16 @@ a {
   .header-nav-btn:hover {
       font-size: clamp(2.3vh, 2.75vw, 2.75vh);
   }
-  .game-number-display {
+  .game-number-display,
+  .control-link {
       font-size: 1.6vh;
-      right: calc(2vw + 4.5vh);
+  }
+  .game-number-display {
+      right: 2vw;
       top: 5vh;
   }
   .control-link {
-      font-size: 1.6vh;
-      right: calc(2vw + 4.5vh);
+      right: 2vw;
       top: 7vh;
   }
   #guesses-link {

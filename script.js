@@ -299,25 +299,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    if (guessesBtn && guessesScreen && guessesCloseBtn) {
-        guessesBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Guesses button clicked");
-            const guessesList = document.getElementById("guesses-list");
-            console.log("Current guesses array:", guesses);
-            if (guessesScreen.style.display === "flex") {
-                guessesScreen.style.display = "none";
-                gameScreen.style.display = "flex";
-            } else {
-                guessesList.innerHTML = guesses.length > 0 
-                    ? guesses.join(' <span class="separator yellow">|</span>   ')
-                    : "No guesses yet!";
-                guessesScreen.style.display = "flex";
-                console.log("Guesses screen displayed, content:", guessesList.innerHTML);
-            }
-        });
-
+    if (guessesScreen && guessesCloseBtn) {
         guessesCloseBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -329,7 +311,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.addEventListener("click", (e) => {
             if (guessesScreen.style.display === "flex" && 
                 !guessesScreen.contains(e.target) && 
-                e.target !== guessesBtn) {
+                e.target !== guessesLink) {
                 console.log("Clicked outside guesses screen");
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
@@ -343,7 +325,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Give Up link clicked");
             giveUpDialog.style.display = "flex";
-        });
+        }, { capture: false });
 
         giveUpYesBtn.addEventListener("click", (e) => {
             e.preventDefault();
@@ -390,7 +372,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessesScreen.style.display = "flex";
                 console.log("Guesses screen displayed, content:", guessesList.innerHTML);
             }
-        });
+        }, { capture: false });
     }
 
     function showGameSelectScreen() {
@@ -594,7 +576,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         document.addEventListener("click", (e) => {
             if (!gameOver && gameScreen.style.display === "flex" &&
-                !gameControls.contains(e.target) &&
+                !gameControls?.contains(e.target) &&
                 !e.target.closest("button") &&
                 e.target.id !== "game-name" &&
                 e.target !== input) {
@@ -706,9 +688,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
             console.log("Hints displayed:", visibleHints, "Width:", hintWidth);
         } else {
-            hintsContainer.style.display = "none";
+            hintsContainer.style.display = "block"; // Ensure no layout shift
             hintsContainer.style.setProperty("--hint-width", "0px");
-            console.log("No hints to display yet");
+            console.log("No hints to display yet, but container is visible to prevent shift");
         }
     }
 
@@ -796,9 +778,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
             console.log("Adjusted hints after guess:", visibleHints, "Width:", hintWidth);
         } else {
-            hintsContainer.style.display = "none";
+            hintsContainer.style.display = "block";
             hintsContainer.style.setProperty("--hint-width", "0px");
-            console.log("No hints to adjust after guess");
+            console.log("No hints to adjust after guess, but container is visible");
         }
     }
 
@@ -874,6 +856,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessCount++;
             score = guessCount;
             console.log("Guess processed:", { guessCount, score });
+
+            // Update guesses link text
+            const guessesLink = document.getElementById("guesses-link");
+            if (guessesLink) {
+                guessesLink.textContent = `Guesses: ${guessCount}`;
+            }
 
             if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
             else updateHintCountdown();
@@ -1003,7 +991,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
             hintsContainer.innerHTML = "";
-            hintsContainer.style.display = "none";
+            hintsContainer.style.display = "block"; // Ensure visibility to prevent layout shift
+        }
+
+        // Reset guesses link text
+        const guessesLink = document.getElementById("guesses-link");
+        if (guessesLink) {
+            guessesLink.textContent = "Guesses: 0";
         }
 
         updateHintCountdown();
@@ -1028,6 +1022,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameNumberDisplays.forEach(display => {
             display.textContent = `Game #${currentGameNumber.replace("Game #", "")}`;
         });
+
+        // Ensure guesses link text is initialized
+        const guessesLink = document.getElementById("guesses-link");
+        if (guessesLink) {
+            guessesLink.textContent = "Guesses: 0";
+        }
 
         // Set the background image for the game
         const backgroundUrl = game["Background"]?.trim();
