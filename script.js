@@ -382,10 +382,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            // Ensure keyboard is open on load
             setTimeout(() => {
                 keepKeyboardOpen();
-            }, 100); // Small delay to ensure DOM is fully rendered
+            }, 100);
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
@@ -398,7 +397,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            // Ensure keyboard is open on load (fallback case)
             setTimeout(() => {
                 keepKeyboardOpen();
             }, 100);
@@ -989,6 +987,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         ].filter(hint => hint);
         hintIndex = 0;
         setupHints();
+
+        // Update the game number display above the guess box
+        const gameNumberDisplay = document.getElementById("game-number-display");
+        if (gameNumberDisplay) {
+            gameNumberDisplay.textContent = currentGameNumber;
+        }
+
         console.log("Loaded game:", { currentGameNumber, secretWord, hints });
     }
 
