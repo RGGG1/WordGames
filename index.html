@@ -18,7 +18,6 @@
                 <button id="home-btn" class="menu-item">Home</button>
             </div>
             <span id="game-name">WORDY</span>
-            <!-- Moved navigation buttons to header -->
             <div class="header-nav-buttons">
                 <button id="prev-game-btn" class="header-nav-btn">←</button>
                 <button id="all-games-btn" class="header-nav-btn"><i class="fas fa-list"></i></button>
@@ -37,7 +36,6 @@
                     </div>
                 </div>
                 <div class="hint-countdown" style="display: none;">(next hint revealed in <span id="countdown">5</span> guesses)</div>
-                <!-- New inline hints container -->
                 <div id="hints-container" class="hints-inline"></div>
             </div>
             <div id="game-controls">
@@ -81,9 +79,9 @@
                 <a id="share-twitter" href="" target="_blank"><i class="fab fa-x-twitter"></i></a>
             </div>
             <div class="end-buttons">
-                <button id="next-game-btn-end" class="control-btn flash">Next Game</button>
+                <button id="next-game-btn-end" class="control-btn">Next Game</button> <!-- Removed flash class -->
                 <span class="or-text">or</span>
-                <button id="create-pineapple-end" class="control-btn flash">
+                <button id="create-pineapple-end" class="control-btn"> <!-- Removed flash class -->
                     Create a Wordy<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>
                 </button>
             </div>
@@ -155,7 +153,7 @@
         <span class="form-input-label">Hint #2</span>
         <input type="text" id="hint-2" class="form-input" placeholder="Enter hint #2">
         <div class="form-line"></div>
-        <span class="form-input-label">Hint #3</span>
+        <span class="form-input-label">Hint #stages/3</span>
         <input type="text" id="hint-3" class="form-input" placeholder="Enter hint #3">
         <div class="form-line"></div>
         <span class="form-input-label">Hint #4</span>

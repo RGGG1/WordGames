@@ -672,6 +672,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                     hintsContainer.appendChild(separator);
                 }
             });
+            // Determine which separators to show based on same-line words
+            setTimeout(() => {
+                const hintElements = hintsContainer.querySelectorAll(".hint-text");
+                const separators = hintsContainer.querySelectorAll(".separator");
+                hintElements.forEach((hint, index) => {
+                    if (index < hintElements.length - 1) {
+                        const currentHint = hint.getBoundingClientRect();
+                        const nextHint = hintElements[index + 1].getBoundingClientRect();
+                        const separator = separators[index];
+                        // Check if hints are on the same line (same top position)
+                        if (Math.abs(currentHint.top - nextHint.top) < 5) {
+                            separator.style.display = "inline-block";
+                        } else {
+                            separator.style.display = "none";
+                        }
+                    }
+                });
+            }, 0);
             hintsContainer.style.display = "block";
             console.log("Hints displayed:", visibleHints);
         } else {
@@ -719,6 +737,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                     hintSpan.textContent += newHint[charIndex];
                     charIndex++;
                     setTimeout(typeLetter, 100);
+                } else {
+                    // After typing, adjust separators
+                    const hintElements = hintsContainer.querySelectorAll(".hint-text");
+                    const separators = hintsContainer.querySelectorAll(".separator");
+                    hintElements.forEach((hint, index) => {
+                        if (index < hintElements.length - 1) {
+                            const currentHint = hint.getBoundingClientRect();
+                            const nextHint = hintElements[index + 1].getBoundingClientRect();
+                            const separator = separators[index];
+                            if (Math.abs(currentHint.top - nextHint.top) < 5) {
+                                separator.style.display = "inline-block";
+                            } else {
+                                separator.style.display = "none";
+                            }
+                        }
+                    });
                 }
             }
             typeLetter();
@@ -749,6 +783,23 @@ document.addEventListener("DOMContentLoaded", async () => {
                     hintsContainer.appendChild(separator);
                 }
             });
+            // Adjust separators after rendering
+            setTimeout(() => {
+                const hintElements = hintsContainer.querySelectorAll(".hint-text");
+                const separators = hintsContainer.querySelectorAll(".separator");
+                hintElements.forEach((hint, index) => {
+                    if (index < hintElements.length - 1) {
+                        const currentHint = hint.getBoundingClientRect();
+                        const nextHint = hintElements[index + 1].getBoundingClientRect();
+                        const separator = separators[index];
+                        if (Math.abs(currentHint.top - nextHint.top) < 5) {
+                            separator.style.display = "inline-block";
+                        } else {
+                            separator.style.display = "none";
+                        }
+                    }
+                });
+            }, 0);
             hintsContainer.style.display = "block";
             console.log("Adjusted hints after guess:", visibleHints);
         } else {
