@@ -232,7 +232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 hint3: document.getElementById("hint-3").value.trim().toUpperCase(),
                 hint4: document.getElementById("hint-4").value.trim().toUpperCase(),
                 hint5: document.getElementById("hint-5").value.trim().toUpperCase()
-                // Note: Background URL is not collected via the form; it can be added to the private games spreadsheet
+                // Background is not included, so private games will use the default background
             };
 
             if (!formData.gameName || !formData.secretWord || !formData.hint1 || !formData.hint2 || !formData.hint3 || !formData.hint4 || !formData.hint5) {
@@ -662,36 +662,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintsContainer.innerHTML = "";
         const visibleHints = hints.slice(0, hintIndex + 1);
         if (visibleHints.length > 0) {
-            visibleHints.forEach((hint, index) => {
-                const hintSpan = document.createElement("span");
-                hintSpan.className = "hint-text";
-                hintSpan.textContent = hint;
-                hintsContainer.appendChild(hintSpan);
-                if (index < visibleHints.length - 1) {
-                    const separator = document.createElement("span");
-                    separator.className = "separator";
-                    separator.textContent = "|";
-                    hintsContainer.appendChild(separator);
-                }
-            });
-            // Determine which separators to show based on same-line words
-            setTimeout(() => {
-                const hintElements = hintsContainer.querySelectorAll(".hint-text");
-                const separators = hintsContainer.querySelectorAll(".separator");
-                hintElements.forEach((hint, index) => {
-                    if (index < hintElements.length - 1) {
-                        const currentHint = hint.getBoundingClientRect();
-                        const nextHint = hintElements[index + 1].getBoundingClientRect();
-                        const separator = separators[index];
-                        // Check if hints are on the same line (same top position)
-                        if (Math.abs(currentHint.top - nextHint.top) < 5) {
-                            separator.style.display = "inline-block";
-                        } else {
-                            separator.style.display = "none";
-                        }
-                    }
-                });
-            }, 0);
+            hintsContainer.innerHTML = visibleHints.join(' <span class="separator">|</span> ');
             hintsContainer.style.display = "block";
             console.log("Hints displayed:", visibleHints);
         } else {
@@ -711,34 +682,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     window.addEventListener("resize", adjustBackground);
 
-    function willHintFitOnSameLine(hintsContainer, newHint) {
-        // Create a temporary span to measure the new hint's width
-        const tempSpan = document.createElement("span");
-        tempSpan.className = "hint-text";
-        tempSpan.textContent = newHint;
-        tempSpan.style.visibility = "hidden";
-        hintsContainer.appendChild(tempSpan);
-
-        const hintElements = hintsContainer.querySelectorAll(".hint-text");
-        const lastHint = hintElements[hintElements.length - 2]; // Last hint before the new one
-        const newHintWidth = tempSpan.getBoundingClientRect().width;
-        hintsContainer.removeChild(tempSpan);
-
-        if (!lastHint) return true; // If no previous hints, it will fit on the first line
-
-        const containerWidth = hintsContainer.getBoundingClientRect().width;
-        const lastHintRect = lastHint.getBoundingClientRect();
-        const containerLeft = hintsContainer.getBoundingClientRect().left;
-
-        // Estimate remaining space on the current line
-        const spaceUsed = lastHintRect.right - containerLeft;
-        const spaceRemaining = containerWidth - (spaceUsed % containerWidth);
-        const separatorWidth = 10; // Approximate width of separator and margins
-        const totalNewWidth = newHintWidth + separatorWidth;
-
-        return spaceRemaining >= totalNewWidth;
-    }
-
     function revealHint() {
         hintIndex++;
         console.log("Revealing hint, new hintIndex:", hintIndex, "total hints:", hints.length);
@@ -748,30 +691,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.error("hints-container element not found in revealHint");
                 return;
             }
-            const visibleHints = hints.slice(0, hintIndex + 1);
+            const visibleHints = hints.slice(0, hintIndex);
             const newHint = hints[hintIndex];
-
-            // Check if the new hint will fit on the same line
-            const fitsOnSameLine = willHintFitOnSameLine(hintsContainer, newHint);
-
-            if (visibleHints.length > 1) {
-                const separator = document.createElement("span");
-                separator.className = "separator";
-                separator.textContent = "|";
-                // Show separator immediately if assumed to be on the same line
-                if (fitsOnSameLine) {
-                    separator.style.display = "inline-block";
-                }
-                hintsContainer.appendChild(separator);
-
-                // If it won't fit, force a line break before the separator
-                if (!fitsOnSameLine) {
-                    separator.style.display = "none"; // Hide separator if on different lines
-                    const lineBreak = document.createElement("div");
-                    lineBreak.style.width = "100%";
-                    lineBreak.style.height = "0";
-                    hintsContainer.appendChild(lineBreak);
-                }
+            if (visibleHints.length > 0) {
+                hintsContainer.innerHTML = visibleHints.join(' <span class="separator">|</span> ') + ' <span class="separator">|</span> ';
+            } else {
+                hintsContainer.innerHTML = "";
             }
 
             const hintSpan = document.createElement("span");
@@ -785,22 +710,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     hintSpan.textContent += newHint[charIndex];
                     charIndex++;
                     setTimeout(typeLetter, 100);
-                } else {
-                    // After typing, adjust separators
-                    const hintElements = hintsContainer.querySelectorAll(".hint-text");
-                    const separators = hintsContainer.querySelectorAll(".separator");
-                    hintElements.forEach((hint, index) => {
-                        if (index < hintElements.length - 1) {
-                            const currentHint = hint.getBoundingClientRect();
-                            const nextHint = hintElements[index + 1].getBoundingClientRect();
-                            const separator = separators[index];
-                            if (Math.abs(currentHint.top - nextHint.top) < 5) {
-                                separator.style.display = "inline-block";
-                            } else {
-                                separator.style.display = "none";
-                            }
-                        }
-                    });
                 }
             }
             typeLetter();
@@ -816,38 +725,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("hints-container element not found in adjustHintsAfterGuess");
             return;
         }
-        hintsContainer.innerHTML = "";
         const visibleHints = hints.slice(0, hintIndex + 1);
         if (visibleHints.length > 0) {
-            visibleHints.forEach((hint, index) => {
-                const hintSpan = document.createElement("span");
-                hintSpan.className = "hint-text";
-                hintSpan.textContent = hint;
-                hintsContainer.appendChild(hintSpan);
-                if (index < visibleHints.length - 1) {
-                    const separator = document.createElement("span");
-                    separator.className = "separator";
-                    separator.textContent = "|";
-                    hintsContainer.appendChild(separator);
-                }
-            });
-            // Adjust separators after rendering
-            setTimeout(() => {
-                const hintElements = hintsContainer.querySelectorAll(".hint-text");
-                const separators = hintsContainer.querySelectorAll(".separator");
-                hintElements.forEach((hint, index) => {
-                    if (index < hintElements.length - 1) {
-                        const currentHint = hint.getBoundingClientRect();
-                        const nextHint = hintElements[index + 1].getBoundingClientRect();
-                        const separator = separators[index];
-                        if (Math.abs(currentHint.top - nextHint.top) < 5) {
-                            separator.style.display = "inline-block";
-                        } else {
-                            separator.style.display = "none";
-                        }
-                    }
-                });
-            }, 0);
+            hintsContainer.innerHTML = visibleHints.join(' <span class="separator">|</span> ');
             hintsContainer.style.display = "block";
             console.log("Adjusted hints after guess:", visibleHints);
         } else {
