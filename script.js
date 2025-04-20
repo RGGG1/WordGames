@@ -19,7 +19,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
     const gameSelectScreen = document.getElementById("game-select-screen");
-    const allGamesBtn = document.getElementById("all-games-btn");
     const homeBtn = document.getElementById("home-btn");
     const createPineappleBtn = document.getElementById("create-pineapple");
     const createForm = document.getElementById("create-form");
@@ -38,6 +37,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const giveUpYesBtn = document.getElementById("give-up-yes-btn");
     const giveUpNoBtn = document.getElementById("give-up-no-btn");
     const guessesLink = document.getElementById("guesses-link");
+    const allGamesLink = document.getElementById("all-games-link");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -131,11 +131,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    if (allGamesBtn) {
-        allGamesBtn.addEventListener("click", (e) => {
+    if (allGamesLink) {
+        allGamesLink.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("All Games button clicked");
+            console.log("All Games link clicked");
             showGameSelectScreen();
         });
     }
@@ -588,7 +588,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 !e.target.closest("button") &&
                 e.target.id !== "game-name" &&
                 e.target !== input) {
-                // Removed keepKeyboardOpen to prevent auto-focus
             }
         });
 
@@ -601,53 +600,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 adjustBackground();
             });
         });
-
-        const prevGameBtn = document.getElementById("prev-game-btn");
-        const nextGameBtn = document.getElementById("next-game-btn");
-
-        if (prevGameBtn) {
-            prevGameBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log("Previous game button clicked, currentGameNumber:", currentGameNumber);
-                let currentIndex;
-                let gameList;
-                if (currentGameNumber.includes("- Private")) {
-                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                    currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                    gameList = privateGames;
-                } else {
-                    currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
-                    gameList = allGames;
-                }
-                if (currentIndex < gameList.length - 1) {
-                    loadGame(gameList[currentIndex + 1]);
-                    console.log("Loading previous game, new index:", currentIndex + 1);
-                }
-            });
-        }
-
-        if (nextGameBtn) {
-            nextGameBtn.addEventListener("click", (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log("Next game button clicked, currentGameNumber:", currentGameNumber);
-                let currentIndex;
-                let gameList;
-                if (currentGameNumber.includes("- Private")) {
-                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                    currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                    gameList = privateGames;
-                } else {
-                    currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
-                    gameList = allGames;
-                }
-                if (currentIndex > 0) {
-                    loadGame(gameList[currentIndex - 1]);
-                    console.log("Loading next game, new index:", currentIndex - 1);
-                }
-            });
-        }
 
         input.addEventListener("focus", () => {
             console.log("Input focused");
@@ -685,7 +637,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.body.appendChild(tempContainer);
         
         const height = tempContainer.offsetHeight;
-        const lineHeight = 3.25 * 1.2; // vh
+        const lineHeight = 3.25 * 1.2;
         const lines = Math.ceil(height / lineHeight);
         
         document.body.removeChild(tempContainer);
@@ -731,7 +683,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintFade(hintsContainer, visibleHints);
             console.log("Hints displayed:", visibleHints);
         } else {
-            hintsContainer.style.display = "block"; // Reserve space
+            hintsContainer.style.display = "block";
             hintsContainer.classList.add('lines-0');
             console.log("No hints to display yet, reserving space");
         }
@@ -742,8 +694,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         screens.forEach(screen => {
             if (screen && screen.style.display === "flex") {
                 screen.style.height = "100vh";
+                screen.style.width = "100vw";
+                screen.offsetHeight;
             }
         });
+        window.dispatchEvent(new Event('resize'));
     }
 
     window.addEventListener("resize", adjustBackground);
@@ -1080,5 +1035,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await fetchGameData();
     await fetchPrivateGames();
-    displayGameList();
+    resetScreenDisplays();
+    gameScreen.style.display = "flex";
+    adjustBackground();
 });

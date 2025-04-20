@@ -29,7 +29,7 @@ a {
   z-index: 10;
   background: none;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   margin: 0;
   padding: 0 2vw;
@@ -48,7 +48,7 @@ a {
   z-index: 11;
   background: none;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
 }
 
@@ -64,8 +64,8 @@ a {
   visibility: visible;
   display: inline-block;
   line-height: 2vh;
-  position: absolute;
-  left: 2vw;
+  position: static;
+  margin-right: 2vw;
 }
 
 .menu-btn:hover {
@@ -92,43 +92,9 @@ a {
   -webkit-text-stroke: 0.1vh #FFFFFF;
   cursor: pointer;
   z-index: 11;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  position: static;
   margin-right: 0;
   line-height: 2.5vh;
-}
-
-/* Header navigation buttons styling */
-.header-nav-buttons {
-  display: none;
-  position: absolute;
-  right: 2vw;
-}
-
-#game-screen .header-nav-buttons {
-  display: flex;
-  gap: 1vw;
-}
-
-.header-nav-btn {
-  font-family: 'Luckiest Guy', cursive;
-  font-size: 2vh;
-  background: #FFFFFF;
-  color: #000000;
-  border: 0.1vh solid #000000;
-  border-radius: 0.6vh;
-  padding: 0.5vh 1vw;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-sizing: border-box;
-  line-height: 2vh;
-}
-
-.header-nav-btn:hover {
-  font-size: 2.5vh;
 }
 
 /* Game controls container */
@@ -169,8 +135,17 @@ a {
   text-decoration: underline;
 }
 
+#all-games-link {
+  margin-top: 1.8vh;
+}
+
 #guesses-link {
   margin-bottom: 0;
+}
+
+/* Spacer for two-line separation */
+.spacer {
+  height: 1.8vh;
 }
 
 /* Game number display on non-game screens */
@@ -244,12 +219,14 @@ a {
   top: 0;
   left: 0;
   z-index: 1;
+  background: url('newbackground.png') no-repeat center center;
+  background-size: 100% 100%;
 }
 
 #main-content {
   position: absolute;
   top: 0;
-  width: 100%;
+  width: 100vw;
   height: 60vh;
   left: 50%;
   transform: translateX(-50%);
@@ -433,7 +410,7 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80vw;
+  width: 85vw;
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
@@ -511,11 +488,6 @@ a {
 }
 
 /* Backgrounds for all screens */
-#game-screen {
-  background: url('newbackground.png') no-repeat center center;
-  background-size: 100% 100%;
-}
-
 #game-over,
 #game-select-screen,
 #create-form {
@@ -935,19 +907,6 @@ a {
   .menu-btn {
       font-size: clamp(1.8vh, 2.25vw, 2.25vh);
       line-height: clamp(1.8vh, 2.25vw, 2.25vh);
-  }
-  .header-nav-btn {
-      font-size: clamp(1.8vh, 2.25vw, 2.25vh);
-      width: clamp(3.6vh, 4.5vw, 4.5vh);
-      height: clamp(3.6vh, 4.5vw, 4.5vh);
-      padding: 0;
-      line-height: clamp(3.6vh, 4.5vw, 4.5vh);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-  }
-  .header-nav-btn:hover {
-      font-size: clamp(2.3vh, 2.75vw, 2.75vh);
   }
   .game-number-display,
   .control-link {
