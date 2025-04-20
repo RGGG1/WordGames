@@ -668,6 +668,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     hintsContainer.appendChild(separator);
                 }
             });
+            hintsContainer.style.display = "block"; // Ensure container is visible
             console.log("Hints displayed:", visibleHints);
         } else {
             hintsContainer.style.display = "none";
@@ -980,8 +981,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             game["Hint 4"]?.toUpperCase(),
             game["Hint 5"]?.toUpperCase()
         ].filter(hint => hint);
+        hintIndex = 0; // Ensure hintIndex starts at 0
+        setupHints(); // Show the first hint immediately
         console.log("Loaded game:", { currentGameNumber, secretWord, hints });
-        setupHints();
     }
 
     await fetchGameData();

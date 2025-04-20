@@ -29,10 +29,11 @@ a {
   height: 5vh;
   background: none;
   display: flex;
-  justify-content: space-between; /* Adjusted to space out elements */
+  justify-content: space-between;
   align-items: center;
   margin: 0;
   padding: 0 2vw;
+  box-sizing: border-box; /* Ensure padding doesn't affect width */
 }
 
 .menu-btn {
@@ -52,7 +53,7 @@ a {
   color: #000000;
   opacity: 1;
   visibility: visible;
-  -webkit-text-stroke: 0.1vh #FFB300;
+  -webkit-text-stroke: 0.1vh #FFFFFF; /* Changed to white outline */
 }
 
 .hamburger-menu {
@@ -65,29 +66,29 @@ a {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #000000;
-  -webkit-text-stroke: 0.1vh #FFB300;
+  -webkit-text-stroke: 0.1vh #FFFFFF; /* Changed to white outline */
   cursor: pointer;
   z-index: 11;
   position: static;
   transform: none;
-  margin-right: auto; /* Pushes nav buttons to the right */
+  margin-right: auto;
 }
 
 /* Header navigation buttons styling */
 .header-nav-buttons {
-  display: none; /* Hidden by default */
+  display: none;
 }
 
 #game-screen .header-nav-buttons {
-  display: flex; /* Visible only on game screen */
+  display: flex;
   gap: 1vw;
 }
 
 .header-nav-btn {
   font-family: 'Luckiest Guy', cursive;
-  font-size: clamp(2vh, 2.5vw, 2.5vh); /* Same size as #game-name */
-  background: #FFFFFF; /* White background */
-  color: #000000; /* Black text/icon */
+  font-size: clamp(2vh, 2.5vw, 2.5vh);
+  background: #FFFFFF;
+  color: #000000;
   border: 0.1vh solid #000000;
   border-radius: 0.6vh;
   padding: 0.5vh 1vw;
@@ -99,7 +100,7 @@ a {
 }
 
 .header-nav-btn i {
-  color: #000000; /* Black icon */
+  color: #000000;
 }
 
 /* Main content on game screen */
@@ -107,6 +108,7 @@ a {
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100vw; /* Ensure full width */
   box-sizing: border-box;
   overflow: hidden;
   margin: 0;
@@ -114,7 +116,6 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
   z-index: 1;
 }
 
@@ -179,7 +180,7 @@ a {
 }
 
 #prompt {
-  font-size: 3vh; /* Increased by 2x from 1.5vh */
+  font-size: 3vh;
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
   position: absolute;
@@ -189,7 +190,7 @@ a {
 }
 
 #guess-input {
-  font-size: 4.5vh; /* Increased by 50% from 3vh */
+  font-size: 4.5vh;
   font-weight: bold;
   background: transparent;
   border: none;
@@ -265,8 +266,8 @@ a {
 .hint-countdown {
   display: block;
   font-size: 1.8vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
+  color: #FFFFFF; /* Changed to white text */
+  text-shadow: 1px 1px 2px #000000;
   margin-top: 0.5vh;
   text-align: center;
 }
@@ -279,10 +280,13 @@ a {
   font-family: 'Luckiest Guy', cursive;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin-top: 1.5em; /* 1.5 lines below guess entry box */
+  margin-top: 0.5em; /* Moved up one line (from 1.5em to 0.5em) */
   text-align: center;
   position: relative;
   z-index: 1;
+  max-width: 90vw; /* Limit to 90% of viewport width */
+  white-space: normal; /* Allow wrapping */
+  line-height: 1.2; /* Adjust line height for better spacing */
 }
 
 .hints-inline::before {
@@ -292,10 +296,11 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
   width: 110%;
-  height: 120%;
+  height: 100%; /* Adjusted to match content height */
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
+  padding: 0.5vh 0; /* Equal padding top and bottom */
 }
 
 .hints-inline span.hint-text {
@@ -303,7 +308,7 @@ a {
 }
 
 .hints-inline span.separator {
-  color: #FFFFFF;
+  color: #FFB300; /* Changed to yellow */
   text-shadow: 1px 1px 2px #000000;
   margin: 0 0.5ch;
 }
@@ -334,11 +339,9 @@ a {
 }
 
 .control-btn-row.top-row {
-  margin-top: 1em; /* One line below hints (based on hints font-size: 3.25vh) */
+  margin-top: 0em; /* Moved up one line (from 1em to 0em) */
   max-width: 50%;
 }
-
-/* Removed bottom-row since buttons are now in header */
 
 /* Create a Wordy button */
 .tap-here {
@@ -399,18 +402,19 @@ a {
   background-size: 100% 100%;
 }
 
-/* Add fade effect to other screens */
+/* Standardize all screens */
 #game-over,
 #game-select-screen,
 #create-form {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
+  width: 100vw; /* Ensure full width */
   height: 100vh;
   overflow: hidden;
   background: url('newbackground.png') no-repeat center center;
   background-size: 100% 100%;
+  box-sizing: border-box;
 }
 
 #game-over::before,
@@ -440,14 +444,15 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100vh;
+  width: 100vw;
+  height: 35vh; /* Cover 35% of screen height from top */
   display: none;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   z-index: 150;
   overflow: hidden;
+  box-sizing: border-box;
 }
 
 /* Game over screen */
@@ -462,11 +467,6 @@ a {
 
 /* Create form styling */
 .create-form {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100vh;
   display: none;
   flex-direction: column;
   align-items: center;
@@ -851,7 +851,7 @@ a {
       width: calc(100% - 30%);
   }
   #guess-input {
-      font-size: 3.75vh; /* Adjusted proportionally (4.5vh * 0.833) */
+      font-size: 3.75vh;
       height: 4.5vh;
       line-height: 4.5vh;
   }
@@ -868,7 +868,7 @@ a {
       font-size: 3.5vh;
   }
   #prompt {
-      font-size: 2.4vh; /* Adjusted proportionally (3vh * 0.8) */
+      font-size: 2.4vh;
   }
   .control-btn {
       font-size: clamp(2vh, 3vw, 3.15vh);
@@ -878,7 +878,7 @@ a {
       font-size: 1.8vh;
   }
   .hints-inline {
-      font-size: 2.925vh; /* Adjusted proportionally (3.25vh * 0.9) */
+      font-size: 2.925vh;
   }
   #ad-box {
       height: 4vh;
