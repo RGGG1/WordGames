@@ -345,7 +345,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameOverScreen) gameOverScreen.style.display = "none";
         if (gameSelectScreen) gameSelectScreen.style.display = "none";
         if (guessesScreen) guessesScreen.style.display = "none";
-        if (createForm) createForm.style.display = "none"; // Ensure create-form is hidden on reset
     }
 
     async function fetchGameData() {
@@ -384,6 +383,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
+            // Removed keepKeyboardOpen() to prevent auto-expanding keyboard on initial load
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
@@ -396,6 +396,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
+            // Removed keepKeyboardOpen() to prevent auto-expanding keyboard on initial load
             alert("Failed to load official games data. Using hardcoded game.");
         }
     }
@@ -630,9 +631,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function updateHintCountdown() {
-        const hintsInline = document.getElementById("hints-container").parentElement; // .hints-inline
-        const countdownElement = hintsInline.querySelector(".hint-countdown");
-        const countdownSpan = countdownElement.querySelector("#countdown");
+        const countdownElement = document.querySelector(".hint-countdown");
+        const countdownSpan = document.getElementById("countdown");
         if (!countdownElement || !countdownSpan) {
             console.error("hint-countdown or countdown span element not found");
             return;
@@ -645,28 +645,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             countdownSpan.textContent = guessesUntilNextHint;
             console.log("Updated hint countdown:", countdownSpan.textContent);
         }
-        adjustFadeBackgroundHeight();
-    }
-
-    // Added function to dynamically adjust the fade background height to cover hints and countdown
-    function adjustFadeBackgroundHeight() {
-        const hintsInline = document.getElementById("hints-container").parentElement; // .hints-inline
-        const hintsContainer = document.getElementById("hints-container");
-        const countdownElement = hintsInline.querySelector(".hint-countdown");
-        
-        // Calculate the height to cover hints and countdown
-        let totalHeight = 0;
-        if (hintsContainer.style.display !== "none") {
-            totalHeight += hintsContainer.offsetHeight;
-        }
-        if (countdownElement.style.display !== "none") {
-            totalHeight += countdownElement.offsetHeight;
-        }
-        totalHeight += 10; // Add padding (0.5vh top + 0.5vh bottom in CSS)
-
-        // Adjust the ::before pseudo-element height
-        hintsInline.style.setProperty('--fade-height', `${totalHeight}px`);
-        hintsInline.querySelector('::before') || (hintsInline.style.height = `var(--fade-height)`);
     }
 
     function setupHints() {
@@ -686,7 +664,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.style.display = "none";
             console.log("No hints to display yet");
         }
-        adjustFadeBackgroundHeight();
     }
 
     function adjustBackground() {
@@ -712,6 +689,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const visibleHints = hints.slice(0, hintIndex);
             const newHint = hints[hintIndex];
             if (visibleHints.length > 0) {
+                // Add the separator first, styled as yellow
                 hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ') + ' <span class="separator yellow">|</span> ';
             } else {
                 hintsContainer.innerHTML = "";
@@ -752,7 +730,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.style.display = "none";
             console.log("No hints to adjust after guess");
         }
-        adjustFadeBackgroundHeight();
     }
 
     function rainPineapples() {
