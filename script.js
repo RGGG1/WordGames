@@ -1,6 +1,10 @@
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("DOM fully loaded");
 
+    // Immediately set game screen as visible to prevent flash
+    resetScreenDisplays();
+    gameScreen.style.display = "flex";
+
     let score = 0;
     let gameOver = false;
     let secretWord = "";
@@ -395,6 +399,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         privateContent.style.display = "none";
         if (createForm) createForm.style.display = "none";
         displayGameList();
+        adjustBackground();
     }
 
     function resetScreenDisplays() {
@@ -403,6 +408,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameSelectScreen) gameSelectScreen.style.display = "none";
         if (guessesScreen) guessesScreen.style.display = "none";
         if (giveUpDialog) giveUpDialog.style.display = "none";
+        if (createForm) createForm.style.display = "none";
+        const gameControlsContainer = document.getElementById("game-controls-container");
+        if (gameControlsContainer) gameControlsContainer.style.display = "none";
     }
 
     async function fetchGameData() {
@@ -438,6 +446,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadGame(latestGame);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            const gameControlsContainer = document.getElementById("game-controls-container");
+            if (gameControlsContainer) gameControlsContainer.style.display = "flex";
             if (createForm) createForm.style.display = "none";
             updateHintCountdown();
             adjustBackground();
@@ -451,6 +461,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            const gameControlsContainer = document.getElementById("game-controls-container");
+            if (gameControlsContainer) gameControlsContainer.style.display = "flex";
             if (createForm) createForm.style.display = "none";
             updateHintCountdown();
             adjustBackground();
@@ -737,6 +749,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    function adjustBackgroundForKeyboard() {
+        const gameScreen = document.getElementById("game-screen");
+        if (!gameScreen || !window.visualViewport) return;
+
+        const defaultBackground = "newbackground.png";
+
+        function updateBackgroundSize() {
+            const viewportHeight = window.visualViewport.height;
+            const windowHeight = window.innerHeight;
+
+            const isKeyboardVisible = viewportHeight < windowHeight * 0.9;
+
+            if (isKeyboardVisible) {
+                const visibleHeight = viewportHeight;
+                gameScreen.style.backgroundSize = `100% ${visibleHeight}px`;
+                gameScreen.style.backgroundPosition = "center top";
+                console.log(`Keyboard detected, adjusting background size to 100% ${visibleHeight}px`);
+            } else {
+                gameScreen.style.backgroundSize = "100% 100%";
+                gameScreen.style.backgroundPosition = "center center";
+                console.log("Keyboard hidden, resetting background size to 100% 100%");
+            }
+        }
+
+        updateBackgroundSize();
+        window.visualViewport.addEventListener("resize", updateBackgroundSize);
+        window.visualViewport.addEventListener("scroll", updateBackgroundSize);
+    }
+
     function adjustBackground() {
         const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
@@ -744,6 +785,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 screen.style.height = "100vh";
             }
         });
+        adjustBackgroundForKeyboard();
     }
 
     window.addEventListener("resize", adjustBackground);
@@ -936,6 +978,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameOverScreen.style.display = "flex";
         document.getElementById("guess-input").blur();
 
+        // Explicitly hide game-controls-container
+        const gameControlsContainer = document.getElementById("game-controls-container");
+        if (gameControlsContainer) gameControlsContainer.style.display = "none";
+
         gameNumberSpan.textContent = currentGameNumber;
         todaysWord.textContent = secretWord;
 
@@ -1045,6 +1091,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessesLink.textContent = "Guesses: 0";
         }
 
+        const gameControlsContainer = document.getElementById("game-controls-container");
+        if (gameControlsContainer) gameControlsContainer.style.display = "flex";
+
         const backgroundUrl = game["Background"]?.trim();
         const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
@@ -1080,5 +1129,5 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await fetchGameData();
     await fetchPrivateGames();
-    displayGameList();
+    adjustBackgroundForKeyboard();
 });
