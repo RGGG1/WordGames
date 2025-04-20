@@ -353,6 +353,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             giveUpDialog.style.display = "none";
             gameScreen.style.display = "flex";
         });
+
+        // Add click outside to close
+        giveUpDialog.addEventListener("click", (e) => {
+            if (e.target === giveUpDialog) {
+                console.log("Clicked outside give-up dialog");
+                giveUpDialog.style.display = "none";
+                gameScreen.style.display = "flex";
+            }
+        });
     }
 
     if (guessesLink && guessesScreen) {
@@ -430,7 +439,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadGame(latestGame);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
-            createForm.style.display = "none";
+            if (createForm) createForm.style.display = "none";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
@@ -443,7 +452,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
-            createForm.style.display = "none";
+            if (createForm) createForm.style.display = "none";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
@@ -648,19 +657,75 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     function updateHintCountdown() {
         const countdownElement = document.querySelector(".hint-countdown");
-        const countdownSpan = document.getElementById("countdown");
-        if (!countdownElement || !countdownSpan) {
-            console.error("hint-countdown or countdown span element not found");
+        if (!countdownElement) {
+            console.error("hint-countdown element not found");
             return;
         }
         if (hintIndex >= hints.length) {
-            countdownElement.style.display = "none";
+            countdownElement.textContent = "(All hints have been revealed)";
+            countdownElement.style.display = "block";
         } else {
             const guessesUntilNextHint = guessCount === 0 ? 5 : 5 - (guessCount % 5);
             countdownElement.style.display = "block";
-            countdownSpan.textContent = guessesUntilNextHint;
-            console.log("Updated hint countdown:", countdownSpan.textContent);
+            countdownElement.textContent = `(next hint revealed in ${guessesUntilNextHint} guesses)`;
         }
+        console.log("Updated hint countdown:", countdownElement.textContent);
+    }
+
+    function buildHintHTML(hintsArray) {
+        if (hintsArray.length === 0) return "";
+        
+        // Create a temporary container to measure line breaks
+        const tempContainer = document.createElement("div");
+        tempContainer.style.fontSize = "3.25vh";
+        tempContainer.style.fontFamily = "'Luckiest Guy', cursive";
+        tempContainer.style.position = "absolute";
+        tempContainer.style.visibility = "hidden";
+        tempContainer.style.maxWidth = "90vw";
+        tempContainer.style.whiteSpace = "normal";
+        tempContainer.style.lineHeight = "1.2";
+        tempContainer.style.display = "inline-block";
+        
+        // Add hints with a placeholder separator
+        hintsArray.forEach((hint, index) => {
+            const span = document.createElement("span");
+            span.textContent = hint;
+            span.dataset.index = index;
+            tempContainer.appendChild(span);
+            if (index < hintsArray.length - 1) {
+                const separator = document.createElement("span");
+                separator.textContent = " | ";
+                separator.className = "separator yellow";
+                separator.dataset.separatorIndex = index;
+                tempContainer.appendChild(separator);
+            }
+        });
+        
+        document.body.appendChild(tempContainer);
+        
+        // Determine which hints are on different lines
+        const hintSpans = tempContainer.querySelectorAll("span:not(.separator)");
+        const positions = Array.from(hintSpans).map(span => ({
+            index: parseInt(span.dataset.index),
+            top: span.getBoundingClientRect().top
+        }));
+        
+        // Build HTML without separators between hints on different lines
+        const htmlParts = [];
+        let lastTop = positions[0].top;
+        hintsArray.forEach((hint, index) => {
+            htmlParts.push(hint);
+            if (index < hintsArray.length - 1) {
+                const currentTop = positions.find(pos => pos.index === index).top;
+                const nextTop = positions.find(pos => pos.index === index + 1).top;
+                if (currentTop === nextTop) {
+                    htmlParts.push(' <span class="separator yellow">|</span> ');
+                }
+            }
+        });
+        
+        document.body.removeChild(tempContainer);
+        return htmlParts.join("");
     }
 
     function setupHints() {
@@ -673,14 +738,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintsContainer.innerHTML = "";
         const visibleHints = hints.slice(0, hintIndex + 1);
         if (visibleHints.length > 0) {
-            hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ');
+            hintsContainer.innerHTML = buildHintHTML(visibleHints);
             hintsContainer.style.display = "block";
-            // Calculate width of visible hints
             const tempSpan = document.createElement("span");
             tempSpan.style.fontSize = "3.25vh";
             tempSpan.style.fontFamily = "'Luckiest Guy', cursive";
             tempSpan.style.visibility = "hidden";
             tempSpan.style.position = "absolute";
+            tempSpan.style.whiteSpace = "normal";
+            tempSpan.style.maxWidth = "90vw";
             tempSpan.textContent = visibleHints.join(" | ");
             document.body.appendChild(tempSpan);
             const hintWidth = tempSpan.offsetWidth + 20;
@@ -688,9 +754,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
             console.log("Hints displayed:", visibleHints, "Width:", hintWidth);
         } else {
-            hintsContainer.style.display = "block"; // Ensure no layout shift
+            hintsContainer.style.display = "none";
             hintsContainer.style.setProperty("--hint-width", "0px");
-            console.log("No hints to display yet, but container is visible to prevent shift");
+            console.log("No hints to display yet");
         }
     }
 
@@ -716,11 +782,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             const visibleHints = hints.slice(0, hintIndex);
             const newHint = hints[hintIndex];
-            if (visibleHints.length > 0) {
-                hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ') + ' <span class="separator yellow">|</span> ';
-            } else {
-                hintsContainer.innerHTML = "";
-            }
+            hintsContainer.innerHTML = buildHintHTML(visibleHints);
+            hintsContainer.style.display = "block";
 
             const hintSpan = document.createElement("span");
             hintSpan.className = "hint-text";
@@ -734,12 +797,14 @@ document.addEventListener("DOMContentLoaded", async () => {
                     charIndex++;
                     setTimeout(typeLetter, 100);
                 } else {
-                    // Update width after full hint is revealed
+                    hintsContainer.innerHTML = buildHintHTML(hints.slice(0, hintIndex + 1));
                     const tempSpan = document.createElement("span");
                     tempSpan.style.fontSize = "3.25vh";
                     tempSpan.style.fontFamily = "'Luckiest Guy', cursive";
                     tempSpan.style.visibility = "hidden";
                     tempSpan.style.position = "absolute";
+                    tempSpan.style.whiteSpace = "normal";
+                    tempSpan.style.maxWidth = "90vw";
                     tempSpan.textContent = hints.slice(0, hintIndex + 1).join(" | ");
                     document.body.appendChild(tempSpan);
                     const hintWidth = tempSpan.offsetWidth + 20;
@@ -749,7 +814,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
             typeLetter();
-            hintsContainer.style.display = "block";
             console.log("Revealed hint:", newHint);
         }
         updateHintCountdown();
@@ -763,14 +827,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         const visibleHints = hints.slice(0, hintIndex + 1);
         if (visibleHints.length > 0) {
-            hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ');
+            hintsContainer.innerHTML = buildHintHTML(visibleHints);
             hintsContainer.style.display = "block";
-            // Recalculate width
             const tempSpan = document.createElement("span");
             tempSpan.style.fontSize = "3.25vh";
             tempSpan.style.fontFamily = "'Luckiest Guy', cursive";
             tempSpan.style.visibility = "hidden";
             tempSpan.style.position = "absolute";
+            tempSpan.style.whiteSpace = "normal";
+            tempSpan.style.maxWidth = "90vw";
             tempSpan.textContent = visibleHints.join(" | ");
             document.body.appendChild(tempSpan);
             const hintWidth = tempSpan.offsetWidth + 20;
@@ -778,9 +843,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.style.setProperty("--hint-width", `${hintWidth}px`);
             console.log("Adjusted hints after guess:", visibleHints, "Width:", hintWidth);
         } else {
-            hintsContainer.style.display = "block";
+            hintsContainer.style.display = "none";
             hintsContainer.style.setProperty("--hint-width", "0px");
-            console.log("No hints to adjust after guess, but container is visible");
+            console.log("No hints to adjust after guess");
         }
     }
 
@@ -857,7 +922,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             score = guessCount;
             console.log("Guess processed:", { guessCount, score });
 
-            // Update guesses link text
             const guessesLink = document.getElementById("guesses-link");
             if (guessesLink) {
                 guessesLink.textContent = `Guesses: ${guessCount}`;
@@ -991,10 +1055,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
             hintsContainer.innerHTML = "";
-            hintsContainer.style.display = "block"; // Ensure visibility to prevent layout shift
+            hintsContainer.style.display = "none";
         }
 
-        // Reset guesses link text
         const guessesLink = document.getElementById("guesses-link");
         if (guessesLink) {
             guessesLink.textContent = "Guesses: 0";
@@ -1017,19 +1080,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintIndex = 0;
         setupHints();
 
-        // Update all game number displays across screens
         const gameNumberDisplays = document.querySelectorAll(".game-number-display");
         gameNumberDisplays.forEach(display => {
             display.textContent = `Game #${currentGameNumber.replace("Game #", "")}`;
         });
 
-        // Ensure guesses link text is initialized
         const guessesLink = document.getElementById("guesses-link");
         if (guessesLink) {
             guessesLink.textContent = "Guesses: 0";
         }
 
-        // Set the background image for the game
         const backgroundUrl = game["Background"]?.trim();
         const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
@@ -1055,7 +1115,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-        // Collapse keyboard on game load
         if (input) {
             input.blur();
             console.log("Input blurred on game load to collapse keyboard");

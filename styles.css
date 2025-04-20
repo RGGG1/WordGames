@@ -36,12 +36,17 @@ a {
   box-sizing: border-box;
 }
 
-/* Ensure header is unaffected by screen overlays */
+/* Ensure header consistency across all screens */
 #game-screen #header,
 #game-over #header,
 #game-select-screen #header,
 #create-form #header {
+  width: 95vw;
+  height: 5vh;
+  padding: 0 2vw;
+  margin: 0;
   z-index: 11;
+  background: none;
 }
 
 /* Menu button styling */
@@ -126,8 +131,10 @@ a {
   font-size: 1.8vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  z-index: 11; /* Above header */
+  z-index: 11;
   text-align: right;
+  width: 91vw; /* Matches header content area (95vw - 2vw padding on each side) */
+  box-sizing: border-box;
 }
 
 .game-number-display {
@@ -138,15 +145,15 @@ a {
 
 .control-link {
   position: fixed;
-  top: 7vh;
+  top: calc(5vh + 4.32vh); /* Two lines below Game #X (1.8vh * 1.2 * 2) */
   right: 2vw;
   cursor: pointer;
   text-decoration: underline;
-  z-index: 100; /* Ensure clickability */
+  z-index: 100;
 }
 
 #guesses-link {
-  top: 9vh;
+  top: calc(5vh + 4.32vh + 4.32vh); /* Four lines below Game #X */
 }
 
 /* Ensure visibility on all screens */
@@ -238,7 +245,7 @@ a {
   margin: 0;
   padding: 0;
   position: absolute;
-  bottom: 6.15vh; /* Two lines lower from start */
+  bottom: 6.15vh;
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -389,7 +396,7 @@ a {
   max-width: 90vw;
   white-space: normal;
   line-height: 1.2;
-  min-height: calc(3.25vh * 1.2 * 2);
+  min-height: 0; /* Allow natural growth */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -403,7 +410,7 @@ a {
   left: 50%;
   transform: translate(-50%, -50%);
   width: var(--hint-width, 110%);
-  height: calc(3.25vh * 1.2 * 2 + 1vh);
+  height: calc(3.25vh * 1.2 + 1vh);
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
@@ -496,10 +503,10 @@ a {
 #create-form::before {
   content: '';
   position: absolute;
-  top: 5vh;
+  top: 0; /* Adjusted to cover the header */
   left: 0;
   width: 100%;
-  height: calc(100% - 5vh);
+  height: 100%; /* Adjusted to cover the header */
   background: rgba(255, 255, 255, 0.8);
   z-index: 1;
 }
@@ -925,10 +932,10 @@ a {
   }
   .control-link {
       right: 2vw;
-      top: 7vh;
+      top: calc(5vh + 3.84vh); /* Two lines (1.6vh * 1.2 * 2) */
   }
   #guesses-link {
-      top: 9vh;
+      top: calc(5vh + 3.84vh + 3.84vh); /* Four lines */
   }
   .dialog-message {
       font-size: 2vh;
