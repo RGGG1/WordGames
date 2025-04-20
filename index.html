@@ -20,11 +20,17 @@
             <span id="game-name">WORDY</span>
         </div>
         <div id="main-content">
+            <!-- Individual hint containers positioned above the guess area -->
+            <div id="hint-1" class="hint-line" style="display: none;"><span></span></div>
+            <div id="hint-2" class="hint-line" style="display: none;"><span></span></div>
+            <div id="hint-3" class="hint-line" style="display: none;"><span></span></div>
+            <div id="hint-4" class="hint-line" style="display: none;"><span></span></div>
+            <div id="hint-5" class="hint-line" style="display: none;"><span></span></div>
             <div id="guess-area">
-                <span id="prompt">The Secret Word is...</span>
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
+                            <div id="prompt">The Secret Word is...</div>
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                         </div>
                         <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
@@ -32,12 +38,6 @@
                 </div>
                 <div class="hint-countdown" style="display: none;">(next hint revealed in <span id="countdown">5</span> guesses)</div>
             </div>
-            <!-- Individual hint containers -->
-            <div id="hint-1" class="hint-line" style="display: none;"><span></span></div>
-            <div id="hint-2" class="hint-line" style="display: none;"><span></span></div>
-            <div id="hint-3" class="hint-line" style="display: none;"><span></span></div>
-            <div id="hint-4" class="hint-line" style="display: none;"><span></span></div>
-            <div id="hint-5" class="hint-line" style="display: none;"><span></span></div>
             <div id="game-controls">
                 <div class="controls-center">
                     <div class="control-btn-row top-row">

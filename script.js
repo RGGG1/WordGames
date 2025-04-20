@@ -640,7 +640,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (hintIndex >= hints.length) {
             countdownElement.style.display = "none";
         } else {
-            const guessesUntilNextHint = guessCount === 0 ? 10 : 10 - (guessCount % 10);
+            const guessesUntilNextHint = guessCount === 0 ? 5 : 5 - (guessCount % 5);
             countdownElement.style.display = "block";
             countdownSpan.textContent = guessesUntilNextHint;
             console.log("Updated hint countdown:", countdownSpan.textContent);
@@ -648,7 +648,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function setupHints() {
-        // Target the individual hint containers
+        // Target the individual hint containers (now positioned above the guess box in HTML)
         const hintElements = [
             document.getElementById("hint-1")?.querySelector("span"),
             document.getElementById("hint-2")?.querySelector("span"),
@@ -792,7 +792,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             console.log("Guess processed:", { guessCount, score });
 
-            if (guessCount % 10 === 0 && hintIndex < hints.length - 1) revealHint();
+            if (guessCount % 5 === 0 && hintIndex < hints.length - 1) revealHint();
             else updateHintCountdown();
         } else {
             console.log("Repeat guess:", upperGuess);
