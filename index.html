@@ -18,14 +18,14 @@
                 <button id="home-btn" class="menu-item">Home</button>
             </div>
             <span id="game-name">WORDY</span>
+            <!-- Moved navigation buttons to header -->
+            <div class="header-nav-buttons">
+                <button id="prev-game-btn" class="header-nav-btn">←</button>
+                <button id="all-games-btn" class="header-nav-btn"><i class="fas fa-list"></i></button>
+                <button id="next-game-btn" class="header-nav-btn">→</button>
+            </div>
         </div>
         <div id="main-content">
-            <!-- Individual hint containers positioned above the guess area -->
-            <div id="hint-1" class="hint-line" style="display: none;"><span></span></div>
-            <div id="hint-2" class="hint-line" style="display: none;"><span></span></div>
-            <div id="hint-3" class="hint-line" style="display: none;"><span></span></div>
-            <div id="hint-4" class="hint-line" style="display: none;"><span></span></div>
-            <div id="hint-5" class="hint-line" style="display: none;"><span></span></div>
             <div id="guess-area">
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
@@ -37,17 +37,14 @@
                     </div>
                 </div>
                 <div class="hint-countdown" style="display: none;">(next hint revealed in <span id="countdown">5</span> guesses)</div>
+                <!-- New inline hints container -->
+                <div id="hints-container" class="hints-inline"></div>
             </div>
             <div id="game-controls">
                 <div class="controls-center">
                     <div class="control-btn-row top-row">
                         <button id="give-up-btn" class="control-btn">Give Up</button>
                         <button id="guesses-btn" class="control-btn">Guesses: 0</button>
-                    </div>
-                    <div class="control-btn-row bottom-row">
-                        <button id="prev-game-btn" class="control-btn">←</button>
-                        <button id="all-games-btn" class="control-btn">All Games<i class="fas fa-list"></i></button>
-                        <button id="next-game-btn" class="control-btn">→</button>
                     </div>
                 </div>
             </div>

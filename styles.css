@@ -29,7 +29,7 @@ a {
   height: 5vh;
   background: none;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between; /* Adjusted to space out elements */
   align-items: center;
   margin: 0;
   padding: 0 2vw;
@@ -46,15 +46,13 @@ a {
   opacity: 1;
   visibility: visible;
   display: inline-block;
-  /* Removed text-shadow to eliminate white outline */
 }
 
 .menu-btn i {
   color: #000000;
   opacity: 1;
   visibility: visible;
-  -webkit-text-stroke: 0.1vh #FFB300; /* Added yellow outline */
-  /* Removed text-shadow to eliminate white outline */
+  -webkit-text-stroke: 0.1vh #FFB300;
 }
 
 .hamburger-menu {
@@ -67,13 +65,41 @@ a {
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #000000;
-  -webkit-text-stroke: 0.1vh #FFB300; /* Yellow outline */
-  /* Removed text-shadow to eliminate white outline */
+  -webkit-text-stroke: 0.1vh #FFB300;
   cursor: pointer;
   z-index: 11;
   position: static;
   transform: none;
-  margin-right: auto;
+  margin-right: auto; /* Pushes nav buttons to the right */
+}
+
+/* Header navigation buttons styling */
+.header-nav-buttons {
+  display: none; /* Hidden by default */
+}
+
+#game-screen .header-nav-buttons {
+  display: flex; /* Visible only on game screen */
+  gap: 1vw;
+}
+
+.header-nav-btn {
+  font-family: 'Luckiest Guy', cursive;
+  font-size: clamp(2vh, 2.5vw, 2.5vh); /* Same size as #game-name */
+  background: #FFFFFF; /* White background */
+  color: #000000; /* Black text/icon */
+  border: 0.1vh solid #000000;
+  border-radius: 0.6vh;
+  padding: 0.5vh 1vw;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.header-nav-btn i {
+  color: #000000; /* Black icon */
 }
 
 /* Main content on game screen */
@@ -96,7 +122,7 @@ a {
   position: absolute;
   top: 0;
   width: 100%;
-  height: 60vh; /* Limit to top 60% to stay above keyboard */
+  height: 60vh;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -116,7 +142,7 @@ a {
   margin: 0;
   padding: 0;
   position: absolute;
-  bottom: 12vh; /* Adjusted to be 1.5 lines above game controls (bottom: 5vh) */
+  bottom: 12vh;
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -142,7 +168,7 @@ a {
 #guess-input-container {
   position: relative;
   width: calc(100% - 30%);
-  height: 8vh; /* Increased to accommodate two lines */
+  height: 8vh;
   background: #FFFFFF;
   border-radius: 0.6vh 0 0 0.6vh;
   box-sizing: border-box;
@@ -153,7 +179,7 @@ a {
 }
 
 #prompt {
-  font-size: 1.5vh;
+  font-size: 3vh; /* Increased by 2x from 1.5vh */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
   position: absolute;
@@ -163,7 +189,7 @@ a {
 }
 
 #guess-input {
-  font-size: 3vh; /* Increased for larger font */
+  font-size: 4.5vh; /* Increased by 50% from 3vh */
   font-weight: bold;
   background: transparent;
   border: none;
@@ -245,43 +271,21 @@ a {
   text-align: center;
 }
 
-/* Individual hint styling and positioning (adjusted to match mockup) */
-.hint-line {
-  position: absolute;
-  margin: 0;
-}
-
-#hint-1 {
-  top: 10vh; /* Positioned in top-left corner, above the pineapple */
-  left: 5vw;
-}
-
-#hint-2 {
-  top: 10vh; /* Positioned in top-right corner, above the pineapple */
-  right: 5vw;
-}
-
-#hint-3 {
-  top: 25vh; /* Positioned middle-left, to the left of the pineapple's sunglasses */
-  left: 5vw;
-}
-
-#hint-4 {
-  top: 25vh; /* Positioned middle-right, to the right of the pineapple's sunglasses */
-  right: 5vw;
-}
-
-#hint-5 {
-  top: 40vh; /* Positioned bottom-left, to the left of the pineapple's base, above guess box */
-  left: 5vw;
-}
-
-/* Add faded background and styling to hints */
-.hint-line {
+/* Inline hints styling */
+.hints-inline {
+  font-size: 3.25vh;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: 'Luckiest Guy', cursive;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  margin-top: 1.5em; /* 1.5 lines below guess entry box */
+  text-align: center;
   position: relative;
+  z-index: 1;
 }
 
-.hint-line::before {
+.hints-inline::before {
   content: '';
   position: absolute;
   top: 50%;
@@ -294,16 +298,14 @@ a {
   border-radius: 0.6vh;
 }
 
-.hint-line span {
-  font-size: 3.25vh; /* Increased by 30% from 2.5vh (2.5 * 1.3 = 3.25) */
-  font-weight: bold;
-  text-transform: uppercase;
-  font-family: 'Luckiest Guy', cursive;
-  color: #FFFFFF; /* White text */
-  -webkit-text-stroke: 0.1vh #000000; /* Black outline */
-  visibility: visible;
-  position: relative;
-  z-index: 1;
+.hints-inline span.hint-text {
+  margin: 0 0.5ch;
+}
+
+.hints-inline span.separator {
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  margin: 0 0.5ch;
 }
 
 /* Game controls */
@@ -331,26 +333,12 @@ a {
   margin-bottom: 0.5vh;
 }
 
-.top-row {
+.control-btn-row.top-row {
+  margin-top: 1em; /* One line below hints (based on hints font-size: 3.25vh) */
   max-width: 50%;
 }
 
-.bottom-row {
-  max-width: 70%;
-}
-
-.control-btn:hover {
-  transform: scale(1.05);
-}
-
-.flash span {
-  animation: expandContract 1.5s infinite;
-}
-
-@keyframes expandContract {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.2); }
-}
+/* Removed bottom-row since buttons are now in header */
 
 /* Create a Wordy button */
 .tap-here {
@@ -847,6 +835,10 @@ a {
   .menu-btn {
       font-size: clamp(1.8vh, 2.25vw, 2.25vh);
   }
+  .header-nav-btn {
+      font-size: clamp(2vh, 2.5vw, 2.5vh);
+      padding: 0.5vh 0.75vw;
+  }
   #main-content {
       width: 100%;
       height: 60vh;
@@ -859,7 +851,7 @@ a {
       width: calc(100% - 30%);
   }
   #guess-input {
-      font-size: 2.625vh; /* Adjusted proportionally */
+      font-size: 3.75vh; /* Adjusted proportionally (4.5vh * 0.833) */
       height: 4.5vh;
       line-height: 4.5vh;
   }
@@ -876,7 +868,7 @@ a {
       font-size: 3.5vh;
   }
   #prompt {
-      font-size: 1.2vh;
+      font-size: 2.4vh; /* Adjusted proportionally (3vh * 0.8) */
   }
   .control-btn {
       font-size: clamp(2vh, 3vw, 3.15vh);
@@ -884,6 +876,9 @@ a {
   }
   .hint-countdown {
       font-size: 1.8vh;
+  }
+  .hints-inline {
+      font-size: 2.925vh; /* Adjusted proportionally (3.25vh * 0.9) */
   }
   #ad-box {
       height: 4vh;
@@ -916,8 +911,5 @@ a {
   }
   .form-line {
       width: 20ch;
-  }
-  .hint-line span {
-      font-size: 2.925vh; /* Adjusted proportionally (2.25 * 1.3 = 2.925) */
   }
 }
