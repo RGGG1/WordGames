@@ -392,6 +392,48 @@ a {
   background-size: 100% 100%;
 }
 
+/* Add fade effect to game screen elements */
+#game-screen #guess-area,
+#game-screen #hints-box,
+#game-screen #game-controls {
+  position: relative;
+}
+
+#game-screen #guess-area::before,
+#game-screen #hints-box::before,
+#game-screen #game-controls::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.4); /* Lighter opacity for subtle fade */
+  z-index: -1; /* Place the fade behind the content */
+  border-radius: 0.6vh; /* Match the border radius of other elements */
+}
+
+/* Ensure content within these elements is above the fade */
+#game-screen #guess-area > *,
+#game-screen #hints-box > *,
+#game-screen #game-controls > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Optional: Adjust padding to ensure the fade looks balanced */
+#game-screen #guess-area,
+#game-screen #hints-box,
+#game-screen #game-controls {
+  padding: 1vh; /* Add padding to create space around the fade */
+  box-sizing: border-box;
+}
+
+/* Ensure guess-input-container doesn't get extra padding */
+#guess-input-container {
+  padding: 0;
+}
+
 /* Add fade effect to other screens */
 #game-over,
 #game-select-screen,
