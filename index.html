@@ -24,6 +24,7 @@
                 <button id="next-game-btn" class="header-nav-btn">→</button>
             </div>
         </div>
+        <span id="game-number-display" class="game-number-display"></span>
         <div id="main-content">
             <div id="guess-area">
                 <div id="guess-container">
@@ -60,6 +61,7 @@
             </div>
             <span id="game-name">WORDY</span>
         </div>
+        <span id="game-number-display" class="game-number-display"></span>
         <span id="game-number"></span>
         <span id="todays-word-label">Today's Word</span>
         <span id="todays-word"></span>
@@ -79,9 +81,9 @@
                 <a id="share-twitter" href="" target="_blank"><i class="fab fa-x-twitter"></i></a>
             </div>
             <div class="end-buttons">
-                <button id="next-game-btn-end" class="control-btn">Next Game</button> <!-- Removed flash class -->
+                <button id="next-game-btn-end" class="control-btn">Next Game</button>
                 <span class="or-text">or</span>
-                <button id="create-pineapple-end" class="control-btn"> <!-- Removed flash class -->
+                <button id="create-pineapple-end" class="control-btn">
                     Create a Wordy<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>
                 </button>
             </div>
@@ -99,6 +101,7 @@
             </div>
             <span id="game-name">WORDY</span>
         </div>
+        <span id="game-number-display" class="game-number-display"></span>
         <div id="game-select-content">
             <span id="game-list-title">WORDY GAMES</span>
             <div id="tabs">
@@ -116,6 +119,10 @@
                 <button id="official-back-btn" class="control-btn">Back</button>
             </div>
             <div id="private-games" class="tab-content">
+                <button id="create-pineapple" class="control-btn flash">
+                    Create a Wordy<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>
+                </button>
+                <div class="spacer"></div>
                 <div class="game-list-header">
                     <span>Game Name</span>
                     <span>Word</span>
@@ -123,9 +130,7 @@
                 </div>
                 <div id="private-list" class="game-list"></div>
                 <div class="spacer"></div>
-                <button id="create-pineapple" class="control-btn flash">
-                    Create a Wordy<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>
-                </button>
+                <button id="private-back-btn" class="control-btn">Back</button>
             </div>
         </div>
         <div id="ad-box">
@@ -141,6 +146,7 @@
             </div>
             <span id="game-name">WORDY</span>
         </div>
+        <span id="game-number-display" class="game-number-display"></span>
         <span class="form-input-label">Game Name</span>
         <input type="text" id="game-name-input" class="form-input" placeholder="Enter a name for your game">
         <div class="form-line"></div>
@@ -153,7 +159,7 @@
         <span class="form-input-label">Hint #2</span>
         <input type="text" id="hint-2" class="form-input" placeholder="Enter hint #2">
         <div class="form-line"></div>
-        <span class="form-input-label">Hint #stages/3</span>
+        <span class="form-input-label">Hint #3</span>
         <input type="text" id="hint-3" class="form-input" placeholder="Enter hint #3">
         <div class="form-line"></div>
         <span class="form-input-label">Hint #4</span>

@@ -33,6 +33,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const hamburgerBtn = document.getElementById("hamburger-btn");
     const nextGameBtnEnd = document.getElementById("next-game-btn-end");
     const officialBackBtn = document.getElementById("official-back-btn");
+    const privateBackBtn = document.getElementById("private-back-btn");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -209,7 +210,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             adjustBackground();
-            keepKeyboardOpen();
+        });
+    }
+
+    if (privateBackBtn) {
+        privateBackBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Private Back button clicked");
+            resetScreenDisplays();
+            gameScreen.style.display = "flex";
+            adjustBackground();
         });
     }
 
@@ -281,7 +292,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             adjustBackground();
-            keepKeyboardOpen();
         });
     }
 
@@ -295,7 +305,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (guessesScreen.style.display === "flex") {
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
-                keepKeyboardOpen();
             } else {
                 guessesList.innerHTML = guesses.length > 0 
                     ? guesses.join(' <span class="separator yellow">|</span>   ')
@@ -311,7 +320,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Guesses close button clicked");
             guessesScreen.style.display = "none";
             gameScreen.style.display = "flex";
-            keepKeyboardOpen();
         });
 
         document.addEventListener("click", (e) => {
@@ -321,7 +329,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Clicked outside guesses screen");
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
-                keepKeyboardOpen();
             }
         });
     }
@@ -380,10 +387,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadGame(latestGame);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            createForm.style.display = "none";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            // Removed keepKeyboardOpen() to prevent auto-expanding keyboard on initial load
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
@@ -393,10 +400,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            createForm.style.display = "none";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
-            // Removed keepKeyboardOpen() to prevent auto-expanding keyboard on initial load
             alert("Failed to load official games data. Using hardcoded game.");
         }
     }
@@ -467,7 +474,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
                         adjustBackground();
-                        keepKeyboardOpen();
                     });
                     officialList.appendChild(gameItem);
                     console.log(`Rendered official game ${gameNumber}: ${secretWord}, Guesses: ${guesses}`);
@@ -514,7 +520,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
                         adjustBackground();
-                        keepKeyboardOpen();
                     });
                     privateList.appendChild(gameItem);
                     console.log(`Rendered private game ${gameNumber}: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guesses}`);
@@ -532,7 +537,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 !e.target.closest("button") &&
                 e.target.id !== "game-name" &&
                 e.target !== input) {
-                keepKeyboardOpen();
+                // Removed keepKeyboardOpen to prevent auto-focus
             }
         });
 
@@ -543,7 +548,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 resetScreenDisplays();
                 gameScreen.style.display = "flex";
                 adjustBackground();
-                keepKeyboardOpen();
             });
         });
 
@@ -589,7 +593,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     loadGame(gameList[currentIndex + 1]);
                     console.log("Loading previous game, new index:", currentIndex + 1);
                 }
-                keepKeyboardOpen();
             });
         }
 
@@ -612,22 +615,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                     loadGame(gameList[currentIndex - 1]);
                     console.log("Loading next game, new index:", currentIndex - 1);
                 }
-                keepKeyboardOpen();
             });
         }
 
         input.addEventListener("focus", () => {
             console.log("Input focused");
         });
-    }
-
-    function keepKeyboardOpen() {
-        if (!gameOver && gameScreen.style.display === "flex" && input && !input.disabled) {
-            if (document.activeElement !== input) {
-                input.focus();
-                console.log("Input focused via keepKeyboardOpen");
-            }
-        }
     }
 
     function updateHintCountdown() {
@@ -689,7 +682,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const visibleHints = hints.slice(0, hintIndex);
             const newHint = hints[hintIndex];
             if (visibleHints.length > 0) {
-                // Add the separator first, styled as yellow
                 hintsContainer.innerHTML = visibleHints.join(' <span class="separator yellow">|</span> ') + ' <span class="separator yellow">|</span> ';
             } else {
                 hintsContainer.innerHTML = "";
@@ -963,11 +955,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintIndex = 0;
         setupHints();
 
-        // Update the game number display above the guess box
-        const gameNumberDisplay = document.getElementById("game-number-display");
-        if (gameNumberDisplay) {
-            gameNumberDisplay.textContent = currentGameNumber;
-        }
+        // Update all game number displays across screens
+        const gameNumberDisplays = document.querySelectorAll(".game-number-display");
+        gameNumberDisplays.forEach(display => {
+            display.textContent = `Game ${currentGameNumber.replace("Game #", "")}`;
+        });
 
         // Set the background image for the game
         const backgroundUrl = game["Background"]?.trim();
@@ -975,7 +967,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         screens.forEach(screen => {
             if (screen) {
                 if (backgroundUrl) {
-                    // Try to load the custom background
                     const img = new Image();
                     img.src = backgroundUrl;
                     img.onload = () => {
@@ -995,6 +986,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
         });
+
+        // Collapse keyboard on game load
+        if (input) {
+            input.blur();
+            console.log("Input blurred on game load to collapse keyboard");
+        }
 
         console.log("Loaded game:", { currentGameNumber, secretWord, hints, background: backgroundUrl || defaultBackground });
     }
