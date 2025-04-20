@@ -93,8 +93,8 @@ a {
   cursor: pointer;
   z-index: 11;
   position: absolute;
-  left: 6vw; /* Position to the right of hamburger button */
-  transform: none; /* Remove centering */
+  left: 50%;
+  transform: translateX(-50%);
   margin-right: 0;
   line-height: 2.5vh;
 }
@@ -103,9 +103,7 @@ a {
 .header-nav-buttons {
   display: none;
   position: absolute;
-  right: 2vw; /* Matches padding-right of game-controls-container */
-  top: 5vh; /* Aligns vertically with game-controls-container */
-  align-items: flex-start;
+  right: 2vw;
 }
 
 #game-screen .header-nav-buttons {
@@ -127,7 +125,6 @@ a {
   align-items: center;
   box-sizing: border-box;
   line-height: 2vh;
-  height: 3vh; /* Consistent height */
 }
 
 .header-nav-btn:hover {
@@ -160,7 +157,6 @@ a {
   text-align: right;
   position: static;
   width: auto;
-  line-height: 1.8vh;
 }
 
 .game-number-display {
@@ -248,8 +244,6 @@ a {
   top: 0;
   left: 0;
   z-index: 1;
-  background: url('newbackground.png') no-repeat center center;
-  background-size: 100% 100%;
 }
 
 #main-content {
@@ -518,7 +512,6 @@ a {
 
 /* Backgrounds for all screens */
 #game-screen {
-  display: flex;
   background: url('newbackground.png') no-repeat center center;
   background-size: 100% 100%;
 }
@@ -526,7 +519,7 @@ a {
 #game-over,
 #game-select-screen,
 #create-form {
-  display: none; /* Ensure hidden by default to prevent flash */
+  display: flex;
   flex-direction: column;
   height: 100vh;
   width: 100vw;
@@ -574,7 +567,7 @@ a {
   left: 0;
   width: 100vw;
   height: 35vh;
-  display: none; /* Hidden by default */
+  display: none;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
