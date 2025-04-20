@@ -42,6 +42,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
+    const defaultBackground = "newbackground.png";
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
@@ -231,6 +232,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 hint3: document.getElementById("hint-3").value.trim().toUpperCase(),
                 hint4: document.getElementById("hint-4").value.trim().toUpperCase(),
                 hint5: document.getElementById("hint-5").value.trim().toUpperCase()
+                // Note: Background URL is not collected via the form; it can be added to the private games spreadsheet
             };
 
             if (!formData.gameName || !formData.secretWord || !formData.hint1 || !formData.hint2 || !formData.hint3 || !formData.hint4 || !formData.hint5) {
@@ -388,7 +390,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
-                { "Game Number": "1", "Secret Word": "TEST", "Hint 1": "SAMPLE", "Hint 2": "WORD", "Hint 3": "GAME", "Hint 4": "PLAY", "Hint 5": "FUN" }
+                { "Game Number": "1", "Secret Word": "TEST", "Hint 1": "SAMPLE", "Hint 2": "WORD", "Hint 3": "GAME", "Hint 4": "PLAY", "Hint 5": "FUN", "Background": "" }
             ];
             console.log("Using hardcoded game:", allGames);
             loadGame(allGames[0]);
@@ -699,7 +701,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function adjustBackground() {
-        const screens = [gameScreen, gameOverScreen, gameSelectScreen];
+        const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
             if (screen && screen.style.display === "flex") {
                 screen.style.height = "100vh";
@@ -708,6 +710,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     window.addEventListener("resize", adjustBackground);
+
+    function willHintFitOnSameLine(hintsContainer, newHint) {
+        // Create a temporary span to measure the new hint's width
+        const tempSpan = document.createElement("span");
+        tempSpan.className = "hint-text";
+        tempSpan.textContent = newHint;
+        tempSpan.style.visibility = "hidden";
+        hintsContainer.appendChild(tempSpan);
+
+        const hintElements = hintsContainer.querySelectorAll(".hint-text");
+        const lastHint = hintElements[hintElements.length - 2]; // Last hint before the new one
+        const newHintWidth = tempSpan.getBoundingClientRect().width;
+        hintsContainer.removeChild(tempSpan);
+
+        if (!lastHint) return true; // If no previous hints, it will fit on the first line
+
+        const containerWidth = hintsContainer.getBoundingClientRect().width;
+        const lastHintRect = lastHint.getBoundingClientRect();
+        const containerLeft = hintsContainer.getBoundingClientRect().left;
+
+        // Estimate remaining space on the current line
+        const spaceUsed = lastHintRect.right - containerLeft;
+        const spaceRemaining = containerWidth - (spaceUsed % containerWidth);
+        const separatorWidth = 10; // Approximate width of separator and margins
+        const totalNewWidth = newHintWidth + separatorWidth;
+
+        return spaceRemaining >= totalNewWidth;
+    }
 
     function revealHint() {
         hintIndex++;
@@ -720,12 +750,30 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             const visibleHints = hints.slice(0, hintIndex + 1);
             const newHint = hints[hintIndex];
+
+            // Check if the new hint will fit on the same line
+            const fitsOnSameLine = willHintFitOnSameLine(hintsContainer, newHint);
+
             if (visibleHints.length > 1) {
                 const separator = document.createElement("span");
                 separator.className = "separator";
                 separator.textContent = "|";
+                // Show separator immediately if assumed to be on the same line
+                if (fitsOnSameLine) {
+                    separator.style.display = "inline-block";
+                }
                 hintsContainer.appendChild(separator);
+
+                // If it won't fit, force a line break before the separator
+                if (!fitsOnSameLine) {
+                    separator.style.display = "none"; // Hide separator if on different lines
+                    const lineBreak = document.createElement("div");
+                    lineBreak.style.width = "100%";
+                    lineBreak.style.height = "0";
+                    hintsContainer.appendChild(lineBreak);
+                }
             }
+
             const hintSpan = document.createElement("span");
             hintSpan.className = "hint-text";
             hintSpan.textContent = "";
@@ -1045,7 +1093,34 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameNumberDisplay.textContent = currentGameNumber;
         }
 
-        console.log("Loaded game:", { currentGameNumber, secretWord, hints });
+        // Set the background image for the game
+        const backgroundUrl = game["Background"]?.trim();
+        const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
+        screens.forEach(screen => {
+            if (screen) {
+                if (backgroundUrl) {
+                    // Try to load the custom background
+                    const img = new Image();
+                    img.src = backgroundUrl;
+                    img.onload = () => {
+                        screen.style.background = `url('${backgroundUrl}') no-repeat center center`;
+                        screen.style.backgroundSize = "100% 100%";
+                        console.log(`Loaded custom background for game ${currentGameNumber}: ${backgroundUrl}`);
+                    };
+                    img.onerror = () => {
+                        screen.style.background = `url('${defaultBackground}') no-repeat center center`;
+                        screen.style.backgroundSize = "100% 100%";
+                        console.log(`Failed to load custom background for game ${currentGameNumber}, using default: ${defaultBackground}`);
+                    };
+                } else {
+                    screen.style.background = `url('${defaultBackground}') no-repeat center center`;
+                    screen.style.backgroundSize = "100% 100%";
+                    console.log(`No custom background for game ${currentGameNumber}, using default: ${defaultBackground}`);
+                }
+            }
+        });
+
+        console.log("Loaded game:", { currentGameNumber, secretWord, hints, background: backgroundUrl || defaultBackground });
     }
 
     await fetchGameData();
