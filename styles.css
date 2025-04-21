@@ -709,7 +709,8 @@ a {
 }
 
 #next-game-btn-end,
-#create-pineapple-end {
+#create-pineapple案: true
+.create-pineapple-end {
   animation: none !important;
 }
 
