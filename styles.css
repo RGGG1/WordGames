@@ -206,7 +206,7 @@ a {
   text-align: left;
   width: 85vw;
   max-width: 85vw;
-  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 0.9vh) auto 0.9vh auto; /* Positioned 0.9vh above guess box */
+  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 0.9vh) auto 0.9vh auto;
   z-index: 5;
   line-height: 1.8vh;
   overflow: hidden;
@@ -218,7 +218,6 @@ a {
 }
 
 /* Game number display on other screens */
-#game-over .game-number-display,
 #game-select-screen .game-number-display,
 #create-form .game-number-display {
   position: fixed;
@@ -233,11 +232,15 @@ a {
   text-align: right;
 }
 
+#game-over .game-number-display {
+  display: none;
+}
+
 /* Main content (guess area) */
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 8.1vh); /* Moved up 4.5 lines (4.5 * 1.8vh = 8.1vh) */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -433,7 +436,7 @@ a {
 .keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 0.3vw;
+  gap: 0.6vw; /* Doubled from 0.3vw */
   margin-bottom: 0.3vh;
   width: 90vw;
 }
@@ -443,12 +446,12 @@ a {
   color: #000000;
   border: 0.1vh solid #000000;
   border-radius: 0.6vh;
-  font-size: 2vh;
+  font-size: 2.25vh; /* 2vh * 1.125 */
   font-family: 'Luckiest Guy', cursive;
-  width: 8vw;
-  max-width: 4.5vh;
-  height: 5vh;
-  line-height: 5vh;
+  width: 9vw; /* 8vw * 1.125 */
+  max-width: 5.0625vh; /* 4.5vh * 1.125 */
+  height: 5.625vh; /* 5vh * 1.125 */
+  line-height: 5.625vh;
   text-align: center;
   cursor: pointer;
   display: flex;
@@ -459,9 +462,9 @@ a {
 }
 
 .key.special {
-  width: 12vw;
-  max-width: 6.5vh;
-  font-size: 1.8vh;
+  width: 13.5vw; /* 12vw * 1.125 */
+  max-width: 7.3125vh; /* 6.5vh * 1.125 */
+  font-size: 2.025vh; /* 1.8vh * 1.125 */
   background: #FFFFFF;
   color: #000000;
 }
@@ -648,6 +651,10 @@ a {
 @keyframes fall {
   0% { 
       transform: translateY(-5vh);
+      opacity: 1; 
+  }
+  80% { 
+      transform: translateY(100vh);
       opacity: 1; 
   }
   100% { 
@@ -888,6 +895,10 @@ a {
   white-space: pre-line;
 }
 
+#share-text .guess-count {
+  font-size: 6vh; /* Doubled from 3vh */
+}
+
 #share-text .big-score {
   font-size: 6.25vh;
   margin-top: 0.25vh;
@@ -909,21 +920,6 @@ a {
 #share-game-number {
   font-size: 1.5vh;
   margin-bottom: 0.5vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
-#share-score-label {
-  font-size: 2vh;
-  margin-bottom: 0.5vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
-#share-score {
-  font-size: 5vh;
-  font-weight: bold;
-  margin-bottom: 1vh;
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -1096,7 +1092,7 @@ a {
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 7.2vh); /* Moved up 4.5 lines (4.5 * 1.6vh = 7.2vh) */
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh);
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1183,21 +1179,21 @@ a {
     bottom: 4vh;
   }
   .keyboard-row {
-    gap: 0.2vw;
+    gap: 0.4vw; /* Doubled from 0.2vw */
     margin-bottom: 0.2vh;
     width: 95vw;
   }
   .key {
-    font-size: 1.8vh;
-    width: 9vw;
-    max-width: 4vh;
-    height: 4.5vh;
-    line-height: 4.5vh;
+    font-size: 2.025vh; /* 1.8vh * 1.125 */
+    width: 10.125vw; /* 9vw * 1.125 */
+    max-width: 4.5vh; /* 4vh * 1.125 */
+    height: 5.0625vh; /* 4.5vh * 1.125 */
+    line-height: 5.0625vh;
   }
   .key.special {
-    width: 13vw;
-    max-width: 6vh;
-    font-size: 1.6vh;
+    width: 14.625vw; /* 13vw * 1.125 */
+    max-width: 6.75vh; /* 6vh * 1.125 */
+    font-size: 1.8vh; /* 1.6vh * 1.125 */
   }
   .dialog-message {
     font-size: 2vh;
@@ -1222,6 +1218,6 @@ a {
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 0.8vh) auto 0.8vh auto; /* 0.8vh above guess box */
+    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh) auto 0.8vh auto;
   }
 }
