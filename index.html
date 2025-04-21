@@ -2,264 +2,198 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wordy - Big Brain Word Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDY</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.rel='stylesheet'" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'" crossorigin>
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    <link rel="icon" type="image/png" href="wordy_favicon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 <body>
+    <!-- Game Screen -->
     <div id="game-screen">
         <div id="header">
             <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
-            <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
-            </div>
-            <span id="game-name">WORDY</span>
+            <div id="game-name">WORDY</div>
         </div>
         <div id="game-controls-container">
-            <span id="all-games-link" class="control-link">All Games</span>
-            <span id="give-up-link" class="control-link">Give Up</span>
-            <span id="guesses-link" class="control-link">Guesses: 0</span>
+            <a href="#" id="all-games-link" class="control-link">All Games</a>
+            <a href="#" id="create-pineapple" class="control-link">Create a Wordy</a>
+            <a href="#" id="guesses-link" class="control-link">Guesses: 0</a>
+            <a href="#" id="give-up-link" class="control-link">Give Up</a>
         </div>
         <div id="nav-arrows-container">
             <button id="prev-game-arrow" class="nav-arrow"><i class="fas fa-arrow-left"></i></button>
             <button id="next-game-arrow" class="nav-arrow"><i class="fas fa-arrow-right"></i></button>
         </div>
+        <div class="new-game-number-display" id="new-game-number-display"></div>
         <div id="main-content">
-            <span id="new-game-number-display" class="new-game-number-display"></span>
             <div id="guess-area">
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is...</div>
-                            <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
+                            <div id="prompt">Guess:</div>
+                            <input type="text" id="guess-input" readonly>
                         </div>
-                        <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
+                        <button id="guess-btn" class="guess-btn">Guess</button>
                     </div>
                 </div>
-                <span id="hints-label">Hints</span>
-                <div class="hint-countdown" style="display: none;">(next hint revealed in <span id="countdown">5</span> guesses)</div>
+                <div id="hints-label">Hints:</div>
+                <div class="hint-countdown"></div>
                 <div id="hints-container" class="hints-inline"></div>
-            </div>
-        </div>
-        <div id="give-up-dialog" class="dialog" style="display: none;">
-            <div class="dialog-content">
-                <span class="dialog-message">Are you sure you want to give up?</span>
-                <div class="dialog-buttons">
-                    <button id="give-up-yes-btn" class="control-btn">Yes</button>
-                    <button id="give-up-no-btn" class="control-btn">No</button>
-                </div>
             </div>
         </div>
         <div id="keyboard-container" class="keyboard">
             <div class="keyboard-row">
-                <button class="key">Q</button>
-                <button class="key">W</button>
-                <button class="key">E</button>
-                <button class="key">R</button>
-                <button class="key">T</button>
-                <button class="key">Y</button>
-                <button class="key">U</button>
-                <button class="key">I</button>
-                <button class="key">O</button>
-                <button class="key">P</button>
+                <div class="key">Q</div><div class="key">W</div><div class="key">E</div><div class="key">R</div>
+                <div class="key">T</div><div class="key">Y</div><div class="key">U</div><div class="key">I</div>
+                <div class="key">O</div><div class="key">P</div>
             </div>
             <div class="keyboard-row">
-                <button class="key">A</button>
-                <button class="key">S</button>
-                <button class="key">D</button>
-                <button class="key">F</button>
-                <button class="key">G</button>
-                <button class="key">H</button>
-                <button class="key">J</button>
-                <button class="key">K</button>
-                <button class="key">L</button>
+                <div class="key">A</div><div class="key">S</div><div class="key">D</div><div class="key">F</div>
+                <div class="key">G</div><div class="key">H</div><div class="key">J</div><div class="key">K</div>
+                <div class="key">L</div>
             </div>
             <div class="keyboard-row">
-                <button class="key special" id="key-enter">ENTER</button>
-                <button class="key">Z</button>
-                <button class="key">X</button>
-                <button class="key">C</button>
-                <button class="key">V</button>
-                <button class="key">B</button>
-                <button class="key">N</button>
-                <button class="key">M</button>
-                <button class="key special" id="key-backspace"><i class="fas fa-backspace"></i></button>
+                <div class="key special" id="key-enter">Enter</div><div class="key">Z</div><div class="key">X</div>
+                <div class="key">C</div><div class="key">V</div><div class="key">B</div><div class="key">N</div>
+                <div class="key">M</div><div class="key special" id="key-backspace">⌫</div>
             </div>
         </div>
         <div id="ad-box">
-            <p>Big Brain Games</p>
+            <p>Advertisement</p>
         </div>
     </div>
 
+    <!-- Game Over Screen -->
     <div id="game-over">
         <div id="header">
             <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
-            <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
-            </div>
-            <span id="game-name">WORDY</span>
+            <div id="game-name">WORDY</div>
         </div>
-        <span id="game-number-display" class="game-number-display"></span>
-        <span id="todays-word-label">Today's Word</span>
-        <span id="todays-word"></span>
+        <div class="game-number-display" id="game-number-display"></div>
         <div id="share-box">
             <div id="share-panel">
                 <div id="share-text"></div>
             </div>
         </div>
-        <span id="share-game-number"></span>
-        <span id="share-score-label">Score</span>
-        <span id="share-score"></span>
         <div id="share-section">
-            <span id="share-label">Share Your Results!</span>
+            <div id="share-label">Share your results:</div>
             <div id="share-buttons">
-                <a id="share-whatsapp" href="" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                <a id="share-telegram" href="" target="_blank"><i class="fab fa-telegram"></i></a>
-                <a id="share-twitter" href="" target="_blank"><i class="fab fa-x-twitter"></i></a>
-            </div>
-            <div class="end-buttons">
-                <button id="next-game-btn-end" class="control-btn">Next Game</button>
-                <span class="or-text">or</span>
-                <button id="create-pineapple-end" class="control-btn">
-                    Create a Wordy<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>
-                </button>
+                <a href="#" id="share-whatsapp"><i class="fab fa-whatsapp"></i></a>
+                <a href="#" id="share-telegram"><i class="fab fa-telegram"></i></a>
+                <a href="#" id="share-twitter"><i class="fab fa-twitter"></i></a>
             </div>
         </div>
-        <div id="ad-box">
-            <p>Big Brain Games</p>
+        <div id="todays-word-label">Secret Word</div>
+        <div id="todays-word"></div>
+        <div class="end-buttons">
+            <button id="next-game-btn-end" class="control-btn">Play Another</button>
+            <a href="#" id="create-pineapple-end" class="control-link">Create a Wordy</a>
         </div>
     </div>
 
+    <!-- Game Select Screen -->
     <div id="game-select-screen">
         <div id="header">
             <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
-            <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
-            </div>
-            <span id="game-name">WORDY</span>
+            <div id="game-name">WORDY</div>
         </div>
-        <span id="game-number-display" class="game-number-display"></span>
+        <div class="game-number-display" id="game-number-display"></div>
         <div id="game-select-content">
-            <span id="game-list-title">WORDY GAMES</span>
+            <div id="game-list-title">Select a Game</div>
             <div id="tabs">
-                <span id="official-tab" class="tab-text active">Official</span>
-                <span id="private-tab" class="tab-text">Private</span>
+                <div id="official-tab" class="tab-text active">Official</div>
+                <div id="private-tab" class="tab-text">Private</div>
             </div>
             <div id="official-games" class="tab-content active">
                 <div class="game-list-header">
-                    <span>Game #</span>
-                    <span>Word</span>
-                    <span>Guesses</span>
+                    <span>Game</span><span>Word</span><span>Guesses</span>
                 </div>
                 <div id="official-list" class="game-list"></div>
-                <div class="spacer"></div>
-                <button id="official-back-btn" class="control-btn">Back</button>
+                <div class="back-btn-container">
+                    <button id="official-back-btn" class="control-btn">Back</button>
+                </div>
             </div>
             <div id="private-games" class="tab-content">
-                <button id="create-pineapple" class="control-btn flash">
-                    Create a Wordy<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>
-                </button>
-                <div class="spacer"></div>
                 <div class="game-list-header">
-                    <span>Game Name</span>
-                    <span>Word</span>
-                    <span>Guesses</span>
+                    <span>Name</span><span>Word</span><span>Guesses</span>
                 </div>
                 <div id="private-list" class="game-list"></div>
-                <div class="spacer"></div>
-                <button id="private-back-btn" class="control-btn">Back</button>
+                <div class="back-btn-container">
+                    <button id="private-back-btn" class="control-btn">Back</button>
+                </div>
             </div>
-        </div>
-        <div id="ad-box">
-            <p>Big Brain Games</p>
         </div>
     </div>
 
-    <div id="create-form" class="create-form" style="display: none;">
+    <!-- Create Form Screen -->
+    <div id="create-form" class="create-form">
         <div id="header">
             <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
-            <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
-            </div>
-            <span id="game-name">WORDY</span>
+            <div id="game-name">WORDY</div>
         </div>
-        <span id="game-number-display" class="game-number-display"></span>
-        <span class="form-input-label">Game Name</span>
-        <input type="text" id="game-name-input" class="form-input" placeholder="Enter a name for your game">
+        <div class="game-number-display" id="game-number-display"></div>
+        <input type="text" id="game-name-input" class="form-input" placeholder="Game Name">
         <div class="form-line"></div>
-        <span class="form-input-label">Secret Word</span>
-        <input type="text" id="secret-word" class="form-input" placeholder="Enter the secret word">
+        <input type="text" id="secret-word" class="form-input" placeholder="Secret Word">
         <div class="form-line"></div>
-        <span class="form-input-label">Hint #1</span>
-        <input type="text" id="hint-1" class="form-input" placeholder="Enter hint #1">
+        <input type="text" id="hint-1" class="form-input" placeholder="Hint 1">
         <div class="form-line"></div>
-        <span class="form-input-label">Hint #2</span>
-        <input type="text" id="hint-2" class="form-input" placeholder="Enter hint #2">
+        <input type="text" id="hint-2" class="form-input" placeholder="Hint 2">
         <div class="form-line"></div>
-        <span class="form-input-label">Hint #3</span>
-        <input type="text" id="hint-3" class="form-input" placeholder="Enter hint #3">
+        <input type="text" id="hint-3" class="form-input" placeholder="Hint 3">
         <div class="form-line"></div>
-        <span class="form-input-label">Hint #4</span>
-        <input type="text" id="hint-4" class="form-input" placeholder="Enter hint #4">
+        <input type="text" id="hint-4" class="form-input" placeholder="Hint 4">
         <div class="form-line"></div>
-        <span class="form-input-label">Hint #5</span>
-        <input type="text" id="hint-5" class="form-input" placeholder="Enter hint #5">
+        <input type="text" id="hint-5" class="form-input" placeholder="Hint 5">
         <div class="form-line"></div>
         <button id="confirm-btn" class="control-btn">Create Game</button>
         <div class="back-btn-container">
-            <span class="or-text">or</span>
             <button id="form-back-btn" class="control-btn">Back</button>
         </div>
         <div id="keyboard-container" class="keyboard">
             <div class="keyboard-row">
-                <button class="key">Q</button>
-                <button class="key">W</button>
-                <button class="key">E</button>
-                <button class="key">R</button>
-                <button class="key">T</button>
-                <button class="key">Y</button>
-                <button class="key">U</button>
-                <button class="key">I</button>
-                <button class="key">O</button>
-                <button class="key">P</button>
+                <div class="key">Q</div><div class="key">W</div><div class="key">E</div><div class="key">R</div>
+                <div class="key">T</div><div class="key">Y</div><div class="key">U</div><div class="key">I</div>
+                <div class="key">O</div><div class="key">P</div>
             </div>
             <div class="keyboard-row">
-                <button class="key">A</button>
-                <button class="key">S</button>
-                <button class="key">D</button>
-                <button class="key">F</button>
-                <button class="key">G</button>
-                <button class="key">H</button>
-                <button class="key">J</button>
-                <button class="key">K</button>
-                <button class="key">L</button>
+                <div class="key">A</div><div class="key">S</div><div class="key">D</div><div class="key">F</div>
+                <div class="key">G</div><div class="key">H</div><div class="key">J</div><div class="key">K</div>
+                <div class="key">L</div>
             </div>
             <div class="keyboard-row">
-                <button class="key special" id="key-enter">ENTER</button>
-                <button class="key">Z</button>
-                <button class="key">X</button>
-                <button class="key">C</button>
-                <button class="key">V</button>
-                <button class="key">B</button>
-                <button class="key">N</button>
-                <button class="key">M</button>
-                <button class="key special" id="key-backspace"><i class="fas fa-backspace"></i></button>
+                <div class="key special" id="key-enter">Enter</div><div class="key">Z</div><div class="key">X</div>
+                <div class="key">C</div><div class="key">V</div><div class="key">B</div><div class="key">N</div>
+                <div class="key">M</div><div class="key special" id="key-backspace">⌫</div>
             </div>
+        </div>
+        <div id="ad-box">
+            <p>Advertisement</p>
         </div>
     </div>
 
+    <!-- Guesses Screen -->
     <div id="guesses-screen">
         <div id="guesses-content">
-            <span id="guesses-title">Your Guesses</span>
+            <div id="guesses-title">Your Guesses</div>
             <div id="guesses-list"></div>
             <button id="guesses-close-btn" class="control-btn">Close</button>
         </div>
     </div>
 
+    <!-- Give Up Dialog -->
+    <div id="give-up-dialog" class="dialog">
+        <div class="dialog-content">
+            <div class="dialog-message">Are you sure you want to give up?</div>
+            <div class="dialog-buttons">
+                <button id="give-up-yes-btn" class="control-btn">Yes</button>
+                <button id="give-up-no-btn" class="control-btn">No</button>
+            </div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
+    <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script>
 </body>
 </html>

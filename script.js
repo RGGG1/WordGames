@@ -107,14 +107,33 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (guessBtn) {
+        // Re-attach guess button listener to ensure functionality
+        guessBtn.onclick = null; // Clear any existing listener
         guessBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
+            console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess, guess: guessInput.value });
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
                     console.log("Guess submitted via button:", guess);
+                    handleGuess(guess);
+                } else {
+                    console.log("No guess entered, ignoring button click");
+                }
+            } else {
+                console.log("Guess button click ignored due to state");
+            }
+        });
+        // Add touchstart for mobile
+        guessBtn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guess button touched:", { gameOver, disabled: guessInput.disabled, isProcessingGuess, guess: guessInput.value });
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                const guess = guessInput.value.trim().toUpperCase();
+                if (guess) {
+                    console.log("Guess submitted via button touch:", guess);
                     handleGuess(guess);
                 }
             }
@@ -1081,7 +1100,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guess === secretWord) {
             console.log("Correct guess!");
-            score = calculateScore();
             saveGameResult(currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple", currentGameNumber, secretWord, guessCount);
             endGame(true);
         } else {
@@ -1125,7 +1143,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function endGame(won, gaveUp = false) {
-        console.log("Ending game", { won, gaveUp, score, guessCount, secretWord });
+        console.log("Ending game", { won, gaveUp, guessCount, secretWord });
         gameOver = true;
         guessInput.disabled = true;
         guessBtn.disabled = true;
@@ -1137,22 +1155,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         adjustBackground();
         setupKeyboardListeners(); // Re-apply listeners
 
+        const todaysWordLabel = document.getElementById("todays-word-label");
         const todaysWord = document.getElementById("todays-word");
-        const shareScore = document.getElementById("share-score");
         const shareText = document.getElementById("share-text");
-        const gameNumberDisplay = document.getElementById("game-number-display");
 
+        if (todaysWordLabel) todaysWordLabel.textContent = "Secret Word";
         if (todaysWord) todaysWord.textContent = secretWord;
-        if (shareScore) shareScore.textContent = gaveUp ? "Gave Up" : score.toString();
-        if (gameNumberDisplay) {
-            gameNumberDisplay.textContent = currentGameNumber;
-        }
 
         let shareMessage;
         if (gaveUp) {
             shareMessage = `Play WORDY\nThe big brain word game.`;
         } else {
-            shareMessage = `${currentGameNumber}\nI solved WORDY in\n${guessCount}\n${guessCount === 1 ? 'guess' : 'guesses'}\nThe big brain word game.`;
+            shareMessage = `${currentGameNumber}\nI solved WORDY in\n<span class="large-guess-count">${guessCount}\n${guessCount === 1 ? 'guess' : 'guesses'}</span>`;
         }
 
         if (shareText) {
@@ -1166,13 +1180,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         if (shareButtons.whatsapp) {
-            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
         }
         if (shareButtons.telegram) {
-            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage)}`;
+            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
         }
         if (shareButtons.twitter) {
-            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
+            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
         }
 
         if (won) {
@@ -1193,9 +1207,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 piece.className = "pineapple-piece";
                 piece.textContent = "🍍";
                 piece.style.left = `${Math.random() * 100}vw`;
-                piece.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                piece.style.animationDuration = `${Math.random() * 2 + 3}s`; // Slower: 3–5s
                 piece.style.fontSize = `${Math.random() * 2 + 1}vh`;
-                piece.style.animationDelay = `${waveNumber * 1.5}s`; // Delay each wave
+                piece.style.animationDelay = `${waveNumber * 0.5}s`; // Overlap waves every 0.5s
                 rainContainer.appendChild(piece);
             });
         }
@@ -1205,10 +1219,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             createWave(i);
         }
 
+        // Remove container after the last wave's longest possible fall (0.5s * 2 + 5s = 6s)
         setTimeout(() => {
             rainContainer.remove();
             console.log("Pineapple rain animation ended");
-        }, 6000); // Total duration: 3 waves * 1.5s delay + 3s fall
+        }, 6000);
     }
 
     function resetGame() {
@@ -1285,10 +1300,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (guessBtn) {
             guessBtn.disabled = false;
-            guessBtn.onclick = (e) => {
+            guessBtn.onclick = null; // Clear any existing listener
+            guessBtn.addEventListener("click", (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
+                console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess, guess: guessInput.value });
                 if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                     const guess = guessInput.value.trim().toUpperCase();
                     if (guess) {
@@ -1296,7 +1312,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                         handleGuess(guess);
                     }
                 }
-            };
+            });
+            guessBtn.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log("Guess button touched:", { gameOver, disabled: guessInput.disabled, isProcessingGuess, guess: guessInput.value });
+                if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                    const guess = guessInput.value.trim().toUpperCase();
+                    if (guess) {
+                        console.log("Guess submitted via button touch:", guess);
+                        handleGuess(guess);
+                    }
+                }
+            });
         }
 
         const keyboard = document.getElementById("keyboard-container");
