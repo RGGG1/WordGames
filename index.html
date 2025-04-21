@@ -24,15 +24,6 @@
             <span id="give-up-link" class="control-link">Give Up</span>
             <span id="guesses-link" class="control-link">Guesses: 0</span>
         </div>
-        <div id="give-up-dialog" class="dialog" style="display: none;">
-            <div class="dialog-content">
-                <span class="dialog-message">Are you sure you want to give up?</span>
-                <div class="dialog-buttons">
-                    <button id="give-up-yes-btn" class="control-btn">Yes</button>
-                    <button id="give-up-no-btn" class="control-btn">No</button>
-                </div>
-            </div>
-        </div>
         <div id="nav-arrows-container">
             <button id="prev-game-arrow" class="nav-arrow"><i class="fas fa-arrow-left"></i></button>
             <button id="next-game-arrow" class="nav-arrow"><i class="fas fa-arrow-right"></i></button>
@@ -51,6 +42,15 @@
                 </div>
                 <div class="hint-countdown" style="display: none;">(next hint revealed in <span id="countdown">5</span> guesses)</div>
                 <div id="hints-container" class="hints-inline"></div>
+            </div>
+        </div>
+        <div id="give-up-dialog" class="dialog" style="display: none;">
+            <div class="dialog-content">
+                <span class="dialog-message">Are you sure you want to give up?</span>
+                <div class="dialog-buttons">
+                    <button id="give-up-yes-btn" class="control-btn">Yes</button>
+                    <button id="give-up-no-btn" class="control-btn">No</button>
+                </div>
             </div>
         </div>
         <div id="keyboard-container" class="keyboard">
