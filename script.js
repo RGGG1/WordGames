@@ -42,6 +42,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const allGamesLink = document.getElementById("all-games-link");
     const prevGameArrow = document.getElementById("prev-game-arrow");
     const nextGameArrow = document.getElementById("next-game-arrow");
+    const guessInput = document.getElementById("guess-input");
+    const guessArea = document.getElementById("guess-area");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -59,8 +61,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Hamburger button found:", hamburgerBtn);
     }
 
-    const guessInput = document.getElementById("guess-input");
-
     if (guessInput) {
         guessInput.addEventListener("input", (e) => {
             console.log("Guess input value changed:", guessInput.value);
@@ -77,8 +77,35 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Animation cancelled and state reset due to typing");
             }
         });
+        // Ensure cursor blinks on load if empty
+        if (!guessInput.value) {
+            guessInput.focus();
+            activeInput = guessInput;
+        }
     } else {
         console.error("guess-input not found in DOM");
+    }
+
+    // Add click/tap handler for guess area to focus input
+    if (guessArea) {
+        guessArea.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                guessInput.focus();
+                activeInput = guessInput;
+                console.log("Guess area clicked, input focused");
+            }
+        });
+        guessArea.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                guessInput.focus();
+                activeInput = guessInput;
+                console.log("Guess area touched, input focused");
+            }
+        });
     }
 
     if (guessBtn) {
@@ -110,7 +137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(input => input);
 
     formInputs.forEach(input => {
-        input.readOnly = false;
+        input.readOnly = true; // Use on-screen keyboard
         input.disabled = false;
         input.addEventListener("click", () => {
             activeInput = input;
@@ -139,7 +166,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Setup keyboard listeners for both game and form
     function setupKeyboardListeners() {
-        const keys = document.querySelectorAll("#keyboard-container .key, #form-keyboard-container .key");
+        const keys = document.querySelectorAll("#keyboard-container .key");
         keys.forEach(key => {
             // Remove existing listeners to prevent stacking
             key.removeEventListener("click", key._clickHandler);
@@ -154,6 +181,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             handleGuess(guess);
                         }
                     }
+                    // Ignore Enter for form inputs to prevent unintended submission
                 } else if (key.id === "key-backspace") {
                     if (activeInput) {
                         activeInput.value = activeInput.value.slice(0, -1);
@@ -180,6 +208,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateContent.classList.remove("active");
             privateContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "none";
             displayGameList();
         });
 
@@ -192,6 +222,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             officialContent.classList.remove("active");
             officialContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "none";
             displayGameList();
         });
     }
@@ -333,6 +365,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateContent.classList.remove("active");
             privateContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "none";
             displayGameList();
             adjustBackground();
         });
@@ -345,8 +379,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Create a Wordy clicked");
             resetScreenDisplays();
             createForm.style.display = "flex";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "flex";
             activeInput = document.getElementById("game-name-input");
             if (activeInput) activeInput.focus();
+            adjustBackground();
         });
     }
 
@@ -364,6 +401,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             officialContent.classList.remove("active");
             officialContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "none";
             displayGameList();
             adjustBackground();
         });
@@ -383,6 +422,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateContent.classList.remove("active");
             privateContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "none";
             displayGameList();
             adjustBackground();
         });
@@ -395,6 +436,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Official Back button clicked");
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "flex";
             adjustBackground();
         });
     }
@@ -406,6 +449,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Private Back button clicked");
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "flex";
             adjustBackground();
         });
     }
@@ -459,6 +504,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 privateContent.style.display = "flex";
                 officialContent.classList.remove("active");
                 officialContent.style.display = "none";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = "none";
                 await fetchPrivateGames();
                 displayGameList();
                 adjustBackground();
@@ -477,6 +524,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             createForm.style.display = "none";
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "flex";
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
             adjustBackground();
@@ -490,6 +539,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Guesses close button clicked");
             guessesScreen.style.display = "none";
             gameScreen.style.display = "flex";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "flex";
         });
 
         document.addEventListener("click", (e) => {
@@ -499,6 +550,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Clicked outside guesses screen");
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = "flex";
             }
         });
     }
@@ -536,6 +589,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Give Up No button clicked");
             giveUpDialog.style.display = "none";
             gameScreen.style.display = "flex";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "flex";
         });
 
         giveUpDialog.addEventListener("click", (e) => {
@@ -543,6 +598,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Clicked outside give-up dialog");
                 giveUpDialog.style.display = "none";
                 gameScreen.style.display = "flex";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = "flex";
             }
         });
     }
@@ -557,11 +614,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (guessesScreen.style.display === "flex") {
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = "flex";
             } else {
                 guessesList.innerHTML = guesses.length > 0 
                     ? guesses.join(' <span class="separator yellow">|</span>   ')
                     : "No guesses yet!";
                 guessesScreen.style.display = "flex";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = "none";
                 console.log("Guesses screen displayed, content:", guessesList.innerHTML);
             }
         }, { capture: false });
@@ -578,6 +639,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         privateContent.classList.remove("active");
         privateContent.style.display = "none";
         if (createForm) createForm.style.display = "none";
+        const keyboard = document.getElementById("keyboard-container");
+        if (keyboard) keyboard.style.display = "none";
         displayGameList();
     }
 
@@ -624,6 +687,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             if (createForm) createForm.style.display = "none";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "flex";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
@@ -639,6 +704,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             if (createForm) createForm.style.display = "none";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = "flex";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
@@ -713,6 +780,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         loadGame(game);
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
+                        const keyboard = document.getElementById("keyboard-container");
+                        if (keyboard) keyboard.style.display = "flex";
                         adjustBackground();
                         const currentIndex = allGames.findIndex(g => g["Game Number"] === game["Game Number"]);
                         updateArrowStates(currentIndex, allGames);
@@ -761,6 +830,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         loadGame(game);
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
+                        const keyboard = document.getElementById("keyboard-container");
+                        if (keyboard) keyboard.style.display = "flex";
                         adjustBackground();
                         const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
                         updateArrowStates(currentIndex, privateGames);
@@ -790,6 +861,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 loadGame(allGames[0]);
                 resetScreenDisplays();
                 gameScreen.style.display = "flex";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = "flex";
                 adjustBackground();
                 updateArrowStates(0, allGames);
             });
@@ -973,6 +1046,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.style.color = "#000000";
                 isProcessingGuess = false;
                 console.log("Animation completed, input reset");
+                if (guessInput) guessInput.focus(); // Re-focus after animation
             }, 350);
 
             if (guessCount % 5 === 0 && hintIndex < hints.length - 1) {
@@ -1010,6 +1084,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         resetScreenDisplays();
         gameOverScreen.style.display = "flex";
+        const keyboard = document.getElementById("keyboard-container");
+        if (keyboard) keyboard.style.display = "none";
         adjustBackground();
 
         const todaysWord = document.getElementById("todays-word");
@@ -1023,14 +1099,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameNumberDisplay.textContent = currentGameNumber;
         }
 
-        let shareMessage = `Wordy ${currentGameNumber}\n`;
+        let shareMessage;
         if (gaveUp) {
-            shareMessage += `I gave up after ${guessCount} guesses 😔\n`;
+            shareMessage = `Play WORDY\nThe big brain word game.`;
         } else {
-            shareMessage += `Score: ${score}/100 in ${guessCount} guesses 🎉\n`;
+            shareMessage = `${currentGameNumber}\nI solved WORDY in\n${guessCount}\n${guessCount === 1 ? 'guess' : 'guesses'}\nThe big brain word game.`;
         }
-        shareMessage += `Secret Word: ${secretWord}\n`;
-        shareMessage += "Play at: https://wordy.bigbraingames.net";
 
         if (shareText) {
             shareText.innerHTML = shareMessage.replace(/\n/g, "<br>");
@@ -1063,21 +1137,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         rainContainer.className = "pineapple-rain";
         document.body.appendChild(rainContainer);
 
-        const pieces = Array(30).fill("🍍");
-        pieces.forEach(() => {
-            const piece = document.createElement("div");
-            piece.className = "pineapple-piece";
-            piece.textContent = "🍍";
-            piece.style.left = `${Math.random() * 100}vw`;
-            piece.style.animationDuration = `${Math.random() * 2 + 1}s`;
-            piece.style.fontSize = `${Math.random() * 2 + 1}vh`;
-            rainContainer.appendChild(piece);
-        });
+        function createWave(waveNumber) {
+            const pieces = Array(50).fill("🍍");
+            pieces.forEach(() => {
+                const piece = document.createElement("div");
+                piece.className = "pineapple-piece";
+                piece.textContent = "🍍";
+                piece.style.left = `${Math.random() * 100}vw`;
+                piece.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                piece.style.fontSize = `${Math.random() * 2 + 1}vh`;
+                piece.style.animationDelay = `${waveNumber * 1.5}s`; // Delay each wave
+                rainContainer.appendChild(piece);
+            });
+        }
+
+        // Create three waves
+        for (let i = 0; i < 3; i++) {
+            createWave(i);
+        }
 
         setTimeout(() => {
             rainContainer.remove();
             console.log("Pineapple rain animation ended");
-        }, 3000);
+        }, 6000); // Total duration: 3 waves * 1.5s delay + 3s fall
     }
 
     function resetGame() {
@@ -1096,6 +1178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessInput.value = "";
             guessInput.disabled = false;
             guessInput.focus();
+            activeInput = guessInput;
         }
         if (guessBtn) {
             guessBtn.disabled = false;
@@ -1166,6 +1249,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
         }
 
+        const keyboard = document.getElementById("keyboard-container");
+        if (keyboard) keyboard.style.display = "flex";
         setupKeyboardListeners();
     }
 
