@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let guesses = [];
     let animationTimeout = null;
     let activeInput = null;
+    let currentBackground = "newbackground.png"; // Track the current background
 
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
@@ -745,9 +746,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
-                { "Game Number": "1", "Secret Word": "TEST", "Hint 1": "SAMPLE", "Hint 2": "WORD", "Hint 3": "GAME", "Hint 4": "PLAY", "Hint 5": "FUN", "Background": "" }
+                { "Game Number": "1", "Secret Word": "TEST", "Hint 1": "SAMPLE", "Hint 2": "WORD", "Hint 3": "GAME", "Hint 4": "PLAY", "Hint 5": "FUN", "Background": "testbackground.png" } // Added test background
             ];
-            console.log("Using hardcoded game:", allGames);
+            console.log("Using hardcoded game with background:", allGames);
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
@@ -1016,13 +1017,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function adjustBackground() {
-        console.log("Adjusting background for screens");
+        console.log("Adjusting background for screens, using currentBackground:", currentBackground);
         const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
             if (screen && screen.style.display === "flex") {
                 screen.style.height = "100vh";
                 screen.style.width = "100vw";
-                screen.style.background = `url('${defaultBackground}') no-repeat center top fixed`;
+                screen.style.background = `url('${currentBackground}') no-repeat center top fixed !important`;
                 screen.style.backgroundSize = "100% calc(100% - 24vh)";
                 screen.offsetHeight;
                 console.log(`Adjusted background for ${screen.id}`);
@@ -1262,10 +1263,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameNumberDisplay.textContent = currentGameNumber;
         }
 
-        const background = game["Background"] || defaultBackground;
+        // Set the current background, fallback to default if not specified
+        currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+        console.log("Setting currentBackground to:", currentBackground);
         [gameScreen, gameOverScreen, gameSelectScreen, createForm].forEach(screen => {
             if (screen) {
-                screen.style.background = `url('${background}') no-repeat center top fixed`;
+                screen.style.background = `url('${currentBackground}') no-repeat center top fixed !important`;
                 screen.style.backgroundSize = "100% calc(100% - 24vh)";
             }
         });

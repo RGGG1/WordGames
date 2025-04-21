@@ -1092,7 +1092,8 @@ a {
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 3.6vh); /* Moved down two lines */
+    /* Adjusted to use line-height-based spacing; 1.6vh font-size, 1.2 line-height = 1.92vh per line */
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + (1.92vh * 2)); /* Two lines = 3.84vh */
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1179,21 +1180,21 @@ a {
     bottom: 4vh;
   }
   .keyboard-row {
-    gap: 0.8vw; /* Doubled twice from 0.2vw: 0.2 * 2 * 2 = 0.8vw */
+    gap: clamp(0.6vw, 0.8vw, 1vw); /* Adjusted for better spacing on mobile */
     margin-bottom: 0.2vh;
     width: 95vw;
   }
   .key {
-    font-size: 2.025vh; /* 1.8vh * 1.125 */
-    width: 10.125vw; /* 9vw * 1.125 */
-    max-width: 4.5vh; /* 4vh * 1.125 */
-    height: 5.0625vh; /* 4.5vh * 1.125 */
-    line-height: 5.0625vh;
+    font-size: clamp(1.8vh, 2.025vh, 2.5vh); /* Adjusted for better visibility */
+    width: clamp(9vw, 10.125vw, 12vw);
+    max-width: clamp(4vh, 4.5vh, 5vh);
+    height: clamp(4.5vh, 5.0625vh, 6vh);
+    line-height: clamp(4.5vh, 5.0625vh, 6vh);
   }
   .key.special {
-    width: 14.625vw; /* 13vw * 1.125 */
-    max-width: 6.75vh; /* 6vh * 1.125 */
-    font-size: 1.8vh; /* 1.6vh * 1.125 */
+    width: clamp(13vw, 14.625vw, 16vw);
+    max-width: clamp(6vh, 6.75vh, 7.5vh);
+    font-size: clamp(1.6vh, 1.8vh, 2vh);
   }
   .dialog-message {
     font-size: 2vh;
@@ -1218,6 +1219,13 @@ a {
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh) auto 0.8vh auto; /* Moved down one line */
+    /* Adjusted to use line-height-based spacing; 1.6vh font-size, 1 line = 1.6vh */
+    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh) auto 0.8vh auto;
+  }
+  #share-text {
+    font-size: 2vh;
+  }
+  #share-text .guess-count {
+    font-size: 4vh; /* Explicitly set for mobile to ensure 2x */
   }
 }
