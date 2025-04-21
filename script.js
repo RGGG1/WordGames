@@ -16,6 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let isLoadingGame = false;
     let guesses = [];
     let animationTimeout = null;
+    let activeInput = null;
 
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
@@ -58,20 +59,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Hamburger button found:", hamburgerBtn);
     }
 
-    const input = document.getElementById("guess-input");
+    const guessInput = document.getElementById("guess-input");
 
-    if (input) {
-        input.addEventListener("input", (e) => {
-            console.log("Input value changed:", input.value);
+    if (guessInput) {
+        guessInput.addEventListener("input", (e) => {
+            console.log("Guess input value changed:", guessInput.value);
             if (animationTimeout) {
                 clearTimeout(animationTimeout);
                 animationTimeout = null;
                 const guessContainer = document.getElementById("guess-input-container");
                 guessContainer.classList.remove("wrong-guess");
-                input.style.opacity = "1";
-                input.style.visibility = "visible";
-                input.style.color = "#000000";
-                input.value = e.target.value;
+                guessInput.style.opacity = "1";
+                guessInput.style.visibility = "visible";
+                guessInput.style.color = "#000000";
+                guessInput.value = e.target.value;
                 isProcessingGuess = false;
                 console.log("Animation cancelled and state reset due to typing");
             }
@@ -84,9 +85,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guess button clicked:", { gameOver, disabled: input.disabled, isProcessingGuess });
-            if (!gameOver && !input.disabled && !isProcessingGuess) {
-                const guess = input.value.trim().toUpperCase();
+            console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
                     console.log("Guess submitted via button:", guess);
                     handleGuess(guess);
@@ -95,6 +96,70 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     } else {
         console.error("guess-btn not found in DOM");
+    }
+
+    // Setup form input listeners
+    const formInputs = [
+        document.getElementById("game-name-input"),
+        document.getElementById("secret-word"),
+        document.getElementById("hint-1"),
+        document.getElementById("hint-2"),
+        document.getElementById("hint-3"),
+        document.getElementById("hint-4"),
+        document.getElementById("hint-5")
+    ].filter(input => input);
+
+    formInputs.forEach(input => {
+        input.addEventListener("click", () => {
+            activeInput = input;
+            console.log("Form input selected:", input.id);
+        });
+    });
+
+    // Debounce function for key clicks
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    }
+
+    // Setup keyboard listeners for both game and form
+    function setupKeyboardListeners() {
+        const keys = document.querySelectorAll("#keyboard-container .key, #form-keyboard-container .key");
+        keys.forEach(key => {
+            // Remove existing listeners to prevent stacking
+            key.removeEventListener("click", key._clickHandler);
+            const clickHandler = debounce(() => {
+                if (gameOver || (activeInput && activeInput.disabled) || isProcessingGuess) return;
+                const keyValue = key.textContent;
+                if (key.id === "key-enter") {
+                    if (activeInput === guessInput) {
+                        const guess = guessInput.value.trim().toUpperCase();
+                        if (guess) {
+                            console.log("Guess submitted via on-screen Enter:", guess);
+                            handleGuess(guess);
+                        }
+                    }
+                } else if (key.id === "key-backspace") {
+                    if (activeInput) {
+                        activeInput.value = activeInput.value.slice(0, -1);
+                    }
+                } else {
+                    if (activeInput) {
+                        activeInput.value += keyValue;
+                    }
+                }
+                if (activeInput) activeInput.focus();
+            }, 100);
+            key._clickHandler = clickHandler;
+            key.addEventListener("click", clickHandler);
+        });
     }
 
     if (officialTab && privateTab && officialContent && privateContent) {
@@ -270,7 +335,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Create a Wordy clicked");
+            resetScreenDisplays();
             createForm.style.display = "flex";
+            activeInput = document.getElementById("game-name-input");
+            if (activeInput) activeInput.focus();
         });
     }
 
@@ -401,6 +469,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             createForm.style.display = "none";
             resetScreenDisplays();
             gameScreen.style.display = "flex";
+            activeInput = guessInput;
+            if (activeInput) activeInput.focus();
             adjustBackground();
         });
     }
@@ -509,6 +579,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameSelectScreen) gameSelectScreen.style.display = "none";
         if (guessesScreen) guessesScreen.style.display = "none";
         if (giveUpDialog) giveUpDialog.style.display = "none";
+        if (createForm) createForm.style.display = "none";
     }
 
     async function fetchGameData() {
@@ -548,6 +619,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
+            setupKeyboardListeners();
             updateArrowStates(0, allGames);
         } catch (error) {
             console.error("Error fetching official games:", error);
@@ -562,6 +634,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
+            setupKeyboardListeners();
             updateArrowStates(0, allGames);
             alert("Failed to load official games data. Using hardcoded game.");
         }
@@ -699,7 +772,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 !gameControls?.contains(e.target) &&
                 !e.target.closest("button") &&
                 e.target.id !== "game-name" &&
-                e.target !== input) {
+                e.target !== guessInput) {
             }
         });
 
@@ -714,8 +787,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             });
         });
 
-        input.addEventListener("focus", () => {
-            console.log("Input focused");
+        guessInput.addEventListener("focus", () => {
+            console.log("Guess input focused");
+            activeInput = guessInput;
         });
     }
 
@@ -867,7 +941,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const guessContainer = document.getElementById("guess-input-container");
         guessContainer.classList.remove("wrong-guess");
-        input.value = "";
+        guessInput.value = "";
         guessCount++;
         guesses.push(guess);
         console.log("Guess added, current guesses:", guesses);
@@ -886,9 +960,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessContainer.classList.add("wrong-guess");
             animationTimeout = setTimeout(() => {
                 guessContainer.classList.remove("wrong-guess");
-                input.style.opacity = "1";
-                input.style.visibility = "visible";
-                input.style.color = "#000000";
+                guessInput.style.opacity = "1";
+                guessInput.style.visibility = "visible";
+                guessInput.style.color = "#000000";
                 isProcessingGuess = false;
                 console.log("Animation completed, input reset");
             }, 350);
@@ -923,7 +997,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function endGame(won, gaveUp = false) {
         console.log("Ending game", { won, gaveUp, score, guessCount, secretWord });
         gameOver = true;
-        input.disabled = true;
+        guessInput.disabled = true;
         guessBtn.disabled = true;
 
         resetScreenDisplays();
@@ -981,7 +1055,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         rainContainer.className = "pineapple-rain";
         document.body.appendChild(rainContainer);
 
-        const pieces = ["🍍", "🍍", "🍍", "🍍", "🍍"];
+        const pieces = Array(30).fill("🍍");
         pieces.forEach(() => {
             const piece = document.createElement("div");
             piece.className = "pineapple-piece";
@@ -1010,10 +1084,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         gaveUp = false;
         guesses = [];
         isProcessingGuess = false;
-        if (input) {
-            input.value = "";
-            input.disabled = false;
-            input.focus();
+        if (guessInput) {
+            guessInput.value = "";
+            guessInput.disabled = false;
+            guessInput.focus();
         }
         if (guessBtn) {
             guessBtn.disabled = false;
@@ -1058,19 +1132,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupHints();
         updateHintCountdown();
 
-        if (input) {
-            input.disabled = false;
-            input.readOnly = true;
-            input.focus();
+        if (guessInput) {
+            guessInput.disabled = false;
+            guessInput.readOnly = true;
+            guessInput.focus();
+            activeInput = guessInput;
         }
         if (guessBtn) {
             guessBtn.disabled = false;
             guessBtn.onclick = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                console.log("Guess button clicked:", { gameOver, disabled: input.disabled, isProcessingGuess });
-                if (!gameOver && !input.disabled && !isProcessingGuess) {
-                    const guess = input.value.trim().toUpperCase();
+                console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
+                if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                    const guess = guessInput.value.trim().toUpperCase();
                     if (guess) {
                         console.log("Guess submitted via button:", guess);
                         handleGuess(guess);
@@ -1079,25 +1154,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
         }
 
-        const keys = document.querySelectorAll(".key");
-        keys.forEach(key => {
-            key.addEventListener("click", () => {
-                if (gameOver || input.disabled || isProcessingGuess) return;
-                const keyValue = key.textContent;
-                if (key.id === "key-enter") {
-                    const guess = input.value.trim().toUpperCase();
-                    if (guess) {
-                        console.log("Guess submitted via on-screen Enter:", guess);
-                        handleGuess(guess);
-                    }
-                } else if (key.id === "key-backspace") {
-                    input.value = input.value.slice(0, -1);
-                } else {
-                    input.value += keyValue;
-                }
-                input.focus();
-            });
-        });
+        setupKeyboardListeners();
     }
 
     await fetchGameData();

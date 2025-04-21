@@ -234,7 +234,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 1.8vh + 1.8vh); /* Below game number */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 1.8vh + 1.8vh + 3.6vh); /* Below game number + two lines */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -328,7 +328,7 @@ a {
   font-size: 1.8vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: 0 0 1.8vh 0; /* Spacing to hints */
+  margin: 3.6vh 0 1.8vh 0; /* Two lines below guess box, one line above hints */
   text-align: center;
 }
 
@@ -400,6 +400,10 @@ a {
   z-index: 10;
   padding: 0.5vh 0;
   box-sizing: border-box;
+}
+
+#form-keyboard-container {
+  bottom: 4vh; /* Same as game screen keyboard */
 }
 
 .keyboard-row {
@@ -625,7 +629,7 @@ a {
 #game-over,
 #game-select-screen,
 #create-form {
-  display: flex;
+  display: none; /* Ensure game-select-screen is hidden initially */
   flex-direction: column;
   height: 100vh;
   width: 100vw;
@@ -690,7 +694,8 @@ a {
 
 .create-form {
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  overflow-y: auto;
 }
 
 #game-select-screen {
@@ -960,6 +965,7 @@ a {
 
 .back-btn-container {
   margin-top: 2vh;
+  margin-bottom: 25vh; /* Space for keyboard */
 }
 
 #back-btn {
@@ -1054,7 +1060,7 @@ a {
     overflow: hidden;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 1.6vh + 1.6vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 1.6vh + 1.6vh + 3.2vh);
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1110,7 +1116,7 @@ a {
   }
   .hint-countdown {
     font-size: 1.6vh;
-    margin: 0 0 1.6vh 0;
+    margin: 3.2vh 0 1.6vh 0;
   }
   .hints-inline {
     font-size: 2.75vh;
