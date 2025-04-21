@@ -62,6 +62,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (guessInput) {
+        guessInput.readOnly = isMobile; // Only readOnly on mobile
+        guessInput.disabled = false;
         guessInput.addEventListener("input", (e) => {
             console.log("Guess input value changed:", guessInput.value);
             if (animationTimeout) {
@@ -72,9 +74,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.style.opacity = "1";
                 guessInput.style.visibility = "visible";
                 guessInput.style.color = "#000000";
-                guessInput.value = e.target.value;
+                guessInput.value = e.target.value.toUpperCase(); // Force uppercase
                 isProcessingGuess = false;
                 console.log("Animation cancelled and state reset due to typing");
+            }
+        });
+        guessInput.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" && !gameOver && !guessInput.disabled && !isProcessingGuess) {
+                const guess = guessInput.value.trim().toUpperCase();
+                if (guess) {
+                    console.log("Guess submitted via Enter key:", guess);
+                    handleGuess(guess);
+                }
             }
         });
         // Ensure cursor blinks on load
@@ -110,15 +121,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessBtn.disabled = false;
         // Remove any existing listeners to prevent duplicates
         guessBtn.removeEventListener("click", guessBtn._clickHandler);
+        guessBtn.removeEventListener("touchstart", guessBtn._touchHandler);
+        
         const clickHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess, guess: guessInput.value });
+            console.log("Guess button triggered:", { gameOver, disabled: guessInput.disabled, isProcessingGuess, guess: guessInput.value });
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
                     console.log("Submitting guess:", guess);
                     handleGuess(guess);
+                    guessInput.focus(); // Re-focus input after guess
                 } else {
                     console.log("No guess entered");
                 }
@@ -126,8 +140,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Guess button ignored due to state");
             }
         };
+        
         guessBtn._clickHandler = clickHandler;
+        guessBtn._touchHandler = (e) => {
+            e.preventDefault();
+            clickHandler(e);
+        };
+        
         guessBtn.addEventListener("click", clickHandler);
+        guessBtn.addEventListener("touchstart", guessBtn._touchHandler);
     } else {
         console.error("guess-btn not found in DOM");
     }
@@ -144,18 +165,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(input => input);
 
     formInputs.forEach(input => {
-        input.readOnly = true; // Use on-screen keyboard
+        input.readOnly = isMobile; // Use on-screen keyboard only on mobile
         input.disabled = false;
         input.addEventListener("click", () => {
             activeInput = input;
             input.focus();
             console.log("Form input selected:", input.id);
         });
-        input.addEventListener("touchstart", () => {
+        input.addEventListener("touchstart", (e) => {
+            e.preventDefault();
             activeInput = input;
             input.focus();
             console.log("Form input touched:", input.id);
         });
+        // Allow direct typing on desktop
+        if (!isMobile) {
+            input.addEventListener("input", () => {
+                console.log("Form input updated:", input.id, input.value);
+            });
+        }
     });
 
     // Debounce function for key clicks
@@ -167,12 +195,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 func(...args);
             };
             clearTimeout(timeout);
-            timeout = setTimeout(later, wait);
+            timeout = setTimeout(later, 50); // Reduced from 100ms
         };
     }
 
     // Setup keyboard listeners for both game and form
     function setupKeyboardListeners() {
+        if (!isMobile) {
+            console.log("Skipping on-screen keyboard setup on desktop");
+            return;
+        }
         const keys = document.querySelectorAll("#keyboard-container .key");
         console.log("Setting up keyboard listeners, found keys:", keys.length);
         keys.forEach(key => {
@@ -205,7 +237,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.log("Key added, new value:", activeInput.value);
                 }
                 activeInput.focus();
-            }, 100);
+            }, 50);
             key._clickHandler = clickHandler;
             key._touchHandler = (e) => {
                 e.preventDefault();
@@ -229,7 +261,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
 
         privateTab.addEventListener("click", () => {
@@ -244,7 +276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
     }
 
@@ -389,7 +421,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
             adjustBackground();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
     }
 
@@ -401,11 +433,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             createForm.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "flex";
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
             activeInput = document.getElementById("game-name-input");
             if (activeInput) activeInput.focus();
             adjustBackground();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
     }
 
@@ -427,7 +459,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
             adjustBackground();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
     }
 
@@ -449,7 +481,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
             adjustBackground();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
     }
 
@@ -461,11 +493,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "flex";
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
             adjustBackground();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
     }
 
@@ -477,16 +509,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "flex";
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
             adjustBackground();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
     }
 
     if (confirmBtn) {
-        confirmBtn.addEventListener("click", async (e) => {
+        confirmBtn.removeEventListener("click", confirmBtn._clickHandler);
+        const clickHandler = async (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Confirm button clicked");
@@ -525,6 +558,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
                 console.log("Game created successfully");
+                // Clear form inputs
+                formInputs.forEach(input => (input.value = ""));
                 createForm.style.display = "none";
                 resetScreenDisplays();
                 gameSelectScreen.style.display = "flex";
@@ -539,11 +574,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                 await fetchPrivateGames();
                 displayGameList();
                 adjustBackground();
-                setupKeyboardListeners(); // Re-apply listeners
+                setupKeyboardListeners();
             } catch (error) {
                 console.error("Error submitting form:", error);
                 alert("Failed to create game: " + error.message);
             }
+        };
+        
+        confirmBtn._clickHandler = clickHandler;
+        confirmBtn.addEventListener("click", clickHandler);
+        confirmBtn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            clickHandler(e);
         });
     }
 
@@ -556,11 +598,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "flex";
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
             adjustBackground();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
     }
 
@@ -572,10 +614,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessesScreen.style.display = "none";
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "flex";
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
 
         document.addEventListener("click", (e) => {
@@ -586,10 +628,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = "flex";
+                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
                 activeInput = guessInput;
                 if (activeInput) activeInput.focus();
-                setupKeyboardListeners(); // Re-apply listeners
+                setupKeyboardListeners();
             }
         });
     }
@@ -628,10 +670,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             giveUpDialog.style.display = "none";
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "flex";
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
-            setupKeyboardListeners(); // Re-apply listeners
+            setupKeyboardListeners();
         });
 
         giveUpDialog.addEventListener("click", (e) => {
@@ -640,10 +682,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 giveUpDialog.style.display = "none";
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = "flex";
+                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
                 activeInput = guessInput;
                 if (activeInput) activeInput.focus();
-                setupKeyboardListeners(); // Re-apply listeners
+                setupKeyboardListeners();
             }
         });
     }
@@ -659,10 +701,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = "flex";
+                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
                 activeInput = guessInput;
                 if (activeInput) activeInput.focus();
-                setupKeyboardListeners(); // Re-apply listeners
+                setupKeyboardListeners();
             } else {
                 guessesList.innerHTML = guesses.length > 0 
                     ? guesses.join(' <span class="separator yellow">|</span>   ')
@@ -670,7 +712,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessesScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
                 if (keyboard) keyboard.style.display = "none";
-                setupKeyboardListeners(); // Re-apply listeners
+                setupKeyboardListeners();
             }
         }, { capture: false });
     }
@@ -690,7 +732,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (keyboard) keyboard.style.display = "none";
         displayGameList();
         adjustBackground();
-        setupKeyboardListeners(); // Re-apply listeners
+        setupKeyboardListeners();
     }
 
     function resetScreenDisplays() {
@@ -737,7 +779,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameScreen.style.display = "flex";
             if (createForm) createForm.style.display = "none";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "flex";
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
@@ -754,7 +796,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameScreen.style.display = "flex";
             if (createForm) createForm.style.display = "none";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "flex";
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
             updateHintCountdown();
             adjustBackground();
             setupEventListeners();
@@ -830,11 +872,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
                         const keyboard = document.getElementById("keyboard-container");
-                        if (keyboard) keyboard.style.display = "flex";
+                        if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
                         activeInput = guessInput;
                         if (activeInput) activeInput.focus();
                         adjustBackground();
-                        setupKeyboardListeners(); // Re-apply listeners
+                        setupKeyboardListeners();
                         const currentIndex = allGames.findIndex(g => g["Game Number"] === game["Game Number"]);
                         updateArrowStates(currentIndex, allGames);
                     });
@@ -883,11 +925,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
                         const keyboard = document.getElementById("keyboard-container");
-                        if (keyboard) keyboard.style.display = "flex";
+                        if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
                         activeInput = guessInput;
                         if (activeInput) activeInput.focus();
                         adjustBackground();
-                        setupKeyboardListeners(); // Re-apply listeners
+                        setupKeyboardListeners();
                         const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
                         updateArrowStates(currentIndex, privateGames);
                     });
@@ -917,11 +959,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 resetScreenDisplays();
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = "flex";
+                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
                 activeInput = guessInput;
                 if (activeInput) activeInput.focus();
                 adjustBackground();
-                setupKeyboardListeners(); // Re-apply listeners
+                setupKeyboardListeners();
                 updateArrowStates(0, allGames);
             });
         });
@@ -1117,7 +1159,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.style.color = "#000000";
                 isProcessingGuess = false;
                 console.log("Animation completed, input reset");
-                if (guessInput) guessInput.focus(); // Re-focus after animation
+                if (guessInput) {
+                    guessInput.focus(); // Ensure focus after animation
+                    activeInput = guessInput;
+                }
             }, 350);
 
             if (guessCount % 5 === 0 && hintIndex < hints.length - 1) {
@@ -1148,7 +1193,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const keyboard = document.getElementById("keyboard-container");
         if (keyboard) keyboard.style.display = "none";
         adjustBackground();
-        setupKeyboardListeners(); // Re-apply listeners
+        setupKeyboardListeners();
 
         const todaysWord = document.getElementById("todays-word");
         const shareText = document.getElementById("share-text");
@@ -1250,7 +1295,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.classList.add('lines-0');
         }
         updateHintCountdown();
-        setupKeyboardListeners(); // Re-apply listeners
+        setupKeyboardListeners();
     }
 
     function loadGame(game) {
@@ -1288,7 +1333,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guessInput) {
             guessInput.disabled = false;
-            guessInput.readOnly = true;
+            guessInput.readOnly = isMobile; // Use on-screen keyboard only on mobile
             guessInput.focus();
             activeInput = guessInput;
         }
@@ -1297,7 +1342,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         const keyboard = document.getElementById("keyboard-container");
-        if (keyboard) keyboard.style.display = "flex";
+        if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
         setupKeyboardListeners();
     }
 
