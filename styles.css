@@ -247,7 +247,7 @@ a {
   margin: 0;
   padding: 0;
   position: absolute;
-  bottom: calc(6.15vh + 0.9vh);
+  bottom: calc(4.35vh + 0.9vh); /* Adjusted to move guess box up by ~1.8vh */
 }
 
 #guess-area:hover, #guess-input:hover {
