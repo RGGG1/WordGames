@@ -112,7 +112,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     formInputs.forEach(input => {
         input.addEventListener("click", () => {
             activeInput = input;
+            input.focus();
             console.log("Form input selected:", input.id);
+        });
+        input.addEventListener("touchstart", () => {
+            activeInput = input;
+            input.focus();
+            console.log("Form input touched:", input.id);
         });
     });
 

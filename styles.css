@@ -125,7 +125,7 @@ a {
   z-index: 11;
   background: none;
   position: fixed;
-  top: 5vh; /* Below header */
+  top: calc(5vh - 3.6vh); /* Moved up two lines */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -159,7 +159,7 @@ a {
   width: 90vw;
   height: 5vh;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh); /* Below game controls */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 7.2vh); /* Moved down four lines */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -207,7 +207,7 @@ a {
   width: 85vw;
   max-width: 85vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 1.8vh); /* Below nav arrows */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 1.8vh + 3.6vh); /* Above guess section */
   left: 7.5vw;
   z-index: 5;
   line-height: 1.8vh;
@@ -234,7 +234,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 1.8vh + 1.8vh + 3.6vh); /* Below game number + two lines */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 1.8vh + 3.6vh + 10.8vh); /* Moved down six lines */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -266,6 +266,7 @@ a {
   justify-content: center;
   width: 100%;
   margin-bottom: 0.5vh; /* Spacing to hint countdown */
+  margin-top: 2.7vh; /* Moved down 1.5 lines */
   position: relative;
 }
 
@@ -361,7 +362,7 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 82.5vw;
+  width: 85vw; /* Set to 85vw */
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
@@ -1027,7 +1028,7 @@ a {
     line-height: clamp(1.8vh, 2.25vw, 2.25vh);
   }
   #game-controls-container {
-    top: 5vh;
+    top: calc(5vh - 3.2vh); /* Adjusted for mobile */
   }
   .control-link {
     font-size: 1.6vh;
@@ -1037,7 +1038,7 @@ a {
     margin-top: 1.6vh;
   }
   #nav-arrows-container {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 6.4vh); /* Adjusted for mobile */
     height: 4.5vh;
   }
   .nav-arrow {
@@ -1052,7 +1053,7 @@ a {
   }
   #game-screen .game-number-display {
     font-size: 1.6vh;
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 1.6vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 1.6vh + 3.2vh);
     left: 7.5vw;
     line-height: 1.6vh;
     width: 85vw;
@@ -1060,7 +1061,7 @@ a {
     overflow: hidden;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 1.6vh + 1.6vh + 3.2vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 1.6vh + 3.2vh + 9.6vh); /* Adjusted for mobile */
   }
   .guess-input-wrapper {
     width: 85vw;
