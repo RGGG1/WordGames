@@ -746,7 +746,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (error) {
             console.error("Error fetching official games:", error);
             allGames = [
-                { "Game Number": "1", "Secret Word": "TEST", "Hint 1": "SAMPLE", "Hint 2": "WORD", "Hint 3": "GAME", "Hint 4": "PLAY", "Hint 5": "FUN", "Background": "testbackground.png" } // Added test background
+                { "Game Number": "1", "Secret Word": "TEST", "Hint 1": "SAMPLE", "Hint 2": "WORD", "Hint 3": "GAME", "Hint 4": "PLAY", "Hint 5": "FUN", "Background": "testbackground.png" }
             ];
             console.log("Using hardcoded game with background:", allGames);
             loadGame(allGames[0]);
@@ -1017,18 +1017,31 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function adjustBackground() {
-        console.log("Adjusting background for screens, using currentBackground:", currentBackground);
+        console.log("Adjusting background for all screens, using currentBackground:", currentBackground);
         const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
-            if (screen && screen.style.display === "flex") {
-                screen.style.height = "100vh";
-                screen.style.width = "100vw";
-                screen.style.background = `url('${currentBackground}') no-repeat center top fixed !important`;
+            if (screen) {
+                // Apply background to all screens, not just visible ones
+                screen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
                 screen.style.backgroundSize = "100% calc(100% - 24vh)";
+                // Force repaint
                 screen.offsetHeight;
-                console.log(`Adjusted background for ${screen.id}`);
+                console.log(`Set background for ${screen.id} to ${currentBackground}`);
             }
         });
+        // Test if the background image loaded successfully
+        const img = new Image();
+        img.src = currentBackground;
+        img.onload = () => {
+            console.log(`Background image ${currentBackground} loaded successfully`);
+        };
+        img.onerror = () => {
+            console.error(`Failed to load background image ${currentBackground}, falling back to default`);
+            if (currentBackground !== defaultBackground) {
+                currentBackground = defaultBackground;
+                adjustBackground(); // Reapply with default
+            }
+        };
         window.dispatchEvent(new Event('resize'));
     }
 
@@ -1266,12 +1279,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Set the current background, fallback to default if not specified
         currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
         console.log("Setting currentBackground to:", currentBackground);
-        [gameScreen, gameOverScreen, gameSelectScreen, createForm].forEach(screen => {
-            if (screen) {
-                screen.style.background = `url('${currentBackground}') no-repeat center top fixed !important`;
-                screen.style.backgroundSize = "100% calc(100% - 24vh)";
-            }
-        });
+
+        // Apply and verify background
+        adjustBackground();
 
         setupHints();
         updateHintCountdown();

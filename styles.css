@@ -1180,7 +1180,7 @@ a {
     bottom: 4vh;
   }
   .keyboard-row {
-    gap: clamp(0.6vw, 0.8vw, 1vw); /* Adjusted for better spacing on mobile */
+    gap: clampоко(0.6vw, 0.8vw, 1vw); /* Adjusted for better spacing on mobile */
     margin-bottom: 0.2vh;
     width: 95vw;
   }
