@@ -59,54 +59,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     const input = document.getElementById("guess-input");
-    if (input) {
-        input.addEventListener("keydown", (e) => {
-            console.log("Keydown event:", e.key, { gameOver, disabled: input.disabled, isProcessingGuess });
-            if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver && !input.disabled && !isProcessingGuess) {
-                e.preventDefault();
-                const guess = input.value.trim().toUpperCase();
-                if (guess) {
-                    console.log("Guess submitted via Enter:", guess);
-                    handleGuess(guess);
-                }
-            }
-        });
-
-        input.addEventListener("input", (e) => {
-            console.log("Input value changed:", input.value);
-            if (animationTimeout) {
-                clearTimeout(animationTimeout);
-                animationTimeout = null;
-                const guessContainer = document.getElementById("guess-input-container");
-                guessContainer.classList.remove("wrong-guess");
-                input.style.opacity = "1";
-                input.style.visibility = "visible";
-                input.style.color = "#000000";
-                input.value = e.target.value;
-                isProcessingGuess = false;
-                console.log("Animation cancelled and state reset due to typing");
-            }
-        });
-    } else {
-        console.error("guess-input not found in DOM");
-    }
-
-    if (guessBtn) {
-        guessBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Guess button clicked:", { gameOver, disabled: input.disabled, isProcessingGuess });
-            if (!gameOver && !input.disabled && !isProcessingGuess) {
-                const guess = input.value.trim().toUpperCase();
-                if (guess) {
-                    console.log("Guess submitted via button:", guess);
-                    handleGuess(guess);
-                }
-            }
-        });
-    } else {
-        console.error("guess-btn not found in DOM");
-    }
 
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
@@ -728,6 +680,24 @@ document.addEventListener("DOMContentLoaded", async () => {
         input.addEventListener("focus", () => {
             console.log("Input focused");
         });
+
+        if (input) {
+            input.addEventListener("input", (e) => {
+                console.log("Input value changed:", input.value);
+                if (animationTimeout) {
+                    clearTimeout(animationTimeout);
+                    animationTimeout = null;
+                    const guessContainer = document.getElementById("guess-input-container");
+                    guessContainer.classList.remove("wrong-guess");
+                    input.style.opacity = "1";
+                    input.style.visibility = "visible";
+                    input.style.color = "#000000";
+                    input.value = e.target.value;
+                    isProcessingGuess = false;
+                    console.log("Animation cancelled and state reset due to typing");
+                }
+            });
+        }
     }
 
     function updateHintCountdown() {
@@ -753,10 +723,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         tempContainer.style.fontFamily = "'Luckiest Guy', cursive";
         tempContainer.style.position = "absolute";
         tempContainer.style.visibility = "hidden";
-        tempContainer.style.maxWidth = "90vw";
+        tempContainer.style.maxWidth = "82.5vw"; // Updated from 90vw
         tempContainer.style.whiteSpace = "normal";
         tempContainer.style.lineHeight = "1.2";
         tempContainer.style.display = "inline-block";
+        tempContainer.style.wordBreak = "break-word"; // Match CSS
         tempContainer.textContent = hintsArray.join(" | ");
         document.body.appendChild(tempContainer);
         
@@ -1019,11 +990,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessCount = 0;
         gaveUp = false;
         guesses = [];
+        isProcessingGuess = false; // Explicitly reset
         if (input) {
             input.value = "";
             input.disabled = false;
+            input.focus(); // Ensure input is focused
         }
-        if (guessBtn) guessBtn.disabled = false;
+        if (guessBtn) {
+            guessBtn.disabled = false;
+        }
         if (guessesLink) guessesLink.textContent = "Guesses: 0";
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
@@ -1063,6 +1038,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         setupHints();
         updateHintCountdown();
+
+        // Ensure input is active and focused
+        if (input) {
+            input.disabled = false;
+            input.focus();
+            // Re-attach event listeners to ensure they’re active
+            input.onkeydown = (e) => {
+                console.log("Keydown event:", e.key, { gameOver, disabled: input.disabled, isProcessingGuess });
+                if ((e.key === "Enter" || e.key === "NumpadEnter") && !gameOver && !input.disabled && !isProcessingGuess) {
+                    e.preventDefault();
+                    const guess = input.value.trim().toUpperCase();
+                    if (guess) {
+                        console.log("Guess submitted via Enter:", guess);
+                        handleGuess(guess);
+                    }
+                }
+            };
+        }
+        if (guessBtn) {
+            guessBtn.disabled = false;
+            // Re-attach click event listener
+            guessBtn.onclick = (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log("Guess button clicked:", { gameOver, disabled: input.disabled, isProcessingGuess });
+                if (!gameOver && !input.disabled && !isProcessingGuess) {
+                    const guess = input.value.trim().toUpperCase();
+                    if (guess) {
+                        console.log("Guess submitted via button:", guess);
+                        handleGuess(guess);
+                    }
+                }
+            };
+        }
     }
 
     // Initialize game
