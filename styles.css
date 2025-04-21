@@ -106,7 +106,7 @@ a {
   z-index: 11;
   background: none;
   position: fixed;
-  top: calc(5vh - 3.6vh); /* Moved up by 2 lines (3.6vh) */
+  top: calc(5vh - 3.6vh);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -122,7 +122,7 @@ a {
   text-align: right;
   position: static;
   width: auto;
-  margin-bottom: 1.8vh; /* One line spacing */
+  margin-bottom: 1.8vh;
   cursor: pointer;
   text-decoration: underline;
 }
@@ -138,9 +138,9 @@ a {
 /* Navigation arrows container */
 #nav-arrows-container {
   width: 90vw;
-  height: 2vh;
+  height: 10vh; /* Increased to match larger arrows */
   position: fixed;
-  top: calc(5vh - 3.6vh + 3 * 1.8vh + 4 * 1.8vh); /* Below Guesses: X by 4 lines */
+  top: calc(5vh - 3.6vh + 3 * 1.8vh + 10 * 1.8vh); /* Moved down 6 lines (10.8vh from 4 * 1.8vh) */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -158,19 +158,19 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 2vh;
-  height: 2vh;
+  width: 10vh; /* 2vh * 5 */
+  height: 10vh; /* 2vh * 5 */
 }
 
 .nav-arrow i {
-  font-size: 1.8vh;
+  font-size: 9vh; /* 1.8vh * 5 */
   color: #FFFFFF; /* White filled */
   font-weight: bold;
   text-shadow: 1px 1px 2px #000000;
 }
 
 .nav-arrow:hover i {
-  font-size: 2vh;
+  font-size: 10vh; /* Slightly larger on hover */
 }
 
 /* Game number display on game screen */
@@ -181,7 +181,7 @@ a {
   text-shadow: 1px 1px 2px #000000;
   text-align: left;
   width: 85vw;
-  margin-bottom: 0.5vh; /* Small spacing below */
+  margin-bottom: 0.5vh;
   position: relative;
   z-index: 5;
 }
@@ -285,7 +285,7 @@ a {
   margin: 0;
   padding: 0;
   position: absolute;
-  bottom: calc(7.95vh + 0.9vh); /* Moved up by 1.8vh from 6.15vh */
+  bottom: calc(7.95vh + 0.9vh);
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -416,7 +416,7 @@ a {
   font-size: 1.8vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: 0;
+  margin: 0 0 1.8vh 0; /* Added 1.8vh bottom margin for one line of space */
   text-align: center;
 }
 
@@ -1009,17 +1009,22 @@ a {
       height: calc(100% + 0.5vh);
       padding: 0.25vh 0;
   }
+  .hint-countdown {
+      font-size: 1.6vh;
+      margin: 0 0 1.6vh 0; /* Adjusted for mobile */
+  }
   #nav-arrows-container {
-      top: calc(5vh - 3.2vh + 3 * 1.6vh + 4 * 1.6vh); /* Adjusted for smaller font sizes */
+      top: calc(5vh - 3.2vh + 3 * 1.6vh + 10 * 1.6vh); /* Moved down 6 lines (9.6vh from 4 * 1.6vh) */
+      height: 9vh; /* Adjusted for larger arrows */
   }
   .nav-arrow {
-      width: 1.8vh;
-      height: 1.8vh;
+      width: 9vh; /* 1.8vh * 5 */
+      height: 9vh; /* 1.8vh * 5 */
   }
   .nav-arrow i {
-      font-size: 1.6vh;
+      font-size: 8vh; /* 1.6vh * 5 */
   }
   .nav-arrow:hover i {
-      font-size: 1.8vh;
+      font-size: 9vh; /* Slightly larger on hover */
   }
 }
