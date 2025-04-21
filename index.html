@@ -43,10 +43,46 @@
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is....</div>
-                            <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
+                            <div id="prompt">The Secret Word is...</div>
+                            <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false" readonly>
                         </div>
                         <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
+                    </div>
+                </div>
+                <div id="keyboard-container" class="keyboard">
+                    <div class="keyboard-row">
+                        <button class="key">Q</button>
+                        <button class="key">W</button>
+                        <button class="key">E</button>
+                        <button class="key">R</button>
+                        <button class="key">T</button>
+                        <button class="key">Y</button>
+                        <button class="key">U</button>
+                        <button class="key">I</button>
+                        <button class="key">O</button>
+                        <button class="key">P</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key">A</button>
+                        <button class="key">S</button>
+                        <button class="key">D</button>
+                        <button class="key">F</button>
+                        <button class="key">G</button>
+                        <button class="key">H</button>
+                        <button class="key">J</button>
+                        <button class="key">K</button>
+                        <button class="key">L</button>
+                    </div>
+                    <div class="keyboard-row">
+                        <button class="key special" id="key-enter">ENTER</button>
+                        <button class="key">Z</button>
+                        <button class="key">X</button>
+                        <button class="key">C</button>
+                        <button class="key">V</button>
+                        <button class="key">B</button>
+                        <button class="key">N</button>
+                        <button class="key">M</button>
+                        <button class="key special" id="key-backspace"><i class="fas fa-backspace"></i></button>
                     </div>
                 </div>
                 <div class="hint-countdown" style="display: none;">(next hint revealed in <span id="countdown">5</span> guesses)</div>
