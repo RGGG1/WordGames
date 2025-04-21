@@ -444,7 +444,7 @@ a {
   display: flex;
   justify-content: center;
   gap: 1.2vw;
-  margin-bottom: 0.3vh;
+  margin-bottom: 1.2vw; /* Changed from 0.3vh to match gap */
   width: 90vw;
 }
 
@@ -453,12 +453,12 @@ a {
   color: #000000;
   border: 0.1vh solid #000000;
   border-radius: 0.6vh;
-  font-size: 2.25vh;
+  font-size: 2.475vh; /* Increased from 2.25vh by 10% */
   font-family: 'Luckiest Guy', cursive;
-  width: 9vw;
-  max-width: 5.0625vh;
-  height: 5.625vh;
-  line-height: 5.625vh;
+  width: 9.9vw; /* Increased from 9vw by 10% */
+  max-width: 5.56875vh; /* Increased from 5.0625vh by 10% */
+  height: 6.1875vh; /* Increased from 5.625vh by 10% */
+  line-height: 6.1875vh; /* Increased from 5.625vh by 10% */
   text-align: center;
   cursor: pointer;
   display: flex;
@@ -469,9 +469,9 @@ a {
 }
 
 .key.special {
-  width: 13.5vw;
-  max-width: 7.3125vh;
-  font-size: 2.025vh;
+  width: 14.85vw; /* Increased from 13.5vw by 10% */
+  max-width: 8.04375vh; /* Increased from 7.3125vh by 10% */
+  font-size: 2.2275vh; /* Increased from 2.025vh by 10% */
   background: #FFFFFF;
   color: #000000;
 }
@@ -667,15 +667,15 @@ a {
 
 @keyframes fall {
   0% { 
-      transform: translateY(-5vh);
+      transform: translateY(-5vh) translateX(0) rotate(var(--rotation));
       opacity: 1; 
   }
   80% { 
-      transform: translateY(100vh);
+      transform: translateY(100vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
       opacity: 1; 
   }
   100% { 
-      transform: translateY(105vh);
+      transform: translateY(105vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
       opacity: 0; 
   }
 }
@@ -998,6 +998,7 @@ a {
 
 .form-input:focus {
   background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0.6vh rgba(255, 179, 0, 0.7); /* Increased glow for mobile visibility */
 }
 
 .form-input::placeholder {
@@ -1008,7 +1009,7 @@ a {
   text-transform: none;
 }
 
-/* Form inputs cursor */
+/* Ensure cursor is prominent */
 .form-input:focus:not(:disabled)::after {
   content: "|";
   animation: blink 1s step-end infinite;
@@ -1204,20 +1205,21 @@ a {
   }
   .keyboard-row {
     gap: clamp(0.6vw, 0.8vw, 1vw);
-    margin-bottom: 0.2vh;
+    margin-bottom: clamp(0.6vw, 0.8vw, 1vw); /* Changed from 0.2vh to match gap */
     width: 95vw;
   }
   .key {
-    font-size: clamp(1.8vh, 2.025vh, 2.5vh);
-    width: clamp(9vw, 10.125vw, 12vw);
-    max-width: clamp(4vh, 4.5vh, 5vh);
-    height: clamp(4.5vh, 5.0625vh, 6vh);
-    line-height: clamp(4.5vh, 5.0625vh, 6vh);
+    font-size: clamp(1.98vh, 2.2275vh, 2.75vh); /* Increased from clamp(1.8vh, 2.025vh, 2.5vh) by 10% */
+    width: clamp(9.9vw, 11.1375vw, 13.2vw); /* Increased from clamp(9vw, 10.125vw, 12vw) by 10% */
+    max-width: clamp(4.4vh, 4.95vh, 5.5vh); /* Increased from clamp(4vh, 4.5vh, 5vh) by 10% */
+    height: clamp(4.95vh, 5.56875vh, 6.6vh); /* Increased from clamp(4.5vh, 5.0625vh, 6vh) by 10% */
+    line-height: clamp(4.95vh, 5.56875vh, 6.6vh); /* Increased from clamp(4.5vh, 5.0625vh, 6vh) by 10% */
+    border-radius: 0.8vh; /* Larger for mobile touch feedback */
   }
   .key.special {
-    width: clamp(13vw, 14.625vw, 16vw);
-    max-width: clamp(6vh, 6.75vh, 7.5vh);
-    font-size: clamp(1.6vh, 1.8vh, 2vh);
+    width: clamp(14.3vw, 16.0875vw, 17.6vw); /* Increased from clamp(13vw, 14.625vw, 16vw) by 10% */
+    max-width: clamp(6.6vh, 7.425vh, 8.25vh); /* Increased from clamp(6vh, 6.75vh, 7.5vh) by 10% */
+    font-size: clamp(1.76vh, 1.98vh, 2.2vh); /* Increased from clamp(1.6vh, 1.8vh, 2vh) by 10% */
   }
   .dialog-message {
     font-size: 2vh;
@@ -1229,20 +1231,23 @@ a {
   }
   .form-input {
     font-size: clamp(2.5vh, 3.75vw, 3.75vh);
-    margin: 0.4vh auto 0.4vh auto;
-    padding: 0.4vh 1vw;
+    padding: 0.6vh 1.5vw; /* Increased padding for mobile touch */
+    margin: 0.6vh auto;
   }
   .form-input::placeholder {
     font-size: 1.875vh;
   }
-  .form-line {
-    width: 30ch;
-    margin: 1.2vh auto 1.6vh auto;
+  .form-input:focus:not(:disabled)::after {
+    font-size: clamp(2.5vh, 3.75vw, 3.75vh);
   }
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
     margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh) auto 0.8vh auto;
+  }
+  .pineapple-piece {
+    animation-timing-function: linear; /* Ensure smooth rendering */
+    will-change: transform, opacity; /* Optimize for mobile GPU */
   }
   #share-text {
     font-size: 2vh;

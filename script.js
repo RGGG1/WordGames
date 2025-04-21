@@ -1243,28 +1243,31 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.body.appendChild(rainContainer);
 
         function createWave(waveNumber) {
-            const pieces = Array(50).fill("🍍");
+            const pieces = Array(40).fill("🍍"); // Reduced to 40 pieces for mobile performance
             pieces.forEach(() => {
                 const piece = document.createElement("div");
                 piece.className = "pineapple-piece";
                 piece.textContent = "🍍";
                 piece.style.left = `${Math.random() * 100}vw`;
-                piece.style.animationDuration = `${Math.random() * 2 + 2}s`; // Slower: 3-4s instead of 1-3s
-                piece.style.fontSize = `${Math.random() * 2 + 1}vh`;
-                piece.style.animationDelay = `${waveNumber * 0.75}s`; // Reduced delay for overlap (was 1.5s)
+                piece.style.animationDuration = `${Math.random() * 3.5 + 2.5}s`; // 2.5-6s for varied speeds
+                piece.style.fontSize = `${Math.random() * 1.5 + 0.8}vh`; // Smaller range for mobile
+                piece.style.animationDelay = `${waveNumber * 0.2 + Math.random() * 0.15}s`; // Shorter delay (0.2s + 0-0.15s jitter)
+                piece.style.setProperty('--rotation', `${Math.random() * 360}deg`); // Random angle
+                piece.style.setProperty('--drift', `${Math.random() * 2 - 1}`); // Random drift (-1 to +1vw)
                 rainContainer.appendChild(piece);
             });
         }
 
-        // Create three waves
-        for (let i = 0; i < 3; i++) {
+        // Create 6 waves for mobile, 5 for desktop
+        const waveCount = isMobile ? 6 : 5;
+        for (let i = 0; i < waveCount; i++) {
             createWave(i);
         }
 
         setTimeout(() => {
             rainContainer.remove();
             console.log("Pineapple rain animation ended");
-        }, 9000); // Increased to 9s to allow final wave to fall off-screen (3s max fall + 2 * 0.75s delays + buffer)
+        }, 13500); // 13.5s (50% longer than 9s)
     }
 
     function resetGame() {
