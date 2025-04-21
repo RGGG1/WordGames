@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("DOM fully loaded");
 
-    let score = 0;
     let gameOver = false;
     let secretWord = "";
     let hints = [];
@@ -107,18 +106,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (guessBtn) {
-        guessBtn.addEventListener("click", (e) => {
+        guessBtn.disabled = false;
+        // Remove any existing listeners to prevent duplicates
+        guessBtn.removeEventListener("click", guessBtn._clickHandler);
+        const clickHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
+            console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess, guess: guessInput.value });
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
-                    console.log("Guess submitted via button:", guess);
+                    console.log("Submitting guess:", guess);
                     handleGuess(guess);
+                } else {
+                    console.log("No guess entered");
                 }
+            } else {
+                console.log("Guess button ignored due to state");
             }
-        });
+        };
+        guessBtn._clickHandler = clickHandler;
+        guessBtn.addEventListener("click", clickHandler);
     } else {
         console.error("guess-btn not found in DOM");
     }
@@ -680,6 +688,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const keyboard = document.getElementById("keyboard-container");
         if (keyboard) keyboard.style.display = "none";
         displayGameList();
+        adjustBackground();
         setupKeyboardListeners(); // Re-apply listeners
     }
 
@@ -1013,6 +1022,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (screen && screen.style.display === "flex") {
                 screen.style.height = "100vh";
                 screen.style.width = "100vw";
+                screen.style.background = `url('${defaultBackground}') no-repeat center top fixed`;
                 screen.style.backgroundSize = "100% calc(100% - 24vh)";
                 screen.offsetHeight;
                 console.log(`Adjusted background for ${screen.id}`);
@@ -1081,7 +1091,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guess === secretWord) {
             console.log("Correct guess!");
-            score = calculateScore();
             saveGameResult(currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple", currentGameNumber, secretWord, guessCount);
             endGame(true);
         } else {
@@ -1105,16 +1114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    function calculateScore() {
-        console.log("Calculating score, guessCount:", guessCount);
-        if (guessCount <= 1) return 100;
-        if (guessCount <= 3) return 80;
-        if (guessCount <= 5) return 60;
-        if (guessCount <= 7) return 40;
-        if (guessCount <= 10) return 20;
-        return 10;
-    }
-
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
         console.log("Saving game result", { gameType, gameNumber, secretWord, guesses });
         const resultsKey = gameType === "pineapple" ? "pineappleResults" : "privatePineappleResults";
@@ -1125,7 +1124,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function endGame(won, gaveUp = false) {
-        console.log("Ending game", { won, gaveUp, score, guessCount, secretWord });
+        console.log("Ending game", { won, gaveUp, guessCount, secretWord });
         gameOver = true;
         guessInput.disabled = true;
         guessBtn.disabled = true;
@@ -1138,21 +1137,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupKeyboardListeners(); // Re-apply listeners
 
         const todaysWord = document.getElementById("todays-word");
-        const shareScore = document.getElementById("share-score");
         const shareText = document.getElementById("share-text");
         const gameNumberDisplay = document.getElementById("game-number-display");
 
         if (todaysWord) todaysWord.textContent = secretWord;
-        if (shareScore) shareScore.textContent = gaveUp ? "Gave Up" : score.toString();
         if (gameNumberDisplay) {
             gameNumberDisplay.textContent = currentGameNumber;
         }
 
         let shareMessage;
         if (gaveUp) {
-            shareMessage = `Play WORDY\nThe big brain word game.`;
+            shareMessage = `Play WORDY`;
         } else {
-            shareMessage = `${currentGameNumber}\nI solved WORDY in\n${guessCount}\n${guessCount === 1 ? 'guess' : 'guesses'}\nThe big brain word game.`;
+            shareMessage = `${currentGameNumber}\nI solved WORDY in\n<span class="guess-count">${guessCount}</span>\n${guessCount === 1 ? 'guess' : 'guesses'}`;
         }
 
         if (shareText) {
@@ -1166,13 +1163,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         if (shareButtons.whatsapp) {
-            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
         }
         if (shareButtons.telegram) {
-            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage)}`;
+            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
         }
         if (shareButtons.twitter) {
-            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
+            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
         }
 
         if (won) {
@@ -1193,9 +1190,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 piece.className = "pineapple-piece";
                 piece.textContent = "🍍";
                 piece.style.left = `${Math.random() * 100}vw`;
-                piece.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                piece.style.animationDuration = `${Math.random() * 2 + 2}s`; // Slower: 3-4s instead of 1-3s
                 piece.style.fontSize = `${Math.random() * 2 + 1}vh`;
-                piece.style.animationDelay = `${waveNumber * 1.5}s`; // Delay each wave
+                piece.style.animationDelay = `${waveNumber * 0.75}s`; // Reduced delay for overlap (was 1.5s)
                 rainContainer.appendChild(piece);
             });
         }
@@ -1208,12 +1205,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         setTimeout(() => {
             rainContainer.remove();
             console.log("Pineapple rain animation ended");
-        }, 6000); // Total duration: 3 waves * 1.5s delay + 3s fall
+        }, 9000); // Increased to 9s to allow final wave to fall off-screen (3s max fall + 2 * 0.75s delays + buffer)
     }
 
     function resetGame() {
         console.log("Resetting game state");
-        score = 0;
         gameOver = false;
         secretWord = "";
         hints = [];
@@ -1269,7 +1265,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const background = game["Background"] || defaultBackground;
         [gameScreen, gameOverScreen, gameSelectScreen, createForm].forEach(screen => {
             if (screen) {
-                screen.style.backgroundImage = `url('${background}')`;
+                screen.style.background = `url('${background}') no-repeat center top fixed`;
                 screen.style.backgroundSize = "100% calc(100% - 24vh)";
             }
         });
@@ -1285,18 +1281,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (guessBtn) {
             guessBtn.disabled = false;
-            guessBtn.onclick = (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
-                if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                    const guess = guessInput.value.trim().toUpperCase();
-                    if (guess) {
-                        console.log("Guess submitted via button:", guess);
-                        handleGuess(guess);
-                    }
-                }
-            };
         }
 
         const keyboard = document.getElementById("keyboard-container");
