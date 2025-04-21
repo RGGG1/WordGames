@@ -337,6 +337,7 @@ a {
   position: absolute;
   right: 50%;
   transform: translateX(50%);
+  z-index: 7; /* Ensure cursor is above animation effects */
 }
 
 @keyframes blink {
@@ -436,8 +437,8 @@ a {
 .keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 1.2vw; /* Doubled twice from 0.3vw: 0.3 * 2 * 2 = 1.2vw */
-  margin-bottom: 0.3vh;
+  gap: 1.2vw; /* Horizontal spacing */
+  margin-bottom: 1.2vw; /* Vertical spacing to match horizontal */
   width: 90vw;
 }
 
@@ -1180,8 +1181,8 @@ a {
     bottom: 4vh;
   }
   .keyboard-row {
-    gap: clampоко(0.6vw, 0.8vw, 1vw); /* Adjusted for better spacing on mobile */
-    margin-bottom: 0.2vh;
+    gap: clamp(0.6vw, 0.8vw, 1vw); /* Horizontal spacing on mobile */
+    margin-bottom: clamp(0.6vw, 0.8vw, 1vw); /* Vertical spacing to match horizontal */
     width: 95vw;
   }
   .key {
@@ -1219,8 +1220,8 @@ a {
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
-    /* Adjusted to use line-height-based spacing; 1.6vh font-size, 1 line = 1.6vh */
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh) auto 0.8vh auto;
+    /* Moved down one more line: original + 1.6vh */
+    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh + 1.6vh) auto 0.8vh auto;
   }
   #share-text {
     font-size: 2vh;

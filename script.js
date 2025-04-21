@@ -107,23 +107,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (guessBtn) {
-        guessBtn.disabled = false;
         // Remove any existing listeners to prevent duplicates
         guessBtn.removeEventListener("click", guessBtn._clickHandler);
         const clickHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guess button clicked:", { gameOver, disabled: guessInput.disabled, isProcessingGuess, guess: guessInput.value });
+            console.log("Guess button clicked:", { 
+                gameOver, 
+                disabled: guessBtn.disabled, 
+                inputDisabled: guessInput.disabled, 
+                isProcessingGuess, 
+                guess: guessInput.value 
+            });
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
-                    console.log("Submitting guess:", guess);
+                    console.log("Submitting guess via button:", guess);
                     handleGuess(guess);
                 } else {
                     console.log("No guess entered");
                 }
             } else {
-                console.log("Guess button ignored due to state");
+                console.log("Guess button ignored due to state:", { gameOver, disabled: guessBtn.disabled, isProcessingGuess });
             }
         };
         guessBtn._clickHandler = clickHandler;
@@ -144,7 +149,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(input => input);
 
     formInputs.forEach(input => {
-        input.readOnly = true; // Use on-screen keyboard
+        // Removed input.readOnly = true to allow direct typing
         input.disabled = false;
         input.addEventListener("click", () => {
             activeInput = input;
@@ -582,7 +587,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (guessesScreen.style.display === "flex" && 
                 !guessesScreen.contains(e.target) && 
                 e.target !== guessesLink) {
-                console.log("Clicked outside guesses screen");
+                console.log("Clicked outside guesses screen, closing");
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
@@ -590,6 +595,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 activeInput = guessInput;
                 if (activeInput) activeInput.focus();
                 setupKeyboardListeners(); // Re-apply listeners
+            } else {
+                console.log("Click ignored for guesses screen close", {
+                    display: guessesScreen.style.display,
+                    targetIsGuessesScreen: guessesScreen.contains(e.target),
+                    targetIsGuessesLink: e.target === guessesLink
+                });
             }
         });
     }
@@ -813,7 +824,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
-                    const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResult.guesses : "Gave Up") : "-";
+                    const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResultmortem: "Gave Up") : "-";
                     const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
@@ -1161,7 +1172,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         let shareMessage;
         if (gaveUp) {
-            shareMessage = `Play WORDY`;
+            shareMessage = `Play WORDY\nthe big brain word game`;
         } else {
             shareMessage = `${currentGameNumber}\nI solved WORDY in\n<span class="guess-count">${guessCount}</span>\n${guessCount === 1 ? 'guess' : 'guesses'}`;
         }
@@ -1204,22 +1215,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                 piece.className = "pineapple-piece";
                 piece.textContent = "🍍";
                 piece.style.left = `${Math.random() * 100}vw`;
-                piece.style.animationDuration = `${Math.random() * 2 + 2}s`; // Slower: 3-4s instead of 1-3s
+                piece.style.animationDuration = `${Math.random() * 2 + 2}s`; // Slower: 3-4s
                 piece.style.fontSize = `${Math.random() * 2 + 1}vh`;
-                piece.style.animationDelay = `${waveNumber * 0.75}s`; // Reduced delay for overlap (was 1.5s)
+                piece.style.animationDelay = `${waveNumber * 0.2}s`; // Reduced delay for continuous effect
                 rainContainer.appendChild(piece);
             });
         }
 
-        // Create three waves
-        for (let i = 0; i < 3; i++) {
+        // Create ten waves for smoother rain
+        for (let i = 0; i < 10; i++) {
             createWave(i);
         }
 
         setTimeout(() => {
             rainContainer.remove();
             console.log("Pineapple rain animation ended");
-        }, 9000); // Increased to 9s to allow final wave to fall off-screen (3s max fall + 2 * 0.75s delays + buffer)
+        }, 12000); // Adjusted for more waves (4s max fall + 9 * 0.2s delays + buffer)
     }
 
     function resetGame() {
@@ -1235,12 +1246,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         isProcessingGuess = false;
         if (guessInput) {
             guessInput.value = "";
-            guessInput.disabled = false;
             guessInput.focus();
             activeInput = guessInput;
-        }
-        if (guessBtn) {
-            guessBtn.disabled = false;
         }
         if (guessesLink) guessesLink.textContent = "Guesses: 0";
         const hintsContainer = document.getElementById("hints-container");
@@ -1287,13 +1294,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         updateHintCountdown();
 
         if (guessInput) {
-            guessInput.disabled = false;
             guessInput.readOnly = true;
             guessInput.focus();
             activeInput = guessInput;
-        }
-        if (guessBtn) {
-            guessBtn.disabled = false;
         }
 
         const keyboard = document.getElementById("keyboard-container");
