@@ -125,7 +125,7 @@ a {
   z-index: 11;
   background: none;
   position: fixed;
-  top: 5vh; /* Below header */
+  top: calc(5vh - 3.6vh); /* Moved up 2 lines (3.6vh) */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -159,7 +159,7 @@ a {
   width: 90vw;
   height: 5vh;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh); /* Below game controls */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 3.6vh); /* Moved down 2 lines (3.6vh) */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -207,7 +207,7 @@ a {
   width: 85vw;
   max-width: 85vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 1.8vh); /* Below nav arrows */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 3.6vh + 5vh); /* Moved up 1 line (1.8vh) relative to guess box */
   left: 7.5vw;
   z-index: 5;
   line-height: 1.8vh;
@@ -234,7 +234,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 1.8vh + 1.8vh); /* Below game number */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 3.6vh + 5vh + 1.8vh + 3.6vh); /* Moved down 2 lines (3.6vh) */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -265,7 +265,7 @@ a {
   align-items: center;
   justify-content: center;
   width: 100%;
-  margin-bottom: 0.5vh; /* Spacing to hint countdown */
+  margin-bottom: 0.5vh;
   position: relative;
 }
 
@@ -328,7 +328,7 @@ a {
   font-size: 1.8vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: 0 0 1.8vh 0; /* Spacing to hints */
+  margin: 0 0 1.8vh 0;
   text-align: center;
 }
 
@@ -394,19 +394,19 @@ a {
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 4vh; /* Above ad-box */
+  bottom: 4vh;
   left: 0;
   background: rgba(255, 255, 255, 0.8);
   z-index: 10;
-  padding: 0.5vh 0;
+  padding: 0.3vh 0; /* Reduced padding to fit larger keys */
   box-sizing: border-box;
 }
 
 .keyboard-row {
   display: flex;
   justify-content: center;
-  gap: 0.3vw;
-  margin-bottom: 0.3vh;
+  gap: 0.2vw; /* Reduced gap to fit larger keys */
+  margin-bottom: 0.2vh; /* Reduced margin */
   width: 90vw;
 }
 
@@ -415,12 +415,12 @@ a {
   color: #000000;
   border: 0.1vh solid #000000;
   border-radius: 0.6vh;
-  font-size: 2vh;
+  font-size: 2.7vh; /* 2vh * 1.35 */
   font-family: 'Luckiest Guy', cursive;
-  width: 8vw;
-  max-width: 4.5vh;
-  height: 5vh;
-  line-height: 5vh;
+  width: 10.8vw; /* 8vw * 1.35 */
+  max-width: 6.075vh; /* 4.5vh * 1.35 */
+  height: 6.75vh; /* 5vh * 1.35 */
+  line-height: 6.75vh;
   text-align: center;
   cursor: pointer;
   display: flex;
@@ -430,9 +430,9 @@ a {
 }
 
 .key.special {
-  width: 12vw;
-  max-width: 6.5vh;
-  font-size: 1.8vh;
+  width: 16.2vw; /* 12vw * 1.35 */
+  max-width: 8.775vh; /* 6.5vh * 1.35 */
+  font-size: 2.43vh; /* 1.8vh * 1.35 */
   background: #FFFFFF;
   color: #000000;
 }
@@ -512,6 +512,106 @@ a {
   padding: 0.75vh 2vw;
 }
 
+/* Create a Wordy form */
+.create-form {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: url('newbackground.png') no-repeat center center fixed;
+  background-size: 100% 100%;
+  background-attachment: fixed;
+  z-index: 1;
+}
+
+.create-form::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+}
+
+.create-form > * {
+  position: relative;
+  z-index: 2;
+}
+
+#form-content {
+  width: 90vw;
+  max-height: calc(100vh - 5vh - 20vh - 4vh - 1vh); /* Header + keyboard + ad-box + padding */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 5vh auto 0 auto; /* Start below header */
+  padding-bottom: 1vh;
+  box-sizing: border-box;
+}
+
+.form-input-label {
+  font-size: 2.5vh;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+  margin: 0.5vh 0;
+}
+
+.form-input {
+  font-size: clamp(2vh, 3vw, 2.5vh); /* Reduced to fit */
+  font-weight: bold;
+  background: none;
+  border: none;
+  width: 25ch;
+  max-width: 90vw;
+  text-align: center;
+  padding: 0;
+  margin: 0 auto;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+  outline: none;
+  caret-color: black;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+  display: block;
+}
+
+.form-input::placeholder {
+  font-size: 1.5vh;
+  color: #AAAAAA;
+  text-align: center;
+  font-weight: normal;
+  text-transform: none;
+}
+
+.form-line {
+  width: 25ch;
+  height: 0.2vh;
+  background: #000000;
+  transition: opacity 0.5s ease-out;
+  margin: 0.3vh auto 0.3vh auto; /* Reduced to fit */
+}
+
+.back-btn-container {
+  margin-top: 0.5vh;
+}
+
+.or-text {
+  font-size: 1.8vh;
+  margin-bottom: 0.5vh;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
 /* Buttons styling */
 .control-btn,
 .guess-btn {
@@ -523,14 +623,14 @@ a {
 }
 
 .control-btn {
-  font-size: 3.375vh;
-  padding: 1.125vh 2.25vw;
+  font-size: 2.5vh; /* Reduced to fit */
+  padding: 0.75vh 2vw;
   box-sizing: border-box;
 }
 
 @media (min-width: 601px) {
   #game-screen .control-btn:hover {
-    font-size: 3.375vh;
+    font-size: 2.5vh;
   }
   #game-screen .guess-btn:hover {
     font-size: 4vh;
@@ -621,10 +721,9 @@ a {
   height: 1vh;
 }
 
-/* Backgrounds for all screens */
+/* Backgrounds for other screens */
 #game-over,
-#game-select-screen,
-#create-form {
+#game-select-screen {
   display: flex;
   flex-direction: column;
   height: 100vh;
@@ -643,8 +742,7 @@ a {
 }
 
 #game-over::before,
-#game-select-screen::before,
-#create-form::before {
+#game-select-screen::before {
   content: '';
   position: absolute;
   top: 0;
@@ -656,8 +754,7 @@ a {
 }
 
 #game-over > *,
-#game-select-screen > *,
-#create-form > * {
+#game-select-screen > * {
   position: relative;
   z-index: 2;
 }
@@ -686,11 +783,6 @@ a {
 #game-over {
   justify-content: flex-start;
   align-items: center;
-}
-
-.create-form {
-  align-items: center;
-  justify-content: center;
 }
 
 #game-select-screen {
@@ -922,88 +1014,6 @@ a {
   gap: 0.5vh;
 }
 
-.form-input {
-  font-size: clamp(2vh, 3vw, 3vh);
-  font-weight: bold;
-  background: none;
-  border: none;
-  width: 25ch;
-  max-width: 90vw;
-  text-align: center;
-  padding: 0;
-  margin: 0 auto;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-  outline: none;
-  caret-color: black;
-  text-transform: uppercase;
-  position: relative;
-  z-index: 1;
-  display: block;
-}
-
-.form-input::placeholder {
-  font-size: 1.5vh;
-  color: #AAAAAA;
-  text-align: center;
-  font-weight: normal;
-  text-transform: none;
-}
-
-.form-line {
-  width: 25ch;
-  height: 0.2vh;
-  background: #000000;
-  transition: opacity 0.5s ease-out;
-  margin: 0 auto 1vh auto;
-}
-
-.back-btn-container {
-  margin-top: 2vh;
-}
-
-#back-btn {
-  border: 0.1vh solid #000000;
-}
-
-.or-text {
-  font-size: 1.8vh;
-  margin-bottom: 0.5vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
-#guesses-content {
-  width: 85vw;
-  text-align: center;
-  padding-top: 1vh;
-}
-
-#guesses-title {
-  font-size: 2.5vh;
-  font-weight: bold;
-  margin-bottom: 1vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
-#guesses-list {
-  font-size: 2vh;
-  max-height: 17vh;
-  max-width: 85vw;
-  overflow-x: hidden;
-  overflow-y: auto;
-  white-space: normal;
-  margin-bottom: 1vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
-#guesses-list span.separator {
-  color: #FFB300;
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
 /* Mobile styles */
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
@@ -1021,7 +1031,7 @@ a {
     line-height: clamp(1.8vh, 2.25vw, 2.25vh);
   }
   #game-controls-container {
-    top: 5vh;
+    top: calc(5vh - 3.2vh); /* Moved up 2 lines (3.2vh) */
   }
   .control-link {
     font-size: 1.6vh;
@@ -1031,7 +1041,7 @@ a {
     margin-top: 1.6vh;
   }
   #nav-arrows-container {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 3.2vh); /* Moved down 2 lines (3.2vh) */
     height: 4.5vh;
   }
   .nav-arrow {
@@ -1046,7 +1056,7 @@ a {
   }
   #game-screen .game-number-display {
     font-size: 1.6vh;
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 1.6vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 3.2vh + 4.5vh); /* Moved up 1 line (1.6vh) */
     left: 7.5vw;
     line-height: 1.6vh;
     width: 85vw;
@@ -1054,7 +1064,7 @@ a {
     overflow: hidden;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 1.6vh + 1.6vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 3.2vh + 4.5vh + 1.6vh + 3.2vh); /* Moved down 2 lines (3.2vh) */
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1102,11 +1112,11 @@ a {
     left: 1vw;
   }
   .control-btn {
-    font-size: clamp(2vh, 3vw, 3.15vh);
-    padding: 0.75vh 1.5vw;
+    font-size: 2vh;
+    padding: 0.5vh 1.5vw;
   }
   .control-btn:hover {
-    font-size: clamp(2.5vh, 3.5vw, 3.65vh);
+    font-size: 2.5vh;
   }
   .hint-countdown {
     font-size: 1.6vh;
@@ -1126,25 +1136,25 @@ a {
     width: 100vw;
     height: 20vh;
     max-height: 20vh;
-    padding: 0.3vh 0;
+    padding: 0.2vh 0; /* Reduced for larger keys */
     bottom: 4vh;
   }
   .keyboard-row {
-    gap: 0.2vw;
-    margin-bottom: 0.2vh;
+    gap: 0.15vw; /* Reduced for larger keys */
+    margin-bottom: 0.15vh;
     width: 95vw;
   }
   .key {
-    font-size: 1.8vh;
-    width: 9vw;
-    max-width: 4vh;
-    height: 4.5vh;
-    line-height: 4.5vh;
+    font-size: 2.43vh; /* 1.8vh * 1.35 */
+    width: 12.15vw; /* 9vw * 1.35 */
+    max-width: 5.4vh; /* 4vh * 1.35 */
+    height: 6.075vh; /* 4.5vh * 1.35 */
+    line-height: 6.075vh;
   }
   .key.special {
-    width: 13vw;
-    max-width: 6vh;
-    font-size: 1.6vh;
+    width: 17.55vw; /* 13vw * 1.35 */
+    max-width: 8.1vh; /* 6vh * 1.35 */
+    font-size: 2.16vh; /* 1.6vh * 1.35 */
   }
   .dialog-message {
     font-size: 2vh;
@@ -1153,5 +1163,25 @@ a {
   .dialog-buttons .control-btn {
     font-size: 2vh;
     padding: 0.5vh 1.5vw;
+  }
+  #form-content {
+    max-height: calc(100vh - 5vh - 20vh - 4vh - 0.5vh);
+    padding-bottom: 0.5vh;
+  }
+  .form-input-label {
+    font-size: 2vh;
+    margin: 0.3vh 0;
+  }
+  .form-input {
+    font-size: clamp(1.8vh, 2.5vw, 2vh);
+  }
+  .form-line {
+    margin: 0.2vh auto 0.2vh auto;
+  }
+  .back-btn-container {
+    margin-top: 0.3vh;
+  }
+  .or-text {
+    font-size: 1.6vh;
   }
 }
