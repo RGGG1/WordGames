@@ -138,39 +138,44 @@ a {
 /* Navigation arrows container */
 #nav-arrows-container {
   width: 90vw;
-  height: 10vh; /* Increased to match larger arrows */
+  height: 5vh;
   position: fixed;
-  top: calc(5vh - 3.6vh + 3 * 1.8vh + 10 * 1.8vh); /* Moved down 6 lines (10.8vh from 4 * 1.8vh) */
+  top: calc(5vh - 3.6vh + 3 * 1.8vh + 8 * 1.8vh);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 11;
+  z-index: 12;
 }
 
 .nav-arrow {
   background: none;
-  border: 0.2vh solid #FFB300; /* Yellow outline */
+  border: 0.1vh solid #FFB300;
   border-radius: 0.3vh;
-  padding: 0.5vh;
+  padding: 0.25vh;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 10vh; /* 2vh * 5 */
-  height: 10vh; /* 2vh * 5 */
+  width: 5vh;
+  height: 5vh;
 }
 
 .nav-arrow i {
-  font-size: 9vh; /* 1.8vh * 5 */
-  color: #FFFFFF; /* White filled */
+  font-size: 4.5vh;
+  color: #FFFFFF;
   font-weight: bold;
   text-shadow: 1px 1px 2px #000000;
 }
 
 .nav-arrow:hover i {
-  font-size: 10vh; /* Slightly larger on hover */
+  font-size: 5vh;
+}
+
+.nav-arrow.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 /* Game number display on game screen */
@@ -181,8 +186,9 @@ a {
   text-shadow: 1px 1px 2px #000000;
   text-align: left;
   width: 85vw;
-  margin-bottom: 0.5vh;
-  position: relative;
+  position: absolute;
+  top: calc(-1.8vh);
+  left: 7.5vw;
   z-index: 5;
 }
 
@@ -257,8 +263,9 @@ a {
   top: 0;
   left: 0;
   z-index: 1;
-  background: url('newbackground.png') no-repeat center center;
-  background-size: 100% 100%;
+  background: url('newbackground.png') no-repeat center center fixed;
+  background-size: 100% 100%; /* Ensure full stretch/squash */
+  background-attachment: fixed;
 }
 
 #main-content {
@@ -416,7 +423,7 @@ a {
   font-size: 1.8vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: 0 0 1.8vh 0; /* Added 1.8vh bottom margin for one line of space */
+  margin: 0 0 1.8vh 0;
   text-align: center;
 }
 
@@ -540,8 +547,9 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center;
-  background-size: 100% 100%;
+  background: url('newbackground.png') no-repeat center center fixed;
+  background-size: 100% 100%; /* Ensure full stretch/squash */
+  background-attachment: fixed;
   z-index: 1;
 }
 
@@ -955,7 +963,8 @@ a {
   }
   #game-screen .game-number-display {
       font-size: 1.6vh;
-      margin-bottom: 0.4vh;
+      top: calc(-1.6vh);
+      left: 7.5vw;
   }
   .dialog-message {
       font-size: 2vh;
@@ -1011,20 +1020,20 @@ a {
   }
   .hint-countdown {
       font-size: 1.6vh;
-      margin: 0 0 1.6vh 0; /* Adjusted for mobile */
+      margin: 0 0 1.6vh 0;
   }
   #nav-arrows-container {
-      top: calc(5vh - 3.2vh + 3 * 1.6vh + 10 * 1.6vh); /* Moved down 6 lines (9.6vh from 4 * 1.6vh) */
-      height: 9vh; /* Adjusted for larger arrows */
+      top: calc(5vh - 3.2vh + 3 * 1.6vh + 8 * 1.6vh);
+      height: 4.5vh;
   }
   .nav-arrow {
-      width: 9vh; /* 1.8vh * 5 */
-      height: 9vh; /* 1.8vh * 5 */
+      width: 4.5vh;
+      height: 4.5vh;
   }
   .nav-arrow i {
-      font-size: 8vh; /* 1.6vh * 5 */
+      font-size: 4vh;
   }
   .nav-arrow:hover i {
-      font-size: 9vh; /* Slightly larger on hover */
+      font-size: 4.5vh;
   }
 }
