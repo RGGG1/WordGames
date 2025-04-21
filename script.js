@@ -110,6 +110,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(input => input);
 
     formInputs.forEach(input => {
+        input.readOnly = false;
+        input.disabled = false;
         input.addEventListener("click", () => {
             activeInput = input;
             input.focus();
@@ -890,7 +892,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (screen && screen.style.display === "flex") {
                 screen.style.height = "100vh";
                 screen.style.width = "100vw";
-                screen.style.backgroundSize = "100% 100%";
+                screen.style.backgroundSize = "100% calc(100% - 24vh)";
                 screen.offsetHeight;
                 console.log(`Adjusted background for ${screen.id}`);
             }
@@ -1122,7 +1124,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Loaded hints:", hints);
 
         currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}${game["Game Name"] ? " - Private" : ""}`;
+        const newGameNumberDisplay = document.getElementById("new-game-number-display");
         const gameNumberDisplay = document.getElementById("game-number-display");
+        if (newGameNumberDisplay) {
+            newGameNumberDisplay.textContent = currentGameNumber;
+        }
         if (gameNumberDisplay) {
             gameNumberDisplay.textContent = currentGameNumber;
         }
@@ -1131,7 +1137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         [gameScreen, gameOverScreen, gameSelectScreen, createForm].forEach(screen => {
             if (screen) {
                 screen.style.backgroundImage = `url('${background}')`;
-                screen.style.backgroundSize = "100% 100%";
+                screen.style.backgroundSize = "100% calc(100% - 24vh)";
             }
         });
 
