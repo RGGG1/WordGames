@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (guessBtn) {
         // Remove any existing listeners to prevent duplicates
         guessBtn.removeEventListener("click", guessBtn._clickHandler);
+        guessBtn.removeEventListener("touchstart", guessBtn._touchHandler);
         const clickHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -119,7 +120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isProcessingGuess, 
                 guess: guessInput.value 
             });
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+            if (!gameOver && !guessBtn.disabled && !guessInput.disabled && !isProcessingGuess) {
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
                     console.log("Submitting guess via button:", guess);
@@ -128,11 +129,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.log("No guess entered");
                 }
             } else {
-                console.log("Guess button ignored due to state:", { gameOver, disabled: guessBtn.disabled, isProcessingGuess });
+                console.log("Guess button ignored due to state:", { 
+                    gameOver, 
+                    buttonDisabled: guessBtn.disabled, 
+                    inputDisabled: guessInput.disabled, 
+                    isProcessingGuess 
+                });
             }
         };
         guessBtn._clickHandler = clickHandler;
+        guessBtn._touchHandler = (e) => {
+            e.preventDefault();
+            clickHandler(e);
+        };
         guessBtn.addEventListener("click", clickHandler);
+        guessBtn.addEventListener("touchstart", guessBtn._touchHandler);
     } else {
         console.error("guess-btn not found in DOM");
     }
@@ -149,7 +160,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(input => input);
 
     formInputs.forEach(input => {
-        // Removed input.readOnly = true to allow direct typing
+        input.readOnly = true; // Enforce on-screen keyboard for form inputs
         input.disabled = false;
         input.addEventListener("click", () => {
             activeInput = input;
@@ -654,6 +665,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (keyboard) keyboard.style.display = "flex";
                 activeInput = guessInput;
                 if (activeInput) activeInput.focus();
+               a
                 setupKeyboardListeners(); // Re-apply listeners
             }
         });
@@ -824,7 +836,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
-                    const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResultmortem: "Gave Up") : "-";
+                    const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResult.guesses : "Gave Up") : "-";
                     const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
@@ -1209,20 +1221,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.body.appendChild(rainContainer);
 
         function createWave(waveNumber) {
-            const pieces = Array(50).fill("🍍");
+            const pieces = Array(35).fill("🍍"); // Reduced to 35 pineapples per wave
             pieces.forEach(() => {
                 const piece = document.createElement("div");
                 piece.className = "pineapple-piece";
                 piece.textContent = "🍍";
                 piece.style.left = `${Math.random() * 100}vw`;
-                piece.style.animationDuration = `${Math.random() * 2 + 2}s`; // Slower: 3-4s
+                piece.style.animationDuration = `3s`; // Fixed at 3s for consistent fall
                 piece.style.fontSize = `${Math.random() * 2 + 1}vh`;
-                piece.style.animationDelay = `${waveNumber * 0.2}s`; // Reduced delay for continuous effect
+                piece.style.animationDelay = `${waveNumber * 0.3}s`; // Slightly spaced out waves
                 rainContainer.appendChild(piece);
             });
         }
 
-        // Create ten waves for smoother rain
+        // Create ten waves
         for (let i = 0; i < 10; i++) {
             createWave(i);
         }
@@ -1230,7 +1242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         setTimeout(() => {
             rainContainer.remove();
             console.log("Pineapple rain animation ended");
-        }, 12000); // Adjusted for more waves (4s max fall + 9 * 0.2s delays + buffer)
+        }, 4000); // Screen empty after 4 seconds (3s fall + 9 * 0.3s delays)
     }
 
     function resetGame() {
