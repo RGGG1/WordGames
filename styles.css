@@ -206,7 +206,7 @@ a {
   text-align: left;
   width: 85vw;
   max-width: 85vw;
-  margin: calc(1.8vh + 3.6vh) auto 1.8vh auto; /* Moved down two lines (1.8vh * 2 = 3.6vh) */
+  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 0.9vh) auto 0.9vh auto; /* Positioned 0.9vh above guess box */
   z-index: 5;
   line-height: 1.8vh;
   overflow: hidden;
@@ -237,7 +237,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 1.8vh + 3.6vh + 10.8vh + 7.2vh + 3.6vh); /* Adjusted for game number margin */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 8.1vh); /* Moved up 4.5 lines (4.5 * 1.8vh = 8.1vh) */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -319,15 +319,15 @@ a {
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
   outline: none;
-  caret-color: black;
+  caret-color: transparent; /* Hide default caret */
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
   box-sizing: border-box;
   z-index: 6;
 }
 
-/* Blinking cursor when empty */
-#guess-input:empty::after {
+/* Blinking cursor at all times when not disabled */
+#guess-input:not(:disabled)::after {
   content: "|";
   animation: blink 1s step-end infinite;
   color: #000000;
@@ -427,6 +427,7 @@ a {
   z-index: 10;
   padding: 0.5vh 0;
   box-sizing: border-box;
+  pointer-events: auto; /* Ensure keyboard is clickable */
 }
 
 .keyboard-row {
@@ -454,6 +455,7 @@ a {
   justify-content: center;
   align-items: center;
   box-sizing: border-box;
+  pointer-events: auto; /* Ensure keys are clickable */
 }
 
 .key.special {
@@ -973,7 +975,7 @@ a {
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
   outline: none;
-  caret-color: black;
+  caret-color: transparent; /* Hide default caret for form inputs */
   text-transform: uppercase;
   position: relative;
   z-index: 1;
@@ -986,6 +988,16 @@ a {
   text-align: center;
   font-weight: normal;
   text-transform: none;
+}
+
+/* Blinking cursor for form inputs when focused */
+.form-input:focus::after {
+  content: "|";
+  animation: blink 1s step-end infinite;
+  color: #000000;
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
 }
 
 .form-line {
@@ -1084,7 +1096,7 @@ a {
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 1.6vh + 3.2vh + 9.6vh + 7.2vh + 3.2vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 7.2vh); /* Moved up 4.5 lines (4.5 * 1.6vh = 7.2vh) */
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1108,7 +1120,7 @@ a {
     color: #000000;
     text-shadow: 1px 1px 2px #FFFFFF;
     outline: none;
-    caret-color: black;
+    caret-color: transparent;
     text-transform: uppercase;
     font-family: 'Luckiest Guy', cursive;
     box-sizing: content-box;
@@ -1210,6 +1222,6 @@ a {
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
-    margin: calc(1.6vh + 3.2vh) auto 1.6vh auto;
+    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 0.8vh) auto 0.8vh auto; /* 0.8vh above guess box */
   }
 }

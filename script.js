@@ -77,11 +77,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Animation cancelled and state reset due to typing");
             }
         });
-        // Ensure cursor blinks on load if empty
-        if (!guessInput.value) {
-            guessInput.focus();
-            activeInput = guessInput;
-        }
+        // Ensure cursor blinks on load
+        guessInput.focus();
+        activeInput = guessInput;
     } else {
         console.error("guess-input not found in DOM");
     }
@@ -167,11 +165,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Setup keyboard listeners for both game and form
     function setupKeyboardListeners() {
         const keys = document.querySelectorAll("#keyboard-container .key");
+        console.log("Setting up keyboard listeners, found keys:", keys.length);
         keys.forEach(key => {
-            // Remove existing listeners to prevent stacking
-            key.removeEventListener("click", key._clickHandler);
+            // Remove existing listeners to prevent duplicates
+            if (key._clickHandler) {
+                key.removeEventListener("click", key._clickHandler);
+                key.removeEventListener("touchstart", key._touchHandler);
+            }
             const clickHandler = debounce(() => {
-                if (gameOver || (activeInput && activeInput.disabled) || isProcessingGuess) return;
+                console.log("Key clicked:", key.textContent, { gameOver, isProcessingGuess, activeInput: activeInput?.id });
+                if (gameOver || isProcessingGuess || !activeInput || activeInput.disabled) {
+                    console.log("Key click ignored due to state");
+                    return;
+                }
                 const keyValue = key.textContent;
                 if (key.id === "key-enter") {
                     if (activeInput === guessInput) {
@@ -183,18 +189,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                     // Ignore Enter for form inputs to prevent unintended submission
                 } else if (key.id === "key-backspace") {
-                    if (activeInput) {
-                        activeInput.value = activeInput.value.slice(0, -1);
-                    }
+                    activeInput.value = activeInput.value.slice(0, -1);
+                    console.log("Backspace pressed, new value:", activeInput.value);
                 } else {
-                    if (activeInput) {
-                        activeInput.value += keyValue;
-                    }
+                    activeInput.value += keyValue;
+                    console.log("Key added, new value:", activeInput.value);
                 }
-                if (activeInput) activeInput.focus();
+                activeInput.focus();
             }, 100);
             key._clickHandler = clickHandler;
+            key._touchHandler = (e) => {
+                e.preventDefault();
+                clickHandler();
+            };
             key.addEventListener("click", clickHandler);
+            key.addEventListener("touchstart", key._touchHandler);
         });
     }
 
@@ -211,6 +220,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
+            setupKeyboardListeners(); // Re-apply listeners
         });
 
         privateTab.addEventListener("click", () => {
@@ -225,6 +235,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
+            setupKeyboardListeners(); // Re-apply listeners
         });
     }
 
@@ -369,6 +380,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
             adjustBackground();
+            setupKeyboardListeners(); // Re-apply listeners
         });
     }
 
@@ -384,6 +396,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeInput = document.getElementById("game-name-input");
             if (activeInput) activeInput.focus();
             adjustBackground();
+            setupKeyboardListeners(); // Re-apply listeners
         });
     }
 
@@ -405,6 +418,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
             adjustBackground();
+            setupKeyboardListeners(); // Re-apply listeners
         });
     }
 
@@ -426,6 +440,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (keyboard) keyboard.style.display = "none";
             displayGameList();
             adjustBackground();
+            setupKeyboardListeners(); // Re-apply listeners
         });
     }
 
@@ -438,7 +453,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = "flex";
+            activeInput = guessInput;
+            if (activeInput) activeInput.focus();
             adjustBackground();
+            setupKeyboardListeners(); // Re-apply listeners
         });
     }
 
@@ -451,7 +469,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = "flex";
+            activeInput = guessInput;
+            if (activeInput) activeInput.focus();
             adjustBackground();
+            setupKeyboardListeners(); // Re-apply listeners
         });
     }
 
@@ -509,6 +530,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 await fetchPrivateGames();
                 displayGameList();
                 adjustBackground();
+                setupKeyboardListeners(); // Re-apply listeners
             } catch (error) {
                 console.error("Error submitting form:", error);
                 alert("Failed to create game: " + error.message);
@@ -529,6 +551,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
             adjustBackground();
+            setupKeyboardListeners(); // Re-apply listeners
         });
     }
 
@@ -541,6 +564,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = "flex";
+            activeInput = guessInput;
+            if (activeInput) activeInput.focus();
+            setupKeyboardListeners(); // Re-apply listeners
         });
 
         document.addEventListener("click", (e) => {
@@ -552,6 +578,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
                 if (keyboard) keyboard.style.display = "flex";
+                activeInput = guessInput;
+                if (activeInput) activeInput.focus();
+                setupKeyboardListeners(); // Re-apply listeners
             }
         });
     }
@@ -591,6 +620,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = "flex";
+            activeInput = guessInput;
+            if (activeInput) activeInput.focus();
+            setupKeyboardListeners(); // Re-apply listeners
         });
 
         giveUpDialog.addEventListener("click", (e) => {
@@ -600,6 +632,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
                 if (keyboard) keyboard.style.display = "flex";
+                activeInput = guessInput;
+                if (activeInput) activeInput.focus();
+                setupKeyboardListeners(); // Re-apply listeners
             }
         });
     }
@@ -616,6 +651,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
                 if (keyboard) keyboard.style.display = "flex";
+                activeInput = guessInput;
+                if (activeInput) activeInput.focus();
+                setupKeyboardListeners(); // Re-apply listeners
             } else {
                 guessesList.innerHTML = guesses.length > 0 
                     ? guesses.join(' <span class="separator yellow">|</span>   ')
@@ -623,7 +661,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessesScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
                 if (keyboard) keyboard.style.display = "none";
-                console.log("Guesses screen displayed, content:", guessesList.innerHTML);
+                setupKeyboardListeners(); // Re-apply listeners
             }
         }, { capture: false });
     }
@@ -642,6 +680,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const keyboard = document.getElementById("keyboard-container");
         if (keyboard) keyboard.style.display = "none";
         displayGameList();
+        setupKeyboardListeners(); // Re-apply listeners
     }
 
     function resetScreenDisplays() {
@@ -782,7 +821,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                         gameScreen.style.display = "flex";
                         const keyboard = document.getElementById("keyboard-container");
                         if (keyboard) keyboard.style.display = "flex";
+                        activeInput = guessInput;
+                        if (activeInput) activeInput.focus();
                         adjustBackground();
+                        setupKeyboardListeners(); // Re-apply listeners
                         const currentIndex = allGames.findIndex(g => g["Game Number"] === game["Game Number"]);
                         updateArrowStates(currentIndex, allGames);
                     });
@@ -832,7 +874,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                         gameScreen.style.display = "flex";
                         const keyboard = document.getElementById("keyboard-container");
                         if (keyboard) keyboard.style.display = "flex";
+                        activeInput = guessInput;
+                        if (activeInput) activeInput.focus();
                         adjustBackground();
+                        setupKeyboardListeners(); // Re-apply listeners
                         const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
                         updateArrowStates(currentIndex, privateGames);
                     });
@@ -863,7 +908,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
                 if (keyboard) keyboard.style.display = "flex";
+                activeInput = guessInput;
+                if (activeInput) activeInput.focus();
                 adjustBackground();
+                setupKeyboardListeners(); // Re-apply listeners
                 updateArrowStates(0, allGames);
             });
         });
@@ -1087,6 +1135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const keyboard = document.getElementById("keyboard-container");
         if (keyboard) keyboard.style.display = "none";
         adjustBackground();
+        setupKeyboardListeners(); // Re-apply listeners
 
         const todaysWord = document.getElementById("todays-word");
         const shareScore = document.getElementById("share-score");
@@ -1191,6 +1240,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.classList.add('lines-0');
         }
         updateHintCountdown();
+        setupKeyboardListeners(); // Re-apply listeners
     }
 
     function loadGame(game) {
