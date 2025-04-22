@@ -365,8 +365,8 @@ a {
   font-weight: bold;
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
+  color: #000000; /* Changed to black */
+  text-shadow: -0.1vh -0.1vh 0 #FFFFFF, 0.1vh -0.1vh 0 #FFFFFF, -0.1vh 0.1vh 0 #FFFFFF, 0.1vh 0.1vh 0 #FFFFFF; /* White outline */
   margin: 0;
   text-align: center;
   position: relative;
@@ -380,6 +380,11 @@ a {
   justify-content: center;
   flex-wrap: wrap;
   word-break: break-word;
+}
+
+.hints-inline .separator {
+  color: #000000; /* Changed to black */
+  text-shadow: -0.1vh -0.1vh 0 #FFFFFF, 0.1vh -0.1vh 0 #FFFFFF, -0.1vh 0.1vh 0 #FFFFFF, 0.1vh 0.1vh 0 #FFFFFF; /* White outline */
 }
 
 .hints-inline::before {
@@ -565,7 +570,7 @@ a {
 /* Increase Next Game button size by 50% */
 #next-game-btn-end {
   font-size: 5.0625vh;
-  padding: 1.6875vh 3.375vw;
+  padding: 1.6875vh 3.375vw; /* Added missing semicolon */
 }
 
 @media (min-width: 601px) {
@@ -681,8 +686,7 @@ a {
 
 /* Backgrounds for all screens */
 #game-over,
-#game-select-screen,
-#create-form {
+#game-select-screen {
   display: none;
   flex-direction: column;
   height: 100vh;
@@ -698,6 +702,25 @@ a {
   background-size: 100% calc(100% - 24vh);
   background-attachment: fixed;
   z-index: 1;
+}
+
+#create-form {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: url('newbackground.png') no-repeat center center fixed;
+  background-size: cover; /* Changed to cover entire screen */
+  z-index: 1;
+  align-items: center;
+  justify-content: flex-start;
 }
 
 #game-over::before,
@@ -874,6 +897,14 @@ a {
   margin: 0.5vh auto;
   white-space: pre-line;
   color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+#hard-luck-label {
+  font-size: 2vh;
+  font-weight: bold;
+  margin: 0.5vh auto;
+  color: #FFB300;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
@@ -1175,11 +1206,12 @@ a {
   }
   #hints-label {
     font-size: 2.75vh;
-    margin: 1.2vh 0 0 0; /* Reduced for mobile */
+    margin: 8.25vh 0 0 0; /* Adjusted to move 'Hints' down 2.5 lines */
   }
   .hints-inline {
     font-size: 2.75vh;
     min-height: calc(2.75vh * 1.2 * 2);
+    margin-top: 9.9vh; /* Added to move hints section down 3 lines */
   }
   .hints-inline.lines-1::before {
     height: calc(2.75vh * 1.2 + 1vh);
@@ -1212,6 +1244,9 @@ a {
     max-width: clamp(6.6vh, 7.425vh, 8.25vh); /* Increased from clamp(6vh, 6.75vh, 7.5vh) by 10% */
     font-size: clamp(1.76vh, 1.98vh, 2.2vh); /* Increased from clamp(1.6vh, 1.8vh, 2vh) by 10% */
   }
+  #create-form .keyboard {
+    display: none !important; /* Hide keyboard on create form */
+  }
   .dialog-message {
     font-size: 2vh;
     margin-bottom: 1.5vh;
@@ -1234,7 +1269,7 @@ a {
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh) auto 0.8vh auto;
+    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh + 8.25vh) auto 0.8vh auto; /* Added 8.25vh */
   }
   .pineapple-piece {
     animation-timing-function: linear; /* Ensure smooth rendering */
@@ -1247,9 +1282,9 @@ a {
     font-size: 4vh;
   }
   #game-select-content {
-    margin: 5vh auto 0 auto; /* Consistent with desktop */
+    margin: 0 auto 0 auto; /* Changed from 5vh to 0 to move up */
   }
   #guess-container {
-    margin-top: 3.2vh; /* Slightly less for mobile, adjusted from 3.7vh */
+    margin-top: 9.7vh; /* Changed from 3.2vh to 9.7vh (3.2vh + 6.6vh) */
   }
 }
