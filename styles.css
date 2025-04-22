@@ -248,7 +248,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 3.6vh + 3.6vh);
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 3.6vh + 3.6vh - 2.7vh); /* Moved up 1.5 lines */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -375,6 +375,7 @@ a {
   font-family: 'Luckiest Guy', cursive;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
+  -webkit-text-stroke: 0.1vh #000000; /* Black outline */
   margin: 0;
   text-align: center;
   position: relative;
@@ -388,6 +389,11 @@ a {
   justify-content: center;
   flex-wrap: wrap;
   word-break: break-word;
+}
+
+.hints-inline .separator {
+  -webkit-text-stroke: 0.1vh #000000; /* Black outline for separator */
+  color: #FFB300; /* Maintain yellow color */
 }
 
 .hints-inline::before {
@@ -684,7 +690,7 @@ a {
 }
 
 .spacer {
-  height: 1vh;
+  display: none; /* Remove spacers to save space */
 }
 
 /* Backgrounds for all screens */
@@ -708,7 +714,7 @@ a {
 
 /* Specific background sizes */
 #game-select-screen {
-  background-size: cover; /* Stretch to full screen for All Games screen */
+  background-size: cover; /* Ensure background fits entire screen */
 }
 
 #game-over,
@@ -775,20 +781,21 @@ a {
 
 #game-select-content {
   width: 85vw;
-  margin: -1vh auto 0 auto; /* Moved down 6 lines from -7vh */
+  height: calc(100vh - 5vh - 0.5vh - 4vh - 12vh); /* Full height minus header (5vh + 0.5vh padding), ad-box (4vh), 2 lines top (6vh), 2 lines bottom (6vh) */
+  margin: calc(5vh + 0.5vh + 6vh) auto 0 auto; /* Start 2 lines (6vh) below header */
   text-align: center;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   position: relative;
   z-index: 5;
+  box-sizing: border-box;
 }
 
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: 2vh 0;
+  margin: 0 0 2vh 0; /* Reduced margin to fit within allocated space */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -797,6 +804,7 @@ a {
   display: flex;
   gap: 4vw;
   margin-bottom: 2vh;
+  height: 2vh; /* Fixed height for tabs */
 }
 
 .tab-text {
@@ -817,12 +825,13 @@ a {
 .tab-content {
   display: none;
   width: 100%;
+  height: 100%; /* Fill available height */
+  flex-direction: column;
+  align-items: center;
 }
 
 .tab-content.active {
   display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .game-list-header {
@@ -838,13 +847,11 @@ a {
 }
 
 .game-list {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 85vw;
-  max-height: 50vh;
+  max-height: calc(100vh - 5vh - 0.5vh - 4vh - 12vh - 3vh - 2vh - 2vh - 4vh); /* Subtract header, ad-box, margins, title (3vh), tabs (2vh), header margin (2vh), button (approx 4vh) */
   overflow-y: auto;
   overflow-x: hidden;
+  flex-grow: 1; /* Allow list to take available space */
 }
 
 .game-list-row {
@@ -1147,7 +1154,7 @@ a {
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + (1.92vh * 2) + 3.2vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + (1.92vh * 2) + 3.2vh - 2.4vh); /* Moved up 1.5 lines */
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1215,7 +1222,11 @@ a {
   }
   .hints-inline {
     font-size: 2.75vh;
+    -webkit-text-stroke: 0.08vh #000000; /* Slightly thinner outline for smaller text */
     min-height: calc(2.75vh * 1.2 * 2);
+  }
+  .hints-inline .separator {
+    -webkit-text-stroke: 0.08vh #000000;
   }
   .hints-inline.lines-1::before {
     height: calc(2.75vh * 1.2 + 1vh);
@@ -1283,23 +1294,26 @@ a {
     font-size: 4vh;
   }
   #game-select-content {
-    margin: 4vh auto 0 auto; /* Moved up 3 lines from 7vh to 4vh */
     width: 85vw;
-    height: calc(100vh - 4vh - 4vh - 7vh); /* Full height minus top, ad-box, buttons */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    text-align: center;
-    position: relative;
-    z-index: 5;
-    box-sizing: border-box;
+    height: calc(100vh - 5vh - 0.5vh - 4vh - 10vh); /* Adjust for smaller line height: 2 lines = 5vh */
+    margin: calc(5vh + 0.5vh + 5vh) auto 0 auto; /* Start 2 lines (5vh) below header */
   }
   .game-list {
-    width: 85vw;
-    max-height: calc(100vh - 4vh - 4vh - 7vh - 7vh - 2vh); /* Subtract top, ad-box, buttons, title, tabs */
-    overflow-y: auto;
-    overflow-x: hidden;
+    max-height: calc(100vh - 5vh - 0.5vh - 4vh - 10vh - 3vh - 2vh - 2vh - 4vh); /* Adjust for mobile */
+  }
+  #official-back-btn,
+  #private-back-btn {
+    font-size: clamp(2vh, 3vw, 3.15vh);
+    padding: 0.75vh 1.5vw;
+    margin-bottom: 5vh; /* 2 lines = 5vh on mobile */
+  }
+  #game-list-title {
+    font-size: 2.5vh;
+    margin: 0 0 1.5vh 0;
+  }
+  #tabs {
+    margin-bottom: 1.5vh;
+    height: 1.8vh;
   }
   #game-select-screen .keyboard {
     display: none !important; /* Hide keyboard only on All Games screen */
