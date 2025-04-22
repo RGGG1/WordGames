@@ -702,9 +702,18 @@ a {
   top: 0;
   left: 0;
   background: url('newbackground.png') no-repeat center center fixed;
-  background-size: cover;
   background-attachment: fixed;
   z-index: 1;
+}
+
+/* Specific background sizes */
+#game-select-screen {
+  background-size: cover; /* Stretch to full screen for All Games screen */
+}
+
+#game-over,
+#create-form {
+  background-size: 100% calc(100% - 24vh); /* Preserve keyboard space */
 }
 
 #game-over::before,
@@ -757,7 +766,6 @@ a {
   align-items: center;
   justify-content: flex-start;
   overflow-y: auto;
-  background-size: cover;
 }
 
 #game-select-screen {
@@ -767,7 +775,7 @@ a {
 
 #game-select-content {
   width: 85vw;
-  margin: -1vh auto 0 auto; /* Updated: Moved down 6 lines from -7vh to -1vh */
+  margin: -1vh auto 0 auto; /* Moved down 6 lines from -7vh */
   text-align: center;
   flex-grow: 1;
   display: flex;
@@ -1055,10 +1063,6 @@ a {
   margin-bottom: 25vh;
 }
 
-#back-btn {
-  border: 0.1vh solid #000000;
-}
-
 .or-text {
   font-size: 1.8vh;
   margin-bottom: 0.5vh;
@@ -1279,9 +1283,29 @@ a {
     font-size: 4vh;
   }
   #game-select-content {
-    margin: -7vh auto 0 auto; /* Confirmed: Moved down 6 lines (6vh) */
+    margin: 7vh auto 0 auto; /* Start 2 lines (2vh) below header (5vh) */
+    width: 85vw;
+    height: calc(100vh - 7vh - 4vh); /* Full height minus header, gap, ad-box */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Ensure content starts at top */
+    text-align: center;
+    position: relative;
+    z-index: 5;
+    box-sizing: border-box;
   }
-  #guess-container {
-    margin-top: 4.2vh;
+  .game-list {
+    width: 85vw;
+    max-height: calc(100vh - 7vh - 4vh - 7vh - 2vh); /* Subtract header, gap, ad-box, title, tabs */
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  #game-select-screen .keyboard {
+    display: none !important; /* Hide keyboard only on All Games screen */
+  }
+  #game-screen .keyboard,
+  #create-form .keyboard {
+    display: flex; /* Ensure keyboard remains on other screens */
   }
 }
