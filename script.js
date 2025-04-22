@@ -16,7 +16,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let guesses = [];
     let animationTimeout = null;
     let activeInput = null;
-    let currentBackground = "newbackground.png"; // Track the current background
+    let currentBackground = "newbackground.png";
 
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (guessInput) {
-        guessInput.readOnly = isMobile; // Only readOnly on mobile
+        guessInput.readOnly = isMobile;
         guessInput.disabled = false;
         guessInput.addEventListener("input", (e) => {
             console.log("Guess input value changed:", guessInput.value);
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.style.opacity = "1";
                 guessInput.style.visibility = "visible";
                 guessInput.style.color = "#000000";
-                guessInput.value = e.target.value.toUpperCase(); // Force uppercase
+                guessInput.value = e.target.value.toUpperCase();
                 isProcessingGuess = false;
                 console.log("Animation cancelled and state reset due to typing");
             }
@@ -88,14 +88,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
         });
-        // Ensure cursor blinks on load
         guessInput.focus();
         activeInput = guessInput;
     } else {
         console.error("guess-input not found in DOM");
     }
 
-    // Add click/tap handler for guess area to focus input
     if (guessArea) {
         guessArea.addEventListener("click", (e) => {
             e.preventDefault();
@@ -119,7 +117,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     if (guessBtn) {
         guessBtn.disabled = false;
-        // Remove any existing listeners to prevent duplicates
         guessBtn.removeEventListener("click", guessBtn._clickHandler);
         guessBtn.removeEventListener("touchstart", guessBtn._touchHandler);
         
@@ -132,7 +129,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (guess) {
                     console.log("Submitting guess:", guess);
                     handleGuess(guess);
-                    guessInput.focus(); // Re-focus input after guess
+                    guessInput.focus();
                 } else {
                     console.log("No guess entered");
                 }
@@ -153,7 +150,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("guess-btn not found in DOM");
     }
 
-    // Setup form input listeners
     const formInputs = [
         document.getElementById("game-name-input"),
         document.getElementById("secret-word"),
@@ -165,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(input => input);
 
     formInputs.forEach(input => {
-        input.readOnly = false; // Allow typing on all devices
+        input.readOnly = false;
         input.disabled = false;
         input.addEventListener("click", () => {
             activeInput = input;
@@ -180,11 +176,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         input.addEventListener("input", () => {
             console.log("Form input updated:", input.id, input.value);
-            input.value = input.value.toUpperCase(); // Force uppercase
+            input.value = input.value.toUpperCase();
         });
     });
 
-    // Debounce function for key clicks
     function debounce(func, wait) {
         let timeout;
         return function executedFunction(...args) {
@@ -193,11 +188,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 func(...args);
             };
             clearTimeout(timeout);
-            timeout = setTimeout(later, 50); // Reduced from 100ms
+            timeout = setTimeout(later, 50);
         };
     }
 
-    // Setup keyboard listeners for both game and form
     function setupKeyboardListeners() {
         if (!isMobile) {
             console.log("Skipping on-screen keyboard setup on desktop");
@@ -206,7 +200,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const keys = document.querySelectorAll("#keyboard-container .key");
         console.log("Setting up keyboard listeners, found keys:", keys.length);
         keys.forEach(key => {
-            // Remove existing listeners to prevent duplicates
             if (key._clickHandler) {
                 key.removeEventListener("click", key._clickHandler);
                 key.removeEventListener("touchstart", key._touchHandler);
@@ -226,7 +219,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                             handleGuess(guess);
                         }
                     }
-                    // Ignore Enter for form inputs to prevent unintended submission
                 } else if (key.id === "key-backspace") {
                     activeInput.value = activeInput.value.slice(0, -1);
                     console.log("Backspace pressed, new value:", activeInput.value);
@@ -556,7 +548,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
 
                 console.log("Game created successfully");
-                // Clear form inputs
                 formInputs.forEach(input => (input.value = ""));
                 createForm.style.display = "none";
                 resetScreenDisplays();
@@ -618,6 +609,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             setupKeyboardListeners();
         });
 
+        // Click handler for closing guesses screen
         document.addEventListener("click", (e) => {
             if (guessesScreen.style.display === "flex" && 
                 !guessesScreen.contains(e.target) && 
@@ -632,6 +624,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                 setupKeyboardListeners();
             }
         });
+
+        // Touchstart handler for closing guesses screen on mobile
+        document.addEventListener("touchstart", (e) => {
+            if (guessesScreen.style.display === "flex" && 
+                !guessesScreen.contains(e.target) && 
+                e.target !== guessesLink) {
+                console.log("Tapped outside guesses screen");
+                guessesScreen.style.display = "none";
+                gameScreen.style.display = "flex";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+                activeInput = guessInput;
+                if (activeInput) activeInput.focus();
+                setupKeyboardListeners();
+            }
+        }, { passive: false });
     }
 
     if (giveUpLink && giveUpDialog && giveUpYesBtn && giveUpNoBtn) {
@@ -1043,15 +1051,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
             if (screen) {
-                // Apply background to all screens, not just visible ones
                 screen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
-                screen.style.backgroundSize = screen.id === "create-form" ? "cover" : "100% calc(100% - 24vh)"; // Full screen for create-form
-                // Force repaint
+                screen.style.backgroundSize = screen.id === "create-form" ? "cover" : "100% calc(100% - 24vh)";
                 screen.offsetHeight;
                 console.log(`Set background for ${screen.id} to ${currentBackground}`);
             }
         });
-        // Test if the background image loaded successfully
         const img = new Image();
         img.src = currentBackground;
         img.onload = () => {
@@ -1061,7 +1066,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error(`Failed to load background image ${currentBackground}, falling back to default`);
             if (currentBackground !== defaultBackground) {
                 currentBackground = defaultBackground;
-                adjustBackground(); // Reapply with default
+                adjustBackground();
             }
         };
         window.dispatchEvent(new Event('resize'));
@@ -1139,7 +1144,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isProcessingGuess = false;
                 console.log("Animation completed, input reset");
                 if (guessInput) {
-                    guessInput.focus(); // Ensure focus after animation
+                    guessInput.focus();
                     activeInput = guessInput;
                 }
             }, 350);
@@ -1232,22 +1237,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.body.appendChild(rainContainer);
 
         function createWave(waveNumber) {
-            const pieces = Array(40).fill("🍍"); // Reduced to 40 pieces for mobile performance
+            const pieces = Array(40).fill("🍍");
             pieces.forEach(() => {
                 const piece = document.createElement("div");
                 piece.className = "pineapple-piece";
                 piece.textContent = "🍍";
                 piece.style.left = `${Math.random() * 100}vw`;
-                piece.style.animationDuration = `${Math.random() * 3.5 + 2.5}s`; // 2.5-6s for varied speeds
-                piece.style.fontSize = `${Math.random() * 1.5 + 0.8}vh`; // Smaller range for mobile
-                piece.style.animationDelay = `${waveNumber * 0.2 + Math.random() * 0.15}s`; // Shorter delay (0.2s + 0-0.15s jitter)
-                piece.style.setProperty('--rotation', `${Math.random() * 360}deg`); // Random angle
-                piece.style.setProperty('--drift', `${Math.random() * 2 - 1}`); // Random drift (-1 to +1vw)
+                piece.style.animationDuration = `${Math.random() * 3.5 + 2.5}s`;
+                piece.style.fontSize = `${Math.random() * 1.5 + 0.8}vh`;
+                piece.style.animationDelay = `${waveNumber * 0.2 + Math.random() * 0.15}s`;
+                piece.style.setProperty('--rotation', `${Math.random() * 360}deg`);
+                piece.style.setProperty('--drift', `${Math.random() * 2 - 1}`);
                 rainContainer.appendChild(piece);
             });
         }
 
-        // Create 6 waves for mobile, 5 for desktop
         const waveCount = isMobile ? 6 : 5;
         for (let i = 0; i < waveCount; i++) {
             createWave(i);
@@ -1256,7 +1260,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         setTimeout(() => {
             rainContainer.remove();
             console.log("Pineapple rain animation ended");
-        }, 13500); // 13.5s (50% longer than 9s)
+        }, 13500);
     }
 
     function resetGame() {
@@ -1312,18 +1316,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameNumberDisplay.textContent = currentGameNumber;
         }
 
-        // Set the current background, fallback to default if not specified
         currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
         console.log("Setting currentBackground to:", currentBackground);
 
-        // Apply and verify background
         adjustBackground();
 
         setupHints();
 
         if (guessInput) {
             guessInput.disabled = false;
-            guessInput.readOnly = isMobile; // Use on-screen keyboard only on mobile
+            guessInput.readOnly = isMobile;
             guessInput.focus();
             activeInput = guessInput;
         }
