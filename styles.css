@@ -62,7 +62,7 @@ a {
 #create-form #header {
   width: 95vw;
   height: 5vh;
-  padding: 0 2vw;
+  padding: 0.5vh 2vw 0 2vw; /* Added 0.5vh top padding for half-line spacing */
   margin: 0;
   z-index: 11;
   background: none;
@@ -1111,7 +1111,7 @@ a {
   #header {
     width: 95vw;
     height: 5vh;
-    padding: 0 2vw;
+    padding: 0.5vh 2vw 0 2vw; /* Consistent with base header padding */
     margin: 0;
   }
   #game-name {
@@ -1283,13 +1283,13 @@ a {
     font-size: 4vh;
   }
   #game-select-content {
-    margin: 7vh auto 0 auto; /* Start 2 lines (2vh) below header (5vh) */
+    margin: 4vh auto 0 auto; /* Moved up 3 lines from 7vh to 4vh */
     width: 85vw;
-    height: calc(100vh - 7vh - 4vh); /* Full height minus header, gap, ad-box */
+    height: calc(100vh - 4vh - 4vh - 7vh); /* Full height minus top, ad-box, buttons */
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start; /* Ensure content starts at top */
+    justify-content: flex-start;
     text-align: center;
     position: relative;
     z-index: 5;
@@ -1297,7 +1297,7 @@ a {
   }
   .game-list {
     width: 85vw;
-    max-height: calc(100vh - 7vh - 4vh - 7vh - 2vh); /* Subtract header, gap, ad-box, title, tabs */
+    max-height: calc(100vh - 4vh - 4vh - 7vh - 7vh - 2vh); /* Subtract top, ad-box, buttons, title, tabs */
     overflow-y: auto;
     overflow-x: hidden;
   }

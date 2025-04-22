@@ -860,8 +860,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
-                    const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResult.guesses : "Gave Up") : "-";
-                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
+                    // Determine guesses display: '-', 'X', 'Gave Up', or number of guesses
+                    let guessesDisplay = '-';
+                    if (pastResult) {
+                        if (pastResult.guesses === "Gave Up") {
+                            guessesDisplay = "Gave Up";
+                        } else if (pastResult.guesses === "X") {
+                            guessesDisplay = "X";
+                        } else if (pastResult.secretWord === secretWord) {
+                            guessesDisplay = pastResult.guesses;
+                        }
+                    }
+                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
                     const gameItem = document.createElement("div");
@@ -869,7 +879,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     gameItem.innerHTML = `
                         <span>${gameNumber}</span>
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
-                        <span>${guesses}</span>
+                        <span>${guessesDisplay}</span>
                     `;
                     gameItem.addEventListener("click", () => {
                         console.log("Clicked official game:", game);
@@ -886,7 +896,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         updateArrowStates(currentIndex, allGames);
                     });
                     officialList.appendChild(gameItem);
-                    console.log(`Rendered official game ${gameNumber}: ${secretWord}, Guesses: ${guesses}`);
+                    console.log(`Rendered official game ${gameNumber}: ${secretWord}, Guesses: ${guessesDisplay}`);
                 });
                 setTimeout(() => {
                     officialList.style.display = "none";
@@ -912,9 +922,18 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameName = game["Game Name"].toUpperCase();
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
-                    console.log(`Checking private game ${gameNumber}: pastResult=`, pastResult, `secretWord=`, secretWord);
-                    const guesses = pastResult ? (pastResult.guesses !== "Gave Up" ? pastResult.guesses : "Gave Up") : "-";
-                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.secretWord === secretWord);
+                    // Determine guesses display: '-', 'X', 'Gave Up', or number of guesses
+                    let guessesDisplay = '-';
+                    if (pastResult) {
+                        if (pastResult.guesses === "Gave Up") {
+                            guessesDisplay = "Gave Up";
+                        } else if (pastResult.guesses === "X") {
+                            guessesDisplay = "X";
+                        } else if (pastResult.secretWord === secretWord) {
+                            guessesDisplay = pastResult.guesses;
+                        }
+                    }
+                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
                     const gameItem = document.createElement("div");
@@ -922,7 +941,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     gameItem.innerHTML = `
                         <span>${gameName}</span>
                         <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
-                        <span>${guesses}</span>
+                        <span>${guessesDisplay}</span>
                     `;
                     gameItem.addEventListener("click", () => {
                         console.log("Clicked private game:", game);
@@ -939,7 +958,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         updateArrowStates(currentIndex, privateGames);
                     });
                     privateList.appendChild(gameItem);
-                    console.log(`Rendered private game ${gameNumber}: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guesses}`);
+                    console.log(`Rendered private game ${gameNumber}: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guessesDisplay}`);
                 });
             }
         }
@@ -1052,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         screens.forEach(screen => {
             if (screen) {
                 screen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
-                screen.style.backgroundSize = screen.id === "create-form" ? "cover" : "100% calc(100% - 24vh)";
+                screen.style.backgroundSize = screen.id === "game-select-screen" ? "cover" : screen.id === "create-form" ? "cover" : "100% calc(100% - 24vh)";
                 screen.offsetHeight;
                 console.log(`Set background for ${screen.id} to ${currentBackground}`);
             }
