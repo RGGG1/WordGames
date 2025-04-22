@@ -688,10 +688,6 @@ a {
   }
 }
 
-.spacer {
-  height: 1vh;
-}
-
 /* Backgrounds for other screens */
 #game-over,
 #create-form {
@@ -706,7 +702,7 @@ a {
   top: 0;
   left: 0;
   background: url('newbackground.png') no-repeat center center fixed;
-  background-size: 100% calc(100% - 24vh);
+  background-size: cover;
   background-attachment: fixed;
   z-index: 1;
 }
@@ -789,7 +785,7 @@ a {
 
 #game-select-content {
   width: 85vw;
-  margin: calc(5vh + 0.5vh + 6vh) auto 0 auto;
+  margin: calc(5vh + 0.5vh + 5vh) auto 0 auto;
   text-align: center;
   flex-grow: 1;
   display: flex;
@@ -797,6 +793,7 @@ a {
   align-items: center;
   position: relative;
   z-index: 5;
+  padding-bottom: 4vh; /* Space for ad-box */
 }
 
 #game-list-title {
@@ -856,9 +853,10 @@ a {
   flex-direction: column;
   align-items: center;
   width: 85vw;
-  max-height: calc(100vh - 5vh - 0.5vh - 4vh - 6vh - 6vh - 3vh - 2vh - 4vh);
   overflow-y: auto;
   overflow-x: hidden;
+  flex-grow: 1;
+  margin-bottom: 2vh; /* Space before Back button */
 }
 
 .game-list-row {
@@ -1120,6 +1118,21 @@ a {
   display: none;
 }
 
+/* Remove spacer */
+.spacer {
+  display: none; /* Remove spacers to avoid unnecessary spacing */
+}
+
+/* Back button styling for game select screen */
+#official-back-btn,
+#private-back-btn {
+  font-size: clamp(2vh, 3vw, 3.15vh);
+  padding: 0.75vh 1.5vw;
+  margin-bottom: 2vh; /* Two lines based on font-size */
+  position: relative;
+  z-index: 5;
+}
+
 /* Mobile styles */
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
@@ -1302,22 +1315,20 @@ a {
   }
   #game-select-content {
     margin: calc(5vh + 0.5vh + 5vh) auto 0 auto;
+    padding-bottom: 4vh; /* Space for ad-box */
   }
   .game-list {
-    max-height: calc(100vh - 5vh - 0.5vh - 4vh - 5vh - 5vh - 2.5vh - 1.5vh - 4vh);
+    /* Calculate max-height: 100vh - header - game-number-display - ad-box - title - tabs - header-row - margins - button space */
+    max-height: calc(100vh - 5vh - 0.5vh - 4vh - 5vh - 2.5vh - 1.5vh - 2vh - 2vh - 4vh);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    margin-bottom: 2vh; /* Space before Back button */
   }
   #official-back-btn,
   #private-back-btn {
     font-size: clamp(2vh, 3vw, 3.15vh);
     padding: 0.75vh 1.5vw;
-    margin-bottom: 5vh;
-  }
-  #game-list-title {
-    font-size: 2.5vh;
-    margin: 1.5vh 0;
-  }
-  #tabs {
-    margin-bottom: 1.5vh;
+    margin-bottom: 2vh; /* Two lines based on font-size (1vh per line) */
   }
   #game-select-screen .keyboard {
     display: none !important;
