@@ -165,7 +165,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(input => input);
 
     formInputs.forEach(input => {
-        input.readOnly = isMobile; // Use on-screen keyboard only on mobile
+        input.readOnly = false; // Allow typing on all devices
         input.disabled = false;
         input.addEventListener("click", () => {
             activeInput = input;
@@ -178,12 +178,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             input.focus();
             console.log("Form input touched:", input.id);
         });
-        // Allow direct typing on desktop
-        if (!isMobile) {
-            input.addEventListener("input", () => {
-                console.log("Form input updated:", input.id, input.value);
-            });
-        }
+        input.addEventListener("input", () => {
+            console.log("Form input updated:", input.id, input.value);
+            input.value = input.value.toUpperCase(); // Force uppercase
+        });
     });
 
     // Debounce function for key clicks
@@ -780,7 +778,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (createForm) createForm.style.display = "none";
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
-            updateHintCountdown();
             adjustBackground();
             setupEventListeners();
             setupKeyboardListeners();
@@ -797,7 +794,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (createForm) createForm.style.display = "none";
             const keyboard = document.getElementById("keyboard-container");
             if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
-            updateHintCountdown();
             adjustBackground();
             setupEventListeners();
             setupKeyboardListeners();
@@ -974,23 +970,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    function updateHintCountdown() {
-        const countdownElement = document.querySelector(".hint-countdown");
-        if (!countdownElement) {
-            console.error("hint-countdown element not found");
-            return;
-        }
-        if (hintIndex >= hints.length) {
-            countdownElement.textContent = "(All hints have been revealed)";
-            countdownElement.style.display = "block";
-        } else {
-            const guessesUntilNextHint = guessCount === 0 ? 5 : 5 - (guessCount % 5);
-            countdownElement.style.display = "block";
-            countdownElement.textContent = `(next hint revealed in ${guessesUntilNextHint} guesses)`;
-        }
-        console.log("Updated hint countdown:", countdownElement.textContent);
-    }
-
     function calculateHintLines(hintsArray) {
         const tempContainer = document.createElement("div");
         tempContainer.style.fontSize = "3.25vh";
@@ -1123,7 +1102,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             typeLetter();
             console.log("Revealing hint:", newHint);
         }
-        updateHintCountdown();
     }
 
     function handleGuess(guess) {
@@ -1165,10 +1143,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }, 350);
 
-            if (guessCount % 5 === 0 && hintIndex < hints.length - 1) {
+            if (hintIndex < hints.length - 1) {
                 revealHint();
-            } else {
-                updateHintCountdown();
             }
         }
     }
@@ -1297,7 +1273,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.style.display = "block";
             hintsContainer.classList.add('lines-0');
         }
-        updateHintCountdown();
         setupKeyboardListeners();
     }
 
@@ -1332,7 +1307,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         adjustBackground();
 
         setupHints();
-        updateHintCountdown();
 
         if (guessInput) {
             guessInput.disabled = false;

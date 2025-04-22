@@ -272,7 +272,7 @@ a {
   justify-content: center;
   width: 100%;
   margin-bottom: 0.5vh;
-  margin-top: 2.7vh;
+  margin-top: 3.7vh; /* Increased from 2.7vh to move down */
   position: relative;
 }
 
@@ -350,18 +350,13 @@ a {
   font-size: 3.25vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: 3.6vh 0 0 0;
+  margin: 1.6vh 0 0 0; /* Reduced from 3.6vh since countdown is removed */
   text-align: center;
 }
 
 /* Hint countdown */
 .hint-countdown {
-  display: block;
-  font-size: 1.8vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  margin: 0.5vh 0 1.8vh 0;
-  text-align: center;
+  display: none; /* Ensure it's hidden */
 }
 
 /* Inline hints styling */
@@ -764,7 +759,7 @@ a {
 
 #game-select-content {
   width: 85vw;
-  margin: 7vh auto 0 auto;
+  margin: 5vh auto 0 auto; /* Reduced from 7vh to 5vh */
   text-align: center;
   flex-grow: 1;
   display: flex;
@@ -1178,13 +1173,9 @@ a {
   #next-game-btn-end:hover {
     font-size: 5.225vh;
   }
-  .hint-countdown {
-    font-size: 1.6vh;
-    margin: 0.5vh 0 1.6vh 0;
-  }
   #hints-label {
     font-size: 2.75vh;
-    margin: 3.2vh 0 0 0;
+    margin: 1.2vh 0 0 0; /* Reduced for mobile */
   }
   .hints-inline {
     font-size: 2.75vh;
@@ -1254,5 +1245,11 @@ a {
   }
   #share-text .guess-count {
     font-size: 4vh;
+  }
+  #game-select-content {
+    margin: 5vh auto 0 auto; /* Consistent with desktop */
+  }
+  #guess-container {
+    margin-top: 3.2vh; /* Slightly less for mobile, adjusted from 3.7vh */
   }
 }
