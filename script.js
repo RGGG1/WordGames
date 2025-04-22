@@ -885,7 +885,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     officialList.offsetHeight;
                     officialList.style.display = "flex";
                     console.log("Forced repaint on official-list");
-                }, 0); // Fixed typo from 'boom' to 0
+                }, 0);
             }
         }
 
@@ -1180,6 +1180,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const shareText = document.getElementById("share-text");
         const gameNumberDisplay = document.getElementById("game-number-display");
         const hardLuckLabel = document.getElementById("hard-luck-label");
+        const wellDoneLabel = document.getElementById("well-done-label");
 
         if (todaysWord) todaysWord.textContent = secretWord;
         if (gameNumberDisplay) {
@@ -1187,6 +1188,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (hardLuckLabel) {
             hardLuckLabel.style.display = failed ? "block" : "none";
+        }
+        if (wellDoneLabel) {
+            wellDoneLabel.style.display = won ? "block" : "none";
         }
 
         let shareMessage;

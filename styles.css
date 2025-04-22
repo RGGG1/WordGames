@@ -206,7 +206,7 @@ a {
   text-align: left;
   width: 85vw;
   max-width: 85vw;
-  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 0.9vh + 1.8vh) auto 0.9vh auto;
+  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 0.9vh + 1.8vh + 3.6vh) auto 0.9vh auto; /* Added +3.6vh for two lines */
   z-index: 5;
   line-height: 1.8vh;
   overflow: hidden;
@@ -240,7 +240,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 3.6vh);
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 3.6vh + 3.6vh); /* Adjusted for new-game-number-display */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -350,7 +350,7 @@ a {
   font-size: 3.25vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: 5.6vh 0 0 0; /* Increased from 1.6vh to move down two lines */
+  margin: 6.1vh 0 0 0; /* Increased from 5.6vh by 0.5vh for half a line */
   text-align: center;
 }
 
@@ -747,7 +747,7 @@ a {
 
 .create-form {
   align-items: center;
-eratify: flex-start;
+  justify-content: flex-start;
   overflow-y: auto; /* Changed to allow scrolling */
   background-size: cover; /* Stretch background to full screen */
 }
@@ -759,7 +759,7 @@ eratify: flex-start;
 
 #game-select-content {
   width: 85vw;
-  margin: -13vh auto 0 auto; /* Changed from -1vh to move up six lines */
+  margin: -7vh auto 0 auto; /* Changed from -13vh to -7vh to move down six lines (6vh = ~6 lines) */
   text-align: center;
   flex-grow: 1;
   display: flex;
@@ -872,6 +872,17 @@ eratify: flex-start;
   font-size: 3vh;
   font-weight: bold;
   color: #FFB300;
+  -webkit-text-stroke: 0.1vh #000000; /* Added black outline */
+  text-shadow: 1px 1px 2px #FFFFFF;
+  margin: 0.5vh auto;
+  display: none;
+}
+
+#well-done-label {
+  font-size: 3vh;
+  font-weight: bold;
+  color: #FFB300;
+  -webkit-text-stroke: 0.1vh #000000; /* Black outline */
   text-shadow: 1px 1px 2px #FFFFFF;
   margin: 0.5vh auto;
   display: none;
@@ -1125,7 +1136,7 @@ eratify: flex-start;
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + (1.92vh * 2));
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + (1.92vh * 2) + 3.2vh); /* Adjusted for new-game-number-display */
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1189,7 +1200,7 @@ eratify: flex-start;
   }
   #hints-label {
     font-size: 2.75vh;
-    margin: 5.2vh 0 0 0; /* Increased from 1.2vh to move down two lines */
+    margin: 5.7vh 0 0 0; /* Increased from 5.2vh by 0.5vh for half a line */
   }
   .hints-inline {
     font-size: 2.75vh;
@@ -1248,7 +1259,7 @@ eratify: flex-start;
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh) auto 0.8vh auto;
+    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh + 3.2vh) auto 0.8vh auto; /* Added +3.2vh for two lines */
   }
   .pineapple-piece {
     animation-timing-function: linear; /* Ensure smooth rendering */
@@ -1261,7 +1272,7 @@ eratify: flex-start;
     font-size: 4vh;
   }
   #game-select-content {
-    margin: -13vh auto 0 auto; /* Changed from -1vh to move up six lines */
+    margin: -7vh auto 0 auto; /* Changed from -13vh to -7vh to move down six lines (6vh = ~6 lines) */
   }
   #guess-container {
     margin-top: 4.2vh; /* Changed from 3.2vh */
