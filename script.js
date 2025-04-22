@@ -696,6 +696,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const guessesList = document.getElementById("guesses-list");
             console.log("Current guesses array:", guesses);
             if (guessesScreen.style.display === "flex") {
+                console.log("Closing guesses screen via guesses link");
                 guessesScreen.style.display = "none";
                 gameScreen.style.display = "flex";
                 const keyboard = document.getElementById("keyboard-container");
@@ -884,7 +885,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     officialList.offsetHeight;
                     officialList.style.display = "flex";
                     console.log("Forced repaint on official-list");
-                }, 0);
+                }, 0); // Fixed typo from 'boom' to 0
             }
         }
 
@@ -1044,7 +1045,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (screen) {
                 // Apply background to all screens, not just visible ones
                 screen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
-                screen.style.backgroundSize = "100% calc(100% - 24vh)";
+                screen.style.backgroundSize = screen.id === "create-form" ? "cover" : "100% calc(100% - 24vh)"; // Full screen for create-form
                 // Force repaint
                 screen.offsetHeight;
                 console.log(`Set background for ${screen.id} to ${currentBackground}`);
@@ -1143,7 +1144,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }, 350);
 
-            if (hintIndex < hints.length - 1) {
+            if (guessCount === 5) {
+                console.log("Max guesses (5) reached, ending game");
+                saveGameResult(currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple", currentGameNumber, secretWord, "X");
+                endGame(false, false, true);
+            } else if (hintIndex < hints.length - 1) {
                 revealHint();
             }
         }
@@ -1158,8 +1163,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Game result saved:", results);
     }
 
-    function endGame(won, gaveUp = false) {
-        console.log("Ending game", { won, gaveUp, guessCount, secretWord });
+    function endGame(won, gaveUp = false, failed = false) {
+        console.log("Ending game", { won, gaveUp, failed, guessCount, secretWord });
         gameOver = true;
         guessInput.disabled = true;
         guessBtn.disabled = true;
@@ -1174,14 +1179,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         const todaysWord = document.getElementById("todays-word");
         const shareText = document.getElementById("share-text");
         const gameNumberDisplay = document.getElementById("game-number-display");
+        const hardLuckLabel = document.getElementById("hard-luck-label");
 
         if (todaysWord) todaysWord.textContent = secretWord;
         if (gameNumberDisplay) {
             gameNumberDisplay.textContent = currentGameNumber;
         }
+        if (hardLuckLabel) {
+            hardLuckLabel.style.display = failed ? "block" : "none";
+        }
 
         let shareMessage;
-        if (gaveUp) {
+        if (gaveUp || failed) {
             shareMessage = `Play WORDY`;
         } else {
             shareMessage = `${currentGameNumber}\nI solved WORDY in\n<span class="guess-count">${guessCount}</span>\n${guessCount === 1 ? 'guess' : 'guesses'}`;

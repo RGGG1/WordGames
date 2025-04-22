@@ -272,7 +272,7 @@ a {
   justify-content: center;
   width: 100%;
   margin-bottom: 0.5vh;
-  margin-top: 3.7vh; /* Increased from 2.7vh to move down */
+  margin-top: 4.7vh; /* Changed from 3.7vh */
   position: relative;
 }
 
@@ -350,7 +350,7 @@ a {
   font-size: 3.25vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: 1.6vh 0 0 0; /* Reduced from 3.6vh since countdown is removed */
+  margin: 5.6vh 0 0 0; /* Increased from 1.6vh to move down two lines */
   text-align: center;
 }
 
@@ -688,14 +688,13 @@ a {
   height: 100vh;
   width: 100vw;
   box-sizing: border-box;
-  overflow: hidden;
   margin: 0;
   padding: 0;
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center top fixed;
-  background-size: 100% calc(100% - 24vh);
+  background: url('newbackground.png') no-repeat center center fixed;
+  background-size: cover; /* Changed for create-form */
   background-attachment: fixed;
   z-index: 1;
 }
@@ -748,8 +747,9 @@ a {
 
 .create-form {
   align-items: center;
-  justify-content: flex-start;
-  overflow-y: auto;
+eratify: flex-start;
+  overflow-y: auto; /* Changed to allow scrolling */
+  background-size: cover; /* Stretch background to full screen */
 }
 
 #game-select-screen {
@@ -759,7 +759,7 @@ a {
 
 #game-select-content {
   width: 85vw;
-  margin: 5vh auto 0 auto; /* Reduced from 7vh to 5vh */
+  margin: -13vh auto 0 auto; /* Changed from -1vh to move up six lines */
   text-align: center;
   flex-grow: 1;
   display: flex;
@@ -865,6 +865,15 @@ a {
 }
 
 #end-graphic {
+  display: none;
+}
+
+#hard-luck-label {
+  font-size: 3vh;
+  font-weight: bold;
+  color: #FFB300;
+  text-shadow: 1px 1px 2px #FFFFFF;
+  margin: 0.5vh auto;
   display: none;
 }
 
@@ -1070,6 +1079,11 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
+/* Hide keyboard on create-form screen */
+#create-form .keyboard {
+  display: none;
+}
+
 /* Mobile styles */
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
@@ -1175,7 +1189,7 @@ a {
   }
   #hints-label {
     font-size: 2.75vh;
-    margin: 1.2vh 0 0 0; /* Reduced for mobile */
+    margin: 5.2vh 0 0 0; /* Increased from 1.2vh to move down two lines */
   }
   .hints-inline {
     font-size: 2.75vh;
@@ -1247,9 +1261,9 @@ a {
     font-size: 4vh;
   }
   #game-select-content {
-    margin: 5vh auto 0 auto; /* Consistent with desktop */
+    margin: -13vh auto 0 auto; /* Changed from -1vh to move up six lines */
   }
   #guess-container {
-    margin-top: 3.2vh; /* Slightly less for mobile, adjusted from 3.7vh */
+    margin-top: 4.2vh; /* Changed from 3.2vh */
   }
 }
