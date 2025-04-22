@@ -767,7 +767,7 @@ a {
 
 #game-select-content {
   width: 85vw;
-  margin: -7vh auto 0 auto; /* Moved down 6 lines (6vh) */
+  margin: -1vh auto 0 auto; /* Updated: Moved down 6 lines from -7vh to -1vh */
   text-align: center;
   flex-grow: 1;
   display: flex;
