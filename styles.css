@@ -785,9 +785,9 @@ a {
 
 #game-select-content {
   width: 85vw;
-  margin: calc(5vh + 0.5vh + 5vh) auto 0 auto;
+  height: 80vh; /* Constrain content to 80vh */
+  margin: 5vh auto 0 auto; /* Align below 5vh header */
   text-align: center;
-  flex-grow: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -799,7 +799,7 @@ a {
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: 2vh 0;
+  margin: 1vh 0; /* Reduced margin for tighter layout */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -807,7 +807,7 @@ a {
 #tabs {
   display: flex;
   gap: 4vw;
-  margin-bottom: 2vh;
+  margin-bottom: 1vh; /* Reduced margin */
 }
 
 .tab-text {
@@ -828,6 +828,7 @@ a {
 .tab-content {
   display: none;
   width: 100%;
+  flex-grow: 1; /* Allow tab content to grow within #game-select-content */
 }
 
 .tab-content.active {
@@ -855,7 +856,7 @@ a {
   width: 85vw;
   overflow-y: auto;
   overflow-x: hidden;
-  flex-grow: 1;
+  flex-grow: 1; /* Take available space */
   margin-bottom: 2vh; /* Space before Back button */
 }
 
@@ -1314,21 +1315,30 @@ a {
     font-size: 4vh;
   }
   #game-select-content {
-    margin: calc(5vh + 0.5vh + 5vh) auto 0 auto;
+    width: 85vw;
+    height: 80vh; /* Constrain to 80vh on mobile */
+    margin: 5vh auto 0 auto; /* Align below 5vh header */
     padding-bottom: 4vh; /* Space for ad-box */
   }
+  #game-list-title {
+    font-size: 2.5vh; /* Slightly smaller for mobile */
+    margin: 1vh 0; /* Tighter margin */
+  }
+  #tabs {
+    margin-bottom: 1vh; /* Tighter margin */
+  }
   .game-list {
-    /* Calculate max-height: 100vh - header - game-number-display - ad-box - title - tabs - header-row - margins - button space */
-    max-height: calc(100vh - 5vh - 0.5vh - 4vh - 5vh - 2.5vh - 1.5vh - 2vh - 2vh - 4vh);
+    /* Max-height: 80vh - title - tabs - header-row - margins - button space - ad-box */
+    max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 4vh);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    margin-bottom: 2vh; /* Space before Back button */
+    margin-bottom: 2vh; /* Space for Back button */
   }
   #official-back-btn,
   #private-back-btn {
     font-size: clamp(2vh, 3vw, 3.15vh);
     padding: 0.75vh 1.5vw;
-    margin-bottom: 2vh; /* Two lines based on font-size (1vh per line) */
+    margin-bottom: 2vh; /* Two lines based on font-size */
   }
   #game-select-screen .keyboard {
     display: none !important;
