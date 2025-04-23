@@ -785,16 +785,15 @@ a {
 
 #game-select-content {
   width: 85vw;
-  height: 80vh; /* Use 80vh for content area */
-  margin: 10vh auto 0 auto; /* 10vh from top */
+  height: 80vh; /* Constrain content to 80vh */
+  margin: 5vh auto 0 auto; /* Align below 5vh header */
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Center content vertically */
   position: relative;
   z-index: 5;
-  padding-bottom: 10vh; /* Space for ad-box (4vh) + 6vh for 10vh bottom margin */
+  padding-bottom: 4vh; /* Space for ad-box */
 }
 
 #game-list-title {
@@ -857,8 +856,7 @@ a {
   width: 85vw;
   overflow-y: auto;
   overflow-x: hidden;
-  flex-grow: 1; /* Allow list to grow within available space */
-  max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 10vh); /* Adjust for title, tabs, header-row, margins, button, ad-box/bottom margin */
+  flex-grow: 1; /* Take available space */
   margin-bottom: 2vh; /* Space before Back button */
 }
 
@@ -1319,15 +1317,19 @@ a {
   #game-select-content {
     width: 85vw;
     height: 80vh; /* Constrain to 80vh on mobile */
-    margin: 10vh auto 0 auto; /* 10vh from top */
-    padding-bottom: 10vh; /* Space for ad-box (4vh) + 6vh for 10vh bottom margin */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center; /* Center content vertically */
+    margin: 5vh auto 0 auto; /* Align below 5vh header */
+    padding-bottom: 4vh; /* Space for ad-box */
+  }
+  #game-list-title {
+    font-size: 2.5vh; /* Slightly smaller for mobile */
+    margin: 1vh 0; /* Tighter margin */
+  }
+  #tabs {
+    margin-bottom: 1vh; /* Tighter margin */
   }
   .game-list {
-    max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 10vh); /* Adjust for title, tabs, header-row, margins, button, ad-box/bottom margin */
+    /* Max-height: 80vh - title - tabs - header-row - margins - button space - ad-box */
+    max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 4vh);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     margin-bottom: 2vh; /* Space for Back button */
