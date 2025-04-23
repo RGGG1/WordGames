@@ -34,7 +34,7 @@
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is....</div>
+                            <div id="prompt">The Secret Word is...</div>
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                         </div>
                         <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
@@ -98,7 +98,7 @@
         <div id="header">
             <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
             <div id="hamburger-menu" class="hamburger-menu">
-               ，不可button id="home-btn" class="menu-item">Home</button>
+                <button id="home-btn" class="menu-item">Home</button>
             </div>
             <span id="game-name">WORDY</span>
         </div>
@@ -155,26 +155,28 @@
                     <span>Guesses</span>
                 </div>
                 <div id="official-list" class="game-list"></div>
-                <div class="spacer"></div>
                 <button id="official-back-btn" class="control-btn">Back</button>
+                <div class="spacer"></div>
+                <div id="ad-box">
+                    <p>Big Brain Games</p>
+                </div>
             </div>
             <div id="private-games" class="tab-content">
                 <button id="create-pineapple" class="control-btn flash">
-                    Create a Wordy<br><span class="tap-here">(tap here)</span><br><span class="plus">+</span>
+                    Create a Wordy<br><span class="tap-here">(tap-here)</span><br><span class="plus">+</span>
                 </button>
-                <div class="spacer"></div>
                 <div class="game-list-header">
                     <span>Game Name</span>
                     <span>Word</span>
                     <span>Guesses</span>
                 </div>
                 <div id="private-list" class="game-list"></div>
-                <div class="spacer"></div>
                 <button id="private-back-btn" class="control-btn">Back</button>
+                <div class="spacer"></div>
+                <div id="ad-box">
+                    <p>Big Brain Games</p>
+                </div>
             </div>
-        </div>
-        <div id="ad-box">
-            <p>Big Brain Games</p>
         </div>
     </div>
 
@@ -188,27 +190,13 @@
         </div>
         <div class="form-content">
             <span id="game-number-display" class="game-number-display"></span>
-            <span class="form-input-label">Game Name</span>
             <input type="text" id="game-name-input" class="form-input" placeholder="Enter a name for your game" autocomplete="off" autocorrect="off" spellcheck="false">
-            <div class="form-line"></div>
-            <span class="form-input-label">Secret Word</span>
             <input type="text" id="secret-word" class="form-input" placeholder="Enter the secret word" autocomplete="off" autocorrect="off" spellcheck="false">
-            <div class="form-line"></div>
-            <span class="form-input-label">Hint #1</span>
             <input type="text" id="hint-1" class="form-input" placeholder="Enter hint #1" autocomplete="off" autocorrect="off" spellcheck="false">
-            <div class="form-line"></div>
-            <span class="form-input-label">Hint #2</span>
             <input type="text" id="hint-2" class="form-input" placeholder="Enter hint #2" autocomplete="off" autocorrect="off" spellcheck="false">
-            <div class="form-line"></div>
-            <span class="form-input-label">Hint #3</span>
             <input type="text" id="hint-3" class="form-input" placeholder="Enter hint #3" autocomplete="off" autocorrect="off" spellcheck="false">
-            <div class="form-line"></div>
-            <span class="form-input-label">Hint #4</span>
             <input type="text" id="hint-4" class="form-input" placeholder="Enter hint #4" autocomplete="off" autocorrect="off" spellcheck="false">
-            <div class="form-line"></div>
-            <span class="form-input-label">Hint #5</span>
             <input type="text" id="hint-5" class="form-input" placeholder="Enter hint #5" autocomplete="off" autocorrect="off" spellcheck="false">
-            <div class="form-line"></div>
             <button id="confirm-btn" class="control-btn">Create Game</button>
             <div class="back-btn-container">
                 <span class="or-text">or</span>
@@ -217,6 +205,15 @@
         </div>
         <div id="ad-box">
             <p>Big Brain Games</p>
+        </div>
+    </div>
+
+    <div id="form-error-dialog" class="dialog" style="display: none;">
+        <div class="dialog-content">
+            <span class="dialog-message"></span>
+            <div class="dialog-buttons">
+                <button id="form-error-ok-btn" class="control-btn">OK</button>
+            </div>
         </div>
     </div>
 

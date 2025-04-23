@@ -44,6 +44,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const nextGameArrow = document.getElementById("next-game-arrow");
     const guessInput = document.getElementById("guess-input");
     const guessArea = document.getElementById("guess-area");
+    const formErrorDialog = document.getElementById("form-error-dialog");
+    const formErrorOkBtn = document.getElementById("form-error-ok-btn");
+    const formErrorMessage = formErrorDialog?.querySelector(".dialog-message");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -515,7 +518,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Confirm button clicked");
             const secretWordInput = document.getElementById("secret-word").value.trim();
             if (secretWordInput.includes(" ") || secretWordInput === "") {
-                alert("Secret Word must be one word (no spaces) and cannot be empty.");
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Secret Word must be one word (no spaces) and cannot be empty.";
+                    formErrorDialog.style.display = "flex";
+                    activeInput = document.getElementById("secret-word");
+                }
                 return;
             }
 
@@ -530,7 +537,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
 
             if (!formData.gameName || !formData.secretWord || !formData.hint1 || !formData.hint2 || !formData.hint3 || !formData.hint4 || !formData.hint5) {
-                alert("Please fill in Game Name, Secret Word, and all Hints (1–5).");
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Please fill in Game Name, Secret Word, and all Hints (1–5).";
+                    formErrorDialog.style.display = "flex";
+                    activeInput = formData.gameName ? (formData.secretWord ? null : document.getElementById("secret-word")) : document.getElementById("game-name-input");
+                }
                 return;
             }
 
@@ -566,7 +577,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 setupKeyboardListeners();
             } catch (error) {
                 console.error("Error submitting form:", error);
-                alert("Failed to create game: " + error.message);
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Failed to create game: " + error.message;
+                    formErrorDialog.style.display = "flex";
+                }
             }
         };
         
@@ -575,6 +589,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         confirmBtn.addEventListener("touchstart", (e) => {
             e.preventDefault();
             clickHandler(e);
+        });
+    }
+
+    if (formErrorDialog && formErrorOkBtn && formErrorMessage) {
+        formErrorOkBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Form Error OK button clicked");
+            formErrorDialog.style.display = "none";
+            if (activeInput) activeInput.focus();
+            setupKeyboardListeners();
+        });
+
+        formErrorDialog.addEventListener("click", (e) => {
+            if (e.target === formErrorDialog) {
+                console.log("Clicked outside form error dialog");
+                formErrorDialog.style.display = "none";
+                if (activeInput) activeInput.focus();
+                setupKeyboardListeners();
+            }
         });
     }
 
@@ -750,6 +784,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (guessesScreen) guessesScreen.style.display = "none";
         if (giveUpDialog) giveUpDialog.style.display = "none";
         if (createForm) createForm.style.display = "none";
+        if (formErrorDialog) formErrorDialog.style.display = "none";
     }
 
     async function fetchGameData() {
@@ -808,7 +843,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             setupEventListeners();
             setupKeyboardListeners();
             updateArrowStates(0, allGames);
-            alert("Failed to load official games data. Using hardcoded game.");
+            if (formErrorDialog && formErrorMessage) {
+                formErrorMessage.textContent = "Failed to load official games data. Using hardcoded game.";
+                formErrorDialog.style.display = "flex";
+            }
         }
     }
 
@@ -1291,7 +1329,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function resetGame() {
-        console.log("Resetting Розыгрыш состояния");
+        console.log("Resetting game state");
         gameOver = false;
         secretWord = "";
         hints = [];
