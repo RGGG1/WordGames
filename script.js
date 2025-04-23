@@ -860,18 +860,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
-                    // Determine guesses display: '-', 'X', 'Gave Up', or number of guesses
-                    let guessesDisplay = '-';
+                    let guessesDisplay = '-'; // Default: game not played
+                    let showSecretWord = false;
+
                     if (pastResult) {
                         if (pastResult.guesses === "Gave Up") {
                             guessesDisplay = "Gave Up";
+                            showSecretWord = true;
                         } else if (pastResult.guesses === "X") {
                             guessesDisplay = "X";
+                            showSecretWord = true;
                         } else if (pastResult.secretWord === secretWord) {
-                            guessesDisplay = pastResult.guesses;
+                            guessesDisplay = String(pastResult.guesses); // Number of guesses
+                            showSecretWord = true;
                         }
                     }
-                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
+
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
                     const gameItem = document.createElement("div");
@@ -922,18 +926,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameName = game["Game Name"].toUpperCase();
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
-                    // Determine guesses display: '-', 'X', 'Gave Up', or number of guesses
-                    let guessesDisplay = '-';
+                    let guessesDisplay = '-'; // Default: game not played
+                    let showSecretWord = false;
+
                     if (pastResult) {
                         if (pastResult.guesses === "Gave Up") {
                             guessesDisplay = "Gave Up";
+                            showSecretWord = true;
                         } else if (pastResult.guesses === "X") {
                             guessesDisplay = "X";
+                            showSecretWord = true;
                         } else if (pastResult.secretWord === secretWord) {
-                            guessesDisplay = pastResult.guesses;
+                            guessesDisplay = String(pastResult.guesses); // Number of guesses
+                            showSecretWord = true;
                         }
                     }
-                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
+
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
                     const gameItem = document.createElement("div");
