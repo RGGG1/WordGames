@@ -34,7 +34,7 @@
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is.....div>
+                            <div id="prompt">The Secret Word is...</div>
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                         </div>
                         <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
@@ -98,7 +98,7 @@
         <div id="header">
             <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
             <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
+               ，不可button id="home-btn" class="menu-item">Home</button>
             </div>
             <span id="game-name">WORDY</span>
         </div>
@@ -186,68 +186,37 @@
             </div>
             <span id="game-name">WORDY</span>
         </div>
-        <span id="game-number-display" class="game-number-display"></span>
-        <span class="form-input-label">Game Name</span>
-        <input type="text" id="game-name-input" class="form-input" placeholder="Enter a name for your game" autocomplete="off" autocorrect="off" spellcheck="false">
-        <div class="form-line"></div>
-        <span class="form-input-label">Secret Word</span>
-        <input type="text" id="secret-word" class="form-input" placeholder="Enter the secret word" autocomplete="off" autocorrect="off" spellcheck="false">
-        <div class="form-line"></div>
-        <span class="form-input-label">Hint #1</span>
-        <input type="text" id="hint-1" class="form-input" placeholder="Enter hint #1" autocomplete="off" autocorrect="off" spellcheck="false">
-        <div class="form-line"></div>
-        <span class="form-input-label">Hint #2</span>
-        <input type="text" id="hint-2" class="form-input" placeholder="Enter hint #2" autocomplete="off" autocorrect="off" spellcheck="false">
-        <div class="form-line"></div>
-        <span class="form-input-label">Hint #3</span>
-        <input type="text" id="hint-3" class="form-input" placeholder="Enter hint #3" autocomplete="off" autocorrect="off" spellcheck="false">
-        <div class="form-line"></div>
-        <span class="form-input-label">Hint #4</span>
-        <input type="text" id="hint-4" class="form-input" placeholder="Enter hint #4" autocomplete="off" autocorrect="off" spellcheck="false">
-        <div class="form-line"></div>
-        <span class="form-input-label">Hint #5</span>
-        <input type="text" id="hint-5" class="form-input" placeholder="Enter hint #5" autocomplete="off" autocorrect="off" spellcheck="false">
-        <div class="form-line"></div>
-        <button id="confirm-btn" class="control-btn">Create Game</button>
-        <div class="back-btn-container">
-            <span class="or-text">or</span>
-            <button id="form-back-btn" class="control-btn">Back</button>
+        <div class="form-content">
+            <span id="game-number-display" class="game-number-display"></span>
+            <span class="form-input-label">Game Name</span>
+            <input type="text" id="game-name-input" class="form-input" placeholder="Enter a name for your game" autocomplete="off" autocorrect="off" spellcheck="false">
+            <div class="form-line"></div>
+            <span class="form-input-label">Secret Word</span>
+            <input type="text" id="secret-word" class="form-input" placeholder="Enter the secret word" autocomplete="off" autocorrect="off" spellcheck="false">
+            <div class="form-line"></div>
+            <span class="form-input-label">Hint #1</span>
+            <input type="text" id="hint-1" class="form-input" placeholder="Enter hint #1" autocomplete="off" autocorrect="off" spellcheck="false">
+            <div class="form-line"></div>
+            <span class="form-input-label">Hint #2</span>
+            <input type="text" id="hint-2" class="form-input" placeholder="Enter hint #2" autocomplete="off" autocorrect="off" spellcheck="false">
+            <div class="form-line"></div>
+            <span class="form-input-label">Hint #3</span>
+            <input type="text" id="hint-3" class="form-input" placeholder="Enter hint #3" autocomplete="off" autocorrect="off" spellcheck="false">
+            <div class="form-line"></div>
+            <span class="form-input-label">Hint #4</span>
+            <input type="text" id="hint-4" class="form-input" placeholder="Enter hint #4" autocomplete="off" autocorrect="off" spellcheck="false">
+            <div class="form-line"></div>
+            <span class="form-input-label">Hint #5</span>
+            <input type="text" id="hint-5" class="form-input" placeholder="Enter hint #5" autocomplete="off" autocorrect="off" spellcheck="false">
+            <div class="form-line"></div>
+            <button id="confirm-btn" class="control-btn">Create Game</button>
+            <div class="back-btn-container">
+                <span class="or-text">or</span>
+                <button id="form-back-btn" class="control-btn">Back</button>
+            </div>
         </div>
-        <div id="keyboard-container" class="keyboard">
-            <div class="keyboard-row">
-                <button class="key">Q</button>
-                <button class="key">W</button>
-                <button class="key">E</button>
-                <button class="key">R</button>
-                <button class="key">T</button>
-                <button class="key">Y</button>
-                <button class="key">U</button>
-                <button class="key">I</button>
-                <button class="key">O</button>
-                <button class="key">P</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="key">A</button>
-                <button class="key">S</button>
-                <button class="key">D</button>
-                <button class="key">F</button>
-                <button class="key">G</button>
-                <button class="key">H</button>
-                <button class="key">J</button>
-                <button class="key">K</button>
-                <button class="key">L</button>
-            </div>
-            <div class="keyboard-row">
-                <button class="key special" id="key-enter">ENTER</button>
-                <button class="key">Z</button>
-                <button class="key">X</button>
-                <button class="key">C</button>
-                <button class="key">V</button>
-                <button class="key">B</button>
-                <button class="key">N</button>
-                <button class="key">M</button>
-                <button class="key special" id="key-backspace"><i class="fas fa-backspace"></i></button>
-            </div>
+        <div id="ad-box">
+            <p>Big Brain Games</p>
         </div>
     </div>
 

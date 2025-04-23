@@ -423,7 +423,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             createForm.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+            if (keyboard) keyboard.style.display = "none"; // Always hide keyboard
             activeInput = document.getElementById("game-name-input");
             if (activeInput) activeInput.focus();
             adjustBackground();
@@ -559,7 +559,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 officialContent.classList.remove("active");
                 officialContent.style.display = "none";
                 const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = "none";
+                if (keyboard) keyboard.style.display = "none"; // Ensure keyboard stays hidden
                 await fetchPrivateGames();
                 displayGameList();
                 adjustBackground();
@@ -587,7 +587,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none"; // Show keyboard on game screen
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
             adjustBackground();
@@ -1219,7 +1219,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameNumberDisplay.textContent = currentGameNumber;
         }
         if (hardLuckLabel) {
-            hardLuckLabel.style.display = failed ? "block" : "none";
+            hardLuckLabel.style.display = (failed || gaveUp) ? "block" : "none";
         }
         if (wellDoneLabel) {
             wellDoneLabel.style.display = won ? "block" : "none";
@@ -1291,7 +1291,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function resetGame() {
-        console.log("Resetting game state");
+        console.log("Resetting Розыгрыш состояния");
         gameOver = false;
         secretWord = "";
         hints = [];

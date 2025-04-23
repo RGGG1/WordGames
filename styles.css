@@ -776,6 +776,11 @@ a {
   align-items: center;
   justify-content: flex-start;
   overflow-y: auto;
+  height: 100vh; /* Full viewport height */
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 5vh; /* Space for ad-box */
+  box-sizing: border-box;
 }
 
 #game-select-screen {
@@ -1135,6 +1140,45 @@ a {
   z-index: 5;
 }
 
+/* Form content container for create-form */
+#create-form .form-content {
+  width: 90vw;
+  max-height: calc(100vh - 10vh - 5vh - 4vh); /* Subtract header, ad-box, and padding */
+  overflow-y: auto;
+  padding: 1vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Form element styling for create-form */
+#create-form .form-input-label {
+  font-size: 2.5vh;
+  margin: 0.5vh 0;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+#create-form .form-input {
+  font-size: 3vh;
+  padding: 0.4vh 1vw;
+  margin: 0.4vh auto;
+}
+
+#create-form .form-line {
+  margin: 0.5vh auto;
+}
+
+#create-form .control-btn {
+  font-size: 2.5vh;
+  padding: 0.5vh 1.5vw;
+  margin: 0.5vh 0;
+}
+
+#create-form .back-btn-container {
+  margin: 1vh 0;
+}
+
 /* Mobile styles */
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
@@ -1346,5 +1390,28 @@ a {
   #game-screen .keyboard,
   #create-form .keyboard {
     display: flex;
+  }
+  /* Mobile adjustments for create-form */
+  #create-form .form-content {
+    max-height: calc(100vh - 10vh - 5vh - 4vh - 20vh); /* Account for on-screen keyboard */
+  }
+  #create-form .form-input-label {
+    font-size: 2vh;
+    margin: 0.4vh 0;
+  }
+  #create-form .form-input {
+    font-size: 2.5vh;
+    padding: 0.3vh 1vw;
+    margin: 0.3vh auto;
+  }
+  #create-form .form-line {
+    margin: 0.4vh auto;
+  }
+  #create-form .control-btn {
+    font-size: 2vh;
+    padding: 0.4vh 1.5vw;
+  }
+  #create-form .back-btn-container {
+    margin: 0.5vh 0;
   }
 }
