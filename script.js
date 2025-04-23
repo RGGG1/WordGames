@@ -595,72 +595,50 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Centralized function to close guesses screen
-    function closeGuessesScreen() {
-        guessesScreen.style.display = "none";
-        gameScreen.style.display = "flex";
-        const keyboard = document.getElementById("keyboard-container");
-        if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
-        activeInput = guessInput;
-        if (activeInput) activeInput.focus();
-        setupKeyboardListeners();
-        console.log("Guesses screen closed");
-    }
-
     if (guessesScreen && guessesCloseBtn) {
         guessesCloseBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Guesses close button clicked");
-            closeGuessesScreen();
+            guessesScreen.style.display = "none";
+            gameScreen.style.display = "flex";
+            const keyboard = document.getElementById("keyboard-container");
+            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+            activeInput = guessInput;
+            if (activeInput) activeInput.focus();
+            setupKeyboardListeners();
         });
 
-        // Click handler for closing guesses screen by clicking outside
+        // Click handler for closing guesses screen
         document.addEventListener("click", (e) => {
-            // Check if guesses screen is open
-            if (guessesScreen.style.display !== "flex") return;
-
-            // Ignore clicks on the guesses link itself to prevent toggling
-            if (e.target === guessesLink || guessesLink.contains(e.target)) {
-                console.log("Click on guesses link ignored for closing");
-                return;
+            if (guessesScreen.style.display === "flex" && 
+                !guessesScreen.contains(e.target) && 
+                e.target !== guessesLink) {
+                console.log("Clicked outside guesses screen");
+                guessesScreen.style.display = "none";
+                gameScreen.style.display = "flex";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+                activeInput = guessInput;
+                if (activeInput) activeInput.focus();
+                setupKeyboardListeners();
             }
+        });
 
-            // Ignore clicks within the guesses screen content
-            if (guessesScreen.contains(e.target)) {
-                console.log("Click inside guesses screen ignored");
-                return;
-            }
-
-            // Close the guesses screen for clicks anywhere else, including game screen
-            console.log("Clicked outside guesses screen, closing");
-            e.preventDefault();
-            e.stopPropagation();
-            closeGuessesScreen();
-        }, { passive: false });
-
-        // Touchstart handler for mobile to close guesses screen
+        // Touchstart handler for closing guesses screen on mobile
         document.addEventListener("touchstart", (e) => {
-            // Check if guesses screen is open
-            if (guessesScreen.style.display !== "flex") return;
-
-            // Ignore touches on the guesses link itself
-            if (e.target === guessesLink || guessesLink.contains(e.target)) {
-                console.log("Touch on guesses link ignored for closing");
-                return;
+            if (guessesScreen.style.display === "flex" && 
+                !guessesScreen.contains(e.target) && 
+                e.target !== guessesLink) {
+                console.log("Tapped outside guesses screen");
+                guessesScreen.style.display = "none";
+                gameScreen.style.display = "flex";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+                activeInput = guessInput;
+                if (activeInput) activeInput.focus();
+                setupKeyboardListeners();
             }
-
-            // Ignore touches within the guesses screen content
-            if (guessesScreen.contains(e.target)) {
-                console.log("Touch inside guesses screen ignored");
-                return;
-            }
-
-            // Close the guesses screen for touches anywhere else, including game screen
-            console.log("Touched outside guesses screen, closing");
-            e.preventDefault();
-            e.stopPropagation();
-            closeGuessesScreen();
         }, { passive: false });
     }
 
@@ -727,7 +705,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Current guesses array:", guesses);
             if (guessesScreen.style.display === "flex") {
                 console.log("Closing guesses screen via guesses link");
-                closeGuessesScreen();
+                guessesScreen.style.display = "none";
+                gameScreen.style.display = "flex";
+                const keyboard = document.getElementById("keyboard-container");
+                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+                activeInput = guessInput;
+                if (activeInput) activeInput.focus();
+                setupKeyboardListeners();
             } else {
                 guessesList.innerHTML = guesses.length > 0 
                     ? guesses.join(' <span class="separator yellow">|</span>   ')
@@ -1218,17 +1202,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const todaysWord = document.getElementById("todays-word");
         const shareText = document.getElementById("share-text");
-        let gameNumberDisplay, hardLuckLabel, wellDoneLabel;
-
-        // Note: The HTML does not have a game-number-display in #game-over, adjusting accordingly
-        // We'll use share-game-number instead as it exists in the HTML
-        const shareGameNumber = document.getElementById("share-game-number");
-        hardLuckLabel = document.getElementById("hard-luck-label");
-        wellDoneLabel = document.getElementById("well-done-label");
+        const gameNumberDisplay = document.getElementById("game-number-display");
+        const hardLuckLabel = document.getElementById("hard-luck-label");
+        const wellDoneLabel = document.getElementById("well-done-label");
 
         if (todaysWord) todaysWord.textContent = secretWord;
-        if (shareGameNumber) {
-            shareGameNumber.textContent = currentGameNumber;
+        if (gameNumberDisplay) {
+            gameNumberDisplay.textContent = currentGameNumber;
         }
         if (hardLuckLabel) {
             hardLuckLabel.style.display = failed ? "block" : "none";
@@ -1347,13 +1327,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}${game["Game Name"] ? " - Private" : ""}`;
         const newGameNumberDisplay = document.getElementById("new-game-number-display");
-        const gameNumberDisplays = document.querySelectorAll("#game-select-screen .game-number-display, #create-form .game-number-display");
+        const gameNumberDisplay = document.getElementById("game-number-display");
         if (newGameNumberDisplay) {
             newGameNumberDisplay.textContent = currentGameNumber;
         }
-        gameNumberDisplays.forEach(display => {
-            display.textContent = currentGameNumber;
-        });
+        if (gameNumberDisplay) {
+            gameNumberDisplay.textContent = currentGameNumber;
+        }
 
         currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
         console.log("Setting currentBackground to:", currentBackground);
