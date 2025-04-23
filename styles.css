@@ -32,14 +32,9 @@ a {
   top: 0;
   left: 0;
   z-index: 1;
-  pointer-events: none; /* Default to none */
   background: url('newbackground.png') no-repeat center top fixed;
   background-size: 100% calc(100% - 24vh); /* Fit above keyboard (20vh + 4vh) */
   background-attachment: fixed;
-}
-
-#game-screen.active {
-  pointer-events: auto; /* Enable clicks when guesses screen is open */
 }
 
 /* Header styling */
@@ -56,7 +51,7 @@ a {
   justify-content: flex-start;
   align-items: center;
   margin: 0;
-  padding: 0.5vh 2vw 0 2vw;
+  padding: 0.5vh 2vw 0 2vw; /* Added 0.5vh top padding */
   box-sizing: border-box;
 }
 
@@ -219,7 +214,7 @@ a {
   text-align: left;
   width: 85vw;
   max-width: 85vw;
-  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 0.9vh + 1.8vh + 3.6vh + 1.8vh) auto 0.9vh auto;
+  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 0.9vh + 1.8vh + 3.6vh) auto 0.9vh auto;
   z-index: 5;
   line-height: 1.8vh;
   overflow: hidden;
@@ -253,7 +248,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 3.6vh + 3.6vh - 2.7vh);
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 3.6vh + 3.6vh - 2.7vh); /* Moved up 1.5 lines */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -363,7 +358,7 @@ a {
   font-size: 3.25vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: calc(6.1vh - 4.875vh) 0 1.625vh 0;
+  margin: calc(6.1vh - 4.875vh) 0 1.625vh 0; /* Moved up 1.5 lines */
   text-align: center;
 }
 
@@ -380,7 +375,7 @@ a {
   font-family: 'Luckiest Guy', cursive;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  -webkit-text-stroke: 0.1vh #000000;
+  -webkit-text-stroke: 0.1vh #000000; /* Black outline */
   margin: 0;
   text-align: center;
   position: relative;
@@ -397,7 +392,7 @@ a {
 }
 
 .hints-inline .separator {
-  -webkit-text-stroke: 0.1vh #000000;
+  -webkit-text-stroke: 0.1vh #000000; /* Black outline for separator */
   color: #FFB300;
 }
 
@@ -757,7 +752,7 @@ a {
 }
 
 #guesses-screen {
-  background: rgba(255, 255, 255, 0.9);
+  background: #FFFFFF;
   position: fixed;
   top: 0;
   left: 0;
@@ -770,7 +765,6 @@ a {
   z-index: 150;
   overflow: hidden;
   box-sizing: border-box;
-  pointer-events: auto;
 }
 
 #game-over {
@@ -779,87 +773,9 @@ a {
 }
 
 .create-form {
-  width: 100vw;
-  height: 90vh;
-  margin: 5vh auto 0 auto;
-  display: none;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   overflow-y: auto;
-  position: relative;
-  z-index: 5;
-  padding-bottom: 4vh;
-  box-sizing: border-box;
-}
-
-.create-form > * {
-  margin: 0.5vh auto;
-  width: 85vw;
-  max-width: 90vw;
-}
-
-.form-input {
-  font-size: clamp(2.5vh, 3.75vw, 3.75vh);
-  font-weight: bold;
-  background: rgba(255, 255, 255, 0.85);
-  border: none;
-  width: 25ch;
-  max-width: 85vw;
-  text-align: center;
-  padding: 0.6vh 1vw;
-  margin: 0.6vh auto;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-  outline: none;
-  text-transform: uppercase;
-  position: relative;
-  z-index: 1;
-  display: block;
-  border-radius: 0.6vh;
-  box-sizing: border-box;
-}
-
-.form-input:focus {
-  background: rgba(255, 255, 255, 1);
-  box-shadow: 0 0 0.6vh rgba(255, 179, 0, 0.7);
-}
-
-.form-input::placeholder {
-  font-size: 2.25vh;
-  color: #AAAAAA;
-  text-align: center;
-  font-weight: normal;
-  text-transform: none;
-}
-
-.form-input:focus:not(:disabled)::after {
-  content: "|";
-  animation: blink 1s step-end infinite;
-  color: #000000;
-  position: absolute;
-  right: 50%;
-  transform: translateX(50%);
-  font-size: clamp(2.5vh, 3.75vw, 3.75vh);
-}
-
-.form-input-label {
-  font-size: 2vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
-.form-line {
-  width: 30ch;
-  max-width: 85vw;
-  height: 0.2vh;
-  background: #000000;
-  margin: 1vh auto;
-}
-
-.back-btn-container {
-  margin-top: 1vh;
-  margin-bottom: 2vh;
 }
 
 #game-select-screen {
@@ -869,22 +785,21 @@ a {
 
 #game-select-content {
   width: 85vw;
-  height: 90vh;
-  margin: 5vh auto 0 auto;
+  height: 80vh; /* Constrain content to 80vh */
+  margin: 5vh auto 0 auto; /* Align below 5vh header */
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   position: relative;
   z-index: 5;
-  padding-bottom: 4vh;
+  padding-bottom: 4vh; /* Space for ad-box */
 }
 
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: 1vh 0;
+  margin: 1vh 0; /* Reduced margin for tighter layout */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -892,7 +807,7 @@ a {
 #tabs {
   display: flex;
   gap: 4vw;
-  margin-bottom: 1vh;
+  margin-bottom: 1vh; /* Reduced margin */
 }
 
 .tab-text {
@@ -913,7 +828,7 @@ a {
 .tab-content {
   display: none;
   width: 100%;
-  flex-grow: 1;
+  flex-grow: 1; /* Allow tab content to grow within #game-select-content */
 }
 
 .tab-content.active {
@@ -941,9 +856,8 @@ a {
   width: 85vw;
   overflow-y: auto;
   overflow-x: hidden;
-  max-height: calc(90vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 4vh);
-  flex-grow: 0;
-  margin-bottom: 2vh;
+  flex-grow: 1; /* Take available space */
+  margin-bottom: 2vh; /* Space before Back button */
 }
 
 .game-list-row {
@@ -989,7 +903,7 @@ a {
   color: #FFB300;
   -webkit-text-stroke: 0.1vh #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
-  margin: 5vh auto 0.5vh auto;
+  margin: 0.5vh auto;
   display: none;
 }
 
@@ -999,7 +913,7 @@ a {
   color: #FFB300;
   -webkit-text-stroke: 0.1vh #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
-  margin: 5vh auto 0.5vh auto;
+  margin: 0.5vh auto;
   display: none;
 }
 
@@ -1105,6 +1019,63 @@ a {
   gap: 0.5vh;
 }
 
+.form-input {
+  font-size: clamp(3vh, 4.5vw, 4.5vh);
+  font-weight: bold;
+  background: rgba(255, 255, 255, 0.85);
+  border: none;
+  width: 25ch;
+  max-width: 90vw;
+  text-align: center;
+  padding: 0.5vh 1vw;
+  margin: 0.5vh auto 0.5vh auto;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+  outline: none;
+  text-transform: uppercase;
+  position: relative;
+  z-index: 1;
+  display: block;
+  border-radius: 0.6vh;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 0 0.6vh rgba(255, 179, 0, 0.7);
+}
+
+.form-input::placeholder {
+  font-size: 2.25vh;
+  color: #AAAAAA;
+  text-align: center;
+  font-weight: normal;
+  text-transform: none;
+}
+
+.form-input:focus:not(:disabled)::after {
+  content: "|";
+  animation: blink 1s step-end infinite;
+  color: #000000;
+  position: absolute;
+  right: 50%;
+  transform: translateX(50%);
+  font-size: clamp(3vh, 4.5vw, 4.5vh);
+}
+
+.form-line {
+  width: 30ch;
+  height: 0.2vh;
+  background: #000000;
+  transition: opacity 0.5s ease-out;
+  margin: 1.5vh auto 2vh auto;
+}
+
+.back-btn-container {
+  margin-top: 2vh;
+  margin-bottom: 25vh;
+}
+
 .or-text {
   font-size: 1.8vh;
   margin-bottom: 0.5vh;
@@ -1116,7 +1087,6 @@ a {
   width: 85vw;
   text-align: center;
   padding-top: 1vh;
-  pointer-events: auto;
 }
 
 #guesses-title {
@@ -1144,9 +1114,14 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
+/* Hide keyboard on create-form screen */
+#create-form .keyboard {
+  display: none;
+}
+
 /* Remove spacer */
 .spacer {
-  display: none;
+  display: none; /* Remove spacers to avoid unnecessary spacing */
 }
 
 /* Back button styling for game select screen */
@@ -1154,7 +1129,7 @@ a {
 #private-back-btn {
   font-size: clamp(2vh, 3vw, 3.15vh);
   padding: 0.75vh 1.5vw;
-  margin-bottom: 2vh;
+  margin-bottom: 2vh; /* Two lines based on font-size */
   position: relative;
   z-index: 5;
 }
@@ -1200,7 +1175,7 @@ a {
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + (1.92vh * 2) + 3.2vh - 2.4vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + (1.92vh * 2) + 3.2vh - 2.4vh); /* Moved up 1.5 lines */
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1264,7 +1239,7 @@ a {
   }
   #hints-label {
     font-size: 2.75vh;
-    margin: calc(5.7vh - 4.125vh) 0 1.375vh 0;
+    margin: calc(5.7vh - 4.125vh) 0 1.375vh 0; /* Moved up 1.5 lines */
   }
   .hints-inline {
     font-size: 2.75vh;
@@ -1313,10 +1288,21 @@ a {
     font-size: 2vh;
     padding: 0.5vh 1.5vw;
   }
+  .form-input {
+    font-size: clamp(2.5vh, 3.75vw, 3.75vh);
+    padding: 0.6vh 1.5vw;
+    margin: 0.6vh auto;
+  }
+  .form-input::placeholder {
+    font-size: 1.875vh;
+  }
+  .form-input:focus:not(:disabled)::after {
+    font-size: clamp(2.5vh, 3.75vw, 3.75vh);
+  }
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh + 3.2vh + 1.6vh) auto 0.8vh auto;
+    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh + 3.2vh) auto 0.8vh auto;
   }
   .pineapple-piece {
     animation-timing-function: linear;
@@ -1330,49 +1316,35 @@ a {
   }
   #game-select-content {
     width: 85vw;
-    height: 90vh;
-    margin: 5vh auto 0 auto;
-    padding-bottom: 4vh;
+    height: 80vh; /* Constrain to 80vh on mobile */
+    margin: 5vh auto 0 auto; /* Align below 5vh header */
+    padding-bottom: 4vh; /* Space for ad-box */
+  }
+  #game-list-title {
+    font-size: 2.5vh; /* Slightly smaller for mobile */
+    margin: 1vh 0; /* Tighter margin */
+  }
+  #tabs {
+    margin-bottom: 1vh; /* Tighter margin */
   }
   .game-list {
-    max-height: calc(90vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 4vh);
+    /* Max-height: 80vh - title - tabs - header-row - margins - button space - ad-box */
+    max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 4vh);
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    margin-bottom: 2vh;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    margin-bottom: 2vh; /* Space for Back button */
   }
   #official-back-btn,
   #private-back-btn {
     font-size: clamp(2vh, 3vw, 3.15vh);
     padding: 0.75vh 1.5vw;
-    margin-bottom: 2vh;
+    margin-bottom: 2vh; /* Two lines based on font-size */
   }
   #game-select-screen .keyboard {
     display: none !important;
   }
-  #game-screen .keyboard {
+  #game-screen .keyboard,
+  #create-form .keyboard {
     display: flex;
-  }
-  .create-form {
-    width: 100vw;
-    height: 90vh;
-    margin: 5vh auto 0 auto;
-    padding-bottom: 4vh;
-  }
-  .form-input {
-    font-size: clamp(2vh, 3vw, 3vh);
-    padding: 0.5vh 1vw;
-    margin: 0.5vh auto;
-  }
-  .form-input::placeholder {
-    font-size: 1.875vh;
-  }
-  .form-input:focus:not(:disabled)::after {
-    font-size: clamp(2vh, 3vw, 3vh);
-  }
-  .form-input-label {
-    font-size: 1.8vh;
-  }
-  .form-line {
-    margin: 0.8vh auto;
   }
 }
