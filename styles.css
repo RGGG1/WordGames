@@ -32,8 +32,8 @@ a {
   top: 0;
   left: 0;
   z-index: 1;
-  background: url('newbackground.png') no-repeat center top fixed;
-  background-size: 100% calc(100% - 24vh); /* Fit above keyboard (20vh + 4vh) */
+  background: url('newbackground.png') no-repeat center top fixed, #FFFFFF; /* Fallback background color */
+  background-size: 100% calc(100% - 24vh); /* Fit above keyboard (20vh + 4vh ad-box) */
   background-attachment: fixed;
 }
 
@@ -248,7 +248,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 3.6vh + 3.6vh - 2.7vh); /* Moved up 1.5 lines */
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh); /* Adjusted to align below header and controls */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -358,7 +358,7 @@ a {
   font-size: 3.25vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: calc(6.1vh - 4.875vh) 0 1.625vh 0; /* Moved up 1.5 lines */
+  margin: 1vh 0 1.625vh 0; /* Reset to original margin */
   text-align: center;
 }
 
@@ -701,7 +701,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed;
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Fallback background color */
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
@@ -720,7 +720,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed;
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Fallback background color */
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
@@ -785,15 +785,16 @@ a {
 
 #game-select-content {
   width: 85vw;
-  height: 80vh; /* Constrain content to 80vh */
-  margin: 5vh auto 0 auto; /* Align below 5vh header */
+  height: 80vh;
+  margin: 0 auto; /* Removed 10vh top margin to move content up */
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   position: relative;
   z-index: 5;
-  padding-bottom: 4vh; /* Space for ad-box */
+  padding-bottom: 10vh; /* Space for ad-box (4vh) + 6vh for 10vh bottom margin */
 }
 
 #game-list-title {
@@ -856,7 +857,8 @@ a {
   width: 85vw;
   overflow-y: auto;
   overflow-x: hidden;
-  flex-grow: 1; /* Take available space */
+  flex-grow: 1;
+  max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh); /* Adjusted for removed top margin */
   margin-bottom: 2vh; /* Space before Back button */
 }
 
@@ -1175,7 +1177,7 @@ a {
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + (1.92vh * 2) + 3.2vh - 2.4vh); /* Moved up 1.5 lines */
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh); /* Adjusted for mobile */
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1239,7 +1241,7 @@ a {
   }
   #hints-label {
     font-size: 2.75vh;
-    margin: calc(5.7vh - 4.125vh) 0 1.375vh 0; /* Moved up 1.5 lines */
+    margin: 1vh 0 1.375vh 0; /* Reset to original mobile margin */
   }
   .hints-inline {
     font-size: 2.75vh;
@@ -1316,29 +1318,25 @@ a {
   }
   #game-select-content {
     width: 85vw;
-    height: 80vh; /* Constrain to 80vh on mobile */
-    margin: 5vh auto 0 auto; /* Align below 5vh header */
-    padding-bottom: 4vh; /* Space for ad-box */
-  }
-  #game-list-title {
-    font-size: 2.5vh; /* Slightly smaller for mobile */
-    margin: 1vh 0; /* Tighter margin */
-  }
-  #tabs {
-    margin-bottom: 1vh; /* Tighter margin */
+    height: 80vh;
+    margin: 0 auto; /* Removed 10vh top margin */
+    padding-bottom: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
   .game-list {
-    /* Max-height: 80vh - title - tabs - header-row - margins - button space - ad-box */
-    max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 4vh);
+    max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh); /* Adjusted for removed top margin */
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    margin-bottom: 2vh; /* Space for Back button */
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 2vh;
   }
   #official-back-btn,
   #private-back-btn {
     font-size: clamp(2vh, 3vw, 3.15vh);
     padding: 0.75vh 1.5vw;
-    margin-bottom: 2vh; /* Two lines based on font-size */
+    margin-bottom: 2vh;
   }
   #game-select-screen .keyboard {
     display: none !important;

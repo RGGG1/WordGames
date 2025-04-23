@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let animationTimeout = null;
     let activeInput = null;
     let currentBackground = "newbackground.png";
+    let backgroundLoaded = false; // Track if currentBackground loads successfully
 
     const gameScreen = document.getElementById("game-screen");
     const gameOverScreen = document.getElementById("game-over");
@@ -56,6 +57,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     const defaultBackground = "newbackground.png";
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+    // Preload background image to verify loading
+    const preloadImage = new Image();
+    preloadImage.src = currentBackground;
+    preloadImage.onload = () => {
+        console.log("Background image loaded successfully:", currentBackground);
+        backgroundLoaded = true;
+    };
+    preloadImage.onerror = () => {
+        console.error("Failed to load background image:", currentBackground);
+        backgroundLoaded = false;
+        currentBackground = defaultBackground; // Fallback to default
+    };
 
     if (hamburgerBtn) {
         console.log("Hamburger button found:", hamburgerBtn);
@@ -1207,19 +1221,36 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function adjustBackground() {
-        console.log("Adjusting background for current screen");
+        console.log("Adjusting background for current screen", { isMobile, currentBackground, backgroundLoaded });
+        const bgImage = backgroundLoaded ? currentBackground : defaultBackground;
+        console.log("Applying background image:", bgImage);
+
         const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
             if (screen && screen.style.display !== "none") {
-                screen.style.backgroundImage = `url('${currentBackground}')`;
+                // Prioritize mobile styling
                 if (screen === gameScreen) {
-                    screen.style.backgroundSize = "100% calc(100% - 24vh)";
+                    screen.style.backgroundImage = `url('${bgImage}')`;
+                    screen.style.backgroundSize = isMobile ? "100% calc(100% - 24vh)" : "100% calc(100% - 24vh)";
+                    screen.style.backgroundPosition = isMobile ? "center top" : "center top";
+                    screen.style.backgroundRepeat = "no-repeat";
+                    screen.style.backgroundAttachment = "fixed";
+                    console.log(`Applied background to ${screen.id}: size=${screen.style.backgroundSize}, position=${screen.style.backgroundPosition}`);
                 } else {
+                    screen.style.backgroundImage = `url('${bgImage}')`;
                     screen.style.backgroundSize = "cover";
+                    screen.style.backgroundPosition = "center center";
+                    screen.style.backgroundRepeat = "no-repeat";
+                    screen.style.backgroundAttachment = "fixed";
+                    console.log(`Applied background to ${screen.id}: size=cover, position=center center`);
                 }
-                screen.style.backgroundPosition = "center center";
-                screen.style.backgroundRepeat = "no-repeat";
-                screen.style.backgroundAttachment = "fixed";
+                // Force repaint to ensure background is applied
+                setTimeout(() => {
+                    screen.style.display = "none";
+                    screen.offsetHeight;
+                    screen.style.display = "flex";
+                    console.log(`Forced repaint on ${screen.id} to apply background`);
+                }, 0);
             }
         });
     }
