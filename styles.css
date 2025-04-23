@@ -214,7 +214,7 @@ a {
   text-align: left;
   width: 85vw;
   max-width: 85vw;
-  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 0.9vh + 1.8vh + 3.6vh) auto 0.9vh auto;
+  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 0.9vh + 1.8vh + 3.6vh + 1.8vh) auto 0.9vh auto; /* Added 1.8vh to move down one line */
   z-index: 5;
   line-height: 1.8vh;
   overflow: hidden;
@@ -724,6 +724,8 @@ a {
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
+  justify-content: center; /* Center content vertically */
+  align-items: center;
 }
 
 #game-over::before,
@@ -752,7 +754,7 @@ a {
 }
 
 #guesses-screen {
-  background: #FFFFFF;
+  background: rgba(255, 255, 255, 0.9); /* Slightly transparent to show game screen */
   position: fixed;
   top: 0;
   left: 0;
@@ -762,7 +764,7 @@ a {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  z-index: 150;
+  z-index: 150; /* Ensure above game screen (z-index: 1) */
   overflow: hidden;
   box-sizing: border-box;
 }
@@ -778,19 +780,15 @@ a {
   overflow-y: auto;
 }
 
-#game-select-screen {
-  justify-content: flex-start;
-  align-items: center;
-}
-
 #game-select-content {
   width: 85vw;
-  height: 80vh; /* Constrain content to 80vh */
-  margin: 5vh auto 0 auto; /* Align below 5vh header */
+  height: 90vh; /* Use 90vh for content */
+  margin: 0 auto; /* Center horizontally, no top margin */
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* Center content vertically within 90vh */
   position: relative;
   z-index: 5;
   padding-bottom: 4vh; /* Space for ad-box */
@@ -1087,6 +1085,9 @@ a {
   width: 85vw;
   text-align: center;
   padding-top: 1vh;
+  background: #FFFFFF; /* Solid background for content */
+  border-radius: 0.6vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
 
 #guesses-title {
@@ -1130,8 +1131,6 @@ a {
   font-size: clamp(2vh, 3vw, 3.15vh);
   padding: 0.75vh 1.5vw;
   margin-bottom: 2vh; /* Two lines based on font-size */
-  position: relative;
-  z-index: 5;
 }
 
 /* Mobile styles */
@@ -1302,7 +1301,7 @@ a {
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh + 3.2vh) auto 0.8vh auto;
+    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh + 3.2vh + 1.6vh) auto 0.8vh auto; /* Added 1.6vh to move down one line */
   }
   .pineapple-piece {
     animation-timing-function: linear;
@@ -1316,8 +1315,8 @@ a {
   }
   #game-select-content {
     width: 85vw;
-    height: 80vh; /* Constrain to 80vh on mobile */
-    margin: 5vh auto 0 auto; /* Align below 5vh header */
+    height: 90vh; /* Use 90vh on mobile */
+    margin: 0 auto; /* Center horizontally */
     padding-bottom: 4vh; /* Space for ad-box */
   }
   #game-list-title {
@@ -1328,8 +1327,8 @@ a {
     margin-bottom: 1vh; /* Tighter margin */
   }
   .game-list {
-    /* Max-height: 80vh - title - tabs - header-row - margins - button space - ad-box */
-    max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 4vh);
+    /* Max-height: 90vh - title - tabs - header-row - margins - button space - ad-box */
+    max-height: calc(90vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 4vh);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
     margin-bottom: 2vh; /* Space for Back button */
