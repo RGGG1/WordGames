@@ -655,16 +655,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Give Up Yes button clicked");
             gaveUp = true;
-            let originalGameNumber;
+            let normalizedGameNumber;
+            let gameType;
             if (currentGameNumber.includes("- Private")) {
                 const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                const privateGame = privateGames.find(game => game["Game Number"] === String(currentNum));
-                originalGameNumber = privateGame ? privateGame["Game Number"] : currentGameNumber;
+                normalizedGameNumber = String(currentNum);
+                gameType = "privatePineapple";
             } else {
-                originalGameNumber = currentGameNumber;
+                normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                gameType = "pineapple";
             }
-            const gameType = currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple";
-            saveGameResult(gameType, originalGameNumber, secretWord, "Gave Up");
+            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
             giveUpDialog.style.display = "none";
             endGame(false, true);
         });
@@ -1181,8 +1182,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
         console.log("Saving game result", { gameType, gameNumber, secretWord, guesses });
         const resultsKey = gameType === "pineapple" ? "pineappleResults" : "privatePineappleResults";
+        // Normalize gameNumber to match game["Game Number"]
+        let normalizedGameNumber = gameNumber;
+        if (gameType === "pineapple") {
+            normalizedGameNumber = gameNumber.replace("Game #", "");
+        } else {
+            normalizedGameNumber = gameNumber.split(" - ")[0];
+        }
         const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
-        results[gameNumber] = { secretWord, guesses };
+        results[normalizedGameNumber] = { secretWord, guesses };
         localStorage.setItem(resultsKey, JSON.stringify(results));
         console.log("Game result saved:", results);
     }

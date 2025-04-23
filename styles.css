@@ -785,21 +785,21 @@ a {
 
 #game-select-content {
   width: 85vw;
-  height: 80vh; /* Constrain content to 80vh */
-  margin: 5vh auto 0 auto; /* Align below 5vh header */
+  height: 85vh; /* Constrain content to 85vh */
+  margin: 7.5vh auto; /* 7.5vh top and bottom */
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center; /* Center content vertically */
   position: relative;
   z-index: 5;
-  padding-bottom: 4vh; /* Space for ad-box */
 }
 
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: 1vh 0; /* Reduced margin for tighter layout */
+  margin: 1vh 0; /* Tight margin to fit within 85vh */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -807,7 +807,7 @@ a {
 #tabs {
   display: flex;
   gap: 4vw;
-  margin-bottom: 1vh; /* Reduced margin */
+  margin: 1vh 0; /* Tight margin */
 }
 
 .tab-text {
@@ -828,13 +828,13 @@ a {
 .tab-content {
   display: none;
   width: 100%;
-  flex-grow: 1; /* Allow tab content to grow within #game-select-content */
+  height: calc(85vh - 3vh - 2vh - 2vh - 3.15vh - 2vh); /* 85vh minus title, tabs, header, button, margins */
+  flex-direction: column;
+  align-items: center;
 }
 
 .tab-content.active {
   display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .game-list-header {
@@ -843,7 +843,7 @@ a {
   width: 85vw;
   font-size: clamp(1.5vh, 2vw, 2vh);
   font-weight: bold;
-  margin-bottom: 1vh;
+  margin: 1vh 0;
   text-align: center;
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
@@ -856,8 +856,9 @@ a {
   width: 85vw;
   overflow-y: auto;
   overflow-x: hidden;
-  flex-grow: 1; /* Take available space */
-  margin-bottom: 2vh; /* Space before Back button */
+  flex-grow: 1; /* Take available space within tab-content */
+  margin: 0; /* Remove bottom margin to fit */
+  max-height: calc(85vh - 3vh - 2vh - 2vh - 3.15vh - 2vh); /* Ensure list fits */
 }
 
 .game-list-row {
@@ -1129,7 +1130,7 @@ a {
 #private-back-btn {
   font-size: clamp(2vh, 3vw, 3.15vh);
   padding: 0.75vh 1.5vw;
-  margin-bottom: 2vh; /* Two lines based on font-size */
+  margin: 1vh 0; /* Tight margin to fit */
   position: relative;
   z-index: 5;
 }
@@ -1316,29 +1317,28 @@ a {
   }
   #game-select-content {
     width: 85vw;
-    height: 80vh; /* Constrain to 80vh on mobile */
-    margin: 5vh auto 0 auto; /* Align below 5vh header */
-    padding-bottom: 4vh; /* Space for ad-box */
+    height: 85vh;
+    margin: 7.5vh auto; /* 7.5vh top and bottom */
   }
   #game-list-title {
     font-size: 2.5vh; /* Slightly smaller for mobile */
     margin: 1vh 0; /* Tighter margin */
   }
   #tabs {
-    margin-bottom: 1vh; /* Tighter margin */
+    margin: 1vh 0; /* Tighter margin */
+  }
+  .tab-content {
+    height: calc(85vh - 2.5vh - 2vh - 2vh - 3.15vh - 2vh); /* Adjust for smaller title */
   }
   .game-list {
-    /* Max-height: 80vh - title - tabs - header-row - margins - button space - ad-box */
-    max-height: calc(80vh - 2.5vh - 1vh - 2vh - 2vh - 4vh - 4vh);
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
-    margin-bottom: 2vh; /* Space for Back button */
+    max-height: calc(85vh - 2.5vh - 2vh - 2vh - 3.15vh - 2vh);
+    margin: 0;
   }
   #official-back-btn,
   #private-back-btn {
     font-size: clamp(2vh, 3vw, 3.15vh);
     padding: 0.75vh 1.5vw;
-    margin-bottom: 2vh; /* Two lines based on font-size */
+    margin: 1vh 0;
   }
   #game-select-screen .keyboard {
     display: none !important;
