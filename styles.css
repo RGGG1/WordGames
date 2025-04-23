@@ -511,6 +511,10 @@ a {
   padding: 0;
 }
 
+#game-over #ad-box {
+  bottom: 0; /* Ensure ad box is at the bottom of the viewport */
+}
+
 #ad-box p {
   margin: 0;
   font-size: 1.5vh;
@@ -702,7 +706,7 @@ a {
   top: 0;
   left: 0;
   background: url('newbackground.png') no-repeat center center fixed;
-  background-size: cover;
+  background-size: 100% 100%; /* Stretch to fill full screen */
   background-attachment: fixed;
   z-index: 1;
 }
@@ -1391,10 +1395,13 @@ a {
   #game-over {
     height: 95vh; /* Ensure content fits within 95vh */
     padding-bottom: 4vh; /* Space for ad-box */
-    background-size: cover; /* Full screen background */
+    background-size: 100% 100%; /* Stretch background to full screen */
   }
   #game-over .keyboard {
     display: none; /* Explicitly hide keyboard */
+  }
+  #game-over #ad-box {
+    bottom: 0; /* Ensure ad box is at the bottom */
   }
   #share-section {
     margin: 0.5vh auto; /* Reduced margin to fit content */
