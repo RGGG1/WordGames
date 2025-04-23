@@ -1218,7 +1218,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const todaysWord = document.getElementById("todays-word");
         const shareText = document.getElementById("share-text");
-        const gameNumberDisplay, hardLuckLabel, wellDoneLabel;
+        let gameNumberDisplay, hardLuckLabel, wellDoneLabel;
 
         // Note: The HTML does not have a game-number-display in #game-over, adjusting accordingly
         // We'll use share-game-number instead as it exists in the HTML
