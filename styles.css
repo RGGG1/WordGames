@@ -268,8 +268,7 @@ a {
   padding: 0;
 }
 
-#guess-area:hover,
-#guess-input:hover {
+#guess-area:hover, #guess-input:hover {
   outline: none;
   border: none;
 }
@@ -291,7 +290,6 @@ a {
   align-items: center;
 }
 
-/* Guess input container */
 #guess-input-container {
   position: relative;
   width: calc(100% - 30%);
@@ -305,7 +303,16 @@ a {
   padding: 1vh 2.5vw;
 }
 
-/* Guess input field */
+#prompt {
+  font-size: 3vh;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+  position: absolute;
+  top: 0.5vh;
+  left: 1vw;
+  text-align: left;
+}
+
 #guess-input {
   font-size: 4.5vh;
   font-weight: bold;
@@ -345,9 +352,7 @@ a {
 }
 
 @keyframes blink {
-  50% {
-    opacity: 0;
-  }
+  50% { opacity: 0; }
 }
 
 /* Show cursor only when input is empty and not disabled */
@@ -359,16 +364,6 @@ a {
 #guess-input:disabled ~ .cursor,
 #guess-input:not(:placeholder-shown) ~ .cursor {
   display: none !important;
-}
-
-#prompt {
-  font-size: 3vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-  position: absolute;
-  top: 0.5vh;
-  left: 1vw;
-  text-align: left;
 }
 
 /* Hints label */
@@ -781,13 +776,8 @@ a {
 }
 
 @keyframes flashRed {
-  0%,
-  100% {
-    background-color: rgba(255, 255, 255, 0.85);
-  }
-  50% {
-    background-color: #FF0000;
-  }
+  0%, 100% { background-color: rgba(255, 255, 255, 0.85); }
+  50% { background-color: #FF0000; }
 }
 
 /* Pineapple rain animation */
@@ -811,86 +801,18 @@ a {
 }
 
 @keyframes fall {
-  0% {
-    transform: translateY(-5vh) translateX(0) rotate(var(--rotation));
-    opacity: 1;
+  0% { 
+      transform: translateY(-5vh) translateX(0) rotate(var(--rotation));
+      opacity: 1; 
   }
-  80% {
-    transform: translateY(100vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
-    opacity: 1;
+  80% { 
+      transform: translateY(100vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
+      opacity: 1; 
   }
-  100% {
-    transform: translateY(105vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
-    opacity: 0;
+  100% { 
+      transform: translateY(105vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
+      opacity: 0; 
   }
-}
-
-/* Wrong guess overlay */
-#wrong-guess-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: 15; /* Above game elements but below keyboard (z-index: 20) */
-  pointer-events: none; /* Allow interaction with elements underneath */
-}
-
-#wrong-guess-overlay.hidden {
-  display: none;
-}
-
-/* Red blinking fade animation for wrong guess */
-#wrong-guess-overlay.red-fade {
-  display: block;
-  background: rgba(139, 0, 0, 0.7); /* Deep red with opacity */
-  animation: blinkRedFade 0.5s ease-in-out 4; /* Blink 4 times in 2 seconds (0.5s per blink) */
-}
-
-@keyframes blinkRedFade {
-  0%,
-  100% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.7;
-  }
-}
-
-/* White fade with hints box exclusion */
-#wrong-guess-overlay.white-fade {
-  display: block;
-  background: rgba(255, 255, 255, 0.9); /* White fade */
-  animation: fadeToWhite 0.3s ease-in forwards; /* Transition to white fade */
-}
-
-@keyframes fadeToWhite {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 0.9;
-  }
-}
-
-/* Highlight hints box by excluding it from the white fade */
-#wrong-guess-overlay.white-fade ~ #game-screen .hints-inline::before {
-  display: block !important; /* Ensure the background is visible */
-  background: transparent !important; /* Remove the default background */
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Add a subtle shadow to highlight */
-  z-index: 16; /* Above the white fade */
-}
-
-/* Ensure hints box content is visible during white fade */
-#wrong-guess-overlay.white-fade ~ #game-screen .hints-inline {
-  z-index: 17; /* Above the white fade and its ::before */
-}
-
-/* Ensure keyboard is not affected by the overlay */
-#wrong-guess-overlay.red-fade,
-#wrong-guess-overlay.white-fade {
-  height: calc(100vh - 24vh); /* Exclude keyboard (20vh) and ad-box (4vh) */
-  bottom: 24vh; /* Position above keyboard and ad-box */
 }
 
 /* Backgrounds for other screens */
@@ -1044,7 +966,7 @@ a {
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: 11.3vh 0 0.5vh 0; /* Adjusted to move down three lines */
+  margin: 0.5vh 0;
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -1073,7 +995,7 @@ a {
 .tab-content {
   display: none;
   width: 100%;
-  height: 56.25vh; /* Adjusted for increased margin-top of #game-list-title */
+  height: calc(85vh - 3vh - 2vh - 0.5vh - 3.15vh - 0.5vh - 4vh - 4.8vh);
   flex-direction: column;
   align-items: center;
 }
@@ -1125,21 +1047,11 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-.green {
-  color: #006400;
-}
-.yellow {
-  color: #FFB300;
-}
-.orange {
-  color: #FF4500;
-}
-.pink {
-  color: #C71585;
-}
-.red {
-  color: #8B0000;
-}
+.green { color: #006400; }
+.yellow { color: #FFB300; }
+.orange { color: #FF4500; }
+.pink { color: #C71585; }
+.red { color: #8B0000; }
 
 .play-now {
   color: #000000;
@@ -1168,7 +1080,7 @@ a {
   font-weight: bold;
   color: #FFB300;
   -webkit-text-stroke: 0.1vh #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
+  text-shadow: 1px 1px 2px #WHITE;
   margin: 0.5vh auto;
   display: none;
 }
@@ -1533,13 +1445,13 @@ a {
   }
   #game-list-title {
     font-size: 2.5vh;
-    margin: 5.55vh 0 0.3vh 0; /* Adjusted to move down three lines */
+    margin: -3.45vh 0 0.3vh 0; /* Previous adjustment, retained */
   }
   #tabs {
     margin: 0.3vh 0;
   }
   .tab-content {
-    height: 62.7vh; /* Adjusted for increased margin-top of #game-list-title */
+    height: calc(85vh - 2.5vh - 2vh - 0.3vh - 3.15vh - 0.3vh - 4vh - 4.8vh);
   }
   .game-list {
     max-height: calc(85vh - 2.5vh - 2vh - 0.3vh - 3.15vh - 0.3vh - 4vh - 4.8vh);
