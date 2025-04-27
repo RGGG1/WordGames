@@ -344,7 +344,7 @@ a {
   line-height: 5.5vh;
   position: absolute;
   left: 50%;
-  top: 60%; /* Moved lower */
+  top: 60%;
   transform: translate(-50%, -50%);
   animation: blink 0.7s step-end infinite;
   pointer-events: none;
@@ -355,15 +355,24 @@ a {
   50% { opacity: 0; }
 }
 
-/* Show cursor when input is empty and not disabled */
-#guess-input:not(:disabled):placeholder-shown ~ .cursor {
+/* Show cursor only when input is empty and not disabled */
+#guess-input:placeholder-shown:not(:disabled) ~ .cursor {
   display: inline-block;
 }
 
-/* Hide cursor when input is disabled or has text */
-#guess-input:disabled ~ .cursor,
-#guess-input:not(:placeholder-shown) ~ .cursor {
+/* Hide cursor when input has any text or is disabled */
+#guess-input:not(:placeholder-shown) ~ .cursor,
+#guess-input:disabled ~ .cursor {
   display: none;
+}
+
+/* Mobile-specific cursor adjustments */
+@media (max-width: 600px) or (max-height: 600px) {
+  .cursor {
+    font-size: 3.75vh;
+    line-height: 4vh;
+    top: 60%;
+  }
 }
 
 /* Hints label */
@@ -1284,13 +1293,6 @@ a {
       font-family: 'Luckiest Guy', cursive;
       box-sizing: content-box;
       z-index: 6;
-  }
-  .cursor {
-      font-size: 3.75vh;
-      line-height: 4vh;
-      left: 50%;
-      top: 60%; /* Moved lower */
-      transform: translate(-50%, -50%);
   }
   .guess-btn {
       font-size: 3vh;
