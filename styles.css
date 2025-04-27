@@ -51,7 +51,7 @@ a {
   justify-content: flex-start;
   align-items: center;
   margin: 0;
-  padding: 0.5vh 2vw 0 2vw; /* Added 0.5vh top padding */
+  padding: 0.5vh 2vw 0 2vw;
   box-sizing: border-box;
 }
 
@@ -363,7 +363,7 @@ a {
 /* Hide cursor when input is disabled or has any text */
 #guess-input:disabled ~ .cursor,
 #guess-input:not(:placeholder-shown) ~ .cursor {
-  display: none;
+  display: none !important;
 }
 
 /* Hints label */
@@ -452,7 +452,7 @@ a {
   bottom: 4vh;
   background: #FFFFFF;
   z-index: 10;
-  padding: 0.3vh 0;
+  padding: 0.2vh 0;
   box-sizing: border-box;
   pointer-events: auto;
   overflow: hidden;
@@ -479,8 +479,8 @@ a {
 .keyboard-row {
   display: flex;
   justify-content: center;
-  margin-bottom: 0.4vh;
-  gap: 0.4vw;
+  margin-bottom: 0.3vh;
+  gap: 0.3vw;
 }
 
 .key {
@@ -1345,25 +1345,25 @@ a {
     width: 100vw;
     height: 20vh;
     max-height: 20vh;
-    padding: 0.3vh 0;
+    padding: 0.1vh 0;
     bottom: 4vh;
   }
   .keyboard-row {
-    gap: 0.3vw;
-    margin-bottom: 0.3vh;
+    gap: 0.2vw;
+    margin-bottom: 0.2vh;
   }
   .key {
-    font-size: 2.25vh;
-    width: 9.375vw;
-    max-width: 4.375vh;
-    height: 6.25vh;
-    line-height: 6.25vh;
+    font-size: 2.5vh;
+    width: 10vw;
+    max-width: 5vh;
+    height: 6.5vh;
+    line-height: 6.5vh;
     border-radius: 0.5vh;
   }
   .key.special {
-    width: 13.75vw;
-    max-width: 6.875vh;
-    font-size: 2vh;
+    width: 15vw;
+    max-width: 7.5vh;
+    font-size: 2.25vh;
   }
   .dialog-message {
     font-size: 2vh;

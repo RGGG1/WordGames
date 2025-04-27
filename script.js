@@ -44,6 +44,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const nextGameArrow = document.getElementById("next-game-arrow");
     const guessInput = document.getElementById("guess-input");
     const guessArea = document.getElementById("guess-area");
+    const guessInputContainer = document.getElementById("guess-input-container");
     const formErrorDialog = document.getElementById("form-error-dialog");
     const formErrorOkBtn = document.getElementById("form-error-ok-btn");
     const formErrorMessage = formErrorDialog?.querySelector(".dialog-message");
@@ -82,8 +83,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         updateCursorVisibility();
 
-        // Update on input changes
+        // Update on input changes for mobile compatibility
         guessInput.addEventListener("input", updateCursorVisibility);
+        guessInput.addEventListener("change", updateCursorVisibility);
+        guessInput.addEventListener("keyup", updateCursorVisibility);
+        guessInput.addEventListener("touchstart", updateCursorVisibility);
 
         // Update when disabled state changes
         const observer = new MutationObserver(updateCursorVisibility);
@@ -130,23 +134,51 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("guess-input not found in DOM");
     }
 
+    // Tap guess box to show keyboard
+    if (guessInputContainer) {
+        guessInputContainer.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guess input container clicked");
+            if (isMobile && keyboardContainer.classList.contains("show-alternate")) {
+                showKeyboard();
+            }
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
+        });
+        guessInputContainer.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guess input container touched");
+            if (isMobile && keyboardContainer.classList.contains("show-alternate")) {
+                showKeyboard();
+            }
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
+        });
+    }
+
     if (guessArea) {
         guessArea.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Guess area clicked");
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
-                console.log("Guess area clicked, input focused");
             }
         });
         guessArea.addEventListener("touchstart", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            console.log("Guess area touched");
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
-                console.log("Guess area touched, input focused");
             }
         });
     }
@@ -278,7 +310,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function showKeyboard() {
         if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardGiveUpContent && keyboardBackBtn) {
             keyboardContainer.classList.remove("show-alternate", "show-guesses", "show-give-up");
-            keyboardContent.style.display = "block";
+            keyboardContent.style.display = "flex";
             keyboardGuessesContent.style.display = "none";
             keyboardGiveUpContent.style.display = "none";
             keyboardBackBtn.style.display = "none";
@@ -994,7 +1026,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (giveUpDialog) giveUpDialog.style.display = "none";
         if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardGiveUpContent && keyboardBackBtn) {
             keyboardContainer.classList.remove("show-alternate", "show-guesses", "show-give-up");
-            keyboardContent.style.display = "block";
+            keyboardContent.style.display = "flex";
             keyboardGuessesContent.style.display = "none";
             keyboardGiveUpContent.style.display = "none";
             keyboardBackBtn.style.display = "none";
