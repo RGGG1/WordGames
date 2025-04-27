@@ -586,7 +586,7 @@ a {
 
 #guesses-list span.separator {
   color: #FFB300;
-  text-shadow: 1px 1px 2px #FFFFFF;
+;  text-shadow: 1px 1px 2px #FFFFFF;
 }
 
 #guesses-close-btn {
@@ -816,7 +816,41 @@ a {
 }
 
 /* Backgrounds for other screens */
-#game-over,
+#game-over {
+  display: none;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100vh; /* Use full viewport height */
+  width: 100vw;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: url('newbackground.png') no-repeat center center fixed;
+  background-size: cover; /* Ensure background covers full screen */
+  background-attachment: fixed;
+  z-index: 1;
+}
+
+#game-over::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+}
+
+#game-over > * {
+  position: relative;
+  z-index: 2;
+}
+
 #create-form {
   display: none;
   flex-direction: column;
@@ -829,7 +863,7 @@ a {
   top: 0;
   left: 0;
   background: url('newbackground.png') no-repeat center center fixed;
-  background-size: 100% 100%;
+  background-size: cover;
   background-attachment: fixed;
   z-index: 1;
 }
@@ -894,13 +928,6 @@ a {
   box-sizing: border-box;
 }
 
-#game-over {
-  justify-content: space-between;
-  align-items: center;
-  height: 95vh;
-  padding-bottom: 4vh;
-}
-
 .create-form {
   align-items: center;
   justify-content: flex-start;
@@ -920,7 +947,7 @@ a {
 #game-select-content {
   width: 85vw;
   height: 85vh;
-  margin: 7.5vh auto;
+  margin: 7.5vh auto; /* Default margin for private tab */
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -928,6 +955,11 @@ a {
   justify-content: flex-start;
   position: relative;
   z-index: 5;
+}
+
+/* Reduce margin when official tab is active */
+#official-games.active ~ #game-select-content {
+  margin: 3.75vh auto; /* Half of 7.5vh for official games */
 }
 
 #game-list-title {
@@ -1152,7 +1184,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5vh;
+  gap: 1.5vh; /* Increased gap for more space between buttons */
 }
 
 .form-input {
@@ -1317,8 +1349,8 @@ a {
     font-size: clamp(2.5vh, 3.5vw, 3.65vh);
   }
   #next-game-btn-end {
-    font-size: 4.725vh;
-    padding: 1.125vh 2.25vw;
+    font-size: 4vh;
+    padding: 0.75vh 2vw;
   }
   #next-game-btn-end:hover {
     font-size: 5.225vh;
@@ -1402,8 +1434,11 @@ a {
   #game-select-content {
     width: 85vw;
     height: 85vh;
-    margin: 7.5vh auto;
+    margin: 7.5vh auto; /* Default for private tab */
     justify-content: flex-start;
+  }
+  #official-games.active ~ #game-select-content {
+    margin: 3.75vh auto; /* Half margin for official games */
   }
   #game-list-title {
     font-size: 2.5vh;
@@ -1454,18 +1489,18 @@ a {
   }
   /* Mobile adjustments for game-over screen */
   #game-over {
-    height: 95vh;
-    padding-bottom: 4vh;
-    background-size: 100% 100%;
-  }
-  #game-over .keyboard {
-    display: none;
+    height: 100vh; /* Ensure full height */
+    padding-bottom: 0; /* Remove padding to avoid extra space */
+    background-size: cover; /* Cover full screen */
   }
   #game-over #ad-box {
-    bottom: 0;
+    bottom: 0; /* Keep ad box at bottom */
+  }
+  #game-over .keyboard {
+    display: none !important; /* Ensure keyboard is hidden */
   }
   #share-section {
-    margin: 0.5vh auto;
+    margin: 0 auto; /* Reduced to move buttons up */
   }
   #share-buttons {
     margin-bottom: 0.75vh;
@@ -1477,6 +1512,9 @@ a {
   #create-pineapple-end {
     font-size: 2.5vh;
     padding: 0.5vh 1.5vw;
+  }
+  .end-buttons {
+    gap: 2vh; /* Further increase gap on mobile for extra line of space */
   }
   /* Mobile adjustments for keyboard alternate content */
   .keyboard-back-btn {
