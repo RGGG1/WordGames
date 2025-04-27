@@ -60,6 +60,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
+    // Initialize cursor
+    function initializeCursor() {
+        const guessInputContainer = document.getElementById("guess-input-container");
+        const cursor = document.createElement("span");
+        cursor.className = "cursor";
+        cursor.textContent = "|";
+        guessInputContainer.appendChild(cursor);
+
+        function updateCursorVisibility() {
+            cursor.style.display = guessInput.disabled ? "none" : "inline-block";
+        }
+
+        updateCursorVisibility();
+
+        const observer = new MutationObserver(updateCursorVisibility);
+        observer.observe(guessInput, { attributes: true, attributeFilter: ["disabled"] });
+
+        guessInput.addEventListener("input", updateCursorVisibility);
+    }
+
     if (hamburgerBtn) {
         console.log("Hamburger button found:", hamburgerBtn);
     }
@@ -1402,6 +1422,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
         setupKeyboardListeners();
     }
+
+    // Initialize cursor before fetching games
+    initializeCursor();
 
     await fetchGameData();
     await fetchPrivateGames();

@@ -300,7 +300,7 @@ a {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 1vh 1vw;
+  padding: 1vh 2.5vw; /* Increased right padding for cursor */
 }
 
 #prompt {
@@ -325,7 +325,7 @@ a {
   position: absolute;
   bottom: -0.5vh;
   left: 0;
-  padding: 0 1vw;
+  padding: 0 2.5vw; /* Increased right padding for cursor */
   margin: 0;
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
@@ -336,22 +336,28 @@ a {
   z-index: 6;
 }
 
-/* Always show blinking cursor when not disabled */
-#guess-input:not(:disabled)::after {
-  content: "|";
-  animation: blink 0.7s step-end infinite;
+/* Cursor styling */
+.cursor {
+  display: inline-block;
   color: #000000;
-  position: absolute;
-  right: 1vw; /* Position at the right edge, adjusted for padding */
-  top: 50%;
-  transform: translateY(-50%);
   font-size: 4.5vh;
   line-height: 5.5vh;
+  position: absolute;
+  right: 0.5vw;
+  top: 50%;
+  transform: translateY(-50%);
+  animation: blink 0.7s step-end infinite;
   pointer-events: none;
+  z-index: 7;
 }
 
 @keyframes blink {
   50% { opacity: 0; }
+}
+
+/* Hide cursor when input is disabled */
+#guess-input:disabled ~ .cursor {
+  display: none;
 }
 
 /* Hints label */
@@ -377,7 +383,7 @@ a {
   font-family: 'Luckiest Guy', cursive;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  -webkit-text-stroke: 0.1vh #000000; /* Black outline */
+  -webkit-text-stroke: 0.1vh #000000;
   margin: 0 0 2vh 0;
   text-align: center;
   position: relative;
@@ -394,7 +400,7 @@ a {
 }
 
 .hints-inline .separator {
-  -webkit-text-stroke: 0.1vh #000000; /* Black outline for separator */
+  -webkit-text-stroke: 0.1vh #000000;
   color: #FFB300;
 }
 
@@ -514,7 +520,7 @@ a {
 }
 
 #game-over #ad-box {
-  bottom: 0; /* Ensure ad box is at the bottom of the viewport */
+  bottom: 0;
 }
 
 #ad-box p {
@@ -708,7 +714,7 @@ a {
   top: 0;
   left: 0;
   background: url('newbackground.png') no-repeat center center fixed;
-  background-size: 100% 100%; /* Stretch to fill full screen */
+  background-size: 100% 100%;
   background-attachment: fixed;
   z-index: 1;
 }
@@ -774,20 +780,20 @@ a {
 }
 
 #game-over {
-  justify-content: space-between; /* Distribute content to use full height */
+  justify-content: space-between;
   align-items: center;
-  height: 95vh; /* Fit within 95vh, leaving 5vh for ad-box */
-  padding-bottom: 4vh; /* Space for ad-box */
+  height: 95vh;
+  padding-bottom: 4vh;
 }
 
 .create-form {
   align-items: center;
   justify-content: flex-start;
   overflow-y: auto;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   display: flex;
   flex-direction: column;
-  padding-bottom: 5vh; /* Space for ad-box */
+  padding-bottom: 5vh;
   box-sizing: border-box;
 }
 
@@ -798,8 +804,8 @@ a {
 
 #game-select-content {
   width: 85vw;
-  height: 85vh; /* Constrain content to 85vh */
-  margin: 7.5vh auto; /* 7.5vh top and bottom */
+  height: 85vh;
+  margin: 7.5vh auto;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -1004,7 +1010,7 @@ a {
   flex-direction: column;
   align-items: center;
   margin: 1vh auto;
-  flex-grow: 1; /* Allow share section to expand and fill available space */
+  flex-grow: 1;
 }
 
 #share-label {
@@ -1128,7 +1134,7 @@ a {
 
 /* Spacer for game select screen */
 .spacer {
-  height: 4.8vh; /* Three lines at 1.6vh line-height */
+  height: 4.8vh;
   width: 100%;
 }
 
@@ -1209,7 +1215,7 @@ a {
   #guess-input-container {
     height: 9vh;
     width: calc(100% - 30%);
-    padding: 1vh 1vw;
+    padding: 1vh 2.5vw; /* Increased right padding for cursor */
   }
   #guess-input {
     font-size: 3.75vh;
@@ -1218,7 +1224,7 @@ a {
     top: calc(50% + 2.4vh);
     transform: translateY(-50%);
     left: 0;
-    padding: 0 1vw;
+    padding: 0 2.5vw; /* Increased right padding for cursor */
     margin: 0;
     color: #000000;
     text-shadow: 1px 1px 2px #FFFFFF;
@@ -1228,10 +1234,10 @@ a {
     box-sizing: content-box;
     z-index: 6;
   }
-  #guess-input:not(:disabled)::after {
+  .cursor {
     font-size: 3.75vh;
     line-height: 4vh;
-    right: 1vw;
+    right: 0.5vw;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -1399,28 +1405,28 @@ a {
   }
   /* Mobile adjustments for game-over screen */
   #game-over {
-    height: 95vh; /* Ensure content fits within 95vh */
-    padding-bottom: 4vh; /* Space for ad-box */
-    background-size: 100% 100%; /* Stretch background to full screen */
+    height: 95vh;
+    padding-bottom: 4vh;
+    background-size: 100% 100%;
   }
   #game-over .keyboard {
-    display: none; /* Explicitly hide keyboard */
+    display: none;
   }
   #game-over #ad-box {
-    bottom: 0; /* Ensure ad box is at the bottom */
+    bottom: 0;
   }
   #share-section {
-    margin: 0.5vh auto; /* Reduced margin to fit content */
+    margin: 0.5vh auto;
   }
   #share-buttons {
-    margin-bottom: 0.75vh; /* Reduced to fit */
+    margin-bottom: 0.75vh;
   }
   #next-game-btn-end {
-    font-size: 4vh; /* Slightly smaller to fit */
+    font-size: 4vh;
     padding: 0.75vh 2vw;
   }
   #create-pineapple-end {
-    font-size: 2.5vh; /* Smaller to fit */
+    font-size: 2.5vh;
     padding: 0.5vh 1.5vw;
   }
 }
