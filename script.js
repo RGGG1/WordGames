@@ -351,7 +351,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         keyboardBackBtn.addEventListener("touchstart", (e) => {
             e.preventDefault();
             console.log("Keyboard back button touched");
-            showKeyboard();
+ me           showKeyboard();
         });
     }
 
@@ -778,10 +778,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (guessesCloseBtn) {
-        guessesCloseBtn.addEventListener("click", (e) => {
+        const closeHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guesses close button clicked");
+            console.log("Guesses close button clicked/touched");
             if (isMobile) {
                 showKeyboard();
             } else {
@@ -791,20 +791,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                     activeInput = guessInput;
                 }
             }
-        });
-        guessesCloseBtn.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            console.log("Guesses close button touched");
-            if (isMobile) {
-                showKeyboard();
-            } else {
-                guessesScreen.style.display = "none";
-                if (guessInput && !gameOver && !isProcessingGuess) {
-                    guessInput.focus();
-                    activeInput = guessInput;
-                }
-            }
-        });
+        };
+
+        guessesCloseBtn.addEventListener("click", closeHandler);
+        guessesCloseBtn.addEventListener("touchstart", closeHandler);
     }
 
     if (giveUpLink && giveUpYesBtn && giveUpNoBtn) {
@@ -874,10 +864,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
 
     if (keyboardGiveUpYesBtn) {
-        keyboardGiveUpYesBtn.addEventListener("click", (e) => {
+        const yesHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Mobile Give Up Yes button clicked");
+            console.log("Mobile Give Up Yes button clicked/touched");
             gaveUp = true;
             let normalizedGameNumber;
             let gameType;
@@ -890,49 +880,27 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameType = "pineapple";
             }
             saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
-            showKeyboard();
-            endGame(false, true);
-        });
-        keyboardGiveUpYesBtn.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            console.log("Mobile Give Up Yes button touched");
-            gaveUp = true;
-            let normalizedGameNumber;
-            let gameType;
-            if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                normalizedGameNumber = String(currentNum);
-                gameType = "privatePineapple";
-            } else {
-                normalizedGameNumber = currentGameNumber.replace("Game #", "");
-                gameType = "pineapple";
-            }
-            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
-            showKeyboard();
-            endGame(false, true);
-        });
+            endGame(false, true); // Navigate to end screen without showing keyboard
+        };
+
+        keyboardGiveUpYesBtn.addEventListener("click", yesHandler);
+        keyboardGiveUpYesBtn.addEventListener("touchstart", yesHandler);
     }
 
     if (keyboardGiveUpNoBtn) {
-        keyboardGiveUpNoBtn.addEventListener("click", (e) => {
+        const noHandler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Mobile Give Up No button clicked");
+            console.log("Mobile Give Up No button clicked/touched");
             showKeyboard();
             if (guessInput && !gameOver && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
             }
-        });
-        keyboardGiveUpNoBtn.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            console.log("Mobile Give Up No button touched");
-            showKeyboard();
-            if (guessInput && !gameOver && !isProcessingGuess) {
-                guessInput.focus();
-                activeInput = guessInput;
-            }
-        });
+        };
+
+        keyboardGiveUpNoBtn.addEventListener("click", noHandler);
+        keyboardGiveUpNoBtn.addEventListener("touchstart", noHandler);
     }
 
     if (guessesLink && guessesScreen) {

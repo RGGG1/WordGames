@@ -452,7 +452,7 @@ a {
   bottom: 4vh;
   background: #FFFFFF;
   z-index: 10;
-  padding: 0.2vh 0;
+  padding: 0.5vh 0.5vw; /* Added small padding */
   box-sizing: border-box;
   pointer-events: auto;
   overflow: hidden;
@@ -467,9 +467,10 @@ a {
 .keyboard-content {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-between; /* Distribute rows evenly */
   width: 100%;
   height: 100%;
+  gap: 0.5vh; /* Vertical spacing between rows */
 }
 
 .keyboard.show-alternate .keyboard-content {
@@ -479,19 +480,20 @@ a {
 .keyboard-row {
   display: flex;
   justify-content: center;
-  margin-bottom: 0.3vh;
-  gap: 0.3vw;
+  align-items: center;
+  gap: 0.5vw; /* Horizontal spacing between keys */
+  flex: 1; /* Rows take equal height */
 }
 
 .key {
-  font-size: 2.5vh;
-  width: 8.5vw; /* Reduced from 10vw (~15%) */
-  max-width: 4.25vh; /* Reduced from 5vh (~15%) */
-  height: 5.84vh; /* Reduced from 6.875vh (~15%) */
-  line-height: 5.84vh;
+  font-size: 2.25vh; /* Slightly reduced for better fit */
+  width: 9vw; /* Adjusted to fit 10 keys with gaps */
+  max-width: 4.5vh;
+  height: 100%; /* Fill row height */
+  line-height: normal; /* Center text vertically */
   background: #D3D6DA;
   border: 0.1vh solid #999999;
-  border-radius: 0.625vh;
+  border-radius: 0.5vh;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -502,9 +504,9 @@ a {
 }
 
 .key.special {
-  width: 12.75vw; /* Reduced from 15vw (~15%) */
-  max-width: 6.375vh; /* Reduced from 7.5vh (~15%) */
-  font-size: 2.25vh;
+  width: 13.5vw; /* Adjusted for Enter/Backspace */
+  max-width: 6.75vh;
+  font-size: 2vh;
 }
 
 .key:hover {
@@ -1344,25 +1346,24 @@ a {
     width: 100vw;
     height: 20vh;
     max-height: 20vh;
-    padding: 0.1vh 0;
+    padding: 0.4vh 0.4vw;
     bottom: 4vh;
   }
+  .keyboard-content {
+    gap: 0.4vh;
+  }
   .keyboard-row {
-    gap: 0.2vw;
-    margin-bottom: 0.2vh;
+    gap: 0.4vw;
   }
   .key {
-    font-size: 2.5vh;
-    width: 8.5vw; /* Reduced from 10vw (~15%) */
-    max-width: 4.25vh; /* Reduced from 5vh (~15%) */
-    height: 5.525vh; /* Reduced from 6.5vh (~15%) */
-    line-height: 5.525vh;
-    border-radius: 0.5vh;
+    font-size: 2vh;
+    width: 9.2vw;
+    max-width: 4.6vh;
   }
   .key.special {
-    width: 12.75vw; /* Reduced from 15vw (~15%) */
-    max-width: 6.375vh; /* Reduced from 7.5vh (~15%) */
-    font-size: 2.25vh;
+    width: 13.8vw;
+    max-width: 6.9vh;
+    font-size: 1.8vh;
   }
   .dialog-message {
     font-size: 2vh;
