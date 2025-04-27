@@ -336,16 +336,18 @@ a {
   z-index: 6;
 }
 
-/* Blinking cursor when focused and not disabled */
-#guess-input:focus:not(:disabled)::after {
+/* Always show blinking cursor when not disabled */
+#guess-input:not(:disabled)::after {
   content: "|";
-  animation: blink 1s step-end infinite;
+  animation: blink 0.7s step-end infinite;
   color: #000000;
   position: absolute;
-  right: 50%;
-  transform: translateX(50%);
+  right: 1vw; /* Position at the right edge, adjusted for padding */
+  top: 50%;
+  transform: translateY(-50%);
   font-size: 4.5vh;
   line-height: 5.5vh;
+  pointer-events: none;
 }
 
 @keyframes blink {
@@ -549,7 +551,7 @@ a {
 .dialog-message {
   font-size: 2.5vh;
   color: #000000;
-  displayvester: block;
+  display: block;
   margin-bottom: 2vh;
 }
 
@@ -1068,7 +1070,7 @@ a {
 
 .form-input:focus:not(:disabled)::after {
   content: "|";
-  animation: blink 1s step-end infinite;
+  animation: blink 0.7s step-end infinite;
   color: #000000;
   position: absolute;
   right: 50%;
@@ -1226,9 +1228,12 @@ a {
     box-sizing: content-box;
     z-index: 6;
   }
-  #guess-input:focus:not(:disabled)::after {
+  #guess-input:not(:disabled)::after {
     font-size: 3.75vh;
     line-height: 4vh;
+    right: 1vw;
+    top: 50%;
+    transform: translateY(-50%);
   }
   .guess-btn {
     font-size: 3vh;
