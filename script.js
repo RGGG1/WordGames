@@ -49,6 +49,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formErrorMessage = formErrorDialog?.querySelector(".dialog-message");
     const keyboardContainer = document.getElementById("keyboard-container");
     const keyboardBackBtn = document.getElementById("keyboard-back-btn");
+    const keyboardContent = document.getElementById("keyboard-content");
+    const keyboardGuessesContent = document.getElementById("keyboard-guesses-content");
+    const keyboardGiveUpContent = document.getElementById("keyboard-give-up-content");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -227,7 +230,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Skipping on-screen keyboard setup on desktop");
             return;
         }
-        const keys = document.querySelectorAll("#keyboard-container .key");
+        const keys = document.querySelectorAll("#keyboard-content .key");
         console.log("Setting up keyboard listeners, found keys:", keys.length);
         keys.forEach(key => {
             if (key._clickHandler) {
@@ -270,18 +273,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Function to show keyboard and hide alternate content
     function showKeyboard() {
-        if (keyboardContainer) {
-            keyboardContainer.classList.remove("show-guesses", "show-give-up");
-            keyboardContainer.classList.add("show-keyboard");
-            if (keyboardBackBtn) keyboardBackBtn.style.display = "none";
+        if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardGiveUpContent && keyboardBackBtn) {
+            keyboardContainer.classList.remove("show-alternate", "show-guesses", "show-give-up");
+            keyboardContent.style.display = "block";
+            keyboardGuessesContent.style.display = "none";
+            keyboardGiveUpContent.style.display = "none";
+            keyboardBackBtn.style.display = "none";
             console.log("Showing keyboard");
-        }
-        if (guessInput && !gameOver && !isProcessingGuess) {
-            guessInput.focus();
-            activeInput = guessInput;
-        }
-        if (isMobile) {
-            setupKeyboardListeners();
+            if (guessInput && !gameOver && !isProcessingGuess) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
+            if (isMobile) {
+                setupKeyboardListeners();
+            }
         }
     }
 
@@ -719,10 +724,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Give Up link clicked");
             if (isMobile) {
-                if (keyboardContainer) {
-                    keyboardContainer.classList.remove("show-keyboard", "show-guesses");
-                    keyboardContainer.classList.add("show-give-up");
-                    if (keyboardBackBtn) keyboardBackBtn.style.display = "block";
+                if (keyboardContainer && keyboardContent && keyboardGiveUpContent && keyboardBackBtn) {
+                    keyboardContainer.classList.add("show-alternate", "show-give-up");
+                    keyboardContent.style.display = "none";
+                    keyboardGuessesContent.style.display = "none";
+                    keyboardGiveUpContent.style.display = "flex";
+                    keyboardBackBtn.style.display = "block";
                     console.log("Showing give-up content in keyboard container");
                 }
             } else {
@@ -731,7 +738,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.log("Showing give-up dialog");
                 }
             }
-        }, { capture: false });
+        });
 
         giveUpYesBtn.addEventListener("click", (e) => {
             e.preventDefault();
@@ -781,19 +788,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             const guessesList = document.getElementById("guesses-list");
             console.log("Current guesses array:", guesses);
             if (isMobile) {
-                if (keyboardContainer.classList.contains("show-guesses")) {
-                    console.log("Closing guesses content");
-                    showKeyboard();
-                } else {
+                if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardBackBtn) {
                     guessesList.innerHTML = guesses.length > 0 
                         ? guesses.join(' <span class="separator yellow">|</span> ')
                         : "No guesses yet!";
-                    if (keyboardContainer) {
-                        keyboardContainer.classList.remove("show-keyboard", "show-give-up");
-                        keyboardContainer.classList.add("show-guesses");
-                        if (keyboardBackBtn) keyboardBackBtn.style.display = "block";
-                        console.log("Showing guesses content in keyboard container");
-                    }
+                    keyboardContainer.classList.add("show-alternate", "show-guesses");
+                    keyboardContent.style.display = "none";
+                    keyboardGuessesContent.style.display = "flex";
+                    keyboardGiveUpContent.style.display = "none";
+                    keyboardBackBtn.style.display = "block";
+                    console.log("Showing guesses content in keyboard container");
                 }
             } else {
                 guessesList.innerHTML = guesses.length > 0 
@@ -802,7 +806,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessesScreen.style.display = "flex";
                 console.log("Showing guesses screen");
             }
-        }, { capture: false });
+        });
 
         // Handle clicks outside guesses screen (desktop only)
         guessesScreen.addEventListener("click", (e) => {
@@ -880,10 +884,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (formErrorDialog) formErrorDialog.style.display = "none";
         if (guessesScreen) guessesScreen.style.display = "none";
         if (giveUpDialog) giveUpDialog.style.display = "none";
-        if (keyboardContainer) {
-            keyboardContainer.classList.remove("show-guesses", "show-give-up");
-            keyboardContainer.classList.add("show-keyboard");
-            if (keyboardBackBtn) keyboardBackBtn.style.display = "none";
+        if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardGiveUpContent && keyboardBackBtn) {
+            keyboardContainer.classList.remove("show-alternate", "show-guesses", "show-give-up");
+            keyboardContent.style.display = "block";
+            keyboardGuessesContent.style.display = "none";
+            keyboardGiveUpContent.style.display = "none";
+            keyboardBackBtn.style.display = "none";
         }
     }
 
@@ -1388,6 +1394,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         function createWave(waveNumber) {
             const pieces = Array(40).fill("🍍");
+            PHENOMENAL
             pieces.forEach(() => {
                 const piece = document.createElement("div");
                 piece.className = "pineapple-piece";
