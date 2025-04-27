@@ -819,9 +819,9 @@ a {
 #game-over {
   display: none;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: flex-start; /* Changed from space-between to flex-start */
   align-items: center;
-  height: 100vh; /* Use full viewport height */
+  height: 100vh; /* Full viewport height */
   width: 100vw;
   box-sizing: border-box;
   margin: 0;
@@ -833,6 +833,7 @@ a {
   background-size: cover; /* Ensure background covers full screen */
   background-attachment: fixed;
   z-index: 1;
+  overflow-y: auto; /* Allow scrolling if content overflows */
 }
 
 #game-over::before {
@@ -1079,7 +1080,7 @@ a {
   font-weight: bold;
   color: #FFB300;
   -webkit-text-stroke: 0.1vh #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
+  text-shadow: 1px 1px 2px #WHITE;
   margin: 0.5vh auto;
   display: none;
 }
@@ -1185,6 +1186,8 @@ a {
   flex-direction: column;
   align-items: center;
   gap: 1.5vh; /* Increased gap for more space between buttons */
+  margin-top: 2vh; /* Add spacing above buttons to position them */
+  margin-bottom: 4vh; /* Ensure space above ad-box */
 }
 
 .form-input {
@@ -1434,15 +1437,15 @@ a {
   #game-select-content {
     width: 85vw;
     height: 85vh;
-    margin: 7.5vh auto; /* Default for private tab */
-    justify-content: flex-start;
+    margin: -2vh auto 7.5vh auto; /* Set top margin to -2vh to position at 3.5vh from top */
+    justify-content: flex-start; /* Ensure content starts from top */
   }
   #official-games.active ~ #game-select-content {
-    margin: 3.75vh auto; /* Half margin for official games */
+    margin: -2vh auto 7.5vh auto; /* Same margin for official tab */
   }
   #game-list-title {
     font-size: 2.5vh;
-    margin: -3.45vh 0 0.3vh 0; /* Move upward by 3.75vh from original 0.3vh */
+    margin: -3.45vh 0 0.3vh 0; /* Previous adjustment, retained */
   }
   #tabs {
     margin: 0.3vh 0;
@@ -1492,18 +1495,20 @@ a {
     height: 100vh; /* Ensure full height */
     padding-bottom: 0; /* Remove padding to avoid extra space */
     background-size: cover; /* Cover full screen */
+    justify-content: flex-start; /* Ensure content starts from top */
   }
   #game-over #ad-box {
     bottom: 0; /* Keep ad box at bottom */
   }
-  #game-over .keyboard {
-    display: none !important; /* Ensure keyboard is hidden */
-  }
+  #game-over .keyboard,
   #game-over #keyboard-container {
-    display: none !important; /* Ensure keyboard container is removed */
+    display: none !important; /* Ensure keyboard and container are removed */
+    height: 0 !important; /* Prevent reserving space */
+    padding: 0 !important;
+    margin: 0 !important;
   }
   #share-section {
-    margin: 0 auto -1vh auto; /* Negative margin-bottom to move buttons up */
+    margin: 0 auto; /* Reset negative margin */
   }
   #share-buttons {
     margin-bottom: 0.75vh;
@@ -1518,6 +1523,8 @@ a {
   }
   .end-buttons {
     gap: 2vh; /* Further increase gap on mobile for extra line of space */
+    margin-top: 1vh; /* Adjust for mobile to position buttons higher */
+    margin-bottom: 4vh; /* Ensure space above ad-box */
   }
   /* Mobile adjustments for keyboard alternate content */
   .keyboard-back-btn {
