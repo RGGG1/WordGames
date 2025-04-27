@@ -77,17 +77,32 @@ document.addEventListener("DOMContentLoaded", async () => {
         function updateCursorVisibility() {
             const isEmpty = guessInput.value.trim() === "";
             const isEnabled = !guessInput.disabled;
-            cursor.style.display = isEmpty && isEnabled ? "inline-block" : "none";
-            console.log("Cursor visibility updated:", { isEmpty, isEnabled, display: cursor.style.display });
+            const isFocused = document.activeElement === guessInput;
+            // Show cursor if input is empty, enabled, and (focused or not on mobile)
+            cursor.style.display = (isEmpty && isEnabled && (!isMobile || isFocused)) ? "inline-block" : "none";
+            console.log("Cursor visibility updated:", { isEmpty, isEnabled, isFocused, isMobile, display: cursor.style.display });
         }
 
+        // Remove readOnly for mobile to allow focus without virtual keyboard
+        guessInput.readOnly = false;
+
+        // Initial update
         updateCursorVisibility();
 
-        // Update on input changes for mobile compatibility
-        guessInput.addEventListener("input", updateCursorVisibility);
+        // Update on input changes
+        guessInput.addEventListener("input", () => {
+            guessInput.value = guessInput.value.toUpperCase(); // Ensure uppercase
+            updateCursorVisibility();
+        });
         guessInput.addEventListener("change", updateCursorVisibility);
         guessInput.addEventListener("keyup", updateCursorVisibility);
-        guessInput.addEventListener("touchstart", updateCursorVisibility);
+        guessInput.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            guessInput.focus();
+            updateCursorVisibility();
+        });
+        guessInput.addEventListener("focus", updateCursorVisibility);
+        guessInput.addEventListener("blur", updateCursorVisibility);
 
         // Update when disabled state changes
         const observer = new MutationObserver(updateCursorVisibility);
@@ -102,7 +117,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (guessInput) {
-        guessInput.readOnly = isMobile;
+        // Note: readOnly is now handled in initializeCursor
         guessInput.disabled = false;
         guessInput.addEventListener("input", (e) => {
             console.log("Guess input value changed:", guessInput.value);
@@ -1623,7 +1638,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guessInput) {
             guessInput.disabled = false;
-            guessInput.readOnly = isMobile;
+            guessInput.readOnly = false; // Handled in initializeCursor
             guessInput.focus();
             activeInput = guessInput;
         }

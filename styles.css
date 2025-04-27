@@ -485,11 +485,10 @@ a {
 
 .key {
   font-size: 2.5vh;
-  font-weight: bold;
-  width: 10vw;
-  max-width: 5vh;
-  height: 6.875vh;
-  line-height: 6.875vh;
+  width: 8.5vw; /* Reduced from 10vw (~15%) */
+  max-width: 4.25vh; /* Reduced from 5vh (~15%) */
+  height: 5.84vh; /* Reduced from 6.875vh (~15%) */
+  line-height: 5.84vh;
   background: #D3D6DA;
   border: 0.1vh solid #999999;
   border-radius: 0.625vh;
@@ -503,8 +502,8 @@ a {
 }
 
 .key.special {
-  width: 15vw;
-  max-width: 7.5vh;
+  width: 12.75vw; /* Reduced from 15vw (~15%) */
+  max-width: 6.375vh; /* Reduced from 7.5vh (~15%) */
   font-size: 2.25vh;
 }
 
@@ -1285,7 +1284,7 @@ a {
     z-index: 6;
   }
   .cursor {
-    font-size: 3.75vh;
+    font-size: 3.75vh; /* Matches #guess-input font-size */
     line-height: 4vh;
     left: 50%;
     top: 50%;
@@ -1354,15 +1353,15 @@ a {
   }
   .key {
     font-size: 2.5vh;
-    width: 10vw;
-    max-width: 5vh;
-    height: 6.5vh;
-    line-height: 6.5vh;
+    width: 8.5vw; /* Reduced from 10vw (~15%) */
+    max-width: 4.25vh; /* Reduced from 5vh (~15%) */
+    height: 5.525vh; /* Reduced from 6.5vh (~15%) */
+    line-height: 5.525vh;
     border-radius: 0.5vh;
   }
   .key.special {
-    width: 15vw;
-    max-width: 7.5vh;
+    width: 12.75vw; /* Reduced from 15vw (~15%) */
+    max-width: 6.375vh; /* Reduced from 7.5vh (~15%) */
     font-size: 2.25vh;
   }
   .dialog-message {
