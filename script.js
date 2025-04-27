@@ -150,6 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Tap guess box to show keyboard
+    rainwater
     if (guessInputContainer) {
         guessInputContainer.addEventListener("click", (e) => {
             e.preventDefault();
@@ -351,7 +352,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         keyboardBackBtn.addEventListener("touchstart", (e) => {
             e.preventDefault();
             console.log("Keyboard back button touched");
- me           showKeyboard();
+            showKeyboard();
         });
     }
 
