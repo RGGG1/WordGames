@@ -47,6 +47,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formErrorDialog = document.getElementById("form-error-dialog");
     const formErrorOkBtn = document.getElementById("form-error-ok-btn");
     const formErrorMessage = formErrorDialog?.querySelector(".dialog-message");
+    const keyboardContainer = document.getElementById("keyboard-container");
+    const keyboardBackBtn = document.getElementById("keyboard-back-btn");
 
     const officialTab = document.getElementById("official-tab");
     const privateTab = document.getElementById("private-tab");
@@ -62,22 +64,27 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Initialize cursor
     function initializeCursor() {
-        const guessInputContainer = document.getElementById("guess-input-container");
-        const cursor = document.createElement("span");
-        cursor.className = "cursor";
-        cursor.textContent = "|";
-        guessInputContainer.appendChild(cursor);
+        const cursor = document.querySelector(".cursor");
+        if (!cursor || !guessInput) {
+            console.error("Cursor or guess-input not found in DOM");
+            return;
+        }
 
         function updateCursorVisibility() {
-            cursor.style.display = guessInput.disabled ? "none" : "inline-block";
+            // Cursor is visible only when input is empty and not disabled
+            const isEmpty = guessInput.value.trim() === "";
+            const isEnabled = !guessInput.disabled;
+            cursor.style.display = isEmpty && isEnabled ? "inline-block" : "none";
         }
 
         updateCursorVisibility();
 
+        // Update on input changes
+        guessInput.addEventListener("input", updateCursorVisibility);
+
+        // Update when disabled state changes
         const observer = new MutationObserver(updateCursorVisibility);
         observer.observe(guessInput, { attributes: true, attributeFilter: ["disabled"] });
-
-        guessInput.addEventListener("input", updateCursorVisibility);
     }
 
     if (hamburgerBtn) {
@@ -261,6 +268,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // Function to show keyboard and hide alternate content
+    function showKeyboard() {
+        if (keyboardContainer) {
+            keyboardContainer.classList.remove("show-guesses", "show-give-up");
+            keyboardContainer.classList.add("show-keyboard");
+            if (keyboardBackBtn) keyboardBackBtn.style.display = "none";
+            console.log("Showing keyboard");
+        }
+        if (guessInput && !gameOver && !isProcessingGuess) {
+            guessInput.focus();
+            activeInput = guessInput;
+        }
+        if (isMobile) {
+            setupKeyboardListeners();
+        }
+    }
+
+    // Back button handler
+    if (keyboardBackBtn) {
+        keyboardBackBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Keyboard back button clicked");
+            showKeyboard();
+        });
+        keyboardBackBtn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            console.log("Keyboard back button touched");
+            showKeyboard();
+        });
+    }
+
     if (officialTab && privateTab && officialContent && privateContent) {
         officialTab.addEventListener("click", () => {
             console.log("Official tab clicked");
@@ -271,8 +310,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateContent.classList.remove("active");
             privateContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "none";
+            if (keyboardContainer) keyboardContainer.style.display = "none";
             displayGameList();
             setupKeyboardListeners();
         });
@@ -286,8 +324,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             officialContent.classList.remove("active");
             officialContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "none";
+            if (keyboardContainer) keyboardContainer.style.display = "none";
             displayGameList();
             setupKeyboardListeners();
         });
@@ -339,6 +376,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 resetScreenDisplays();
                 gameScreen.style.display = "flex";
                 adjustBackground();
+                showKeyboard();
                 setTimeout(() => {
                     isLoadingGame = false;
                     prevGameArrow.style.opacity = "1";
@@ -388,6 +426,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 resetScreenDisplays();
                 gameScreen.style.display = "flex";
                 adjustBackground();
+                showKeyboard();
                 setTimeout(() => {
                     isLoadingGame = false;
                     nextGameArrow.style.opacity = "1";
@@ -430,8 +469,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateContent.classList.remove("active");
             privateContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "none";
+            if (keyboardContainer) keyboardContainer.style.display = "none";
             displayGameList();
             adjustBackground();
             setupKeyboardListeners();
@@ -445,8 +483,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Create a Wordy clicked");
             resetScreenDisplays();
             createForm.style.display = "flex";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "none"; // Always hide keyboard
+            if (keyboardContainer) keyboardContainer.style.display = "none";
             activeInput = document.getElementById("game-name-input");
             if (activeInput) activeInput.focus();
             adjustBackground();
@@ -468,8 +505,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             officialContent.classList.remove("active");
             officialContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "none";
+            if (keyboardContainer) keyboardContainer.style.display = "none";
             displayGameList();
             adjustBackground();
             setupKeyboardListeners();
@@ -490,8 +526,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateContent.classList.remove("active");
             privateContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = "none";
+            if (keyboardContainer) keyboardContainer.style.display = "none";
             displayGameList();
             adjustBackground();
             setupKeyboardListeners();
@@ -505,8 +540,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Official Back button clicked");
             resetScreenDisplays();
             gameScreen.style.display = "flex";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+            if (keyboardContainer) keyboardContainer.style.display = isMobile ? "flex" : "none";
+            showKeyboard();
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
             adjustBackground();
@@ -521,8 +556,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Private Back button clicked");
             resetScreenDisplays();
             gameScreen.style.display = "flex";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+            if (keyboardContainer) keyboardContainer.style.display = isMobile ? "flex" : "none";
+            showKeyboard();
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
             adjustBackground();
@@ -589,8 +624,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 privateContent.style.display = "flex";
                 officialContent.classList.remove("active");
                 officialContent.style.display = "none";
-                const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = "none"; // Ensure keyboard stays hidden
+                if (keyboardContainer) keyboardContainer.style.display = "none";
                 await fetchPrivateGames();
                 displayGameList();
                 adjustBackground();
@@ -640,8 +674,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             createForm.style.display = "none";
             resetScreenDisplays();
             gameScreen.style.display = "flex";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none"; // Show keyboard on game screen
+            if (keyboardContainer) keyboardContainer.style.display = isMobile ? "flex" : "none";
+            showKeyboard();
             activeInput = guessInput;
             if (activeInput) activeInput.focus();
             adjustBackground();
@@ -649,59 +683,54 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    if (guessesScreen && guessesCloseBtn) {
+    if (guessesCloseBtn) {
         guessesCloseBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Guesses close button clicked");
-            guessesScreen.style.display = "none";
-            gameScreen.style.display = "flex";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
-            activeInput = guessInput;
-            if (activeInput) activeInput.focus();
-            setupKeyboardListeners();
-        });
-
-        // Click handler for closing guesses screen
-        document.addEventListener("click", (e) => {
-            if (guessesScreen.style.display === "flex" && 
-                !guessesScreen.contains(e.target) && 
-                e.target !== guessesLink) {
-                console.log("Clicked outside guesses screen");
+            if (isMobile) {
+                showKeyboard();
+            } else {
                 guessesScreen.style.display = "none";
-                gameScreen.style.display = "flex";
-                const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
-                activeInput = guessInput;
-                if (activeInput) activeInput.focus();
-                setupKeyboardListeners();
+                if (guessInput && !gameOver && !isProcessingGuess) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
             }
         });
-
-        // Touchstart handler for closing guesses screen on mobile
-        document.addEventListener("touchstart", (e) => {
-            if (guessesScreen.style.display === "flex" && 
-                !guessesScreen.contains(e.target) && 
-                e.target !== guessesLink) {
-                console.log("Tapped outside guesses screen");
+        guessesCloseBtn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            console.log("Guesses close button touched");
+            if (isMobile) {
+                showKeyboard();
+            } else {
                 guessesScreen.style.display = "none";
-                gameScreen.style.display = "flex";
-                const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
-                activeInput = guessInput;
-                if (activeInput) activeInput.focus();
-                setupKeyboardListeners();
+                if (guessInput && !gameOver && !isProcessingGuess) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
             }
-        }, { passive: false });
+        });
     }
 
-    if (giveUpLink && giveUpDialog && giveUpYesBtn && giveUpNoBtn) {
+    if (giveUpLink && giveUpYesBtn && giveUpNoBtn) {
         giveUpLink.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Give Up link clicked");
-            giveUpDialog.style.display = "flex";
+            if (isMobile) {
+                if (keyboardContainer) {
+                    keyboardContainer.classList.remove("show-keyboard", "show-guesses");
+                    keyboardContainer.classList.add("show-give-up");
+                    if (keyboardBackBtn) keyboardBackBtn.style.display = "block";
+                    console.log("Showing give-up content in keyboard container");
+                }
+            } else {
+                if (giveUpDialog) {
+                    giveUpDialog.style.display = "flex";
+                    console.log("Showing give-up dialog");
+                }
+            }
         }, { capture: false });
 
         giveUpYesBtn.addEventListener("click", (e) => {
@@ -720,7 +749,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameType = "pineapple";
             }
             saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
-            giveUpDialog.style.display = "none";
+            if (isMobile) {
+                showKeyboard();
+            } else {
+                if (giveUpDialog) giveUpDialog.style.display = "none";
+            }
             endGame(false, true);
         });
 
@@ -728,25 +761,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Give Up No button clicked");
-            giveUpDialog.style.display = "none";
-            gameScreen.style.display = "flex";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
-            activeInput = guessInput;
-            if (activeInput) activeInput.focus();
-            setupKeyboardListeners();
-        });
-
-        giveUpDialog.addEventListener("click", (e) => {
-            if (e.target === giveUpDialog) {
-                console.log("Clicked outside give-up dialog");
-                giveUpDialog.style.display = "none";
-                gameScreen.style.display = "flex";
-                const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+            if (isMobile) {
+                showKeyboard();
+            } else {
+                if (giveUpDialog) giveUpDialog.style.display = "none";
+            }
+            if (guessInput && !gameOver && !isProcessingGuess) {
+                guessInput.focus();
                 activeInput = guessInput;
-                if (activeInput) activeInput.focus();
-                setupKeyboardListeners();
             }
         });
     }
@@ -758,25 +780,79 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Guesses link clicked");
             const guessesList = document.getElementById("guesses-list");
             console.log("Current guesses array:", guesses);
-            if (guessesScreen.style.display === "flex") {
-                console.log("Closing guesses screen via guesses link");
-                guessesScreen.style.display = "none";
-                gameScreen.style.display = "flex";
-                const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
-                activeInput = guessInput;
-                if (activeInput) activeInput.focus();
-                setupKeyboardListeners();
+            if (isMobile) {
+                if (keyboardContainer.classList.contains("show-guesses")) {
+                    console.log("Closing guesses content");
+                    showKeyboard();
+                } else {
+                    guessesList.innerHTML = guesses.length > 0 
+                        ? guesses.join(' <span class="separator yellow">|</span> ')
+                        : "No guesses yet!";
+                    if (keyboardContainer) {
+                        keyboardContainer.classList.remove("show-keyboard", "show-give-up");
+                        keyboardContainer.classList.add("show-guesses");
+                        if (keyboardBackBtn) keyboardBackBtn.style.display = "block";
+                        console.log("Showing guesses content in keyboard container");
+                    }
+                }
             } else {
                 guessesList.innerHTML = guesses.length > 0 
-                    ? guesses.join(' <span class="separator yellow">|</span>   ')
+                    ? guesses.join(' <span class="separator yellow">|</span> ')
                     : "No guesses yet!";
                 guessesScreen.style.display = "flex";
-                const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = "none";
-                setupKeyboardListeners();
+                console.log("Showing guesses screen");
             }
         }, { capture: false });
+
+        // Handle clicks outside guesses screen (desktop only)
+        guessesScreen.addEventListener("click", (e) => {
+            if (e.target === guessesScreen && !isMobile) {
+                console.log("Clicked outside guesses screen");
+                guessesScreen.style.display = "none";
+                if (guessInput && !gameOver && !isProcessingGuess) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }
+        });
+
+        // Handle touch outside guesses screen (desktop only)
+        guessesScreen.addEventListener("touchstart", (e) => {
+            if (e.target === guessesScreen && !isMobile) {
+                e.preventDefault();
+                console.log("Touched outside guesses screen");
+                guessesScreen.style.display = "none";
+                if (guessInput && !gameOver && !isProcessingGuess) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }
+        });
+    }
+
+    if (giveUpDialog) {
+        giveUpDialog.addEventListener("click", (e) => {
+            if (e.target === giveUpDialog && !isMobile) {
+                console.log("Clicked outside give-up dialog");
+                giveUpDialog.style.display = "none";
+                if (guessInput && !gameOver && !isProcessingGuess) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }
+        });
+
+        giveUpDialog.addEventListener("touchstart", (e) => {
+            if (e.target === giveUpDialog && !isMobile) {
+                e.preventDefault();
+                console.log("Touched outside give-up dialog");
+                giveUpDialog.style.display = "none";
+                if (guessInput && !gameOver && !isProcessingGuess) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }
+        });
     }
 
     function showGameSelectScreen() {
@@ -790,8 +866,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         privateContent.classList.remove("active");
         privateContent.style.display = "none";
         if (createForm) createForm.style.display = "none";
-        const keyboard = document.getElementById("keyboard-container");
-        if (keyboard) keyboard.style.display = "none";
+        if (keyboardContainer) keyboardContainer.style.display = "none";
         displayGameList();
         adjustBackground();
         setupKeyboardListeners();
@@ -801,10 +876,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameScreen) gameScreen.style.display = "none";
         if (gameOverScreen) gameOverScreen.style.display = "none";
         if (gameSelectScreen) gameSelectScreen.style.display = "none";
-        if (guessesScreen) guessesScreen.style.display = "none";
-        if (giveUpDialog) giveUpDialog.style.display = "none";
         if (createForm) createForm.style.display = "none";
         if (formErrorDialog) formErrorDialog.style.display = "none";
+        if (guessesScreen) guessesScreen.style.display = "none";
+        if (giveUpDialog) giveUpDialog.style.display = "none";
+        if (keyboardContainer) {
+            keyboardContainer.classList.remove("show-guesses", "show-give-up");
+            keyboardContainer.classList.add("show-keyboard");
+            if (keyboardBackBtn) keyboardBackBtn.style.display = "none";
+        }
     }
 
     async function fetchGameData() {
@@ -841,8 +921,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             if (createForm) createForm.style.display = "none";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+            if (keyboardContainer) keyboardContainer.style.display = isMobile ? "flex" : "none";
+            showKeyboard();
             adjustBackground();
             setupEventListeners();
             setupKeyboardListeners();
@@ -857,8 +937,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays();
             gameScreen.style.display = "flex";
             if (createForm) createForm.style.display = "none";
-            const keyboard = document.getElementById("keyboard-container");
-            if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+            if (keyboardContainer) keyboardContainer.style.display = isMobile ? "flex" : "none";
+            showKeyboard();
             adjustBackground();
             setupEventListeners();
             setupKeyboardListeners();
@@ -919,7 +999,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
-                    // Determine guesses display: '-', 'X', 'Gave Up', or number of guesses
                     let guessesDisplay = '-';
                     if (pastResult) {
                         if (pastResult.guesses === "Gave Up") {
@@ -945,8 +1024,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         loadGame(game);
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
-                        const keyboard = document.getElementById("keyboard-container");
-                        if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+                        if (keyboardContainer) keyboardContainer.style.display = isMobile ? "flex" : "none";
+                        showKeyboard();
                         activeInput = guessInput;
                         if (activeInput) activeInput.focus();
                         adjustBackground();
@@ -981,7 +1060,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const gameName = game["Game Name"].toUpperCase();
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
                     const pastResult = results[gameNumber];
-                    // Determine guesses display: '-', 'X', 'Gave Up', or number of guesses
                     let guessesDisplay = '-';
                     if (pastResult) {
                         if (pastResult.guesses === "Gave Up") {
@@ -1007,8 +1085,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         loadGame(game);
                         resetScreenDisplays();
                         gameScreen.style.display = "flex";
-                        const keyboard = document.getElementById("keyboard-container");
-                        if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+                        if (keyboardContainer) keyboardContainer.style.display = isMobile ? "flex" : "none";
+                        showKeyboard();
                         activeInput = guessInput;
                         if (activeInput) activeInput.focus();
                         adjustBackground();
@@ -1024,25 +1102,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function setupEventListeners() {
-        const gameControls = document.getElementById("game-controls");
-
-        document.addEventListener("click", (e) => {
-            if (!gameOver && gameScreen.style.display === "flex" &&
-                !gameControls?.contains(e.target) &&
-                !e.target.closest("button") &&
-                e.target.id !== "game-name" &&
-                e.target !== guessInput) {
-            }
-        });
-
         document.querySelectorAll("#game-name").forEach(name => {
             name.addEventListener("click", () => {
                 resetGame();
                 loadGame(allGames[0]);
                 resetScreenDisplays();
                 gameScreen.style.display = "flex";
-                const keyboard = document.getElementById("keyboard-container");
-                if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+                if (keyboardContainer) keyboardContainer.style.display = isMobile ? "flex" : "none";
+                showKeyboard();
                 activeInput = guessInput;
                 if (activeInput) activeInput.focus();
                 adjustBackground();
@@ -1240,7 +1307,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
         console.log("Saving game result", { gameType, gameNumber, secretWord, guesses });
         const resultsKey = gameType === "pineapple" ? "pineappleResults" : "privatePineappleResults";
-        // Normalize gameNumber to match game["Game Number"]
         let normalizedGameNumber = gameNumber;
         if (gameType === "pineapple") {
             normalizedGameNumber = gameNumber.replace("Game #", "");
@@ -1261,8 +1327,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         resetScreenDisplays();
         gameOverScreen.style.display = "flex";
-        const keyboard = document.getElementById("keyboard-container");
-        if (keyboard) keyboard.style.display = "none";
+        if (keyboardContainer) keyboardContainer.style.display = "none";
         adjustBackground();
         setupKeyboardListeners();
 
@@ -1375,6 +1440,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.style.display = "block";
             hintsContainer.classList.add('lines-0');
         }
+        showKeyboard();
         setupKeyboardListeners();
     }
 
@@ -1418,8 +1484,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessBtn.disabled = false;
         }
 
-        const keyboard = document.getElementById("keyboard-container");
-        if (keyboard) keyboard.style.display = isMobile ? "flex" : "none";
+        if (keyboardContainer) keyboardContainer.style.display = isMobile ? "flex" : "none";
+        showKeyboard();
         setupKeyboardListeners();
     }
 
