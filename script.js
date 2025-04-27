@@ -150,7 +150,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Tap guess box to show keyboard
-    rainwater
     if (guessInputContainer) {
         guessInputContainer.addEventListener("click", (e) => {
             e.preventDefault();
@@ -1019,14 +1018,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function fetchGameData() {
         try {
-            console.log("Fetching official games from:", officialUrl);
+            console.log("Starting fetchGameData: Fetching official games from:", officialUrl);
             const response = await fetch(officialUrl, {
                 method: "GET",
                 mode: "cors",
                 cache: "no-cache",
                 headers: { "Accept": "text/csv" }
             });
-            console.log("Fetch response status:", response.status);
+            console.log("Fetch response received:", { status: response.status, ok: response.ok });
             if (!response.ok) {
                 console.error("Fetch failed with status:", response.status, response.statusText);
                 throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
@@ -1058,11 +1057,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             setupKeyboardListeners();
             updateArrowStates(0, allGames);
         } catch (error) {
-            console.error("Error fetching official games:", error);
+            console.error("Error in fetchGameData:", error.message);
+            console.log("Falling back to hardcoded game");
             allGames = [
                 { "Game Number": "1", "Secret Word": "TEST", "Hint 1": "SAMPLE", "Hint 2": "WORD", "Hint 3": "GAME", "Hint 4": "PLAY", "Hint 5": "FUN", "Background": "testbackground.png" }
             ];
-            console.log("Using hardcoded game with background:", allGames);
+            console.log("Hardcoded game data:", allGames);
             loadGame(allGames[0]);
             resetScreenDisplays();
             gameScreen.style.display = "flex";
@@ -1082,14 +1082,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     async function fetchPrivateGames() {
         try {
-            console.log("Fetching private games from:", privateUrl);
+            console.log("Starting fetchPrivateGames: Fetching private games from:", privateUrl);
             const response = await fetch(privateUrl, {
                 method: "GET",
                 mode: "cors",
                 cache: "no-cache",
                 headers: { "Accept": "text/csv" }
             });
-            console.log("Fetch response status:", response.status);
+            console.log("Fetch response received:", { status: response.status, ok: response.ok });
             if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
             const text = await response.text();
             console.log("Private CSV fetched, length:", text.length);
@@ -1105,7 +1105,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             console.log("Parsed private games:", privateGames);
         } catch (error) {
-            console.error("Error fetching private games:", error);
+            console.error("Error in fetchPrivateGames:", error.message);
             privateGames = [];
         }
     }
@@ -1329,7 +1329,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 screen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
                 screen.style.backgroundSize = screen.id === "game-select-screen" ? "cover" : screen.id === "create-form" ? "cover" : "100% calc(100% - 24vh)";
                 screen.offsetHeight;
-                console.log(`Set background for ${screen.id} to ${currentBackground}`);
+                console.log(`Set background for ${screen.id} to ${currentBackground}, style:`, screen.style.background);
+            } else {
+                console.warn(`Screen element not found: ${screen}`);
             }
         });
         const img = new Image();
@@ -1623,6 +1625,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize cursor before fetching games
     initializeCursor();
 
+    console.log("Starting initial game data fetch");
     await fetchGameData();
     await fetchPrivateGames();
     displayGameList();
