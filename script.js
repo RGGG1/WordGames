@@ -74,10 +74,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         function updateCursorVisibility() {
-            // Cursor is visible only when input is empty and not disabled
             const isEmpty = guessInput.value.trim() === "";
             const isEnabled = !guessInput.disabled;
             cursor.style.display = isEmpty && isEnabled ? "inline-block" : "none";
+            console.log("Cursor visibility updated:", { isEmpty, isEnabled, display: cursor.style.display });
         }
 
         updateCursorVisibility();
@@ -88,6 +88,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Update when disabled state changes
         const observer = new MutationObserver(updateCursorVisibility);
         observer.observe(guessInput, { attributes: true, attributeFilter: ["disabled"] });
+
+        // Ensure cursor is updated after a guess is processed
+        guessInput.addEventListener("guessProcessed", updateCursorVisibility);
     }
 
     if (hamburgerBtn) {
@@ -302,6 +305,45 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
             console.log("Keyboard back button touched");
             showKeyboard();
+        });
+    }
+
+    // Click/tap to show keyboard in guesses and give-up content
+    if (keyboardGuessesContent) {
+        keyboardGuessesContent.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.target === keyboardGuessesContent || e.target === document.getElementById("guesses-list") || e.target === document.getElementById("guesses-title")) {
+                console.log("Clicked/tapped guesses content, showing keyboard");
+                showKeyboard();
+            }
+        });
+        keyboardGuessesContent.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.target === keyboardGuessesContent || e.target === document.getElementById("guesses-list") || e.target === document.getElementById("guesses-title")) {
+                console.log("Touched guesses content, showing keyboard");
+                showKeyboard();
+            }
+        });
+    }
+
+    if (keyboardGiveUpContent) {
+        keyboardGiveUpContent.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.target === keyboardGiveUpContent || e.target.classList.contains("dialog-message")) {
+                console.log("Clicked/tapped give-up content, showing keyboard");
+                showKeyboard();
+            }
+        });
+        keyboardGiveUpContent.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            if (e.target === keyboardGiveUpContent || e.target.classList.contains("dialog-message")) {
+                console.log("Touched give-up content, showing keyboard");
+                showKeyboard();
+            }
         });
     }
 
@@ -773,6 +815,72 @@ document.addEventListener("DOMContentLoaded", async () => {
             } else {
                 if (giveUpDialog) giveUpDialog.style.display = "none";
             }
+            if (guessInput && !gameOver && !isProcessingGuess) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
+        });
+    }
+
+    // Mobile give-up button handlers
+    const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
+    const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
+
+    if (keyboardGiveUpYesBtn) {
+        keyboardGiveUpYesBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Mobile Give Up Yes button clicked");
+            gaveUp = true;
+            let normalizedGameNumber;
+            let gameType;
+            if (currentGameNumber.includes("- Private")) {
+                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
+                normalizedGameNumber = String(currentNum);
+                gameType = "privatePineapple";
+            } else {
+                normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                gameType = "pineapple";
+            }
+            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
+            showKeyboard();
+            endGame(false, true);
+        });
+        keyboardGiveUpYesBtn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            console.log("Mobile Give Up Yes button touched");
+            gaveUp = true;
+            let normalizedGameNumber;
+            let gameType;
+            if (currentGameNumber.includes("- Private")) {
+                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
+                normalizedGameNumber = String(currentNum);
+                gameType = "privatePineapple";
+            } else {
+                normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                gameType = "pineapple";
+            }
+            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
+            showKeyboard();
+            endGame(false, true);
+        });
+    }
+
+    if (keyboardGiveUpNoBtn) {
+        keyboardGiveUpNoBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Mobile Give Up No button clicked");
+            showKeyboard();
+            if (guessInput && !gameOver && !isProcessingGuess) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
+        });
+        keyboardGiveUpNoBtn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            console.log("Mobile Give Up No button touched");
+            showKeyboard();
             if (guessInput && !gameOver && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
@@ -1297,6 +1405,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (guessInput) {
                     guessInput.focus();
                     activeInput = guessInput;
+                    guessInput.dispatchEvent(new Event("guessProcessed"));
                 }
             }, 350);
 
@@ -1394,7 +1503,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         function createWave(waveNumber) {
             const pieces = Array(40).fill("🍍");
-            PHENOMENAL
             pieces.forEach(() => {
                 const piece = document.createElement("div");
                 piece.className = "pineapple-piece";

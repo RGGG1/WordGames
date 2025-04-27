@@ -338,7 +338,7 @@ a {
 
 /* Cursor styling */
 .cursor {
-  display: none; /* Hidden by default, shown via CSS when input is empty */
+  display: none;
   color: #000000;
   font-size: 4.5vh;
   line-height: 5.5vh;
@@ -355,12 +355,12 @@ a {
   50% { opacity: 0; }
 }
 
-/* Show cursor when input is empty and not disabled */
+/* Show cursor only when input is empty and not disabled */
 #guess-input:not(:disabled):placeholder-shown ~ .cursor {
   display: inline-block;
 }
 
-/* Hide cursor when input is disabled or has text */
+/* Hide cursor when input is disabled or has any text */
 #guess-input:disabled ~ .cursor,
 #guess-input:not(:placeholder-shown) ~ .cursor {
   display: none;
@@ -452,7 +452,7 @@ a {
   bottom: 4vh;
   background: #FFFFFF;
   z-index: 10;
-  padding: 0.5vh 0;
+  padding: 0.3vh 0;
   box-sizing: border-box;
   pointer-events: auto;
   overflow: hidden;
@@ -470,7 +470,6 @@ a {
   justify-content: center;
   width: 100%;
   height: 100%;
-  display: block;
 }
 
 .keyboard.show-alternate .keyboard-content {
@@ -480,20 +479,20 @@ a {
 .keyboard-row {
   display: flex;
   justify-content: center;
-  margin-bottom: 0.5vh;
-  gap: 0.5vw;
+  margin-bottom: 0.4vh;
+  gap: 0.4vw;
 }
 
 .key {
-  font-size: 2vh;
+  font-size: 2.5vh;
   font-weight: bold;
-  width: 8vw;
-  max-width: 4vh;
-  height: 5.5vh;
-  line-height: 5.5vh;
+  width: 10vw;
+  max-width: 5vh;
+  height: 6.875vh;
+  line-height: 6.875vh;
   background: #D3D6DA;
   border: 0.1vh solid #999999;
-  border-radius: 0.5vh;
+  border-radius: 0.625vh;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -504,9 +503,9 @@ a {
 }
 
 .key.special {
-  width: 12vw;
-  max-width: 6vh;
-  font-size: 1.8vh;
+  width: 15vw;
+  max-width: 7.5vh;
+  font-size: 2.25vh;
 }
 
 .key:hover {
@@ -1350,21 +1349,21 @@ a {
     bottom: 4vh;
   }
   .keyboard-row {
-    gap: 0.4vw;
-    margin-bottom: 0.4vh;
+    gap: 0.3vw;
+    margin-bottom: 0.3vh;
   }
   .key {
-    font-size: 1.8vh;
-    width: 7.5vw;
-    max-width: 3.5vh;
-    height: 5vh;
-    line-height: 5vh;
-    border-radius: 0.4vh;
+    font-size: 2.25vh;
+    width: 9.375vw;
+    max-width: 4.375vh;
+    height: 6.25vh;
+    line-height: 6.25vh;
+    border-radius: 0.5vh;
   }
   .key.special {
-    width: 11vw;
-    max-width: 5.5vh;
-    font-size: 1.6vh;
+    width: 13.75vw;
+    max-width: 6.875vh;
+    font-size: 2vh;
   }
   .dialog-message {
     font-size: 2vh;
