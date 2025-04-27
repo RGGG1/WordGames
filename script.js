@@ -75,20 +75,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         function updateCursorVisibility() {
-            const isEmpty = guessInput.value.trim() === "";
             const isEnabled = !guessInput.disabled;
-            const isFocused = document.activeElement === guessInput;
-            // Show cursor if input is empty, enabled, and (focused or not on mobile)
-            cursor.style.display = (isEmpty && isEnabled && (!isMobile || isFocused)) ? "inline-block" : "none";
-            console.log("Cursor visibility updated:", { isEmpty, isEnabled, isFocused, isMobile, display: cursor.style.display });
+            // Always show cursor when enabled on mobile
+            cursor.style.display = isEnabled ? "inline-block" : "none";
+            console.log("Cursor visibility updated:", { isEnabled, isMobile, display: cursor.style.display });
         }
 
         // Prevent the phone's virtual keyboard on mobile
         if (isMobile) {
             guessInput.setAttribute("readonly", "readonly");
-            // Remove any input types that might trigger the keyboard
             guessInput.setAttribute("type", "text");
-            // Prevent focus from triggering the keyboard
             guessInput.addEventListener("focus", (e) => {
                 e.preventDefault();
                 console.log("Prevented focus on guessInput to avoid virtual keyboard");
@@ -100,9 +96,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Initial update
         updateCursorVisibility();
 
-        // Update on input changes (via on-screen keyboard, not virtual)
+        // Update on input changes
         guessInput.addEventListener("input", () => {
-            guessInput.value = guessInput.value.toUpperCase(); // Ensure uppercase
+            guessInput.value = guessInput.value.toUpperCase();
             updateCursorVisibility();
         });
         guessInput.addEventListener("change", updateCursorVisibility);
@@ -118,7 +114,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const observer = new MutationObserver(updateCursorVisibility);
         observer.observe(guessInput, { attributes: true, attributeFilter: ["disabled"] });
 
-        // Ensure cursor is updated after a guess is processed
         guessInput.addEventListener("guessProcessed", updateCursorVisibility);
     }
 
@@ -781,7 +776,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         formBackBtn.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Formics Form Back button clicked");
+            console.log("Form Back button clicked");
             createForm.style.display = "none";
             resetScreenDisplays();
             gameScreen.style.display = "flex";
@@ -897,7 +892,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameType = "pineapple";
             }
             saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
-            endGame(false, true); // Navigate to end screen without showing keyboard
+            endGame(false, true); // Navigate to end screen
         };
 
         keyboardGiveUpYesBtn.addEventListener("click", yesHandler);
@@ -1477,7 +1472,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         resetScreenDisplays();
         gameOverScreen.style.display = "flex";
-        if (keyboardContainer) keyboardContainer.style.display = "none";
         adjustBackground();
         setupKeyboardListeners();
 

@@ -338,7 +338,7 @@ a {
 
 /* Cursor styling */
 .cursor {
-  display: none;
+  display: inline-block !important; /* Ensure visibility on mobile */
   color: #000000;
   font-size: 4.5vh;
   line-height: 5.5vh;
@@ -355,14 +355,8 @@ a {
   50% { opacity: 0; }
 }
 
-/* Show cursor only when input is empty and not disabled */
-#guess-input:not(:disabled):placeholder-shown ~ .cursor {
-  display: inline-block;
-}
-
-/* Hide cursor when input is disabled or has any text */
-#guess-input:disabled ~ .cursor,
-#guess-input:not(:placeholder-shown) ~ .cursor {
+/* Hide cursor only when input is disabled */
+#guess-input:disabled ~ .cursor {
   display: none !important;
 }
 
@@ -966,7 +960,7 @@ a {
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: 0.5vh 0;
+  margin: 3em 0 0.3vh 0; /* Moved down three lines with 3em margin-top */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -1080,7 +1074,7 @@ a {
   font-weight: bold;
   color: #FFB300;
   -webkit-text-stroke: 0.1vh #000000;
-  text-shadow: 1px 1px 2px #WHITE;
+  text-shadow: 1px 1px 2px #FFFFFF;
   margin: 0.5vh auto;
   display: none;
 }
@@ -1319,6 +1313,7 @@ a {
     font-family: 'Luckiest Guy', cursive;
     box-sizing: content-box;
     z-index: 6;
+    caret-color: transparent; /* Hide default caret on mobile */
   }
   .cursor {
     font-size: 3.75vh; /* Matches #guess-input font-size */
@@ -1437,15 +1432,14 @@ a {
   #game-select-content {
     width: 85vw;
     height: 85vh;
-    margin: -2vh auto 7.5vh auto; /* Set top margin to -2vh to position at 3.5vh from top */
-    justify-content: flex-start; /* Ensure content starts from top */
+    margin: 3.5vh auto 7.5vh auto; /* Adjusted top margin for consistency */
   }
   #official-games.active ~ #game-select-content {
-    margin: -2vh auto 7.5vh auto; /* Same margin for official tab */
+    margin: 3.5vh auto 7.5vh auto; /* Same margin for official tab */
   }
   #game-list-title {
     font-size: 2.5vh;
-    margin: -3.45vh 0 0.3vh 0; /* Previous adjustment, retained */
+    margin: 3em 0 0.3vh 0; /* Moved down three lines */
   }
   #tabs {
     margin: 0.3vh 0;
