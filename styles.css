@@ -248,7 +248,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 3.6vh);
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 1.8vh);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -279,8 +279,8 @@ a {
   align-items: center;
   justify-content: center;
   width: 100%;
+  margin-top: 0;
   margin-bottom: 0.5vh;
-  margin-top: 4.7vh;
   position: relative;
 }
 
@@ -358,7 +358,7 @@ a {
   font-size: 3.25vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: calc(6.1vh - 4.875vh) 0 1.625vh 0;
+  margin: 2vh 0 1.625vh 0;
   text-align: center;
 }
 
@@ -376,7 +376,7 @@ a {
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   -webkit-text-stroke: 0.1vh #000000; /* Black outline */
-  margin: 0;
+  margin: 0 0 2vh 0;
   text-align: center;
   position: relative;
   z-index: 1;
@@ -549,7 +549,7 @@ a {
 .dialog-message {
   font-size: 2.5vh;
   color: #000000;
-  display: block;
+  displayvester: block;
   margin-bottom: 2vh;
 }
 
@@ -1199,7 +1199,7 @@ a {
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + (1.92vh * 2));
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh);
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1263,12 +1263,13 @@ a {
   }
   #hints-label {
     font-size: 2.75vh;
-    margin: calc(5.7vh - 4.125vh) 0 1.375vh 0;
+    margin: 1.5vh 0 1.375vh 0;
   }
   .hints-inline {
     font-size: 2.75vh;
     -webkit-text-stroke: 0.08vh #000000;
     min-height: calc(2.75vh * 1.2 * 2);
+    margin: 0 0 1.5vh 0;
   }
   .hints-inline .separator {
     -webkit-text-stroke: 0.08vh #000000;
