@@ -586,7 +586,7 @@ a {
 
 #guesses-list span.separator {
   color: #FFB300;
-;  text-shadow: 1px 1px 2px #FFFFFF;
+  text-shadow: 1px 1px 2px #FFFFFF;
 }
 
 #guesses-close-btn {
@@ -1442,7 +1442,7 @@ a {
   }
   #game-list-title {
     font-size: 2.5vh;
-    margin: 0.3vh 0;
+    margin: -3.45vh 0 0.3vh 0; /* Move upward by 3.75vh from original 0.3vh */
   }
   #tabs {
     margin: 0.3vh 0;
@@ -1499,8 +1499,11 @@ a {
   #game-over .keyboard {
     display: none !important; /* Ensure keyboard is hidden */
   }
+  #game-over #keyboard-container {
+    display: none !important; /* Ensure keyboard container is removed */
+  }
   #share-section {
-    margin: 0 auto; /* Reduced to move buttons up */
+    margin: 0 auto -1vh auto; /* Negative margin-bottom to move buttons up */
   }
   #share-buttons {
     margin-bottom: 0.75vh;
