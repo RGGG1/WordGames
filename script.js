@@ -66,13 +66,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize cursor
     function initializeCursor() {
         const cursor = document.querySelector(".cursor");
-        const guessInput = document.getElementById("guess-input");
         if (!cursor || !guessInput) {
             console.error("Cursor or guess-input not found in DOM");
             return;
         }
-        // CSS handles cursor visibility; no additional JavaScript logic needed
-        console.log("Cursor initialized, visibility controlled by CSS");
+
+        function updateCursorVisibility() {
+            const isEmpty = guessInput.value.trim() === "";
+            const isEnabled = !guessInput.disabled;
+            cursor.style.display = isEmpty && isEnabled ? "inline-block" : "none";
+        }
+
+        updateCursorVisibility();
+
+        guessInput.addEventListener("input", updateCursorVisibility);
+
+        const observer = new MutationObserver(updateCursorVisibility);
+        observer.observe(guessInput, { attributes: true, attributeFilter: ["disabled"] });
     }
 
     if (hamburgerBtn) {
@@ -84,7 +94,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.disabled = false;
         guessInput.addEventListener("input", (e) => {
             console.log("Guess input value changed:", guessInput.value);
-            guessInput.value = e.target.value.toUpperCase();
             if (animationTimeout) {
                 clearTimeout(animationTimeout);
                 animationTimeout = null;
@@ -93,6 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.style.opacity = "1";
                 guessInput.style.visibility = "visible";
                 guessInput.style.color = "#000000";
+                guessInput.value = e.target.value.toUpperCase();
                 isProcessingGuess = false;
                 console.log("Animation cancelled and state reset due to typing");
             }
@@ -1516,7 +1526,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupHints();
 
         if (guessInput) {
-            стрInput.disabled = false;
+            guessInput.disabled = false;
             guessInput.readOnly = isMobile;
             guessInput.focus();
             activeInput = guessInput;
