@@ -36,14 +36,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateBackBtn = document.getElementById("private-back-btn");
     const giveUpLink = document.getElementById("give-up-link");
     const giveUpDialog = document.getElementById("give-up-dialog");
-    const giveUpYesBtn = document.getElementById("give-up-yes-btn");
-    const giveUpNoBtn = document.getElementById("give-up-no-btn");
     const guessesLink = document.getElementById("guesses-link");
     const allGamesLink = document.getElementById("all-games-link");
     const prevGameArrow = document.getElementById("prev-game-arrow");
     const nextGameArrow = document.getElementById("next-game-arrow");
     const guessInput = document.getElementById("guess-input");
-    const guessArea = document.getElementById("guess-area");
+    const guessInputContainer = document.getElementById("guess-input-container");
     const formErrorDialog = document.getElementById("form-error-dialog");
     const formErrorOkBtn = document.getElementById("form-error-ok-btn");
     const formErrorMessage = formErrorDialog?.querySelector(".dialog-message");
@@ -74,7 +72,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         function updateCursorVisibility() {
-            // Cursor is visible only when input is empty and not disabled
             const isEmpty = guessInput.value.trim() === "";
             const isEnabled = !guessInput.disabled;
             cursor.style.display = isEmpty && isEnabled ? "inline-block" : "none";
@@ -82,10 +79,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         updateCursorVisibility();
 
-        // Update on input changes
         guessInput.addEventListener("input", updateCursorVisibility);
 
-        // Update when disabled state changes
         const observer = new MutationObserver(updateCursorVisibility);
         observer.observe(guessInput, { attributes: true, attributeFilter: ["disabled"] });
     }
@@ -127,25 +122,35 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.error("guess-input not found in DOM");
     }
 
-    if (guessArea) {
-        guessArea.addEventListener("click", (e) => {
+    if (guessInputContainer) {
+        guessInputContainer.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            if (isMobile && keyboardContainer.classList.contains("show-alternate")) {
+                console.log("Guess input container clicked while alternate content shown, reverting to keyboard");
+                showKeyboard();
+            }
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
-                console.log("Guess area clicked, input focused");
+                console.log("Guess input container clicked, input focused");
             }
         });
-        guessArea.addEventListener("touchstart", (e) => {
+        guessInputContainer.addEventListener("touchstart", (e) => {
             e.preventDefault();
             e.stopPropagation();
+            if (isMobile && keyboardContainer.classList.contains("show-alternate")) {
+                console.log("Guess input container touched while alternate content shown, reverting to keyboard");
+                showKeyboard();
+            }
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
-                console.log("Guess area touched, input focused");
+                console.log("Guess input container touched, input focused");
             }
         });
+    } else {
+        console.error("guess-input-container not found in DOM");
     }
 
     if (guessBtn) {
@@ -718,7 +723,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    if (giveUpLink && giveUpYesBtn && giveUpNoBtn) {
+    if (giveUpLink) {
         giveUpLink.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -740,43 +745,85 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-        giveUpYesBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Give Up Yes button clicked");
-            gaveUp = true;
-            let normalizedGameNumber;
-            let gameType;
-            if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                normalizedGameNumber = String(currentNum);
-                gameType = "privatePineapple";
-            } else {
-                normalizedGameNumber = currentGameNumber.replace("Game #", "");
-                gameType = "pineapple";
-            }
-            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
-            if (isMobile) {
-                showKeyboard();
-            } else {
-                if (giveUpDialog) giveUpDialog.style.display = "none";
-            }
-            endGame(false, true);
+        const giveUpYesButtons = document.querySelectorAll("#give-up-yes-btn");
+        const giveUpNoButtons = document.querySelectorAll("#give-up-no-btn");
+
+        giveUpYesButtons.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log("Give Up Yes button clicked");
+                gaveUp = true;
+                let normalizedGameNumber;
+                let gameType;
+                if (currentGameNumber.includes("- Private")) {
+                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
+                    normalizedGameNumber = String(currentNum);
+                    gameType = "privatePineapple";
+                } else {
+                    normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                    gameType = "pineapple";
+                }
+                saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
+                if (isMobile) {
+                    showKeyboard();
+                } else {
+                    if (giveUpDialog) giveUpDialog.style.display = "none";
+                }
+                endGame(false, true);
+            });
+            btn.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                console.log("Give Up Yes button touched");
+                gaveUp = true;
+                let normalizedGameNumber;
+                let gameType;
+                if (currentGameNumber.includes("- Private")) {
+                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
+                    normalizedGameNumber = String(currentNum);
+                    gameType = "privatePineapple";
+                } else {
+                    normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                    gameType = "pineapple";
+                }
+                saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
+                if (isMobile) {
+                    showKeyboard();
+                } else {
+                    if (giveUpDialog) giveUpDialog.style.display = "none";
+                }
+                endGame(false, true);
+            });
         });
 
-        giveUpNoBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Give Up No button clicked");
-            if (isMobile) {
-                showKeyboard();
-            } else {
-                if (giveUpDialog) giveUpDialog.style.display = "none";
-            }
-            if (guessInput && !gameOver && !isProcessingGuess) {
-                guessInput.focus();
-                activeInput = guessInput;
-            }
+        giveUpNoButtons.forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log("Give Up No button clicked");
+                if (isMobile) {
+                    showKeyboard();
+                } else {
+                    if (giveUpDialog) giveUpDialog.style.display = "none";
+                }
+                if (guessInput && !gameOver && !isProcessingGuess) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            });
+            btn.addEventListener("touchstart", (e) => {
+                e.preventDefault();
+                console.log("Give Up No button touched");
+                if (isMobile) {
+                    showKeyboard();
+                } else {
+                    if (giveUpDialog) giveUpDialog.style.display = "none";
+                }
+                if (guessInput && !gameOver && !isProcessingGuess) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            });
         });
     }
 
@@ -808,7 +855,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-        // Handle clicks outside guesses screen (desktop only)
         guessesScreen.addEventListener("click", (e) => {
             if (e.target === guessesScreen && !isMobile) {
                 console.log("Clicked outside guesses screen");
@@ -820,7 +866,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         });
 
-        // Handle touch outside guesses screen (desktop only)
         guessesScreen.addEventListener("touchstart", (e) => {
             if (e.target === guessesScreen && !isMobile) {
                 e.preventDefault();
@@ -1394,7 +1439,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         function createWave(waveNumber) {
             const pieces = Array(40).fill("🍍");
-            PHENOMENAL
             pieces.forEach(() => {
                 const piece = document.createElement("div");
                 piece.className = "pineapple-piece";
