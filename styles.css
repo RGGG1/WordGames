@@ -1425,11 +1425,11 @@ a {
   #share-text .guess-count {
     font-size: 4vh;
   }
-  /* Updated: Mobile adjustments to move #game-select-content up */
+  /* Updated: Mobile adjustments to position #game-select-content 3.5vh from top, 7vh from bottom */
   #game-select-content {
     width: 85vw;
-    height: 83vh; /* 100vh - 7vh (top) - 6vh (bottom gap) - 4vh (ad box) */
-    margin: 7vh auto 0 auto; /* Top margin = 5.5vh (header) + 1.5vh (~0.5 line) */
+    height: 85.5vh; /* 100vh - 3.5vh (top) - 7vh (bottom gap) - 4vh (ad box) */
+    margin: 3.5vh auto 0 auto; /* Top margin = 3.5vh */
   }
   #game-list-title {
     font-size: 2.5vh;
@@ -1440,16 +1440,16 @@ a {
   }
   /* Updated: Mobile tab-content and game-list heights */
   .tab-content {
-    height: 63.45vh; /* 83vh - 12.9vh (title + tabs) - 6.65vh (button) */
+    height: 65.95vh; /* 85.5vh - 12.9vh (title + tabs) - 6.65vh (button) */
   }
   #private-games {
-    height: 61.95vh; /* 63.45vh - 1.5vh (back-btn-container) */
+    height: 64.45vh; /* 65.95vh - 1.5vh (back-btn-container) */
   }
   .game-list {
-    max-height: 63.45vh;
+    max-height: 65.95vh;
   }
   #private-games .game-list {
-    max-height: 61.95vh;
+    max-height: 64.45vh;
   }
   #official-back-btn,
   #private-back-btn {
