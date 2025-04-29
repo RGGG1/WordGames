@@ -22,18 +22,18 @@ a {
 #game-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100%; /* Changed from 100vh to 100% to better handle dynamic viewports */
   width: 100vw;
   box-sizing: border-box;
   overflow: hidden;
-  margin: none;
+  margin: 0;
   padding: 0;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1;
-  background: url('newbackground.png') no-repeat center top fixed;
-  background-size: 100% calc(100% - 24vh); /* Fit above keyboard (20vh + 4vh) */
+  background: url('newbackground.png') no-repeat center top fixed, #FFFFFF; /* Added fallback color */
+  background-size: 100% calc(100% - 24vh);
   background-attachment: fixed;
 }
 
@@ -441,7 +441,7 @@ a {
   width: 100vw;
   height: 20vh;
   max-height: 20vh;
-  display: flex;
+  display: none; /* Hidden by default */
   flex-direction: column;
   align-items: center;
   justify-content: center;
@@ -821,7 +821,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed;
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Added fallback color */
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
@@ -855,7 +855,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed;
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Added fallback color */
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
@@ -874,7 +874,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed;
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Added fallback color */
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
@@ -1359,6 +1359,14 @@ a {
     max-height: 20vh;
     padding: 0.4vh 0.4vw;
     bottom: 4vh;
+  }
+  #game-screen .keyboard {
+    display: flex; /* Only show keyboard on game-screen for mobile */
+  }
+  #game-over .keyboard,
+  #game-select-screen .keyboard,
+  #create-form .keyboard {
+    display: none !important; /* Explicitly hide on other screens */
   }
   .keyboard-content {
     gap: 0.4vh;

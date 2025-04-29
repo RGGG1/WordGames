@@ -82,7 +82,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     }
 
-    // Preload background image with error handling (FIX: Simplified to ensure default background loads)
+    // Preload background image with robust error handling
     function preloadBackground(url) {
         return new Promise((resolve) => {
             if (!url || url.trim() === "") {
@@ -96,16 +96,21 @@ document.addEventListener("DOMContentLoaded", async () => {
                 resolve(url);
             };
             img.onerror = () => {
-                console.warn(`Failed to preload background: ${url}, using default: ${defaultBackground}`);
-                img.src = defaultBackground;
-                img.onload = () => {
-                    console.log(`Default background preloaded: ${defaultBackground}`);
-                    resolve(defaultBackground);
-                };
-                img.onerror = () => {
-                    console.error(`Failed to preload default background: ${defaultBackground}`);
-                    resolve(defaultBackground); // Always resolve to prevent hanging
-                };
+                console.error(`Failed to preload background: ${url}, attempting default: ${defaultBackground}`);
+                if (url !== defaultBackground) {
+                    img.src = defaultBackground;
+                    img.onload = () => {
+                        console.log(`Default background preloaded: ${defaultBackground}`);
+                        resolve(defaultBackground);
+                    };
+                    img.onerror = () => {
+                        console.error(`Failed to preload default background: ${defaultBackground}`);
+                        resolve(defaultBackground); // Always resolve to prevent hanging
+                    };
+                } else {
+                    console.error(`Default background also failed: ${defaultBackground}`);
+                    resolve(defaultBackground); // Resolve even if default fails to avoid blocking
+                }
             };
         });
     }
@@ -143,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 cursorLeft = maxLeft;
             }
             cursor.style.left = `${cursorLeft}px`;
-            cursor.style.top = "50%";
+            cursor.style.top = " pothole-filled road.50%";
             cursor.style.transform = "translateY(-50%)";
 
             console.log("Cursor updated:", { textWidth, cursorLeft, maxLeft });
@@ -326,10 +331,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 screen.style.display = "none";
             }
         });
-        if (keyboardContainer && activeScreen === gameScreen && isMobile) {
-            showKeyboard();
-        } else if (keyboardContainer) {
-            keyboardContainer.style.display = "none";
+        if (keyboardContainer) {
+            if (activeScreen === gameScreen && isMobile) {
+                showKeyboard();
+                keyboardContainer.style.display = "flex";
+            } else {
+                keyboardContainer.style.display = "none";
+            }
+        }
+        // Force repaint to ensure UI updates
+        if (activeScreen) {
+            activeScreen.style.display = "none";
+            activeScreen.offsetHeight; // Trigger reflow
+            activeScreen.style.display = "flex";
         }
     }
 
@@ -599,67 +613,47 @@ document.addEventListener("DOMContentLoaded", async () => {
             isUILocked = true;
             isLoadingGame = true;
             prevGameArrow.style.opacity = "0.7";
-            if (!currentGameNumber) {
-                console.error("No current game number set");
-                isUILocked = false;
-                isLoadingGame = false;
-                prevGameArrow.style.opacity = "1";
-                return;
-            }
-            let currentIndex;
-            let gameList;
-            let isPrivate = currentGameNumber.includes("- Private");
-            if (isPrivate) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                gameList = privateGames;
-            } else {
-                currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
-                gameList = allGames;
-            }
-            console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length });
-            if (currentIndex === -1) {
-                console.error("Current game not found in game list:", currentGameNumber);
-                isUILocked = false;
-                isLoadingGame = false;
-                prevGameArrow.style.opacity = "1";
-                return;
-            }
-            if (currentIndex < gameList.length - 1) {
-                const targetGame = gameList[currentIndex + 1];
-                console.log("Loading previous game", { currentIndex, targetIndex: currentIndex + 1, targetGame });
-                currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
-                try {
+            try {
+                if (!currentGameNumber) {
+                    throw new Error("No current game number set");
+                }
+                let currentIndex;
+                let gameList;
+                let isPrivate = currentGameNumber.includes("- Private");
+                if (isPrivate) {
+                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
+                    currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
+                    gameList = privateGames;
+                } else {
+                    currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
+                    gameList = allGames;
+                }
+                console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length });
+                if (currentIndex === -1) {
+                    throw new Error(`Current game not found in game list: ${currentGameNumber}`);
+                }
+                if (currentIndex < gameList.length - 1) {
+                    const targetGame = gameList[currentIndex + 1];
+                    console.log("Loading previous game", { currentIndex, targetIndex: currentIndex + 1, targetGame });
+                    currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
                     await preloadBackground(currentBackground);
                     loadGame(targetGame);
                     resetScreenDisplays(gameScreen);
                     gameScreen.style.display = "flex";
                     adjustBackground();
                     showKeyboard();
-                    setTimeout(() => {
-                        isUILocked = false;
-                        isLoadingGame = false;
-                        prevGameArrow.style.opacity = "1";
-                        updateArrowStates(currentIndex + 1, gameList);
-                    }, 500);
-                } catch (error) {
-                    console.error("Failed to preload background for previous game:", error);
-                    currentBackground = defaultBackground;
-                    loadGame(targetGame);
-                    resetScreenDisplays(gameScreen);
-                    gameScreen.style.display = "flex";
-                    adjustBackground();
-                    showKeyboard();
-                    setTimeout(() => {
-                        isUILocked = false;
-                        isLoadingGame = false;
-                        prevGameArrow.style.opacity = "1";
-                        updateArrowStates(currentIndex + 1, gameList);
-                    }, 500);
+                    updateArrowStates(currentIndex + 1, gameList);
+                } else {
+                    console.log("At the oldest game, cannot go to previous");
+                    prevGameArrow.classList.add("disabled");
                 }
-            } else {
-                console.log("At the oldest game, cannot go to previous");
-                prevGameArrow.classList.add("disabled");
+            } catch (error) {
+                console.error("Error navigating to previous game:", error.message);
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Failed to load previous game.";
+                    formErrorDialog.style.display = "flex";
+                }
+            } finally {
                 isUILocked = false;
                 isLoadingGame = false;
                 prevGameArrow.style.opacity = "1";
@@ -680,67 +674,47 @@ document.addEventListener("DOMContentLoaded", async () => {
             isUILocked = true;
             isLoadingGame = true;
             nextGameArrow.style.opacity = "0.7";
-            if (!currentGameNumber) {
-                console.error("No current game number set");
-                isUILocked = false;
-                isLoadingGame = false;
-                nextGameArrow.style.opacity = "1";
-                return;
-            }
-            let currentIndex;
-            let gameList;
-            let isPrivate = currentGameNumber.includes("- Private");
-            if (isPrivate) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                gameList = privateGames;
-            } else {
-                currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
-                gameList = allGames;
-            }
-            console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length });
-            if (currentIndex === -1) {
-                console.error("Current game not found in game list:", currentGameNumber);
-                isUILocked = false;
-                isLoadingGame = false;
-                nextGameArrow.style.opacity = "1";
-                return;
-            }
-            if (currentIndex > 0) {
-                const targetGame = gameList[currentIndex - 1];
-                console.log("Loading next game", { currentIndex, targetIndex: currentIndex - 1, targetGame });
-                currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
-                try {
+            try {
+                if (!currentGameNumber) {
+                    throw new Error("No current game number set");
+                }
+                let currentIndex;
+                let gameList;
+                let isPrivate = currentGameNumber.includes("- Private");
+                if (isPrivate) {
+                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
+                    currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
+                    gameList = privateGames;
+                } else {
+                    currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
+                    gameList = allGames;
+                }
+                console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length });
+                if (currentIndex === -1) {
+                    throw new Error(`Current game not found in game list: ${currentGameNumber}`);
+                }
+                if (currentIndex > 0) {
+                    const targetGame = gameList[currentIndex - 1];
+                    console.log("Loading next game", { currentIndex, targetIndex: currentIndex - 1, targetGame });
+                    currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
                     await preloadBackground(currentBackground);
                     loadGame(targetGame);
                     resetScreenDisplays(gameScreen);
                     gameScreen.style.display = "flex";
                     adjustBackground();
                     showKeyboard();
-                    setTimeout(() => {
-                        isUILocked = false;
-                        isLoadingGame = false;
-                        nextGameArrow.style.opacity = "1";
-                        updateArrowStates(currentIndex - 1, gameList);
-                    }, 500);
-                } catch (error) {
-                    console.error("Failed to preload background for next game:", error);
-                    currentBackground = defaultBackground;
-                    loadGame(targetGame);
-                    resetScreenDisplays(gameScreen);
-                    gameScreen.style.display = "flex";
-                    adjustBackground();
-                    showKeyboard();
-                    setTimeout(() => {
-                        isUILocked = false;
-                        isLoadingGame = false;
-                        nextGameArrow.style.opacity = "1";
-                        updateArrowStates(currentIndex - 1, gameList);
-                    }, 500);
+                    updateArrowStates(currentIndex - 1, gameList);
+                } else {
+                    console.log("At the newest game, cannot go to next");
+                    nextGameArrow.classList.add("disabled");
                 }
-            } else {
-                console.log("At the newest game, cannot go to next");
-                nextGameArrow.classList.add("disabled");
+            } catch (error) {
+                console.error("Error navigating to next game:", error.message);
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Failed to load next game.";
+                    formErrorDialog.style.display = "flex";
+                }
+            } finally {
                 isUILocked = false;
                 isLoadingGame = false;
                 nextGameArrow.style.opacity = "1";
@@ -1112,7 +1086,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupKeyboardListeners();
     }
 
-    // Fetch game data (FIX: Improved error handling to ensure game loads)
+    // Fetch game data with enhanced error handling
     async function fetchGameData() {
         try {
             console.log("Fetching official games from:", officialUrl);
@@ -1138,7 +1112,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             currentBackground = latestGame["Background"] && latestGame["Background"].trim() !== "" ? latestGame["Background"] : defaultBackground;
             console.log("Selected background:", currentBackground);
 
-            // Always attempt to preload background, but proceed even if it fails
             await preloadBackground(currentBackground);
             adjustBackground();
             loadGame(latestGame);
@@ -1166,6 +1139,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ];
             currentBackground = defaultBackground;
             console.log("Using fallback game with default background:", currentBackground);
+            await preloadBackground(currentBackground); // Preload default background
             adjustBackground();
             loadGame(allGames[0]);
             resetScreenDisplays(gameScreen);
@@ -1176,9 +1150,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             setupKeyboardListeners();
             updateArrowStates(0, allGames);
             if (formErrorDialog && formErrorMessage) {
-                formErrorMessage.textContent = "Failed to load official games data. Using default game.";
+                formErrorMessage.textContent = "Failed to load official games. Using default game.";
                 formErrorDialog.style.display = "flex";
             }
+        } finally {
+            // Ensure UI is unlocked and game loading flag is reset
+            isUILocked = false;
+            isLoadingGame = false;
         }
     }
 
@@ -1241,7 +1219,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                             guessesDisplay = pastResult.guesses;
                         }
                     }
-
 
                     const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
@@ -1443,15 +1420,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Adjust background
+    // Adjust background without cache-busting for stability
     function adjustBackground() {
         console.log("Adjusting background to:", currentBackground);
         const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
             if (screen) {
-                const cacheBustUrl = `${currentBackground}?t=${new Date().getTime()}`;
-                screen.style.background = `url('${cacheBustUrl}') no-repeat center top fixed`;
+                screen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
                 screen.style.backgroundSize = screen.id === "game-screen" ? "100% calc(100% - 24vh)" : "cover";
+                screen.style.backgroundAttachment = "fixed";
                 screen.offsetHeight;
             }
         });
@@ -1757,4 +1734,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     await fetchGameData();
     await fetchPrivateGames();
     displayGameList();
+    // Force initial repaint
+    gameScreen.style.display = "none";
+    gameScreen.offsetHeight;
+    gameScreen.style.display = "flex";
+    adjustBackground();
 });
