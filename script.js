@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 cursorLeft = maxLeft;
             }
             cursor.style.left = `${cursorLeft}px`;
-            cursor.style.top = " pothole-filled road.50%";
+            cursor.style.top = "50%";
             cursor.style.transform = "translateY(-50%)";
 
             console.log("Cursor updated:", { textWidth, cursorLeft, maxLeft });
@@ -1560,6 +1560,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gameNumberDisplay = document.getElementById("game-number-display");
         const hardLuckLabel = document.getElementById("hard-luck-label");
         const wellDoneLabel = document.getElementById("well-done-label");
+        const shareSection = document.getElementById("share-section");
 
         if (todaysWord) todaysWord.textContent = secretWord;
         if (gameNumberDisplay) {
@@ -1583,6 +1584,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             shareText.innerHTML = shareMessage.replace(/\n/g, "<br>");
         }
 
+        // Add Share label
+        if (shareSection) {
+            const existingLabel = document.getElementById("share-label");
+            if (!existingLabel) {
+                const shareLabel = document.createElement("div");
+                shareLabel.id = "share-label";
+                shareLabel.textContent = "Share";
+                shareSection.insertBefore(shareLabel, document.getElementById("share-buttons"));
+                console.log("Added Share label to share-section");
+            }
+        }
+
         const shareButtons = {
             whatsapp: document.getElementById("share-whatsapp"),
             telegram: document.getElementById("share-telegram"),
@@ -1602,7 +1615,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (shareButtons.instagram) {
             shareButtons.instagram.addEventListener("click", (e) => {
                 e.preventDefault();
-                // Instagram doesn't support direct URL sharing; fallback to clipboard or manual share
                 navigator.clipboard.writeText(shareMessage.replace(/<[^>]+>/g, '')).then(() => {
                     alert("Score copied to clipboard! Paste it into your Instagram post.");
                     window.open("https://www.instagram.com/", "_blank");

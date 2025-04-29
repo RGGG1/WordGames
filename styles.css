@@ -22,7 +22,7 @@ a {
 #game-screen {
   display: flex;
   flex-direction: column;
-  height: 100%; /* Changed from 100vh to 100% to better handle dynamic viewports */
+  height: 100%;
   width: 100vw;
   box-sizing: border-box;
   overflow: hidden;
@@ -32,7 +32,7 @@ a {
   top: 0;
   left: 0;
   z-index: 1;
-  background: url('newbackground.png') no-repeat center top fixed, #FFFFFF; /* Added fallback color */
+  background: url('newbackground.png') no-repeat center top fixed, #FFFFFF;
   background-size: 100% calc(100% - 24vh);
   background-attachment: fixed;
 }
@@ -130,7 +130,7 @@ a {
   height: auto;
   padding: 0 2vw 0 0;
   margin: 0;
-  z-index: 20; /* FIX: Increased to ensure buttons are above other elements */
+  z-index: 20;
   background: none;
   position: fixed;
   top: calc(5vh - 3.6vh);
@@ -139,7 +139,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  pointer-events: auto; /* FIX: Ensure touch events register */
+  pointer-events: auto;
 }
 
 .control-link {
@@ -153,9 +153,9 @@ a {
   margin-bottom: 1.8vh;
   cursor: pointer;
   text-decoration: underline;
-  pointer-events: auto; /* FIX: Ensure tappable */
-  touch-action: manipulation; /* FIX: Optimize for touch */
-  -webkit-tap-highlight-color: transparent; /* FIX: Remove tap highlight */
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 #all-games-link {
@@ -342,7 +342,7 @@ a {
 
 /* Cursor styling */
 .cursor {
-  display: inline-block !important; /* Ensure visibility on mobile */
+  display: inline-block !important;
   color: #000000;
   font-size: 4.5vh;
   line-height: 5.5vh;
@@ -441,14 +441,14 @@ a {
   width: 100vw;
   height: 20vh;
   max-height: 20vh;
-  display: none; /* Hidden by default */
+  display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: fixed;
   bottom: 4vh;
   background: #FFFFFF;
-  z-index: 15; /* FIX: Below buttons but above background */
+  z-index: 15;
   padding: 0.5vh 0.5vw;
   box-sizing: border-box;
   pointer-events: auto;
@@ -705,6 +705,11 @@ a {
   padding: 1.6875vh 3.375vw;
 }
 
+#create-pineapple-end {
+  font-size: 3.796875vh; /* 75% of #next-game-btn-end (5.0625 * 0.75) */
+  padding: 1.265625vh 2.53125vw; /* Scaled proportionally to 75% of #next-game-btn-end */
+}
+
 @media (min-width: 601px) {
   #game-screen .control-btn:hover {
     font-size: 3.375vh;
@@ -821,7 +826,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Added fallback color */
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
@@ -855,7 +860,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Added fallback color */
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
@@ -874,7 +879,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Added fallback color */
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
@@ -940,8 +945,8 @@ a {
 /* Position #game-select-content to start 2 lines below header and end 2 lines above ad box */
 #game-select-content {
   width: 85vw;
-  height: 76.1vh; /* 100vh - 12.7vh (top) - 7.2vh (bottom gap) - 4vh (ad box) */
-  margin: 12.7vh auto 0 auto; /* Top margin = 5.5vh (header) + 7.2vh (2 lines) */
+  height: 76.1vh;
+  margin: 12.7vh auto 0 auto;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -954,7 +959,7 @@ a {
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0; /* Move up 2vh, add 2vh below */
+  margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0;
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -984,7 +989,7 @@ a {
 .tab-content {
   display: none;
   width: 100%;
-  height: 53.175vh; /* 76.1vh - 15.3vh (title + tabs) - 7.625vh (button) */
+  height: 53.175vh;
   flex-direction: column;
   align-items: center;
 }
@@ -1151,14 +1156,22 @@ a {
   flex-grow: 1;
 }
 
+#share-label {
+  font-size: 2.5vh;
+  font-weight: bold;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+  margin-bottom: 1vh;
+}
+
 #share-buttons {
   display: flex;
-  gap: 3vh; /* Doubled from 1.5vh to 3vh */
+  gap: 3vh;
   margin-bottom: 1.5vh;
 }
 
 #share-buttons a {
-  font-size: 3.375vh; /* Increased from 2.25vh by 150% (2.25 * 1.5 = 3.375) */
+  font-size: 5.0625vh; /* Increased from 3.375vh by 150% (3.375 * 1.5) */
   color: #000000;
   text-decoration: none;
   text-shadow: 1px 1px 2px #FFFFFF;
@@ -1168,8 +1181,8 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5vh;
-  margin-top: 4vh; /* Increased from 2vh to 4vh to add two lines (2vh + 2vh) */
+  gap: 3vh; /* Increased from 1.5vh to 3vh for an extra line of space */
+  margin-top: 2vh; /* Two lines below share icons (1vh from #share-section + 1vh) */
   margin-bottom: 4vh;
 }
 
@@ -1331,8 +1344,9 @@ a {
     font-size: 4vh;
     padding: 0.75vh 2vw;
   }
-  #next-game-btn-end:hover {
-    font-size: 5.225vh;
+  #create-pineapple-end {
+    font-size: 3vh; /* 75% of #next-game-btn-end (4 * 0.75) */
+    padding: 0.5625vh 1.5vw; /* Scaled proportionally to 75% of #next-game-btn-end */
   }
   #hints-label {
     font-size: 2.75vh;
@@ -1361,12 +1375,12 @@ a {
     bottom: 4vh;
   }
   #game-screen .keyboard {
-    display: flex; /* Only show keyboard on game-screen for mobile */
+    display: flex;
   }
   #game-over .keyboard,
   #game-select-screen .keyboard,
   #create-form .keyboard {
-    display: none !important; /* Explicitly hide on other screens */
+    display: none !important;
   }
   .keyboard-content {
     gap: 0.4vh;
@@ -1490,16 +1504,20 @@ a {
   #share-section {
     margin: 0 auto;
   }
+  #share-label {
+    font-size: 2vh;
+    margin-bottom: 0.75vh;
+  }
   #share-buttons {
-    gap: 1.5vh; /* Doubled from 0.75vh (mobile original) to 1.5vh */
+    gap: 1.5vh;
     margin-bottom: 0.75vh;
   }
   #share-buttons a {
-    font-size: 3vh; /* Increased from 2vh (mobile original) by 150% (2 * 1.5 = 3) */
+    font-size: 4.5vh; /* Increased from 3vh by 150% (3 * 1.5) */
   }
   .end-buttons {
-    gap: 2vh;
-    margin-top: 3vh; /* Increased from 1vh to 3vh for mobile (1vh + 2vh) */
+    gap: 2.5vh; /* Increased from 2vh to 2.5vh for an extra line of space */
+    margin-top: 1.5vh; /* Two lines below share icons (0.75vh from #share-section + 0.75vh) */
     margin-bottom: 4vh;
   }
   .keyboard-back-btn {
