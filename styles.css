@@ -343,9 +343,8 @@ a {
   font-size: 4.5vh;
   line-height: 5.5vh;
   position: absolute;
-  left: 50%;
   top: 50%;
-  transform: translate(-50%, -50%);
+  transform: translateY(-50%);
   animation: blink 0.7s step-end infinite;
   pointer-events: none;
   z-index: 7;
@@ -960,7 +959,7 @@ a {
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: 3em 0 0.3vh 0; /* Moved down three lines with 3em margin-top */
+  margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0; /* Adjusted: reduced top by 2vh, increased bottom by 2vh */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -1318,9 +1317,8 @@ a {
   .cursor {
     font-size: 3.75vh; /* Matches #guess-input font-size */
     line-height: 4vh;
-    left: 50%;
     top: 50%;
-    transform: translate(-50%, -50%);
+    transform: translateY(-50%);
   }
   .guess-btn {
     font-size: 3vh;
@@ -1439,7 +1437,7 @@ a {
   }
   #game-list-title {
     font-size: 2.5vh;
-    margin: 3em 0 0.3vh 0; /* Moved down three lines */
+    margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0; /* Adjusted for mobile */
   }
   #tabs {
     margin: 0.3vh 0;

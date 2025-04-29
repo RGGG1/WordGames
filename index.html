@@ -36,7 +36,7 @@
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is.....</div>
+                            <div id="prompt">The Secret Word is...</div>
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                             <span class="cursor">|</span>
                         </div>
@@ -233,6 +233,11 @@
         </div>
     </div>
 
+    <script>
+        // Set initial background to prevent flash
+        document.getElementById("game-screen").style.background = `url('newbackground.png') no-repeat center top fixed`;
+        document.getElementById("game-screen").style.backgroundSize = "100% calc(100% - 24vh)";
+    </script>
     <script src="script.js"></script>
 </body>
 </html>
