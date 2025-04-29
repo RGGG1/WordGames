@@ -1445,7 +1445,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
-        console.log("Saving game result", { gameType, gameNumber, secretWord, guesses });
+        console.log("Attempting to save game result", { gameType, gameNumber, secretWord, guesses });
         const resultsKey = gameType === "pineapple" ? "pineappleResults" : "privatePineappleResults";
         let normalizedGameNumber = gameNumber;
         if (gameType === "pineapple") {
@@ -1454,9 +1454,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             normalizedGameNumber = gameNumber.split(" - ")[0];
         }
         const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
-        results[normalizedGameNumber] = { secretWord, guesses };
-        localStorage.setItem(resultsKey, JSON.stringify(results));
-        console.log("Game result saved:", results);
+        // Only save if no result exists or if the existing result has guesses as '-'
+        if (!results[normalizedGameNumber] || results[normalizedGameNumber].guesses === '-') {
+            results[normalizedGameNumber] = { secretWord, guesses };
+            localStorage.setItem(resultsKey, JSON.stringify(results));
+            console.log("Game result saved:", results);
+        } else {
+            console.log("Game result not saved: existing score is not '-' and will be preserved", results[normalizedGameNumber]);
+        }
     }
 
     function endGame(won, gaveUp = false, failed = false) {

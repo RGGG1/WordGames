@@ -758,11 +758,6 @@ a {
   font-size: 2vh;
 }
 
-.plus {
-  font-size: 4vh;
-  line-height: 1;
-}
-
 /* Guess animation */
 #guess-input-container.wrong-guess {
   animation: flashRed 0.35s ease;
@@ -1230,13 +1225,6 @@ a {
   margin-bottom: 1vh;
 }
 
-.or-text {
-  font-size: 1.8vh;
-  margin-bottom: 0.3vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
 #guesses-content {
   width: 85vw;
   text-align: center;
@@ -1461,7 +1449,7 @@ a {
     display: none !important;
   }
   #game-screen .keyboard,
-  #create-form .keyboard {
+  #create-form .键盘 {
     display: flex;
   }
   /* Mobile adjustments for create-form */
@@ -1480,9 +1468,6 @@ a {
   }
   #create-form .back-btn-container {
     margin: 1vh 0;
-  }
-  .or-text {
-    display: none;
   }
   /* Mobile adjustments for game-over screen */
   #game-over {
