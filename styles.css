@@ -938,7 +938,7 @@ a {
   align-items: center;
 }
 
-/* Updated: Position #game-select-content to start 2 lines below header and end 2 lines above ad box */
+/* Position #game-select-content to start 2 lines below header and end 2 lines above ad box */
 #game-select-content {
   width: 85vw;
   height: 76.1vh; /* 100vh - 12.7vh (top) - 7.2vh (bottom gap) - 4vh (ad box) */
@@ -955,7 +955,7 @@ a {
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0; /* Updated: Move up 2vh, add 2vh below */
+  margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0; /* Move up 2vh, add 2vh below */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -981,7 +981,7 @@ a {
   font-weight: bold;
 }
 
-/* Updated: Adjust tab-content height to fit within new #game-select-content height */
+/* Adjust tab-content height to fit within #game-select-content */
 .tab-content {
   display: none;
   width: 100%;
@@ -1006,7 +1006,7 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Updated: Match game-list max-height to tab-content */
+/* Match game-list max-height to tab-content */
 .game-list {
   display: flex;
   flex-direction: column;
@@ -1425,31 +1425,31 @@ a {
   #share-text .guess-count {
     font-size: 4vh;
   }
-  /* Updated: Mobile adjustments for game-select-content */
+  /* Updated: Mobile adjustments to move #game-select-content up */
   #game-select-content {
     width: 85vw;
-    height: 78.5vh; /* 100vh - 11.5vh (top) - 6vh (bottom gap) - 4vh (ad box) */
-    margin: 11.5vh auto 0 auto; /* Top margin = 5.5vh (header) + 6vh (2 lines) */
+    height: 83vh; /* 100vh - 7vh (top) - 6vh (bottom gap) - 4vh (ad box) */
+    margin: 7vh auto 0 auto; /* Top margin = 5.5vh (header) + 1.5vh (~0.5 line) */
   }
   #game-list-title {
     font-size: 2.5vh;
-    margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0; /* Updated: Move up 2vh, add 2vh below */
+    margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0; /* Move up 2vh, add 2vh below */
   }
   #tabs {
     margin: 0.3vh 0;
   }
   /* Updated: Mobile tab-content and game-list heights */
   .tab-content {
-    height: 61.45vh; /* 78.5vh - 10.3vh (title) - 2.6vh (tabs) - 6.65vh (button) */
+    height: 63.45vh; /* 83vh - 12.9vh (title + tabs) - 6.65vh (button) */
   }
   #private-games {
-    height: 59.95vh; /* 61.45vh - 1.5vh (back-btn-container) */
+    height: 61.95vh; /* 63.45vh - 1.5vh (back-btn-container) */
   }
   .game-list {
-    max-height: 61.45vh;
+    max-height: 63.45vh;
   }
   #private-games .game-list {
-    max-height: 59.95vh;
+    max-height: 61.95vh;
   }
   #official-back-btn,
   #private-back-btn {
