@@ -298,7 +298,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Show keyboard
     function showKeyboard() {
-        if (!isMobile || !keyboardContainer || !keyboardContent || !keyboardGuessesContent || !keyboardGiveUpContent || !keyboardBackBtn) {
+        if (!isoure || !keyboardContainer || !keyboardContent || !keyboardGuessesContent || !keyboardGiveUpContent || !keyboardBackBtn) {
             console.log("Skipping showKeyboard: not mobile or elements missing");
             return;
         }
@@ -1599,7 +1599,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         const shareButtons = {
             whatsapp: document.getElementById("share-whatsapp"),
             telegram: document.getElementById("share-telegram"),
-            twitter: document.getElementById("share-twitter")
+            twitter: document.getElementById("share-twitter"),
+            instagram: document.getElementById("share-instagram")
         };
 
         if (shareButtons.whatsapp) {
@@ -1610,6 +1611,20 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (shareButtons.twitter) {
             shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+        }
+        if (shareButtons.instagram) {
+            shareButtons.instagram.addEventListener("click", (e) => {
+                e.preventDefault();
+                // Instagram doesn't support direct URL sharing; fallback to clipboard or manual share
+                navigator.clipboard.writeText(shareMessage.replace(/<[^>]+>/g, '')).then(() => {
+                    alert("Score copied to clipboard! Paste it into your Instagram post.");
+                    window.open("https://www.instagram.com/", "_blank");
+                }).catch(err => {
+                    console.error("Failed to copy to clipboard:", err);
+                    alert("Please copy your score manually and share it on Instagram.");
+                    window.open("https://www.instagram.com/", "_blank");
+                });
+            });
         }
 
         if (won) {
