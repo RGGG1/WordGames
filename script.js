@@ -424,11 +424,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (keyboardGiveUpContent) {
-        keyboardGuessesContent.addEventListener("click", (e) => {
+        keyboardGiveUpContent.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (e.target === keyboardGuessesContent || e.target === document.getElementById("guesses-list") || e.target === document.getElementById("guesses-title")) {
-                console.log("Clicked/tapped guesses content, showing keyboard");
+            if (e.target === keyboardGiveUpContent || e.target.classList.contains("dialog-message")) {
+                console.log("Clicked/tapped give-up content, showing keyboard");
                 showKeyboard();
             }
         });
@@ -472,12 +472,161 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // FIX: Add debounced event listeners for control links to ensure responsiveness
     if (allGamesLink) {
-        allGamesLink.addEventListener("click", (e) => {
+        allGamesLink.removeEventListener("click", allGamesLink._clickHandler);
+        const clickHandler = debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("All Games link clicked");
-            showGameSelectScreen();
+            if (!isLoadingGame) {
+                showGameSelectScreen();
+            } else {
+                console.log("All Games link ignored: game is still loading");
+            }
+        }, 50);
+        allGamesLink._clickHandler = clickHandler;
+        allGamesLink.addEventListener("click", clickHandler);
+        allGamesLink.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            clickHandler(e);
+        });
+    }
+
+    // FIX: Add debounced event listeners for giveUpLink
+    if (giveUpLink && giveUpYesBtn && giveUpNoBtn) {
+        giveUpLink.removeEventListener("click", giveUpLink._clickHandler);
+        const clickHandler = debounce((e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Give Up link clicked");
+            if (!isLoadingGame) {
+                if (isMobile) {
+                    if (keyboardContainer && keyboardContent && keyboardGiveUpContent && keyboardBackBtn) {
+                        keyboardContainer.classList.add("show-alternate", "show-give-up");
+                        keyboardContent.style.display = "none";
+                        keyboardGuessesContent.style.display = "none";
+                        keyboardGiveUpContent.style.display = "flex";
+                        keyboardBackBtn.style.display = "block";
+                        console.log("Showing give-up content in keyboard container");
+                    }
+                } else {
+                    if (giveUpDialog) {
+                        giveUpDialog.style.display = "flex";
+                        console.log("Showing give-up dialog");
+                    }
+                }
+            } else {
+                console.log("Give Up link ignored: game is still loading");
+            }
+        }, 50);
+        giveUpLink._clickHandler = clickHandler;
+        giveUpLink.addEventListener("click", clickHandler);
+        giveUpLink.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            clickHandler(e);
+        });
+
+        giveUpYesBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Give Up Yes button clicked");
+            gaveUp = true;
+            let normalizedGameNumber;
+            let gameType;
+            if (currentGameNumber.includes("- Private")) {
+                normalizedGameNumber = currentGameNumber.split(" - ")[0];
+                gameType = "privatePineapple";
+            } else {
+                normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                gameType = "pineapple";
+            }
+            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
+            if (isMobile) {
+                showKeyboard();
+            } else {
+                if (giveUpDialog) giveUpDialog.style.display = "none";
+            }
+            endGame(false, true);
+        });
+
+        giveUpNoBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Give Up No button clicked");
+            if (isMobile) {
+                showKeyboard();
+            } else {
+                if (giveUpDialog) giveUpDialog.style.display = "none";
+            }
+            if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
+        });
+    }
+
+    // FIX: Add debounced event listeners for guessesLink
+    if (guessesLink && guessesScreen) {
+        guessesLink.removeEventListener("click", guessesLink._clickHandler);
+        const clickHandler = debounce((e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guesses link clicked");
+            if (!isLoadingGame) {
+                const guessesList = document.getElementById("guesses-list");
+                console.log("Current guesses array:", guesses);
+                if (isMobile) {
+                    if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardBackBtn) {
+                        guessesList.innerHTML = guesses.length > 0 
+                            ? guesses.join(' <span class="separator yellow">|</span> ')
+                            : "No guesses yet!";
+                        keyboardContainer.classList.add("show-alternate", "show-guesses");
+                        keyboardContent.style.display = "none";
+                        keyboardGuessesContent.style.display = "flex";
+                        keyboardGiveUpContent.style.display = "none";
+                        keyboardBackBtn.style.display = "block";
+                        console.log("Showing guesses content in keyboard container");
+                    }
+                } else {
+                    guessesList.innerHTML = guesses.length > 0 
+                        ? guesses.join(' <span class="separator yellow">|</span> ')
+                        : "No guesses yet!";
+                    guessesScreen.style.display = "flex";
+                    console.log("Showing guesses screen");
+                }
+            } else {
+                console.log("Guesses link ignored: game is still loading");
+            }
+        }, 50);
+        guessesLink._clickHandler = clickHandler;
+        guessesLink.addEventListener("click", clickHandler);
+        guessesLink.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            clickHandler(e);
+        });
+
+        guessesScreen.addEventListener("click", (e) => {
+            if (e.target === guessesScreen && !isMobile) {
+                console.log("Clicked outside guesses screen");
+                guessesScreen.style.display = "none";
+                if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }
+        });
+
+        guessesScreen.addEventListener("touchstart", (e) => {
+            if (e.target === guessesScreen && !isMobile) {
+                e.preventDefault();
+                console.log("Touched outside guesses screen");
+                guessesScreen.style.display = "none";
+                if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }
         });
     }
 
@@ -883,67 +1032,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessesCloseBtn.addEventListener("touchstart", closeHandler);
     }
 
-    if (giveUpLink && giveUpYesBtn && giveUpNoBtn) {
-        giveUpLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Give Up link clicked");
-            if (isMobile) {
-                if (keyboardContainer && keyboardContent && keyboardGiveUpContent && keyboardBackBtn) {
-                    keyboardContainer.classList.add("show-alternate", "show-give-up");
-                    keyboardContent.style.display = "none";
-                    keyboardGuessesContent.style.display = "none";
-                    keyboardGiveUpContent.style.display = "flex";
-                    keyboardBackBtn.style.display = "block";
-                    console.log("Showing give-up content in keyboard container");
-                }
-            } else {
-                if (giveUpDialog) {
-                    giveUpDialog.style.display = "flex";
-                    console.log("Showing give-up dialog");
-                }
-            }
-        });
-
-        giveUpYesBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Give Up Yes button clicked");
-            gaveUp = true;
-            let normalizedGameNumber;
-            let gameType;
-            if (currentGameNumber.includes("- Private")) {
-                normalizedGameNumber = currentGameNumber.split(" - ")[0];
-                gameType = "privatePineapple";
-            } else {
-                normalizedGameNumber = currentGameNumber.replace("Game #", "");
-                gameType = "pineapple";
-            }
-            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
-            if (isMobile) {
-                showKeyboard();
-            } else {
-                if (giveUpDialog) giveUpDialog.style.display = "none";
-            }
-            endGame(false, true);
-        });
-
-        giveUpNoBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Give Up No button clicked");
-            if (isMobile) {
-                showKeyboard();
-            } else {
-                if (giveUpDialog) giveUpDialog.style.display = "none";
-            }
-            if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
-                guessInput.focus();
-                activeInput = guessInput;
-            }
-        });
-    }
-
     const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
     const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
 
@@ -984,58 +1072,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         keyboardGiveUpNoBtn.addEventListener("click", noHandler);
         keyboardGiveUpNoBtn.addEventListener("touchstart", noHandler);
-    }
-
-    if (guessesLink && guessesScreen) {
-        guessesLink.addEventListener("click", (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Guesses link clicked");
-            const guessesList = document.getElementById("guesses-list");
-            console.log("Current guesses array:", guesses);
-            if (isMobile) {
-                if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardBackBtn) {
-                    guessesList.innerHTML = guesses.length > 0 
-                        ? guesses.join(' <span class="separator yellow">|</span> ')
-                        : "No guesses yet!";
-                    keyboardContainer.classList.add("show-alternate", "show-guesses");
-                    keyboardContent.style.display = "none";
-                    keyboardGuessesContent.style.display = "flex";
-                    keyboardGiveUpContent.style.display = "none";
-                    keyboardBackBtn.style.display = "block";
-                    console.log("Showing guesses content in keyboard container");
-                }
-            } else {
-                guessesList.innerHTML = guesses.length > 0 
-                    ? guesses.join(' <span class="separator yellow">|</span> ')
-                    : "No guesses yet!";
-                guessesScreen.style.display = "flex";
-                console.log("Showing guesses screen");
-            }
-        });
-
-        guessesScreen.addEventListener("click", (e) => {
-            if (e.target === guessesScreen && !isMobile) {
-                console.log("Clicked outside guesses screen");
-                guessesScreen.style.display = "none";
-                if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
-                    guessInput.focus();
-                    activeInput = guessInput;
-                }
-            }
-        });
-
-        guessesScreen.addEventListener("touchstart", (e) => {
-            if (e.target === guessesScreen && !isMobile) {
-                e.preventDefault();
-                console.log("Touched outside guesses screen");
-                guessesScreen.style.display = "none";
-                if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
-                    guessInput.focus();
-                    activeInput = guessInput;
-                }
-            }
-        });
     }
 
     if (giveUpDialog) {
