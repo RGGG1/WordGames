@@ -130,7 +130,7 @@ a {
   height: auto;
   padding: 0 2vw 0 0;
   margin: 0;
-  z-index: 11;
+  z-index: 20; /* FIX: Increased to ensure buttons are above other elements */
   background: none;
   position: fixed;
   top: calc(5vh - 3.6vh);
@@ -139,6 +139,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  pointer-events: auto; /* FIX: Ensure touch events register */
 }
 
 .control-link {
@@ -152,6 +153,9 @@ a {
   margin-bottom: 1.8vh;
   cursor: pointer;
   text-decoration: underline;
+  pointer-events: auto; /* FIX: Ensure tappable */
+  touch-action: manipulation; /* FIX: Optimize for touch */
+  -webkit-tap-highlight-color: transparent; /* FIX: Remove tap highlight */
 }
 
 #all-games-link {
@@ -444,8 +448,8 @@ a {
   position: fixed;
   bottom: 4vh;
   background: #FFFFFF;
-  z-index: 10;
-  padding: 0.5vh 0.5vw; /* Added small padding */
+  z-index: 15; /* FIX: Below buttons but above background */
+  padding: 0.5vh 0.5vw;
   box-sizing: border-box;
   pointer-events: auto;
   overflow: hidden;
@@ -460,10 +464,10 @@ a {
 .keyboard-content {
   display: flex;
   flex-direction: column;
-  justify-content: space-between; /* Distribute rows evenly */
+  justify-content: space-between;
   width: 100%;
   height: 100%;
-  gap: 0.5vh; /* Vertical spacing between rows */
+  gap: 0.5vh;
 }
 
 .keyboard.show-alternate .keyboard-content {
@@ -474,16 +478,16 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5vw; /* Horizontal spacing between keys */
-  flex: 1; /* Rows take equal height */
+  gap: 0.5vw;
+  flex: 1;
 }
 
 .key {
-  font-size: 2.25vh; /* Slightly reduced for better fit */
-  width: 9vw; /* Adjusted to fit 10 keys with gaps */
+  font-size: 2.25vh;
+  width: 9vw;
   max-width: 4.5vh;
-  height: 100%; /* Fill row height */
-  line-height: normal; /* Center text vertically */
+  height: 100%;
+  line-height: normal;
   background: #D3D6DA;
   border: 0.1vh solid #999999;
   border-radius: 0.5vh;
@@ -497,7 +501,7 @@ a {
 }
 
 .key.special {
-  width: 13.5vw; /* Adjusted for Enter/Backspace */
+  width: 13.5vw;
   max-width: 6.75vh;
   font-size: 2vh;
 }
@@ -807,9 +811,9 @@ a {
 #game-over {
   display: none;
   flex-direction: column;
-  justify-content: flex-start; /* Changed from space-between to flex-start */
+  justify-content: flex-start;
   align-items: center;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   width: 100vw;
   box-sizing: border-box;
   margin: 0;
@@ -818,10 +822,10 @@ a {
   top: 0;
   left: 0;
   background: url('newbackground.png') no-repeat center center fixed;
-  background-size: cover; /* Ensure background covers full screen */
+  background-size: cover;
   background-attachment: fixed;
   z-index: 1;
-  overflow-y: auto; /* Allow scrolling if content overflows */
+  overflow-y: auto;
 }
 
 #game-over::before {
@@ -1171,9 +1175,9 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5vh; /* Increased gap for more space between buttons */
-  margin-top: 2vh; /* Add spacing above buttons to position them */
-  margin-bottom: 4vh; /* Ensure space above ad-box */
+  gap: 1.5vh;
+  margin-top: 2vh;
+  margin-bottom: 4vh;
 }
 
 .form-input {
@@ -1298,10 +1302,10 @@ a {
     font-family: 'Luckiest Guy', cursive;
     box-sizing: content-box;
     z-index: 6;
-    caret-color: transparent; /* Hide default caret on mobile */
+    caret-color: transparent;
   }
   .cursor {
-    font-size: 3.75vh; /* Matches #guess-input font-size */
+    font-size: 3.75vh;
     line-height: 4vh;
     top: 50%;
     transform: translateY(-50%);
@@ -1413,25 +1417,23 @@ a {
   #share-text .guess-count {
     font-size: 4vh;
   }
-  /* Updated: Mobile adjustments to position #game-select-content 3.5vh from top, 7vh from bottom */
   #game-select-content {
     width: 85vw;
-    height: 85.5vh; /* 100vh - 3.5vh (top) - 7vh (bottom gap) - 4vh (ad box) */
-    margin: 3.5vh auto 0 auto; /* Top margin = 3.5vh */
+    height: 85.5vh;
+    margin: 3.5vh auto 0 auto;
   }
   #game-list-title {
     font-size: 2.5vh;
-    margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0; /* Move up 2vh, add 2vh below */
+    margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0;
   }
   #tabs {
     margin: 0.3vh 0;
   }
-  /* Updated: Mobile tab-content and game-list heights */
   .tab-content {
-    height: 65.95vh; /* 85.5vh - 12.9vh (title + tabs) - 6.65vh (button) */
+    height: 65.95vh;
   }
   #private-games {
-    height: 64.45vh; /* 65.95vh - 1.5vh (back-btn-container) */
+    height: 64.45vh;
   }
   .game-list {
     max-height: 65.95vh;
@@ -1449,10 +1451,9 @@ a {
     display: none !important;
   }
   #game-screen .keyboard,
-  #create-form .键盘 {
+  #create-form .keyboard {
     display: flex;
   }
-  /* Mobile adjustments for create-form */
   #create-form .form-content {
     max-height: calc(100vh - 10vh - 5vh - 4vh - 20vh);
   }
@@ -1469,25 +1470,24 @@ a {
   #create-form .back-btn-container {
     margin: 1vh 0;
   }
-  /* Mobile adjustments for game-over screen */
   #game-over {
-    height: 100vh; /* Ensure full height */
-    padding-bottom: 0; /* Remove padding to avoid extra space */
-    background-size: cover; /* Cover full screen */
-    justify-content: flex-start; /* Ensure content starts from top */
+    height: 100vh;
+    padding-bottom: 0;
+    background-size: cover;
+    justify-content: flex-start;
   }
   #game-over #ad-box {
-    bottom: 0; /* Keep ad box at bottom */
+    bottom: 0;
   }
   #game-over .keyboard,
   #game-over #keyboard-container {
-    display: none !important; /* Ensure keyboard and container are removed */
-    height: 0 !important; /* Prevent reserving space */
+    display: none !important;
+    height: 0 !important;
     padding: 0 !important;
     margin: 0 !important;
   }
   #share-section {
-    margin: 0 auto; /* Reset negative margin */
+    margin: 0 auto;
   }
   #share-buttons {
     margin-bottom: 0.75vh;
@@ -1501,11 +1501,10 @@ a {
     padding: 0.5vh 1.5vw;
   }
   .end-buttons {
-    gap: 2vh; /* Further increase gap on mobile for extra line of space */
-    margin-top: 1vh; /* Adjust for mobile to position buttons higher */
-    margin-bottom: 4vh; /* Ensure space above ad-box */
+    gap: 2vh;
+    margin-top: 1vh;
+    margin-bottom: 4vh;
   }
-  /* Mobile adjustments for keyboard alternate content */
   .keyboard-back-btn {
     font-size: 2.25vh;
   }
