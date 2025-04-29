@@ -82,9 +82,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     }
 
-    // Preload background image with error handling
+    // Preload background image with error handling (FIX: Simplified to ensure default background loads)
     function preloadBackground(url) {
-        return new Promise((resolve, reject) => {
+        return new Promise((resolve) => {
             if (!url || url.trim() === "") {
                 console.warn(`Invalid background URL: ${url}, using default: ${defaultBackground}`);
                 url = defaultBackground;
@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 resolve(url);
             };
             img.onerror = () => {
-                console.error(`Failed to preload background: ${url}, falling back to default`);
+                console.warn(`Failed to preload background: ${url}, using default: ${defaultBackground}`);
                 img.src = defaultBackground;
                 img.onload = () => {
                     console.log(`Default background preloaded: ${defaultBackground}`);
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 };
                 img.onerror = () => {
                     console.error(`Failed to preload default background: ${defaultBackground}`);
-                    reject(new Error(`Failed to preload both ${url} and default background`));
+                    resolve(defaultBackground); // Always resolve to prevent hanging
                 };
             };
         });
@@ -298,7 +298,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Show keyboard
     function showKeyboard() {
-        if (!isoure || !keyboardContainer || !keyboardContent || !keyboardGuessesContent || !keyboardGiveUpContent || !keyboardBackBtn) {
+        if (!isMobile || !keyboardContainer || !keyboardContent || !keyboardGuessesContent || !keyboardGiveUpContent || !keyboardBackBtn) {
             console.log("Skipping showKeyboard: not mobile or elements missing");
             return;
         }
@@ -645,7 +645,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } catch (error) {
                     console.error("Failed to preload background for previous game:", error);
                     currentBackground = defaultBackground;
-                    await preloadBackground(currentBackground);
                     loadGame(targetGame);
                     resetScreenDisplays(gameScreen);
                     gameScreen.style.display = "flex";
@@ -727,7 +726,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 } catch (error) {
                     console.error("Failed to preload background for next game:", error);
                     currentBackground = defaultBackground;
-                    await preloadBackground(currentBackground);
                     loadGame(targetGame);
                     resetScreenDisplays(gameScreen);
                     gameScreen.style.display = "flex";
@@ -1114,7 +1112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupKeyboardListeners();
     }
 
-    // Fetch game data
+    // Fetch game data (FIX: Improved error handling to ensure game loads)
     async function fetchGameData() {
         try {
             console.log("Fetching official games from:", officialUrl);
@@ -1140,6 +1138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             currentBackground = latestGame["Background"] && latestGame["Background"].trim() !== "" ? latestGame["Background"] : defaultBackground;
             console.log("Selected background:", currentBackground);
 
+            // Always attempt to preload background, but proceed even if it fails
             await preloadBackground(currentBackground);
             adjustBackground();
             loadGame(latestGame);
@@ -1152,12 +1151,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             updateArrowStates(0, allGames);
         } catch (error) {
             console.error("Error in fetchGameData:", error.message);
+            // Fallback to hardcoded game
             allGames = [
-                { "Game Number": "1", "Secret Word": "TEST", "Hint 1": "SAMPLE", "Hint 2": "WORD", "Hint 3": "GAME", "Hint 4": "PLAY", "Hint 5": "FUN", "Background": "testbackground.png" }
+                {
+                    "Game Number": "1",
+                    "Secret Word": "TEST",
+                    "Hint 1": "SAMPLE",
+                    "Hint 2": "WORD",
+                    "Hint 3": "GAME",
+                    "Hint 4": "PLAY",
+                    "Hint 5": "FUN",
+                    "Background": defaultBackground
+                }
             ];
-            currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
-            console.log("Fallback background:", currentBackground);
-            await preloadBackground(currentBackground);
+            currentBackground = defaultBackground;
+            console.log("Using fallback game with default background:", currentBackground);
             adjustBackground();
             loadGame(allGames[0]);
             resetScreenDisplays(gameScreen);
@@ -1168,7 +1176,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             setupKeyboardListeners();
             updateArrowStates(0, allGames);
             if (formErrorDialog && formErrorMessage) {
-                formErrorMessage.textContent = "Failed to load official games data. Using hardcoded game.";
+                formErrorMessage.textContent = "Failed to load official games data. Using default game.";
                 formErrorDialog.style.display = "flex";
             }
         }
@@ -1233,6 +1241,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                             guessesDisplay = pastResult.guesses;
                         }
                     }
+
+
                     const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
