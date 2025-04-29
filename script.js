@@ -66,18 +66,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
 
-    // Preload background image
+    // Preload background image with error handling
     function preloadBackground(url) {
         return new Promise((resolve, reject) => {
+            if (!url || url.trim() === "") {
+                console.warn(`Invalid background URL: ${url}, using default: ${defaultBackground}`);
+                url = defaultBackground;
+            }
             const img = new Image();
             img.src = url;
             img.onload = () => {
-                console.log(`Preloaded background: ${url}`);
-                resolve();
+                console.log(`Successfully preloaded background: ${url}`);
+                resolve(url);
             };
             img.onerror = () => {
-                console.error(`Failed to preload background: ${url}`);
-                reject();
+                console.error(`Failed to preload background: ${url}, falling back to default`);
+                img.src = defaultBackground;
+                img.onload = () => {
+                    console.log(`Default background preloaded: ${defaultBackground}`);
+                    resolve(defaultBackground);
+                };
+                img.onerror = () => {
+                    console.error(`Failed to preload default background: ${defaultBackground}`);
+                    reject(new Error(`Failed to preload both ${url} and default background`));
+                };
             };
         });
     }
@@ -98,7 +110,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             cursor.style.display = "inline-block";
 
-            // Use canvas to measure text width
             const canvas = document.createElement("canvas");
             const context = canvas.getContext("2d");
             context.font = `${isMobile ? "3.75vh" : "4.5vh"} 'Luckiest Guy', cursive`;
@@ -110,7 +121,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             const paddingRight = parseFloat(containerStyles.paddingRight);
             const containerWidth = inputContainer.offsetWidth;
 
-            // Position cursor
             let cursorLeft = paddingLeft + textWidth;
             const cursorWidth = parseFloat(getComputedStyle(cursor).width);
             const maxLeft = containerWidth - paddingRight - cursorWidth;
@@ -125,7 +135,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Cursor updated:", { textWidth, cursorLeft, maxLeft });
         }
 
-        // Prevent virtual keyboard on mobile
         if (isMobile) {
             guessInput.setAttribute("readonly", "readonly");
             guessInput.addEventListener("focus", (e) => {
@@ -136,7 +145,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessInput.readOnly = false;
         }
 
-        // Event listeners for cursor updates
         guessInput.addEventListener("input", () => {
             guessInput.value = guessInput.value.toUpperCase();
             updateCursorPosition();
@@ -146,11 +154,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         guessInput.addEventListener("guessProcessed", updateCursorPosition);
 
-        // Monitor disabled state
         const observer = new MutationObserver(updateCursorPosition);
         observer.observe(guessInput, { attributes: true, attributeFilter: ["disabled"] });
 
-        // Initial position
         updateCursorPosition();
     }
 
@@ -418,11 +424,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (keyboardGiveUpContent) {
-        keyboardGiveUpContent.addEventListener("click", (e) => {
+        keyboardGuessesContent.addEventListener("click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (e.target === keyboardGiveUpContent || e.target.classList.contains("dialog-message")) {
-                console.log("Clicked/tapped give-up content, showing keyboard");
+            if (e.target === keyboardGuessesContent || e.target === document.getElementById("guesses-list") || e.target === document.getElementById("guesses-title")) {
+                console.log("Clicked/tapped guesses content, showing keyboard");
                 showKeyboard();
             }
         });
@@ -476,7 +482,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (prevGameArrow) {
-        prevGameArrow.addEventListener("click", (e) => {
+        prevGameArrow.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
             if (isLoadingGame) {
@@ -507,17 +513,36 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (currentIndex < gameList.length - 1) {
                 isLoadingGame = true;
                 prevGameArrow.style.opacity = "0.7";
-                console.log("Loading previous game", { currentIndex, targetIndex: currentIndex + 1, targetGame: gameList[currentIndex + 1] });
-                loadGame(gameList[currentIndex + 1]);
-                resetScreenDisplays();
-                gameScreen.style.display = "flex";
-                adjustBackground();
-                showKeyboard();
-                setTimeout(() => {
-                    isLoadingGame = false;
-                    prevGameArrow.style.opacity = "1";
-                    updateArrowStates(currentIndex + 1, gameList);
-                }, 500);
+                const targetGame = gameList[currentIndex + 1];
+                console.log("Loading previous game", { currentIndex, targetIndex: currentIndex + 1, targetGame });
+                currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
+                try {
+                    await preloadBackground(currentBackground);
+                    loadGame(targetGame);
+                    resetScreenDisplays();
+                    gameScreen.style.display = "flex";
+                    adjustBackground();
+                    showKeyboard();
+                    setTimeout(() => {
+                        isLoadingGame = false;
+                        prevGameArrow.style.opacity = "1";
+                        updateArrowStates(currentIndex + 1, gameList);
+                    }, 500);
+                } catch (error) {
+                    console.error("Failed to preload background for previous game:", error);
+                    currentBackground = defaultBackground;
+                    await preloadBackground(currentBackground);
+                    loadGame(targetGame);
+                    resetScreenDisplays();
+                    gameScreen.style.display = "flex";
+                    adjustBackground();
+                    showKeyboard();
+                    setTimeout(() => {
+                        isLoadingGame = false;
+                        prevGameArrow.style.opacity = "1";
+                        updateArrowStates(currentIndex + 1, gameList);
+                    }, 500);
+                }
             } else {
                 console.log("At the oldest game, cannot go to previous");
                 prevGameArrow.classList.add("disabled");
@@ -526,7 +551,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (nextGameArrow) {
-        nextGameArrow.addEventListener("click", (e) => {
+        nextGameArrow.addEventListener("click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
             if (isLoadingGame) {
@@ -557,17 +582,36 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (currentIndex > 0) {
                 isLoadingGame = true;
                 nextGameArrow.style.opacity = "0.7";
-                console.log("Loading next game", { currentIndex, targetIndex: currentIndex - 1, targetGame: gameList[currentIndex - 1] });
-                loadGame(gameList[currentIndex - 1]);
-                resetScreenDisplays();
-                gameScreen.style.display = "flex";
-                adjustBackground();
-                showKeyboard();
-                setTimeout(() => {
-                    isLoadingGame = false;
-                    nextGameArrow.style.opacity = "1";
-                    updateArrowStates(currentIndex - 1, gameList);
-                }, 500);
+                const targetGame = gameList[currentIndex - 1];
+                console.log("Loading next game", { currentIndex, targetIndex: currentIndex - 1, targetGame });
+                currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
+                try {
+                    await preloadBackground(currentBackground);
+                    loadGame(targetGame);
+                    resetScreenDisplays();
+                    gameScreen.style.display = "flex";
+                    adjustBackground();
+                    showKeyboard();
+                    setTimeout(() => {
+                        isLoadingGame = false;
+                        nextGameArrow.style.opacity = "1";
+                        updateArrowStates(currentIndex - 1, gameList);
+                    }, 500);
+                } catch (error) {
+                    console.error("Failed to preload background for next game:", error);
+                    currentBackground = defaultBackground;
+                    await preloadBackground(currentBackground);
+                    loadGame(targetGame);
+                    resetScreenDisplays();
+                    gameScreen.style.display = "flex";
+                    adjustBackground();
+                    showKeyboard();
+                    setTimeout(() => {
+                        isLoadingGame = false;
+                        nextGameArrow.style.opacity = "1";
+                        updateArrowStates(currentIndex - 1, gameList);
+                    }, 500);
+                }
             } else {
                 console.log("At the newest game, cannot go to next");
                 nextGameArrow.classList.add("disabled");
@@ -869,8 +913,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             let normalizedGameNumber;
             let gameType;
             if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                normalizedGameNumber = String(currentNum);
+                normalizedGameNumber = currentGameNumber.split(" - ")[0];
                 gameType = "privatePineapple";
             } else {
                 normalizedGameNumber = currentGameNumber.replace("Game #", "");
@@ -913,8 +956,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             let normalizedGameNumber;
             let gameType;
             if (currentGameNumber.includes("- Private")) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                normalizedGameNumber = String(currentNum);
+                normalizedGameNumber = currentGameNumber.split(" - ")[0];
                 gameType = "privatePineapple";
             } else {
                 normalizedGameNumber = currentGameNumber.replace("Game #", "");
@@ -1080,7 +1122,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             currentBackground = latestGame["Background"] && latestGame["Background"].trim() !== "" ? latestGame["Background"] : defaultBackground;
             console.log("Selected background:", currentBackground);
 
-            // Preload background
             await preloadBackground(currentBackground);
             adjustBackground();
             loadGame(latestGame);
@@ -1201,7 +1242,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         updateArrowStates(currentIndex, allGames);
                     });
                     officialList.appendChild(gameItem);
-                    console.log(`Rendered official game ${gameNumber}: ${secretWord}, Guesses: ${guessesDisplay}`);
+                    console.log(`Rendered official game ${gameNumber}: Secret Word: ${secretWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
                 });
                 setTimeout(() => {
                     officialList.style.display = "none";
@@ -1264,7 +1305,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         updateArrowStates(currentIndex, privateGames);
                     });
                     privateList.appendChild(gameItem);
-                    console.log(`Rendered private game ${gameNumber}: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guessesDisplay}`);
+                    console.log(`Rendered private game ${gameNumber}: Name: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
                 });
             }
         }
@@ -1367,10 +1408,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
             if (screen) {
-                screen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
+                const cacheBustUrl = `${currentBackground}?t=${new Date().getTime()}`;
+                screen.style.background = `url('${cacheBustUrl}') no-repeat center top fixed`;
                 screen.style.backgroundSize = screen.id === "game-screen" ? "100% calc(100% - 24vh)" : "cover";
+                screen.style.display = "none";
                 screen.offsetHeight;
-                console.log(`Set background for ${screen.id}`);
+                screen.style.display = screen.id === "game-screen" ? "flex" : screen.style.display || "none";
+                console.log(`Set background for ${screen.id}: ${cacheBustUrl}`);
             }
         });
     }
@@ -1415,7 +1459,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guess === secretWord) {
             console.log("Correct guess!");
-            saveGameResult(currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple", currentGameNumber, secretWord, guessCount);
+            let normalizedGameNumber;
+            let gameType;
+            if (currentGameNumber.includes("- Private")) {
+                normalizedGameNumber = currentGameNumber.split(" - ")[0];
+                gameType = "privatePineapple";
+            } else {
+                normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                gameType = "pineapple";
+            }
+            saveGameResult(gameType, normalizedGameNumber, secretWord, guessCount);
             endGame(true);
         } else {
             console.log("Incorrect guess, animating...");
@@ -1436,7 +1489,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (guessCount === 5) {
                 console.log("Max guesses (5) reached, ending game");
-                saveGameResult(currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple", currentGameNumber, secretWord, "X");
+                let normalizedGameNumber;
+                let gameType;
+                if (currentGameNumber.includes("- Private")) {
+                    normalizedGameNumber = currentGameNumber.split(" - ")[0];
+                    gameType = "privatePineapple";
+                } else {
+                    normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                    gameType = "pineapple";
+                }
+                saveGameResult(gameType, normalizedGameNumber, secretWord, "X");
                 endGame(false, false, true);
             } else if (hintIndex < hints.length - 1) {
                 revealHint();
@@ -1447,20 +1509,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
         console.log("Attempting to save game result", { gameType, gameNumber, secretWord, guesses });
         const resultsKey = gameType === "pineapple" ? "pineappleResults" : "privatePineappleResults";
-        let normalizedGameNumber = gameNumber;
+        let normalizedGameNumber = String(gameNumber);
         if (gameType === "pineapple") {
             normalizedGameNumber = gameNumber.replace("Game #", "");
         } else {
             normalizedGameNumber = gameNumber.split(" - ")[0];
         }
+        console.log(`Normalized game number: ${normalizedGameNumber}`);
         const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
-        // Only save if no result exists or if the existing result has guesses as '-'
         if (!results[normalizedGameNumber] || results[normalizedGameNumber].guesses === '-') {
             results[normalizedGameNumber] = { secretWord, guesses };
             localStorage.setItem(resultsKey, JSON.stringify(results));
-            console.log("Game result saved:", results);
+            console.log(`Game result saved for ${resultsKey}[${normalizedGameNumber}]:`, results[normalizedGameNumber]);
         } else {
-            console.log("Game result not saved: existing score is not '-' and will be preserved", results[normalizedGameNumber]);
+            console.log(`Game result not saved for ${resultsKey}[${normalizedGameNumber}]: existing score '${results[normalizedGameNumber].guesses}' is not '-' and will be preserved`, results[normalizedGameNumber]);
         }
     }
 
