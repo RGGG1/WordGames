@@ -149,7 +149,7 @@ a {
   width: 90vw;
   height: 5vh;
   position: fixed;
-  top: calc(5vh + 1.8vh + 1.8vh + 7.2vh); /* Adjusted for single control link */
+  bottom: 24vh; /* Above keyboard (20vh) and ad box (4vh) */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -196,7 +196,7 @@ a {
   text-align: left;
   width: 85vw;
   max-width: 85vw;
-  margin: calc(5vh + 1.8vh + 1.8vh + 5vh + 0.9vh + 1.8vh) auto 3.6vh auto;
+  margin: 5vh auto 3.6vh auto; /* Adjusted margin-top */
   z-index: 5;
   line-height: 1.8vh;
   overflow: hidden;
@@ -214,7 +214,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 1.8vh + 1.8vh); /* Adjusted for single control link */
+  top: 5vh; /* Only needs to account for the header */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -373,7 +373,7 @@ a {
 .hints-inline::before {
   content: '';
   position: absolute;
-  top: 50%; /* Fixed typo: '50 manoeuvre%' to '50%' */
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 85vw;
@@ -863,7 +863,7 @@ a {
 .pineapple-piece {
   position: absolute;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  animation: fall linear forwards; /* Fixed typo: 'Winear' to 'linear' */
+  animation: fall linear forwards;
   line-height: 1;
   top: -5vh;
   opacity: 1;
@@ -1079,10 +1079,7 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
-  top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh); /* Below hints */
-  left: 50%;
-  transform: translateX(-50%);
+  margin-top: 2vh; /* Adds a line of space between hints and links */
   z-index: 11;
 }
 
@@ -1110,6 +1107,32 @@ a {
   pointer-events: auto;
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Guesses wrapper to stack link and icons */
+#guesses-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Pineapple lives container */
+#pineapple-lives {
+  display: flex;
+  gap: 0.5vw;
+  margin-top: 0.5vh;
+}
+
+/* Pineapple icon styling */
+.pineapple-icon {
+  font-size: 2vh;
+  filter: grayscale(100%) brightness(0%); /* Makes the icon black */
+  transition: filter 0.3s ease;
+}
+
+.pineapple-icon.lost {
+  filter: none; /* Restores the icon's natural color (yellow) */
+  color: #FF0000; /* Overrides to red */
 }
 
 /* Guesses screen */
@@ -1163,7 +1186,7 @@ a {
     margin-bottom: 0;
   }
   #nav-arrows-container {
-    top: calc(5vh + 1.6vh + 1.6vh + 6.4vh);
+    bottom: 24vh; /* Above keyboard (20vh) and ad box (4vh) */
     height: 4.5vh;
   }
   .nav-arrow {
@@ -1177,7 +1200,7 @@ a {
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 1.6vh + 1.6vh);
+    top: 5vh; /* Only needs to account for the header */
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1288,7 +1311,7 @@ a {
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
-    margin: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh) auto 3.2vh auto;
+    margin: 4.5vh auto 3.2vh auto; /* Adjusted margin-top */
   }
   .pineapple-piece {
     animation-timing-function: linear;
@@ -1390,12 +1413,22 @@ a {
     padding: 0.3vh 1.5vw;
   }
   #bottom-controls-container {
-    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh);
+    margin-top: 1.5vh; /* Reduced for mobile */
   }
   #give-up-link {
     font-size: 1.6vh;
   }
   #guesses-link {
     font-size: 1.6vh;
+  }
+  #guesses-wrapper {
+    align-items: flex-end;
+  }
+  #pineapple-lives {
+    gap: 0.4vw;
+    margin-top: 0.4vh;
+  }
+  .pineapple-icon {
+    font-size: 1.8vh;
   }
 }
