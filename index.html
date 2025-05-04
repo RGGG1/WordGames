@@ -21,8 +21,6 @@
         </div>
         <div id="game-controls-container">
             <span id="all-games-link" class="control-link">All Games</span>
-            <span id="give-up-link" class="control-link">Give Up</span>
-            <span id="guesses-link" class="control-link">Guesses: 0</span>
         </div>
         <div id="nav-arrows-container">
             <button id="prev-game-arrow" class="nav-arrow"><i class="fas fa-arrow-left"></i></button>
@@ -36,13 +34,17 @@
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is....</div>
+                            <div id="prompt">The Secret Word is...</div>
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                             <span class="cursor">|</span>
                         </div>
                         <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
                     </div>
                 </div>
+            </div>
+            <div id="bottom-controls-container">
+                <span id="give-up-link" class="control-link">Give Up</span>
+                <span id="guesses-link" class="control-link">Guesses: 0</span>
             </div>
         </div>
         <div id="give-up-dialog" class="dialog" style="display: none;">
@@ -154,7 +156,7 @@
             </div>
         </div>
         <div class="form-content" id="form-content" style="display: none;">
-            <input id="game-name-input" class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
+            <input id="game-name-input" Class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
             <input id="secret-word" class="form-input" type="text" placeholder="Enter Secret Word" maxlength="50">
             <input id="hint-1" class="form-input" type="text" placeholder="Enter Hint 1" maxlength="50">
             <input id="hint-2" class="form-input" type="text" placeholder="Enter Hint 2" maxlength="50">

@@ -353,6 +353,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeScreen.offsetHeight; // Trigger reflow
             activeScreen.style.display = "flex";
         }
+        // Toggle fade classes
+        gameScreen.classList.remove("game-select-active", "form-active");
+        if (activeScreen === gameSelectContent) {
+            gameScreen.classList.add("game-select-active");
+        } else if (activeScreen === formContent) {
+            gameScreen.classList.add("form-active");
+        }
     }
 
     // Setup keyboard listeners
@@ -753,7 +760,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Home button triggered", { isUILocked });
             if (isUILocked) return;
             isUILocked = true;
-            resetScreenDisplays(gameScreen);
+            resetScreenDisplays(gameSelectContent);
             gameSelectContent.style.display = "flex";
             gameSelectContent.classList.add("active");
             officialTab.classList.add("active");
@@ -778,7 +785,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Create a Wordy triggered", { isUILocked });
             if (isUILocked) return;
             isUILocked = true;
-            resetScreenDisplays(gameScreen);
+            resetScreenDisplays(formContent); // Set formContent as active
             formContent.style.display = "flex";
             formContent.classList.add("active");
             activeInput = document.getElementById("game-name-input");
@@ -798,7 +805,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Create Wordy end button triggered", { isUILocked });
             if (isUILocked) return;
             isUILocked = true;
-            resetScreenDisplays(gameScreen);
+            resetScreenDisplays(gameSelectContent);
             gameSelectContent.style.display = "flex";
             gameSelectContent.classList.add("active");
             privateTab.classList.add("active");
@@ -941,7 +948,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 formInputs.forEach(input => (input.value = ""));
                 formContent.style.display = "none";
                 formContent.classList.remove("active");
-                resetScreenDisplays(gameScreen);
+                resetScreenDisplays(gameSelectContent);
                 gameSelectContent.style.display = "flex";
                 gameSelectContent.classList.add("active");
                 privateTab.classList.add("active");
@@ -1094,7 +1101,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Show game select screen
     function showGameSelectScreen() {
         console.log("Showing game select overlay", { isUILocked });
-        resetScreenDisplays(gameScreen); // Keep game-screen active
+        resetScreenDisplays(gameSelectContent); // Set gameSelectContent as active
         gameSelectContent.style.display = "flex";
         gameSelectContent.classList.add("active");
         officialTab.classList.add("active");
@@ -1759,7 +1766,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             game["Hint 4"]?.toUpperCase() || "",
             game["Hint 5"]?.toUpperCase() || ""
         ].filter(hint => hint);
-        console.log("Loaded hints:", hints);
+        console.log(" Loaded hints:", hints);
 
         currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}${game["Game Name"] ? " - Private" : ""}`;
         const newGameNumberDisplay = document.getElementById("new-game-number-display");
