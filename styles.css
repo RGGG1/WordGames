@@ -373,7 +373,7 @@ a {
 .hints-inline::before {
   content: '';
   position: absolute;
-  top: 50%; /* Fixed typo: '50 manoeuvre%' to '50%' */
+  top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   width: 85vw;
@@ -863,7 +863,7 @@ a {
 .pineapple-piece {
   position: absolute;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  animation: fall linear forwards; /* Fixed typo: 'Winear' to 'linear' */
+  animation: fall linear forwards;
   line-height: 1;
   top: -5vh;
   opacity: 1;
@@ -888,14 +888,14 @@ a {
 #game-select-content {
   display: none;
   width: 85vw;
-  max-height: calc(100vh - 5vh - 4vh - 2vh); /* Header (5vh) + ad box (4vh) + padding (2vh) */
+  max-height: calc(100vh - 5vh - 4vh - 20vh - 4vh - 2vh); /* Header (5vh) + ad box (4vh) + keyboard (20vh) + keyboard gap (4vh) + padding (2vh) */
   position: fixed;
   top: 5vh; /* Below header */
   left: 50%;
   transform: translateX(-50%);
-  background: rgba(255, 255, 255, 0.95); /* Slightly more opaque for visibility */
+  background: rgba(255, 255, 255, 0.95);
   border-radius: 1vh;
-  padding: 2vh 2vw;
+  padding: 1vh 1vw;
   box-sizing: border-box;
   z-index: 12;
   flex-direction: column;
@@ -969,6 +969,8 @@ a {
   overflow-x: hidden;
   flex-grow: 1;
   margin: 0;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  touch-action: pan-y; /* Restrict to vertical scrolling */
 }
 
 .game-list-row {
@@ -1080,7 +1082,7 @@ a {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh); /* Below hints */
+  top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh + 8vh + 3.2vh); /* Below guess input (8vh) + 2 lines (1.6vh * 2) */
   left: 50%;
   transform: translateX(-50%);
   z-index: 11;
@@ -1296,8 +1298,8 @@ a {
   }
   #game-select-content {
     width: 90vw;
-    max-height: calc(100vh - 5vh - 4vh - 1.5vh);
-    padding: 1.5vh 1.5vw;
+    max-height: calc(100vh - 5vh - 4vh - 20vh - 4vh - 1.5vh); /* Header (5vh) + ad box (4vh) + keyboard (20vh) + keyboard gap (4vh) + padding (1.5vh) */
+    padding: 1vh 1vw;
   }
   #game-list-title {
     font-size: 2.5vh;
@@ -1390,7 +1392,7 @@ a {
     padding: 0.3vh 1.5vw;
   }
   #bottom-controls-container {
-    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh);
+    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh); /* Below guess input (9vh) + 2 lines (1.6vh * 2) */
   }
   #give-up-link {
     font-size: 1.6vh;
