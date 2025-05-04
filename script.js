@@ -22,7 +22,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // DOM elements
     const gameScreen = document.getElementById("game-screen");
-    const gameOverScreen = document.getElementById("game-over");
     const gameSelectScreen = document.getElementById("game-select-screen");
     const homeBtn = document.getElementById("home-btn");
     const createPineappleBtn = document.getElementById("create-pineapple");
@@ -308,11 +307,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
         console.log("Showing keyboard");
-        keyboardContainer.classList.remove("show-alternate", "show-guesses", "show-give-up");
+        keyboardContainer.classList.remove("show-alternate", "show-guesses", "show-give-up", "show-game-over");
         keyboardContainer.style.display = "flex";
         keyboardContent.style.display = "flex";
         keyboardGuessesContent.style.display = "none";
         keyboardGiveUpContent.style.display = "none";
+        document.getElementById("game-over").style.display = "none";
         keyboardBackBtn.style.display = "none";
         keyboardContainer.offsetHeight; // Force reflow
         if (guessInput && !gameOver && !isProcessingGuess) {
@@ -325,14 +325,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Reset screen displays
     function resetScreenDisplays(activeScreen) {
         console.log("Resetting screen displays for:", activeScreen?.id);
-        const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm, formErrorDialog, guessesScreen, giveUpDialog];
+        const screens = [gameScreen, gameSelectScreen, createForm, formErrorDialog, guessesScreen, giveUpDialog];
         screens.forEach(screen => {
             if (screen && screen !== activeScreen) {
                 screen.style.display = "none";
             }
         });
+        if (document.getElementById("game-over")) {
+            document.getElementById("game-over").style.display = "none";
+        }
         if (keyboardContainer) {
-            if (activeScreen === gameScreen && isMobile) {
+            if (activeScreen === gameScreen && isMobile && !gameOver) {
                 showKeyboard();
                 keyboardContainer.style.display = "flex";
             } else {
@@ -798,6 +801,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             officialContent.classList.remove("active");
             officialContent.style.display = "none";
             if (createForm) createForm.style.display = "none";
+            document.getElementById("game-over").style.display = "none";
+            document.getElementById("main-content").style.display = "flex";
             displayGameList();
             adjustBackground();
             setupKeyboardListeners();
@@ -810,19 +815,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         nextGameBtnEnd.addEventListener(isMobile ? "touchstart" : "click", (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Next Game button on end screen triggered", { isUILocked });
+            console.log("Next Game button triggered", { isUILocked });
             if (isUILocked) return;
             isUILocked = true;
-            resetScreenDisplays(gameSelectScreen);
-            gameSelectScreen.style.display = "flex";
-            officialTab.classList.add("active");
-            privateTab.classList.remove("active");
-            officialContent.classList.add("active");
-            officialContent.style.display = "flex";
-            privateContent.classList.remove("active");
-            privateContent.style.display = "none";
-            if (createForm) createForm.style.display = "none";
-            displayGameList();
+            resetGame();
+            resetScreenDisplays(gameScreen);
+            gameScreen.style.display = "flex";
+            document.getElementById("game-over").style.display = "none";
+            document.getElementById("main-content").style.display = "flex";
+            if (isMobile) {
+                showKeyboard();
+            } else {
+                keyboardContainer.style.display = "none";
+            }
+            activeInput = guessInput;
+            if (activeInput && !isMobile) activeInput.focus();
             adjustBackground();
             setupKeyboardListeners();
             setTimeout(() => { isUILocked = false; }, 500);
@@ -1423,7 +1430,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Adjust background without cache-busting for stability
     function adjustBackground() {
         console.log("Adjusting background to:", currentBackground);
-        const screens = [gameScreen, gameOverScreen, gameSelectScreen, createForm];
+        const screens = [gameScreen, gameSelectScreen, createForm];
         screens.forEach(screen => {
             if (screen) {
                 screen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
@@ -1550,10 +1557,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.disabled = true;
         guessBtn.disabled = true;
 
-        resetScreenDisplays(gameOverScreen);
-        gameOverScreen.style.display = "flex";
+        // Stay on game screen, show game-over content in keyboard area
+        resetScreenDisplays(gameScreen);
+        gameScreen.style.display = "flex";
         adjustBackground();
-        setupKeyboardListeners();
+
+        // Hide keyboard and show game-over content
+        if (isMobile && keyboardContainer) {
+            keyboardContainer.classList.add("show-game-over");
+            keyboardContainer.style.display = "flex";
+            keyboardContent.style.display = "none";
+            keyboardGuessesContent.style.display = "none";
+            keyboardGiveUpContent.style.display = "none";
+            document.getElementById("game-over").style.display = "flex";
+            keyboardBackBtn.style.display = "none";
+        } else {
+            // On desktop, show game-over content in the main area (optional)
+            document.getElementById("game-over").style.display = "flex";
+            document.getElementById("main-content").style.display = "none"; // Hide guess area
+        }
 
         const todaysWord = document.getElementById("todays-word");
         const shareText = document.getElementById("share-text");
@@ -1584,7 +1606,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             shareText.innerHTML = shareMessage.replace(/\n/g, "<br>");
         }
 
-        // Add Share label
+        // Ensure Share label exists
         if (shareSection) {
             const existingLabel = document.getElementById("share-label");
             if (!existingLabel) {
@@ -1629,6 +1651,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (won) {
             startPineappleRain();
         }
+
+        setupKeyboardListeners();
     }
 
     // Start pineapple rain
@@ -1695,6 +1719,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.style.display = "block";
             hintsContainer.classList.add('lines-0');
         }
+        document.getElementById("game-over").style.display = "none";
+        document.getElementById("main-content").style.display = "flex";
         showKeyboard();
         setupKeyboardListeners();
     }
