@@ -265,6 +265,7 @@ a {
   background: none;
   margin: 0;
   padding: 0;
+  z-index: 11; /* Above fade overlay */
 }
 
 #guess-area:hover, #guess-input:hover {
@@ -385,7 +386,7 @@ a {
   margin: 0 0 2vh 0;
   text-align: center;
   position: relative;
-  z-index: 1;
+  z-index: 11; /* Above fade overlay */
   max-width: 82.5vw;
   white-space: normal;
   line-height: 1.2;
@@ -725,7 +726,7 @@ a {
   width: 100vw;
   height: 100vh;
   background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
-  z-index: 10; /* Above background but below UI elements */
+  z-index: 10; /* Below guess-area, hints-container, and other UI elements */
   pointer-events: none;
 }
 

@@ -1570,6 +1570,16 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessInput.dispatchEvent(new Event("guessProcessed")); // Update cursor
         }
 
+        // Update hints container with "Well Done" or "Hard Luck"
+        const hintsContainer = document.getElementById("hints-container");
+        if (hintsContainer) {
+            hintsContainer.innerHTML = won ? "Well Done" : "Hard Luck";
+            hintsContainer.style.display = "block";
+            hintsContainer.classList.remove('lines-0', 'lines-1', 'lines-2');
+            hintsContainer.classList.add('lines-1'); // Assume single line for "Well Done" or "Hard Luck"
+            console.log("Hints container updated to:", hintsContainer.innerHTML);
+        }
+
         // Hide keyboard and show game-over content
         if (isMobile && keyboardContainer) {
             keyboardContainer.classList.add("show-game-over");
@@ -1580,7 +1590,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("game-over").style.display = "flex";
             keyboardBackBtn.style.display = "none";
         } else {
-            // On desktop, show game-over content in the main area (optional)
+            // On desktop, show game-over content in the main area
             document.getElementById("game-over").style.display = "flex";
             document.getElementById("main-content").style.display = "none"; // Hide guess area
         }
@@ -1709,7 +1719,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (hintsContainer) {
             hintsContainer.innerHTML = "";
             hintsContainer.style.display = "block";
+            hintsContainer.classList.remove('lines-1', 'lines-2');
             hintsContainer.classList.add('lines-0');
+            console.log("Hints container reset");
         }
         document.getElementById("game-over").style.display = "none";
         document.getElementById("main-content").style.display = "flex";
