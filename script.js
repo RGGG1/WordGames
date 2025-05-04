@@ -501,7 +501,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const handler = debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Give Up link triggered", { isUILocked, isLoadingGame });
+            console.log("Give Up link triggered", { isUILocked, isLoadingGame, eventType: e.type });
             if (isUILocked || isLoadingGame) {
                 console.log("Give Up link ignored: UI locked or game loading");
                 return;
@@ -524,9 +524,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             setTimeout(() => { isUILocked = false; }, 500);
         }, 100);
-        giveUpLink.addEventListener(isMobile ? "touchstart" : "click", handler);
+        // Ensure both touchstart and click are handled, prioritize touchstart on mobile
+        giveUpLink.addEventListener("touchstart", handler, { passive: false });
+        giveUpLink.addEventListener("click", handler);
 
-        giveUpYesBtn.addEventListener("click", (e) => {
+        giveUpYesBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Give Up Yes button clicked");
@@ -549,7 +551,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             endGame(false, true);
         });
 
-        giveUpNoBtn.addEventListener("click", (e) => {
+        giveUpNoBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Give Up No button clicked");
@@ -570,7 +572,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const handler = debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guesses link triggered", { isUILocked, isLoadingGame });
+            console.log("Guesses link triggered", { isUILocked, isLoadingGame, eventType: e.type });
             if (isUILocked || isLoadingGame) {
                 console.log("Guesses link ignored: UI locked or game loading");
                 return;
@@ -599,7 +601,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             setTimeout(() => { isUILocked = false; }, 500);
         }, 100);
-        guessesLink.addEventListener(isMobile ? "touchstart" : "click", handler);
+        // Ensure both touchstart and click are handled, prioritize touchstart on mobile
+        guessesLink.addEventListener("touchstart", handler, { passive: false });
+        guessesLink.addEventListener("click", handler);
 
         guessesScreen.addEventListener("click", (e) => {
             if (e.target === guessesScreen && !isMobile) {
@@ -1828,113 +1832,37 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameNumberDisplay.textContent = currentGameNumber;
         }
 
+        console.log("Game loaded with currentGameNumber:", currentGameNumber, "Secret Word:", secretWord);
         setupHints();
-
-        if (guessInput) {
-            guessInput.disabled = false;
-            if (!isMobile) {
+        initializeCursor();
+        if (isMobile) {
+            showKeyboard();
+        } else {
+            if (guessInput) {
                 guessInput.focus();
-            }
-            activeInput = guessInput;
-        }
-        if (guessBtn) {
-            guessBtn.disabled = false;
-        }
-        // Check for past result
-        let resultsKey = currentGameNumber.includes("- Private") ? "privatePineappleResults" : "pineappleResults";
-        let normalizedGameNumber = currentGameNumber.includes("- Private")
-            ? currentGameNumber.split(" - ")[0]
-            : currentGameNumber.replace("Game #", "");
-        const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
-        const pastResult = results[normalizedGameNumber];
-
-        if (pastResult && pastResult.secretWord === secretWord) {
-            console.log(`Found past result for ${resultsKey}[${normalizedGameNumber}]:`, pastResult);
-            if (pastResult.guesses !== '-' && pastResult.guesses !== 'X') {
-                gameOver = true;
-                guessInput.disabled = true;
-                guessBtn.disabled = true;
-                guessInput.value = secretWord;
-                guessInputContainer.classList.add("game-ended");
-                guessInput.dispatchEvent(new Event("guessProcessed"));
-                hintsContainer.innerHTML = "Well Done";
-                hintsContainer.style.display = "block";
-                hintsContainer.classList.remove('lines-0', 'lines-1', 'lines-2');
-                hintsContainer.classList.add(`lines-${lastHintLines || 1}`);
-                hintsLabel.style.visibility = "hidden";
-                gameScreen.classList.add("game-ended");
-                if (isMobile && keyboardContainer) {
-                    keyboardContainer.classList.add("show-game-over");
-                    keyboardContainer.style.display = "flex";
-                    keyboardContent.style.display = "none";
-                    keyboardGuessesContent.style.display = "none";
-                    keyboardGiveUpContent.style.display = "none";
-                    document.getElementById("game-over").style.display = "flex";
-                    keyboardBackBtn.style.display = "none";
-                } else {
-                    document.getElementById("game-over").style.display = "flex";
-                    document.getElementById("main-content").style.display = "none";
-                }
-                guessCount = pastResult.guesses === "Gave Up" ? 0 : parseInt(pastResult.guesses);
-                const shareText = document.getElementById("share-text");
-                const gameNumberDisplay = document.getElementById("game-number-display");
-                if (gameNumberDisplay) {
-                    gameNumberDisplay.textContent = currentGameNumber;
-                }
-                let shareMessage = pastResult.guesses === "Gave Up"
-                    ? `Play WORDY`
-                    : `${currentGameNumber}\nI solved WORDY in\n<span class="guess-count">${guessCount}</span>\n${guessCount === 1 ? 'guess' : 'guesses'}`;
-                if (shareText) {
-                    shareText.innerHTML = shareMessage.replace(/\n/g, "<br>");
-                }
-                const shareButtons = {
-                    whatsapp: document.getElementById("share-whatsapp"),
-                    telegram: document.getElementById("share-telegram"),
-                    twitter: document.getElementById("share-twitter"),
-                    instagram: document.getElementById("share-instagram")
-                };
-                if (shareButtons.whatsapp) {
-                    shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
-                }
-                if (shareButtons.telegram) {
-                    shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
-                }
-                if (shareButtons.twitter) {
-                    shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
-                }
-                if (shareButtons.instagram) {
-                    shareButtons.instagram.addEventListener("click", (e) => {
-                        e.preventDefault();
-                        navigator.clipboard.writeText(shareMessage.replace(/<[^>]+>/g, '')).then(() => {
-                            alert("Score copied to clipboard! Paste it into your Instagram post.");
-                            window.open("https://www.instagram.com/", "_blank");
-                        }).catch(err => {
-                            console.error("Failed to copy to clipboard:", err);
-                            alert("Please copy your score manually and share it on Instagram.");
-                            window.open("https://www.instagram.com/", "_blank");
-                        });
-                    });
-                }
+                activeInput = guessInput;
             }
         }
-        console.log(`Game loaded: ${currentGameNumber}, Secret Word: ${secretWord}`);
+        setupKeyboardListeners();
     }
 
-    // Initialize game
+    // Initialize the game
     async function initializeGame() {
-        console.log("Initializing game");
+        console.log("Initializing game...");
         isUILocked = true;
         isLoadingGame = true;
         try {
             await fetchGameData();
             await fetchPrivateGames();
+            displayGameList();
             initializeCursor();
-            adjustBackground();
+            setupEventListeners();
+            setupKeyboardListeners();
             if (isMobile) {
                 showKeyboard();
             }
         } catch (error) {
-            console.error("Error initializing game:", error.message);
+            console.error("Error initializing game:", error);
             if (formErrorDialog && formErrorMessage) {
                 formErrorMessage.textContent = "Failed to initialize game.";
                 formErrorDialog.style.display = "flex";
@@ -1946,5 +1874,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Start the game
-    initializeGame();
+    await initializeGame();
 });
