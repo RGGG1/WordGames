@@ -149,8 +149,8 @@ a {
   width: 90vw;
   height: 5vh;
   position: fixed;
-  /* Moved two lines below bottom-controls-container (add 1.8vh * 2) */
-  top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh + 8vh + 3.2vh + 1.8vh + 1.8vh * 2);
+  /* Adjusted to move down by 2x button size (10vh) instead of 1.8vh * 2 */
+  top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh + 8vh + 3.2vh + 1.8vh + 10vh);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -1171,8 +1171,8 @@ a {
     margin-bottom: 0;
   }
   #nav-arrows-container {
-    /* Moved two lines below bottom-controls-container (add 1.6vh * 2) */
-    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh + 1.6vh * 2);
+    /* Adjusted to move down by 2x button size (9vh) instead of 1.6vh * 2 */
+    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh + 9vh);
     height: 4.5vh;
   }
   .nav-arrow {
