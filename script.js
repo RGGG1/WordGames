@@ -1560,7 +1560,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         // Stay on game screen, show game-over content in keyboard area
         resetScreenDisplays(gameScreen);
         gameScreen.style.display = "flex";
+        gameScreen.classList.add("game-ended"); // Add fade overlay
         adjustBackground();
+
+        // Set secret word in guess input and apply green background
+        if (guessInput && guessInputContainer) {
+            guessInput.value = secretWord;
+            guessInputContainer.classList.add("game-ended");
+            guessInput.dispatchEvent(new Event("guessProcessed")); // Update cursor
+        }
 
         // Hide keyboard and show game-over content
         if (isMobile && keyboardContainer) {
@@ -1577,22 +1585,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("main-content").style.display = "none"; // Hide guess area
         }
 
-        const todaysWord = document.getElementById("todays-word");
         const shareText = document.getElementById("share-text");
         const gameNumberDisplay = document.getElementById("game-number-display");
-        const hardLuckLabel = document.getElementById("hard-luck-label");
-        const wellDoneLabel = document.getElementById("well-done-label");
-        const shareSection = document.getElementById("share-section");
 
-        if (todaysWord) todaysWord.textContent = secretWord;
         if (gameNumberDisplay) {
             gameNumberDisplay.textContent = currentGameNumber;
-        }
-        if (hardLuckLabel) {
-            hardLuckLabel.style.display = (failed || gaveUp) ? "block" : "none";
-        }
-        if (wellDoneLabel) {
-            wellDoneLabel.style.display = won ? "block" : "none";
         }
 
         let shareMessage;
@@ -1604,18 +1601,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (shareText) {
             shareText.innerHTML = shareMessage.replace(/\n/g, "<br>");
-        }
-
-        // Ensure Share label exists
-        if (shareSection) {
-            const existingLabel = document.getElementById("share-label");
-            if (!existingLabel) {
-                const shareLabel = document.createElement("div");
-                shareLabel.id = "share-label";
-                shareLabel.textContent = "Share";
-                shareSection.insertBefore(shareLabel, document.getElementById("share-buttons"));
-                console.log("Added Share label to share-section");
-            }
         }
 
         const shareButtons = {
@@ -1713,6 +1698,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessBtn.disabled = false;
         }
         if (guessesLink) guessesLink.textContent = "Guesses: 0";
+        if (guessInputContainer) {
+            guessInputContainer.classList.remove("game-ended", "wrong-guess");
+            guessInputContainer.style.background = "rgba(255, 255, 255, 0.85)"; // Reset to default
+        }
+        if (gameScreen) {
+            gameScreen.classList.remove("game-ended"); // Remove fade overlay
+        }
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
             hintsContainer.innerHTML = "";
