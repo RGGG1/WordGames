@@ -146,7 +146,7 @@ a {
 
 /* Navigation arrows container */
 #nav-arrows-container {
-  width: 90vw;
+  width: 80vw; /* Match guess-input-wrapper width */
   height: 5vh;
   position: fixed;
   top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh + 8vh + 3.2vh + 1.8vh + 10vh);
@@ -888,8 +888,7 @@ a {
 #game-select-content {
   display: none;
   width: 85vw;
-  /* Adjusted max-height to 90% of space between header (5vh) and keyboard (20vh + 4vh) */
-  max-height: calc(0.9 * (100vh - 5vh - 4vh - 20vh - 4vh));
+  max-height: calc(90vh - 5vh - 4vh - 4vh); /* 90vh minus header (5vh), ad-box (4vh), and small padding (4vh) */
   position: fixed;
   top: 5vh;
   left: 50%;
@@ -943,6 +942,7 @@ a {
   width: 100%;
   flex-direction: column;
   align-items: center;
+  height: 100%; /* Ensure it takes full height of parent */
 }
 
 .tab-content.active {
@@ -1078,7 +1078,7 @@ a {
 
 /* New container for give-up and guesses links below guess area */
 #bottom-controls-container {
-  width: 85vw;
+  width: 80vw; /* Match guess-input-wrapper width */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -1168,6 +1168,7 @@ a {
     margin-bottom: 0;
   }
   #nav-arrows-container {
+    width: 85vw; /* Match mobile guess-input-wrapper width */
     top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh + 9vh + 3.2vh);
     height: 4.5vh;
   }
@@ -1301,7 +1302,7 @@ a {
   }
   #game-select-content {
     width: 90vw;
-    max-height: calc(0.9 * (100vh - 5vh - 4vh - 20vh - 4vh));
+    max-height: calc(90vh - 5vh - 4vh - 4vh); /* Adjusted for mobile */
     padding: 1vh 1vw;
   }
   #game-list-title {
@@ -1395,6 +1396,7 @@ a {
     padding: 0.3vh 1.5vw;
   }
   #bottom-controls-container {
+    width: 85vw; /* Match mobile guess-input-wrapper width */
     top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh);
   }
   #give-up-link {
