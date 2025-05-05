@@ -22,7 +22,7 @@ a {
 #game-screen {
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Adjusted to use viewport height directly */
+  height: 100%;
   width: 100vw;
   box-sizing: border-box;
   overflow: hidden;
@@ -146,10 +146,10 @@ a {
 
 /* Navigation arrows container */
 #nav-arrows-container {
-  width: 80vw; /* Match guess-input-wrapper width */
+  width: 90vw;
   height: 5vh;
   position: fixed;
-  bottom: calc(env(safe-area-inset-bottom) + 24vh + 1.8vh + 1.8vh); /* Positioned above bottom-controls-container */
+  top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh + 8vh + 3.2vh + 1.8vh + 10vh);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -409,8 +409,7 @@ a {
   align-items: center;
   justify-content: center;
   position: fixed;
-  top: auto;
-  bottom: calc(env(safe-area-inset-bottom) + 4vh); /* Position above the ad-box */
+  bottom: 4vh;
   background: #FFFFFF;
   z-index: 15;
   padding: 0.5vh 0.5vw;
@@ -419,7 +418,6 @@ a {
   overflow: hidden;
 }
 
-/* Hide keyboard on desktop */
 @media (min-width: 601px) {
   .keyboard {
     display: none !important;
@@ -890,7 +888,8 @@ a {
 #game-select-content {
   display: none;
   width: 85vw;
-  max-height: calc(90vh - 5vh - 4vh - 4vh); /* 90vh minus header (5vh), ad-box (4vh), and small padding (4vh) */
+  /* Adjusted max-height to 90% of space between header (5vh) and keyboard (20vh + 4vh) */
+  max-height: calc(0.9 * (100vh - 5vh - 4vh - 20vh - 4vh));
   position: fixed;
   top: 5vh;
   left: 50%;
@@ -944,7 +943,6 @@ a {
   width: 100%;
   flex-direction: column;
   align-items: center;
-  height: 100%; /* Ensure it takes full height of parent */
 }
 
 .tab-content.active {
@@ -1080,12 +1078,12 @@ a {
 
 /* New container for give-up and guesses links below guess area */
 #bottom-controls-container {
-  width: 80vw; /* Match guess-input-wrapper width */
+  width: 85vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  bottom: calc(env(safe-area-inset-bottom) + 24vh); /* Position above the keyboard */
+  top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh + 8vh + 3.2vh + 1.8vh);
   left: 50%;
   transform: translateX(-50%);
   z-index: 12; /* Increased to ensure tappability */
@@ -1170,8 +1168,7 @@ a {
     margin-bottom: 0;
   }
   #nav-arrows-container {
-    width: 85vw; /* Match mobile guess-input-wrapper width */
-    bottom: calc(env(safe-area-inset-bottom) + 24vh + 1.6vh + 1.6vh); /* Adjusted for mobile */
+    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh + 9vh + 3.2vh);
     height: 4.5vh;
   }
   .nav-arrow {
@@ -1264,9 +1261,7 @@ a {
     height: 20vh;
     max-height: 20vh;
     padding: 0.4vh 0.4vw;
-    bottom: calc(env(safe-area-inset-bottom) + 4vh);
-    top: auto;
-    display: none;
+    bottom: 4vh;
   }
   #game-screen .keyboard {
     display: flex;
@@ -1306,7 +1301,7 @@ a {
   }
   #game-select-content {
     width: 90vw;
-    max-height: calc(90vh - 5vh - 4vh - 4vh); /* Adjusted for mobile */
+    max-height: calc(0.9 * (100vh - 5vh - 4vh - 20vh - 4vh));
     padding: 1vh 1vw;
   }
   #game-list-title {
@@ -1329,7 +1324,7 @@ a {
     margin: 0.5vh 0;
   }
   #form-content {
-    width: 90vw;
+    width: 90vw; /* Fixed typo by removing "NECESSARY" */
     max-height: calc(90vh - 5vh - 4vh);
     padding: 1.5vh 1.5vw;
   }
@@ -1371,7 +1366,7 @@ a {
   }
   #keyboard-give-up-content .dialog-message {
     font-size: 2vh;
-    margin-bottom: 0.75vh;
+    margin-bottom: 0.75vh; /* Fixed typo by removing "DEE" */
   }
   #keyboard-give-up-content .control-btn {
     font-size: 1.8vh;
@@ -1400,8 +1395,7 @@ a {
     padding: 0.3vh 1.5vw;
   }
   #bottom-controls-container {
-    width: 85vw; /* Match mobile guess-input-wrapper width */
-    bottom: calc(env(safe-area-inset-bottom) + 24vh); /* Adjusted for mobile */
+    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh);
   }
   #give-up-link {
     font-size: 1.6vh;

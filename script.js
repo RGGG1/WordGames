@@ -289,22 +289,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                 e.preventDefault();
                 console.log("Prevented focus on form input to avoid virtual keyboard:", input.id);
                 activeInput = input;
-                showKeyboard(); // Show on-screen keyboard
+                showKeyboard(); // Ensure on-screen keyboard is visible
             });
         } else {
             input.readOnly = false;
         }
         input.disabled = false;
-        const handler = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Form input tapped:", input.id);
+        input.addEventListener("click", () => {
             activeInput = input;
             if (!isMobile) input.focus();
-            if (isMobile) showKeyboard(); // Ensure on-screen keyboard is shown
-        };
-        input.addEventListener("click", handler);
-        input.addEventListener("touchstart", handler);
+            console.log("Form input selected:", input.id);
+            if (isMobile) showKeyboard(); // Show on-screen keyboard on mobile
+        });
+        input.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            activeInput = input;
+            if (!isMobile) input.focus();
+            console.log("Form input touched:", input.id);
+            if (isMobile) showKeyboard(); // Show on-screen keyboard on mobile
+        });
         input.addEventListener("input", () => {
             console.log("Form input updated:", input.id, input.value);
             input.value = input.value.toUpperCase();
@@ -326,18 +329,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("game-over").style.display = "none";
         keyboardBackBtn.style.display = "none";
         keyboardContainer.offsetHeight; // Force reflow
-
-        // Debug positioning
-        const rect = keyboardContainer.getBoundingClientRect();
-        const computedStyle = getComputedStyle(keyboardContainer);
-        console.log("Keyboard container position:", {
-            top: rect.top,
-            bottom: rect.bottom,
-            computedTop: computedStyle.top,
-            computedBottom: computedStyle.bottom,
-            viewportHeight: window.innerHeight
-        });
-
         if (guessInput && !gameOver && !isProcessingGuess) {
             activeInput = guessInput;
             guessInput.dispatchEvent(new Event("guessProcessed"));
@@ -382,22 +373,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else if (activeScreen === formContent) {
             gameScreen.classList.add("form-active");
         }
-
-        // Hide navigation elements when game-select or form-content is active
-        const navElements = [
-            document.getElementById("game-controls-container"), // All Games link
-            document.getElementById("nav-arrows-container"),    // Navigation arrows
-            document.getElementById("bottom-controls-container") // Give Up and Guesses links
-        ];
-        navElements.forEach(element => {
-            if (element) {
-                if (activeScreen === gameSelectContent || activeScreen === formContent) {
-                    element.style.display = "none";
-                } else {
-                    element.style.display = "flex";
-                }
-            }
-        });
     }
 
     // Setup keyboard listeners
@@ -1483,105 +1458,94 @@ document.addEventListener("DOMContentLoaded", async () => {
         tempContainer.style.wordBreak = "break-word";
         tempContainer.textContent = hintsArray.join(" | ");
         document.body.appendChild(tempContainer);
+        
         const height = tempContainer.offsetHeight;
-        const lineHeightPx = parseFloat(tempContainer.style.fontSize) * 1.2;
-        const lines = Math.ceil(height / lineHeightPx);
+        const lineHeight = (isMobile ? 2.75 : 3.25) * 1.2;
+        const lines = Math.ceil(height / lineHeight);
+        
         document.body.removeChild(tempContainer);
-        console.log("Calculated hint lines:", { hints: hintsArray, height, lineHeightPx, lines });
-        return Math.min(lines, 2);
+        return lines;
     }
+
+    // Update hint fade
+    function updateHintFade(hintsContainer, visibleHints) {
+        const lines = calculateHintLines(visibleHints);
+        hintsContainer.classList.remove('lines-1', 'lines-2');
+        if (lines === 1) {
+            hintsContainer.classList.add('lines-1');
+        } else if (lines >= 2) {
+            hintsContainer.classList.add('lines-2');
+        }
+    }
+
+    // Build hint HTML
+    function buildHintHTML(hintsArray) {
+        if (hintsArray.length === 0) return "";
+        
+        const htmlParts = [];
+        hintsArray.forEach((hint, index) => {
+            htmlParts.push(hint);
+            if (index < hintsArray.length - 1) {
+                htmlParts.push(' <span class="separator yellow">| </span> ');
+            }
+        });
+        
+        return htmlParts.join("");
+    }
+
+    // Setup hints
+    function setupHints() {
+        const hintsContainer = document.getElementById("hints-container");
+        if (!hintsContainer) {
+            console.error("hints-container element not found");
+            return;
+        }
+        console.log("Setting up hints:", hints, "hintIndex:", hintIndex);
+        hintsContainer.innerHTML = "";
+        const visibleHints = hints.slice(0, hintIndex + 1);
+        if (visibleHints.length > 0) {
+            hintsContainer.innerHTML = buildHintHTML(visibleHints);
+            hintsContainer.style.display = "block";
+            lastHintLines = calculateHintLines(visibleHints); // Store line count
+            updateHintFade(hintsContainer, visibleHints);
+            console.log("Hints displayed:", visibleHints, "Lines:", lastHintLines);
+        } else {
+            hintsContainer.style.display = "block";
+            hintsContainer.classList.add('lines-0');
+            lastHintLines = 0; // No hints, so 0 lines
+            console.log("No hints to display yet, reserving space");
+        }
+    }
+
+    // Adjust background without cache-busting for stability
+    function adjustBackground() {
+        console.log("Adjusting background to:", currentBackground);
+        if (gameScreen) {
+            gameScreen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
+            gameScreen.style.backgroundSize = "100% calc(100% - 24vh)";
+            gameScreen.style.backgroundAttachment = "fixed";
+            gameScreen.offsetHeight;
+        }
+    }
+
+    window.addEventListener("resize", adjustBackground);
 
     // Reveal hint
     function revealHint() {
-        const hintsContainer = document.getElementById("hints-container");
-        if (!hintsContainer) {
-            console.error("hints-container not found in DOM");
-            return;
-        }
         hintIndex++;
-        console.log("Revealing hint, current index:", hintIndex, "Total hints:", hints.length);
-
-        const displayedHints = hints.slice(0, hintIndex + 1);
-        hintsContainer.innerHTML = displayedHints.join(' <span class="separator">| </span> ');
-
-        const lines = calculateHintLines(displayedHints);
-        hintsContainer.classList.remove("lines-0", "lines-1", "lines-2");
-        hintsContainer.classList.add(`lines-${lines}`);
-        lastHintLines = lines;
-        console.log("Hint lines updated:", lines);
-    }
-
-    // Reset game
-    function resetGame() {
-        console.log("Resetting game state");
-        gameOver = false;
-        guessCount = 0;
-        gaveUp = false;
-        guesses = [];
-        firstGuessMade = false;
-        isProcessingGuess = false;
-        hintIndex = -1;
-        lastHintLines = 0;
-        if (guessInput) {
-            guessInput.value = "";
-            guessInput.disabled = false;
-            initializeCursor();
-        }
-        if (guessBtn) guessBtn.disabled = false;
-        const hintsContainer = document.getElementById("hints-container");
-        if (hintsContainer) {
-            hintsContainer.innerHTML = "";
-            hintsContainer.classList.remove("lines-0", "lines-1", "lines-2");
-            hintsContainer.classList.add("lines-0");
-        }
-        if (guessesLink) guessesLink.textContent = "Guesses: 0";
-        gameScreen.classList.remove("game-ended");
-        if (guessInputContainer) guessInputContainer.classList.remove("game-ended");
-        const pineappleRain = document.querySelector(".pineapple-rain");
-        if (pineappleRain) pineappleRain.remove();
-        console.log("Game state reset complete");
-    }
-
-    // Adjust background
-    function adjustBackground() {
-        console.log("Adjusting background to:", currentBackground);
-        gameScreen.style.background = `url('${currentBackground}') no-repeat center top fixed, #FFFFFF`;
-        gameScreen.style.backgroundSize = "100% calc(100% - 24vh)";
-        gameScreen.style.backgroundAttachment = "fixed";
-    }
-
-    // Load game
-    function loadGame(game) {
-        console.log("Loading game:", game);
-        resetGame(); // Ensure a fresh state
-        secretWord = game["Secret Word"].toUpperCase();
-        hints = [
-            game["Hint 1"]?.toUpperCase() || "",
-            game["Hint 2"]?.toUpperCase() || "",
-            game["Hint 3"]?.toUpperCase() || "",
-            game["Hint 4"]?.toUpperCase() || "",
-            game["Hint 5"]?.toUpperCase() || ""
-        ].filter(hint => hint !== "");
-        console.log("Loaded hints:", hints);
-
-        // Set current game number for display
-        if (game["Display Name"]) {
-            currentGameNumber = game["Display Name"];
-        } else {
-            currentGameNumber = `Game #${game["Game Number"]}`;
-        }
-        const gameNumberDisplay = document.querySelector(".new-game-number-display");
-        if (gameNumberDisplay) {
-            gameNumberDisplay.textContent = currentGameNumber;
-            console.log("Game number display updated:", currentGameNumber);
-        }
-
-        // Start with first hint revealed
-        hintIndex = -1;
-        revealHint();
-        if (guessInput && !isMobile) {
-            guessInput.focus();
-            activeInput = guessInput;
+        console.log("Revealing hint, new hintIndex:", hintIndex, "total hints:", hints.length);
+        if (hintIndex < hints.length) {
+            const hintsContainer = document.getElementById("hints-container");
+            if (!hintsContainer) {
+                console.error("hints-container element not found in revealHint");
+                return;
+            }
+            const visibleHints = hints.slice(0, hintIndex + 1);
+            hintsContainer.innerHTML = buildHintHTML(visibleHints);
+            hintsContainer.style.display = "block";
+            lastHintLines = calculateHintLines(visibleHints); // Store line count
+            updateHintFade(hintsContainer, visibleHints);
+            console.log("Revealed hint:", visibleHints[visibleHints.length - 1], "Lines:", lastHintLines);
         }
     }
 
@@ -1592,12 +1556,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
         isProcessingGuess = true;
-        guess = guess.trim().toUpperCase();
-        console.log("Handling guess:", guess, "Secret Word:", secretWord);
+        console.log("Handling guess:", guess);
 
+        guessInputContainer.classList.remove("wrong-guess");
+        guessInput.value = "";
         guessCount++;
         guesses.push(guess);
-        if (guessesLink) guessesLink.textContent = `Guesses: ${guessCount}`;
+        console.log("Guess added, current guesses:", guesses);
+
+        if (guessesLink) {
+            guessesLink.textContent = `Guesses: ${guessCount}`;
+        }
 
         if (guess === secretWord) {
             console.log("Correct guess!");
@@ -1612,149 +1581,314 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             saveGameResult(gameType, normalizedGameNumber, secretWord, guessCount);
             endGame(true);
-            isProcessingGuess = false;
-            return;
-        }
+            isProcessingGuess = false; // Reset immediately after correct guess
+        } else {
+            console.log("Incorrect guess, animating...");
+            guessInputContainer.classList.add("wrong-guess");
+            animationTimeout = setTimeout(() => {
+                guessInputContainer.classList.remove("wrong-guess");
+                guessInput.style.opacity = "1";
+                guessInput.style.visibility = "visible";
+                guessInput.style.color = "#000000";
+                isProcessingGuess = false;
+                console.log("Animation completed, input reset");
+                if (guessInput && !isMobile) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                    guessInput.dispatchEvent(new Event("guessProcessed"));
+                }
+            }, 350);
 
-        if (!firstGuessMade) {
-            firstGuessMade = true;
-            console.log("First guess made, starting hint reveal logic");
-        }
-
-        if (hintIndex < hints.length - 1 && (guessCount - 1) % 5 === 0) {
-            revealHint();
-            console.log("Revealed new hint due to guess count:", guessCount);
-        }
-
-        guessInputContainer.classList.add("wrong-guess");
-        guessInput.style.opacity = "0";
-        guessInput.style.visibility = "hidden";
-
-        animationTimeout = setTimeout(() => {
-            guessInput.value = "";
-            guessInput.style.opacity = "1";
-            guessInput.style.visibility = "visible";
-            guessInput.style.color = "#000000";
-            guessInput.dispatchEvent(new Event("guessProcessed"));
-            animationTimeout = null;
-            isProcessingGuess = false;
-            if (guessInput && !isMobile) {
-                guessInput.focus();
-                activeInput = guessInput;
+            if (hintIndex < hints.length - 1) {
+                revealHint();
+            } else {
+                isProcessingGuess = false; // Ensure state is reset if no hints remain
             }
-        }, 350);
+        }
     }
 
     // Save game result
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
-        console.log("Saving game result", { gameType, gameNumber, secretWord, guesses });
-        const storageKey = gameType === "pineapple" ? "pineappleResults" : "privatePineappleResults";
-        const results = JSON.parse(localStorage.getItem(storageKey) || "{}");
-        results[gameNumber] = { secretWord, guesses };
-        localStorage.setItem(storageKey, JSON.stringify(results));
-        console.log(`Saved to ${storageKey}:`, results);
+        console.log("Attempting to save game result", { gameType, gameNumber, secretWord, guesses });
+        const resultsKey = gameType === "pineapple" ? "pineappleResults" : "privatePineappleResults";
+        let normalizedGameNumber = String(gameNumber);
+        if (gameType === "pineapple") {
+            normalizedGameNumber = gameNumber.replace("Game #", "");
+        } else {
+            normalizedGameNumber = gameNumber.split(" - ")[0];
+        }
+        console.log(`Normalized game number: ${normalizedGameNumber}`);
+        const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
+        if (!results[normalizedGameNumber] || results[normalizedGameNumber].guesses === '-') {
+            results[normalizedGameNumber] = { secretWord, guesses };
+            localStorage.setItem(resultsKey, JSON.stringify(results));
+            console.log(`Game result saved for ${resultsKey}[${normalizedGameNumber}]:`, results[normalizedGameNumber]);
+        } else {
+            console.log(`Game result not saved for ${resultsKey}[${normalizedGameNumber}]: existing score '${results[normalizedGameNumber].guesses}' is not '-' and will be preserved`, results[normalizedGameNumber]);
+        }
     }
 
     // End game
-    function endGame(won = false, gaveUp = false) {
+    function endGame(won, gaveUp = false) {
         console.log("Ending game", { won, gaveUp, guessCount, secretWord });
         gameOver = true;
-        if (guessInput) guessInput.disabled = true;
-        if (guessBtn) guessBtn.disabled = true;
-        gameScreen.classList.add("game-ended");
-        if (guessInputContainer) guessInputContainer.classList.add("game-ended");
+        guessInput.disabled = true;
+        guessBtn.disabled = true;
+
+        // Stay on game screen, show game-over content in keyboard area
+        resetScreenDisplays(gameScreen);
+        gameScreen.style.display = "flex";
+        gameScreen.classList.add("game-ended"); // Add fade overlay
+        adjustBackground();
+
+        // Set secret word in guess input and apply green background
+        if (guessInput && guessInputContainer) {
+            guessInput.value = secretWord;
+            guessInputContainer.classList.add("game-ended");
+            guessInput.dispatchEvent(new Event("guessProcessed")); // Update cursor
+        }
+
+        // Update hints container with "Well Done" or "Hard Luck"
+        const hintsContainer = document.getElementById("hints-container");
+        if (hintsContainer) {
+            hintsContainer.innerHTML = won ? "Well Done" : "Hard Luck";
+            hintsContainer.style.display = "block";
+            hintsContainer.classList.remove('lines-0', 'lines-1', 'lines-2');
+            hintsContainer.classList.add(`lines-${lastHintLines || 1}`); // Use last hint lines or fallback to 1
+            console.log("Hints container updated to:", hintsContainer.innerHTML, "Lines:", lastHintLines);
+        }
+
+        // Hide Hints label but keep its space
+        const hintsLabel = document.getElementById("hints-label");
+        if (hintsLabel) {
+            hintsLabel.style.visibility = "hidden";
+            console.log("Hints label hidden");
+        }
+
+        // Hide keyboard and show game-over content
+        if (isMobile && keyboardContainer) {
+            keyboardContainer.classList.add("show-game-over");
+            keyboardContainer.style.display = "flex";
+            keyboardContent.style.display = "none";
+            keyboardGuessesContent.style.display = "none";
+            keyboardGiveUpContent.style.display = "none";
+            document.getElementById("game-over").style.display = "flex";
+            keyboardBackBtn.style.display = "none";
+        } else {
+            // On desktop, show game-over content in the main area
+            document.getElementById("game-over").style.display = "flex";
+            document.getElementById("main-content").style.display = "none"; // Hide guess area
+        }
+
+        const shareText = document.getElementById("share-text");
+        const gameNumberDisplay = document.getElementById("game-number-display");
+
+        if (gameNumberDisplay) {
+            gameNumberDisplay.textContent = currentGameNumber;
+        }
+
+        let shareMessage;
+        if (gaveUp) {
+            shareMessage = `Play WORDY`;
+        } else {
+            shareMessage = `${currentGameNumber}\nI solved WORDY in\n<span class="guess-count">${guessCount}</span>\n${guessCount === 1 ? 'guess' : 'guesses'}`;
+        }
+
+        if (shareText) {
+            shareText.innerHTML = shareMessage.replace(/\n/g, "<br>");
+        }
+
+        const shareButtons = {
+            whatsapp: document.getElementById("share-whatsapp"),
+            telegram: document.getElementById("share-telegram"),
+            twitter: document.getElementById("share-twitter"),
+            instagram: document.getElementById("share-instagram")
+        };
+
+        if (shareButtons.whatsapp) {
+            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+        }
+        if (shareButtons.telegram) {
+            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+        }
+        if (shareButtons.twitter) {
+            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+        }
+        if (shareButtons.instagram) {
+            shareButtons.instagram.addEventListener("click", (e) => {
+                e.preventDefault();
+                navigator.clipboard.writeText(shareMessage.replace(/<[^>]+>/g, '')).then(() => {
+                    alert("Score copied to clipboard! Paste it into your Instagram post.");
+                    window.open("https://www.instagram.com/", "_blank");
+                }).catch(err => {
+                    console.error("Failed to copy to clipboard:", err);
+                    alert("Please copy your score manually and share it on Instagram.");
+                    window.open("https://www.instagram.com/", "_blank");
+                });
+            });
+        }
 
         if (won) {
-            guessInput.value = secretWord;
-            initializeCursor();
-            const pineappleRain = document.createElement("div");
-            pineappleRain.className = "pineapple-rain";
-            for (let i = 0; i < 25; i++) {
-                const piece = document.createElement("div");
-                piece.className = "pineapple-piece";
-                piece.textContent = "🍍";
-                piece.style.fontSize = `${Math.random() * 3 + 1}vh`;
-                piece.style.left = `${Math.random() * 100}vw`;
-                piece.style.animationDuration = `${Math.random() * 2 + 2}s`;
-                piece.style.animationDelay = `${Math.random() * 1}s`;
-                piece.style.setProperty("--rotation", `${Math.random() * 360 - 180}deg`);
-                piece.style.setProperty("--drift", `${Math.random() * 20 - 10}`);
-                pineappleRain.appendChild(piece);
-            }
-            document.body.appendChild(pineappleRain);
-        } else if (gaveUp) {
-            guessInput.value = secretWord;
-            initializeCursor();
+            startPineappleRain();
         }
 
-        if (isMobile) {
-            const gameOverScreen = document.getElementById("game-over");
-            if (gameOverScreen) {
-                const gameNumberDisplay = document.getElementById("game-number-display");
-                const shareText = document.getElementById("share-text");
-                if (gameNumberDisplay) gameNumberDisplay.textContent = currentGameNumber;
-                if (shareText) {
-                    shareText.innerHTML = `${currentGameNumber}<br>`;
-                    shareText.innerHTML += gaveUp ? "I gave up! 😢<br>" : won ? `I got it in <span class="guess-count">${guessCount}</span> guess${guessCount === 1 ? "" : "es"}! 🎉<br>` : `Failed after ${guessCount} guesses! 😢<br>`;
-                    shareText.innerHTML += `Secret Word: ${secretWord}`;
-                }
-                const shareLinks = [
-                    { id: "share-whatsapp", url: "https://api.whatsapp.com/send?text=" },
-                    { id: "share-telegram", url: "https://t.me/share/url?url=" },
-                    { id: "share-twitter", url: "https://twitter.com/intent/tweet?text=" },
-                    { id: "share-instagram", url: "https://www.instagram.com/?url=" }
-                ];
-                shareLinks.forEach(link => {
-                    const element = document.getElementById(link.id);
-                    if (element) {
-                        const gameNumberText = currentGameNumber || "Unknown Game";
-                        const safeSecretWord = secretWord.replace(/[^\x20-\x7E]/g, '');
-                        const shareMessage = encodeURIComponent(`${gameNumberText}\n${gaveUp ? "I gave up!" : won ? `I got it in ${guessCount} guess${guessCount === 1 ? "" : "es"}!` : `Failed after ${guessCount} guesses!`}\nSecret Word: ${safeSecretWord}\nPlay Wordy at https://wordy-game.com`);
-                        element.href = `${link.url}${shareMessage}`;
-                    } else {
-                        console.warn(`Share link element not found: ${link.id}`);
-                    }
-                });
-                if (keyboardContainer) {
-                    keyboardContainer.classList.add("show-alternate", "show-game-over");
-                } else {
-                    console.error("keyboardContainer not found in DOM");
-                }
-                if (keyboardContent) {
-                    keyboardContent.style.display = "none";
-                } else {
-                    console.error("keyboardContent not found in DOM");
-                }
-                if (keyboardGuessesContent) {
-                    keyboardGuessesContent.style.display = "none";
-                } else {
-                    console.error("keyboardGuessesContent not found in DOM");
-                }
-                if (keyboardGiveUpContent) {
-                    keyboardGiveUpContent.style.display = "none";
-                } else {
-                    console.error("keyboardGiveUpContent not found in DOM");
-                }
-                if (gameOverScreen) {
-                    gameOverScreen.style.display = "flex";
-                } else {
-                    console.error("gameOverScreen not found in DOM");
-                }
-                if (keyboardBackBtn) {
-                    keyboardBackBtn.style.display = "none";
-                } else {
-                    console.error("keyboardBackBtn not found in DOM");
-                }
-                console.log("Showing game-over screen in keyboard container");
-            }
-        } else {
-            console.log("Desktop game end: showing result in guess input");
-        }
         setupKeyboardListeners();
     }
 
-    // Initialize game
-    initializeCursor();
+    // Start pineapple rain
+    function startPineappleRain() {
+        console.log("Starting pineapple rain animation");
+        const rainContainer = document.createElement("div");
+        rainContainer.className = "pineapple-rain";
+        document.body.appendChild(rainContainer);
+
+        function createWave(waveNumber) {
+            const pieces = Array(40).fill("🍍");
+            pieces.forEach(() => {
+                const piece = document.createElement("div");
+                piece.className = "pineapple-piece";
+                piece.textContent = "🍍";
+                piece.style.left = `${Math.random() * 100}vw`;
+                piece.style.animationDuration = `${Math.random() * 3.5 + 2.5}s`;
+                piece.style.fontSize = `${Math.random() * 1.5 + 0.8}vh`;
+                piece.style.animationDelay = `${waveNumber * 0.2 + Math.random() * 0.15}s`;
+                piece.style.setProperty('--rotation', `${Math.random() * 360}deg`);
+                piece.style.setProperty('--drift', `${Math.random() * 2 - 1}`);
+                rainContainer.appendChild(piece);
+            });
+        }
+
+        const waveCount = isMobile ? 6 : 5;
+        for (let i = 0; i < waveCount; i++) {
+            createWave(i);
+        }
+
+        setTimeout(() => {
+            rainContainer.remove();
+            console.log("Pineapple rain animation ended");
+        }, 13500);
+    }
+
+    // Reset game
+    function resetGame() {
+        console.log("Resetting game state");
+        gameOver = false;
+        secretWord = "";
+        hints = [];
+        hintIndex = 0;
+        lastHintLines = 0; // Reset hint lines
+        firstGuessMade = false;
+        guessCount = 0;
+        gaveUp = false;
+        guesses = [];
+        isProcessingGuess = false;
+        if (guessInput) {
+            guessInput.value = "";
+            guessInput.disabled = false;
+            if (!isMobile) {
+                guessInput.focus();
+            }
+            activeInput = guessInput;
+        }
+        if (guessBtn) {
+            guessBtn.disabled = false;
+        }
+        if (guessesLink) guessesLink.textContent = "Guesses: 0";
+        if (guessInputContainer) {
+            guessInputContainer.classList.remove("game-ended", "wrong-guess");
+            guessInputContainer.style.background = "rgba(255, 255, 255, 0.85)"; // Reset to default
+        }
+        if (gameScreen) {
+            gameScreen.classList.remove("game-ended"); // Remove fade overlay
+        }
+        const hintsContainer = document.getElementById("hints-container");
+        if (hintsContainer) {
+            hintsContainer.innerHTML = "";
+            hintsContainer.style.display = "block";
+            hintsContainer.classList.remove('lines-1', 'lines-2');
+            hintsContainer.classList.add('lines-0');
+            console.log("Hints container reset");
+        }
+        // Restore Hints label visibility
+        const hintsLabel = document.getElementById("hints-label");
+        if (hintsLabel) {
+            hintsLabel.style.visibility = "visible";
+            console.log("Hints label restored");
+        }
+        document.getElementById("game-over").style.display = "none";
+        document.getElementById("main-content").style.display = "flex";
+        showKeyboard();
+        setupKeyboardListeners();
+    }
+
+    // Load game
+function loadGame(game) {
+    console.log("Loading game:", game);
+    resetGame();
+    secretWord = game["Secret Word"].toUpperCase();
+    hints = [
+        game["Hint 1"]?.toUpperCase() || "",
+        game["Hint 2"]?.toUpperCase() || "",
+        game["Hint 3"]?.toUpperCase() || "",
+        game["Hint 4"]?.toUpperCase() || "",
+        game["Hint 5"]?.toUpperCase() || ""
+    ].filter(hint => hint !== "");
+    console.log("Loaded hints:", hints);
+
+    // Set current game number for display
+    if (game["Display Name"]) {
+        currentGameNumber = game["Display Name"];
+    } else {
+        currentGameNumber = `Game #${game["Game Number"]}`;
+    }
+    const gameNumberDisplay = document.querySelector(".new-game-number-display");
+    if (gameNumberDisplay) {
+        gameNumberDisplay.textContent = currentGameNumber;
+        console.log("Game number display updated:", currentGameNumber);
+    }
+
+    // Check if the game has already been completed
+    let resultsKey, normalizedGameNumber;
+    if (currentGameNumber.includes("- Private")) {
+        resultsKey = "privatePineappleResults";
+        normalizedGameNumber = currentGameNumber.split(" - ")[0];
+    } else {
+        resultsKey = "pineappleResults";
+        normalizedGameNumber = currentGameNumber.replace("Game #", "");
+    }
+    const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
+    const pastResult = results[normalizedGameNumber];
+    console.log("Past result for game:", pastResult);
+
+    if (pastResult && pastResult.secretWord === secretWord) {
+        console.log("Game already completed:", pastResult);
+        if (pastResult.guesses === "Gave Up" || pastResult.guesses === "X") {
+            gaveUp = true;
+            endGame(false, true);
+        } else {
+            guessCount = parseInt(pastResult.guesses, 10);
+            guesses = Array(guessCount).fill("DUMMY"); // Placeholder guesses
+            if (guessesLink) guessesLink.textContent = `Guesses: ${guessCount}`;
+            endGame(true);
+        }
+    } else {
+        // Start with first hint revealed
+        hintIndex = -1;
+        revealHint();
+        if (guessInput && !isMobile) {
+            guessInput.focus();
+            activeInput = guessInput;
+        }
+    }
+}
+
+// Initialize game
+async function initializeGame() {
+    console.log("Initializing game");
     await fetchGameData();
     await fetchPrivateGames();
+    initializeCursor();
+}
+
+initializeGame();
 });
