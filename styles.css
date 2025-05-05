@@ -409,7 +409,9 @@ a {
   align-items: center;
   justify-content: center;
   position: fixed;
+  top: auto;
   bottom: 4vh;
+  bottom: calc(env(safe-area-inset-bottom) + 4vh);
   background: #FFFFFF;
   z-index: 15;
   padding: 0.5vh 0.5vw;
@@ -418,6 +420,7 @@ a {
   overflow: hidden;
 }
 
+/* Hide keyboard on desktop */
 @media (min-width: 601px) {
   .keyboard {
     display: none !important;
@@ -1263,6 +1266,9 @@ a {
     max-height: 20vh;
     padding: 0.4vh 0.4vw;
     bottom: 4vh;
+    bottom: calc(env(safe-area-inset-bottom) + 4vh);
+    top: auto;
+    display: none;
   }
   #game-screen .keyboard {
     display: flex;
@@ -1325,7 +1331,7 @@ a {
     margin: 0.5vh 0;
   }
   #form-content {
-    width: 90vw; /* Fixed typo by removing "NECESSARY" */
+    width: 90vw;
     max-height: calc(90vh - 5vh - 4vh);
     padding: 1.5vh 1.5vw;
   }
@@ -1367,7 +1373,7 @@ a {
   }
   #keyboard-give-up-content .dialog-message {
     font-size: 2vh;
-    margin-bottom: 0.75vh; /* Fixed typo by removing "DEE" */
+    margin-bottom: 0.75vh;
   }
   #keyboard-give-up-content .control-btn {
     font-size: 1.8vh;
