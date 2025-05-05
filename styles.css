@@ -33,7 +33,7 @@ a {
   left: 0;
   z-index: 1;
   background: url('newbackground.png') no-repeat center top fixed, #FFFFFF;
-  background-size: 100% calc(100% - 24vh);
+  background-size: 100% calc(100% - 28.25vh); /* Adjusted for 21.25vh keyboard + 5vh ad-box + 2vh space */
   background-attachment: fixed;
 }
 
@@ -160,49 +160,7 @@ a {
 /* Remove margin from all-games-link */
 #all-games-link {
   margin: 0;
-}
-
-/* Navigation arrows container */
-#nav-arrows-container {
-  width: 90vw;
-  height: 5vh;
-  position: fixed;
-  top: calc(5vh + 1.8vh + 7.2vh);
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  z-index: 12;
-}
-
-.nav-arrow {
-  background: none;
-  border: 0.1vh solid #FFB300;
-  border-radius: 0.3vh;
-  padding: 0.25vh;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 5vh;
-  height: 5vh;
-}
-
-.nav-arrow i {
-  font-size: 4.5vh;
-  color: #FFFFFF;
-  font-weight: bold;
-  text-shadow: 1px 1px 2px #000000;
-}
-
-.nav-arrow:hover i {
-  font-size: 5vh;
-}
-
-.nav-arrow.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  z-index: 25; /* Ensure it’s clickable */
 }
 
 /* Game info container (new) */
@@ -229,6 +187,34 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
+/* New game navigation arrows */
+.game-nav-arrow {
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 2.5vh;
+  height: 2.5vh;
+  padding: 0;
+}
+
+.game-nav-arrow i {
+  font-size: 2.5vh;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.game-nav-arrow:hover i {
+  font-size: 3vh;
+}
+
+.game-nav-arrow.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 /* Center game number display */
 .new-game-number-display {
   font-family: Arial, sans-serif;
@@ -238,7 +224,7 @@ a {
   text-align: center;
   flex-grow: 1;
   line-height: 1.8vh;
-  margin: 0;
+  margin: 0 1vw; /* Small margin to space out from arrows */
 }
 
 /* Remove old game-number-display from game screen */
@@ -269,7 +255,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 1.8vh + 5vh - 4.5vh + 1.8vh);
+  top: calc(5vh + 1.8vh); /* Header (5vh) + Space (2vh) - Adjusted since nav-arrows are removed */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -313,9 +299,9 @@ a {
 
 #guess-input-container {
   position: relative;
-  width: calc(100% - 30%);
+  width: 70%; /* Restored to match desktop */
   height: 8vh;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.85); /* Fixed rgba syntax */
   border-radius: 0.6vh 0 0 0.6vh;
   box-sizing: border-box;
   display: flex;
@@ -456,14 +442,14 @@ a {
 /* Keyboard styles */
 .keyboard {
   width: 100vw;
-  height: 20vh;
-  max-height: 20vh;
+  height: 21.25vh; /* Reduced by 15% from 25vh */
+  max-height: 21.25vh;
   display: none;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: fixed;
-  bottom: 4vh;
+  bottom: 7vh; /* Ad Box (5vh) + Space (2vh) */
   background: #FFFFFF;
   z-index: 15;
   padding: 0.5vh 0.5vw;
@@ -635,7 +621,7 @@ a {
 /* Ad box */
 #ad-box {
   width: 100%;
-  height: 4vh;
+  height: 5vh;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -1206,7 +1192,7 @@ a {
 .form-input {
   font-size: clamp(3vh, 4.5vw, 4.5vh);
   font-weight: bold;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.85); /* Fixed rgba syntax */
   border: none;
   width: 25ch;
   max-width: 90vw;
@@ -1287,12 +1273,13 @@ a {
     font-size: 1.6vh;
     margin: 0;
     line-height: 2vh;
+    z-index: 25; /* Ensure it’s clickable */
   }
 
-  /* Central Area: 45vh (Hints, Guess Container) */
+  /* Central Area: 59.5vh (Hints, Guess Container) */
   #main-content {
     top: 7vh; /* Header (5vh) + Space (2vh) */
-    height: 45vh;
+    height: 59.5vh; /* Increased from 55.75vh by 3.75vh */
     width: 100vw;
     left: 0;
     transform: none; /* Remove translate to avoid positioning issues */
@@ -1307,16 +1294,16 @@ a {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center; /* Center contents vertically */
+    justify-content: flex-start; /* Align contents at the top */
   }
   #hints-label {
     font-size: 2.75vh;
-    margin: 1vh 0; /* Reduced margins to fit within 45vh */
+    margin: 10.9vh 0 1vh 0; /* Moved down three lines (10.9vh top margin) */
   }
   .hints-inline {
     font-size: 2.75vh;
     -webkit-text-stroke: 0.08vh #000000;
-    margin: 1vh 0;
+    margin: 0 0 1vh 0;
     min-height: calc(2.75vh * 1.2 * 2);
     max-height: 10vh; /* Limit height to prevent overflow */
     overflow-y: auto;
@@ -1329,8 +1316,7 @@ a {
   }
   #guess-container {
     margin: 1vh 0;
-    height: auto; /* Allow natural height */
-    flex-grow: 1; /* Take remaining space */
+    height: 9vh; /* Restored to match desktop */
     display: flex;
     align-items: center;
   }
@@ -1339,15 +1325,14 @@ a {
   }
   #guess-input-container {
     height: 9vh;
-    width: calc(100% - 30%);
+    width: 70%; /* Restored to match desktop */
     padding: 1vh 2.5vw;
   }
   #guess-input {
     font-size: 3.75vh;
     height: 6vh;
-    line-height: 4vh;
-    top: calc(50% + 2.4vh);
-    transform: translateY(-50%);
+    line-height: 6vh;
+    bottom: 0; /* Adjusted to align properly */
     left: 0;
     padding: 0 2.5vw;
     margin: 0;
@@ -1356,13 +1341,13 @@ a {
     outline: none;
     text-transform: uppercase;
     font-family: 'Luckiest Guy', cursive;
-    box-sizing: content-box;
+    box-sizing: border-box;
     z-index: 6;
     caret-color: transparent;
   }
   .cursor {
     font-size: 3.75vh;
-    line-height: 4vh;
+    line-height: 6vh;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -1389,7 +1374,7 @@ a {
     width: 85vw;
     height: 5vh;
     position: fixed;
-    top: 54vh; /* Header (5vh) + Space (2vh) + Central Area (45vh) + Space (2vh) */
+    top: 68.5vh; /* Header (5vh) + Space (2vh) + Central Area (59.5vh) + Space (2vh) */
     left: 50%;
     transform: translateX(-50%);
     margin: 0;
@@ -1401,30 +1386,24 @@ a {
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 5vh;
+    margin: 0 0.5vw; /* Adjusted margin */
+  }
+  .game-nav-arrow {
+    width: 2vh;
+    height: 2vh;
+  }
+  .game-nav-arrow i {
+    font-size: 2vh;
+  }
+  .game-nav-arrow:hover i {
+    font-size: 2.5vh;
   }
 
-  /* Arrow Buttons: 5vh */
-  #nav-arrows-container {
-    top: 61vh; /* Header (5vh) + Space (2vh) + Central Area (45vh) + Space (2vh) + Game Info (5vh) + Space (2vh) */
-    height: 5vh;
-    width: 90vw;
-  }
-  .nav-arrow {
-    width: 4.5vh;
-    height: 4.5vh;
-  }
-  .nav-arrow i {
-    font-size: 4vh;
-  }
-  .nav-arrow:hover i {
-    font-size: 4.5vh;
-  }
-
-  /* Keyboard Container: 25vh */
+  /* Keyboard Container: 21.25vh */
   .keyboard {
     width: 100vw;
-    height: 25vh;
-    max-height: 25vh;
+    height: 21.25vh;
+    max-height: 21.25vh;
     padding: 0.4vh 0.4vw;
     bottom: 7vh; /* Ad Box (5vh) + Space (2vh) */
     position: fixed; /* Ensure it’s fixed */
@@ -1444,41 +1423,41 @@ a {
     gap: 0.4vw;
   }
   .key {
-    font-size: 2vh;
+    font-size: 1.8vh; /* Adjusted for smaller container */
     width: 9.2vw;
     max-width: 4.6vh;
   }
   .key.special {
     width: 13.8vw;
     max-width: 6.9vh;
-    font-size: 1.8vh;
+    font-size: 1.6vh;
   }
   .keyboard-back-btn {
-    font-size: 2.25vh;
+    font-size: 2vh;
   }
   .keyboard-back-btn:hover i {
-    font-size: 2.75vh;
+    font-size: 2.5vh;
   }
   #guesses-title {
-    font-size: 2vh;
+    font-size: 1.8vh;
     margin-bottom: 0.3vh;
   }
   #guesses-list {
-    font-size: 1.8vh;
-    max-height: 15vh; /* Increased to fit within 25vh keyboard container */
-    line-height: 2.2vh;
+    font-size: 1.6vh;
+    max-height: 12vh; /* Adjusted for smaller keyboard container */
+    line-height: 2vh;
   }
   #guesses-close-btn {
-    font-size: 1.8vh;
+    font-size: 1.6vh;
     padding: 0.3vh 1.5vw;
     margin-bottom: 0.3vh;
   }
   #keyboard-give-up-content .dialog-message {
-    font-size: 2vh;
-    margin-bottom: 0.75vh;
+    font-size: 1.8vh;
+    margin-bottom: 0.5vh;
   }
   #keyboard-give-up-content .control-btn {
-    font-size: 1.8vh;
+    font-size: 1.6vh;
     padding: 0.3vh 1.5vw;
   }
 
