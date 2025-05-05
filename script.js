@@ -282,31 +282,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(input => input);
 
     formInputs.forEach(input => {
-        // Set readonly for mobile to prevent phone keyboard
-        if (isMobile) {
-            input.setAttribute("readonly", "readonly");
-            input.addEventListener("focus", (e) => {
-                e.preventDefault();
-                console.log("Prevented focus on form input to avoid virtual keyboard:", input.id);
-                activeInput = input;
-                showKeyboard(); // Ensure on-screen keyboard is visible
-            });
-        } else {
-            input.readOnly = false;
-        }
+        input.readOnly = false;
         input.disabled = false;
         input.addEventListener("click", () => {
             activeInput = input;
-            if (!isMobile) input.focus();
+            input.focus();
             console.log("Form input selected:", input.id);
-            if (isMobile) showKeyboard(); // Show on-screen keyboard on mobile
         });
         input.addEventListener("touchstart", (e) => {
             e.preventDefault();
             activeInput = input;
-            if (!isMobile) input.focus();
+            input.focus();
             console.log("Form input touched:", input.id);
-            if (isMobile) showKeyboard(); // Show on-screen keyboard on mobile
         });
         input.addEventListener("input", () => {
             console.log("Form input updated:", input.id, input.value);
@@ -1822,73 +1809,70 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Load game
-function loadGame(game) {
-    console.log("Loading game:", game);
-    resetGame();
-    secretWord = game["Secret Word"].toUpperCase();
-    hints = [
-        game["Hint 1"]?.toUpperCase() || "",
-        game["Hint 2"]?.toUpperCase() || "",
-        game["Hint 3"]?.toUpperCase() || "",
-        game["Hint 4"]?.toUpperCase() || "",
-        game["Hint 5"]?.toUpperCase() || ""
-    ].filter(hint => hint !== "");
-    console.log("Loaded hints:", hints);
+    function loadGame(game) {
+        console.log("Loading game:", game);
+        resetGame();
+        secretWord = game["Secret Word"].toUpperCase();
+        hints = [
+            game["Hint 1"]?.toUpperCase() || "",
+            game["Hint 2"]?.toUpperCase() || "",
+            game["Hint 3"]?.toUpperCase() || "",
+            game["Hint 4"]?.toUpperCase() || "",
+            game["Hint 5"]?.toUpperCase() || ""
+        ].filter(hint => hint);
+        console.log(" Loaded hints:", hints);
 
-    // Set current game number for display
-    if (game["Display Name"]) {
-        currentGameNumber = game["Display Name"];
-    } else {
-        currentGameNumber = `Game #${game["Game Number"]}`;
-    }
-    const gameNumberDisplay = document.querySelector(".new-game-number-display");
-    if (gameNumberDisplay) {
-        gameNumberDisplay.textContent = currentGameNumber;
-        console.log("Game number display updated:", currentGameNumber);
-    }
+        currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}${game["Game Name"] ? " - Private" : ""}`;
+        const newGameNumberDisplay = document.getElementById("new-game-number-display");
+        const gameNumberDisplay = document.getElementById("game-number-display");
+        if (newGameNumberDisplay) {
+            newGameNumberDisplay.textContent = currentGameNumber;
+        }
+        if (gameNumberDisplay) {
+            gameNumberDisplay.textContent = currentGameNumber;
+        }
 
-    // Check if the game has already been completed
-    let resultsKey, normalizedGameNumber;
-    if (currentGameNumber.includes("- Private")) {
-        resultsKey = "privatePineappleResults";
-        normalizedGameNumber = currentGameNumber.split(" - ")[0];
-    } else {
-        resultsKey = "pineappleResults";
-        normalizedGameNumber = currentGameNumber.replace("Game #", "");
-    }
-    const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
-    const pastResult = results[normalizedGameNumber];
-    console.log("Past result for game:", pastResult);
-
-    if (pastResult && pastResult.secretWord === secretWord) {
-        console.log("Game already completed:", pastResult);
-        if (pastResult.guesses === "Gave Up" || pastResult.guesses === "X") {
-            gaveUp = true;
-            endGame(false, true);
+        console.log("Game loaded with currentGameNumber:", currentGameNumber, "Secret Word:", secretWord);
+        setupHints();
+        initializeCursor();
+        if (isMobile) {
+            showKeyboard();
         } else {
-            guessCount = parseInt(pastResult.guesses, 10);
-            guesses = Array(guessCount).fill("DUMMY"); // Placeholder guesses
-            if (guessesLink) guessesLink.textContent = `Guesses: ${guessCount}`;
-            endGame(true);
+            if (guessInput) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
         }
-    } else {
-        // Start with first hint revealed
-        hintIndex = -1;
-        revealHint();
-        if (guessInput && !isMobile) {
-            guessInput.focus();
-            activeInput = guessInput;
+        setupKeyboardListeners();
+    }
+
+    // Initialize the game
+    async function initializeGame() {
+        console.log("Initializing game...");
+        isUILocked = true;
+        isLoadingGame = true;
+        try {
+            await fetchGameData();
+            await fetchPrivateGames();
+            displayGameList();
+            initializeCursor();
+            setupEventListeners();
+            setupKeyboardListeners();
+            if (isMobile) {
+                showKeyboard();
+            }
+        } catch (error) {
+            console.error("Error initializing game:", error);
+            if (formErrorDialog && formErrorMessage) {
+                formErrorMessage.textContent = "Failed to initialize game.";
+                formErrorDialog.style.display = "flex";
+            }
+        } finally {
+            isUILocked = false;
+            isLoadingGame = false;
         }
     }
-}
 
-// Initialize game
-async function initializeGame() {
-    console.log("Initializing game");
-    await fetchGameData();
-    await fetchPrivateGames();
-    initializeCursor();
-}
-
-initializeGame();
+    // Start the game
+    await initializeGame();
 });
