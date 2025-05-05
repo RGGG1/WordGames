@@ -537,6 +537,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 normalizedGameNumber = currentGameNumber.replace("Game #", "");
                 gameType = "pineapple";
             }
+            let gameResults = JSON.parse(localStorage.getItem("gameResults")) || {};
+            let gameKey = currentGameNumber.includes("- Private") ? `${currentGameNumber}` : `Game #${normalizedGameNumber}`;
+            gameResults[gameKey] = gameResults[gameKey] || { guesses: "-" };
+            gameResults[gameKey].guesses = "Gave up";
+            localStorage.setItem("gameResults", JSON.stringify(gameResults));
             saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
             completedGames[currentGameNumber] = true;
             localStorage.setItem("completedGames", JSON.stringify(completedGames));
@@ -981,6 +986,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessesLink.textContent = `Guesses: ${guessCount}/5`;
             }
 
+            // Update game results in localStorage
+            let gameResults = JSON.parse(localStorage.getItem("gameResults")) || {};
+            let gameKey = currentGameNumber.includes("- Private") ? `${currentGameNumber}` : `Game #${currentGameNumber.replace("Game #", "")}`;
+            gameResults[gameKey] = gameResults[gameKey] || { guesses: "-" };
+
             if (guess === secretWord) {
                 console.log("Correct guess!");
                 guessInputContainer.classList.add("correct-guess");
@@ -993,6 +1003,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     normalizedGameNumber = currentGameNumber.replace("Game #", "");
                     gameType = "pineapple";
                 }
+                gameResults[gameKey].guesses = guessCount;
+                localStorage.setItem("gameResults", JSON.stringify(gameResults));
                 await saveGameResult(gameType, normalizedGameNumber, secretWord, guessCount);
                 completedGames[currentGameNumber] = true;
                 localStorage.setItem("completedGames", JSON.stringify(completedGames));
@@ -1004,7 +1016,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     isProcessingGuess = false;
                     initializeCursor();
                     animationTimeout = null;
-                }, 1500);
+                }, 500); // Reduced from 1500ms to 500ms
             } else {
                 console.log("Incorrect guess");
                 guessInputContainer.classList.add("wrong-guess");
@@ -1018,6 +1030,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                         normalizedGameNumber = currentGameNumber.replace("Game #", "");
                         gameType = "pineapple";
                     }
+                    gameResults[gameKey].guesses = "X";
+                    localStorage.setItem("gameResults", JSON.stringify(gameResults));
                     await saveGameResult(gameType, normalizedGameNumber, secretWord, "Lost");
                     completedGames[currentGameNumber] = true;
                     localStorage.setItem("completedGames", JSON.stringify(completedGames));
@@ -1029,11 +1043,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                         isProcessingGuess = false;
                         initializeCursor();
                         animationTimeout = null;
-                    }, 1500);
+                    }, 500); // Reduced from 1500ms to 500ms
                 } else {
                     if (hintIndex + 1 < hints.length) {
                         hintIndex++;
-                        // Append the new hint with a separator
                         hintsContainer.innerHTML += ` <span class="separator yellow">| </span> ${hints[hintIndex]}`;
                     }
                     animationTimeout = setTimeout(() => {
@@ -1047,7 +1060,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             guessInput.focus();
                         }
                         animationTimeout = null;
-                    }, 1500);
+                    }, 500); // Reduced from 1500ms to 500ms
                 }
             }
         } catch (error) {
@@ -1102,8 +1115,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             triggerPineappleRain();
         }
 
-        resetScreenDisplays(gameOverScreen);
-        adjustBackground();
+        // Faster transition with immediate display change
+        gameScreen.style.opacity = "0";
+        setTimeout(() => {
+            resetScreenDisplays(gameOverScreen);
+            gameOverScreen.style.opacity = "1";
+            adjustBackground();
+        }, 200); // Matches CSS transition duration
     }
 
     // Trigger pineapple rain
@@ -1113,23 +1131,30 @@ document.addEventListener("DOMContentLoaded", async () => {
         container.classList.add("pineapple-rain");
         document.body.appendChild(container);
 
-        const numPieces = 20;
-        for (let i = 0; i < numPieces; i++) {
-            const piece = document.createElement("div");
-            piece.classList.add("pineapple-piece");
-            piece.textContent = "🍍";
-            piece.style.left = `${Math.random() * 100}vw`;
-            piece.style.fontSize = `${1.5 + Math.random() * 2}vh`;
-            piece.style.animationDuration = `${2 + Math.random() * 3}s`;
-            piece.style.setProperty("--rotation", `${Math.random() * 360}deg`);
-            piece.style.setProperty("--drift", `${-10 + Math.random() * 20}`);
-            container.appendChild(piece);
+        const numPieces = 35;
+        const waves = 3;
+        const waveDelay = 1000; // 1 second between waves
+
+        for (let wave = 0; wave < waves; wave++) {
+            setTimeout(() => {
+                for (let i = 0; i < numPieces; i++) {
+                    const piece = document.createElement("div");
+                    piece.classList.add("pineapple-piece");
+                    piece.textContent = "🍍";
+                    piece.style.left = `${Math.random() * 100}vw`;
+                    piece.style.fontSize = `${1.5 + Math.random() * 2}vh`;
+                    piece.style.animationDuration = `${2 + Math.random() * 3}s`;
+                    piece.style.setProperty("--rotation", `${Math.random() * 360 - 180}deg`); // -180° to +180°
+                    piece.style.setProperty("--drift", `${-10 + Math.random() * 20}`);
+                    container.appendChild(piece);
+                }
+            }, wave * waveDelay);
         }
 
         setTimeout(() => {
             container.remove();
             console.log("Pineapple rain animation completed");
-        }, 6000);
+        }, 6000 + (waves - 1) * waveDelay);
     }
 
     // Setup share buttons
@@ -1202,6 +1227,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Displaying game list");
         const officialList = document.getElementById("official-list");
         const privateList = document.getElementById("private-list");
+        let gameResults = JSON.parse(localStorage.getItem("gameResults")) || {};
 
         if (officialList) {
             officialList.innerHTML = "";
@@ -1210,10 +1236,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 row.classList.add("game-list-row");
                 const gameNum = game["Game Number"];
                 const displayWord = completedGames[`Game #${gameNum}`] ? game["Secret Word"].toUpperCase() : "Play Now";
+                const gameKey = `Game #${gameNum}`;
+                const guessesDisplay = gameResults[gameKey]?.guesses || "-";
                 row.innerHTML = `
                     <span>${gameNum}</span>
                     <span class="play-now">${displayWord}</span>
-                    <span>${game["Guesses"] || "Not Played"}</span>
+                    <span>${guessesDisplay}</span>
                 `;
                 row.addEventListener("click", async () => {
                     console.log("Official game selected:", game["Game Number"]);
@@ -1236,10 +1264,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 row.classList.add("game-list-row");
                 const gameNum = game["Game Number"];
                 const displayWord = completedGames[`${gameNum} - Private`] ? game["Secret Word"].toUpperCase() : "Play Now";
+                const gameKey = `${gameNum} - Private`;
+                const guessesDisplay = gameResults[gameKey]?.guesses || "-";
                 row.innerHTML = `
                     <span>${game["Name"] || "Unnamed"}</span>
                     <span class="play-now">${displayWord}</span>
-                    <span>${game["Guesses"] || "Not Played"}</span>
+                    <span>${guessesDisplay}</span>
                 `;
                 row.addEventListener("click", async () => {
                     console.log("Private game selected:", game["Game Number"]);

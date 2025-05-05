@@ -35,6 +35,7 @@ a {
   background: url('newbackground.png') no-repeat center top fixed, #FFFFFF;
   background-size: 100% calc(100% - 28.25vh); /* Adjusted for 21.25vh keyboard + 5vh ad-box + 2vh space */
   background-attachment: fixed;
+  transition: opacity 0.2s ease; /* Added for faster screen transition */
 }
 
 /* Header styling */
@@ -190,7 +191,7 @@ a {
   text-shadow: 1px 1px 2px #000000;
   text-align: center;
   line-height: 1.8vh;
-  margin: 0 0.3vw; /* Tight spacing between text and arrows */
+  margin: 0 0.6vw; /* Increased from 0.3vw for two extra spaces */
 }
 
 .game-nav-arrow {
@@ -203,7 +204,7 @@ a {
   width: 2.5vh;
   height: 2.5vh;
   padding: 0;
-  margin: 0 0.3vw; /* Tight spacing */
+  margin: 0 0.6vw; /* Increased from 0.3vw for two extra spaces */
 }
 
 .game-nav-arrow i {
@@ -411,8 +412,8 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 85vw; /* Match guess container width */
-  height: calc(3.25vh * 1.2 * 2); /* Two lines of text height */
+  width: 59.5vw; /* Matches #guess-input-container (70% of 85vw) */
+  height: 8vh; /* Matches #guess-input-container height */
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh; /* Curved corners */
@@ -420,12 +421,12 @@ a {
   box-sizing: border-box;
 }
 
-/* Remove conditional line classes */
+/* Remove conditional line classes to keep fixed size */
 .hints-inline.lines-0::before,
 .hints-inline.lines-1::before,
 .hints-inline.lines-2::before {
-  width: 85vw;
-  height: calc(3.25vh * 1.2 * 2);
+  width: 59.5vw;
+  height: 8vh;
 }
 
 /* Keyboard styles */
@@ -786,11 +787,11 @@ a {
 }
 
 #guess-input-container.wrong-guess {
-  animation: flashRed 1.5s ease;
+  animation: flashRed 0.5s ease; /* Reduced from 1.5s */
 }
 
 #guess-input-container.correct-guess {
-  animation: flashGreen 1.5s ease;
+  animation: flashGreen 0.5s ease; /* Reduced from 1.5s */
 }
 
 /* Pineapple rain animation */
@@ -847,6 +848,7 @@ a {
   background-attachment: fixed;
   z-index: 1;
   overflow-y: auto;
+  transition: opacity 0.2s ease; /* Added for faster screen transition */
 }
 
 #game-over::before {
@@ -1257,6 +1259,12 @@ a {
   padding-top: 1vh;
 }
 
+/* Faster screen transition for hidden screens */
+#game-screen[style*="display: none"],
+#game-over[style*="display: none"] {
+  opacity: 0;
+}
+
 /* Mobile styles */
 @media (max-width: 600px) or (max-height: 600px) {
   /* Header: 5vh */
@@ -1328,8 +1336,8 @@ a {
     overflow-y: auto;
   }
   .hints-inline::before {
-    width: 85vw;
-    height: calc(2.75vh * 1.2 * 2); /* Two lines of text height for mobile */
+    width: 59.5vw; /* Matches mobile #guess-input-container */
+    height: 9vh; /* Matches mobile #guess-input-container height */
   }
   #guess-container {
     margin: 1vh 0;
@@ -1394,12 +1402,12 @@ a {
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 5vh;
-    margin: 0 0.3vw;
+    margin: 0 0.6vw; /* Consistent spacing on mobile */
   }
   .game-nav-arrow {
     width: 2vh;
     height: 2vh;
-    margin: 0 0.3vw;
+    margin: 0 0.6vw; /* Consistent spacing on mobile */
   }
   .game-nav-arrow i {
     font-size: 2vh;
@@ -1416,16 +1424,16 @@ a {
   #give-up-no-btn,
   #keyboard-give-up-yes-btn,
   #keyboard-give-up-no-btn {
-    font-size: 4vh; /* Doubled from 2vh */
-    padding: 0.6vh 3vw; /* Doubled padding */
+    font-size: 5vh; /* Increased from 4vh (25% larger) */
+    padding: 1vh 4vw; /* Increased padding for larger touch area */
   }
 
   /* Flash animations */
   #guess-input-container.wrong-guess {
-    animation: flashRed 1.5s ease;
+    animation: flashRed 0.5s ease;
   }
   #guess-input-container.correct-guess {
-    animation: flashGreen 1.5s ease;
+    animation: flashGreen 0.5s ease;
   }
 
   /* Keyboard Container: 21.25vh */
