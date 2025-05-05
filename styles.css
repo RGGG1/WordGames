@@ -157,38 +157,42 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* Remove margin from all-games-link */
+/* All Games link - Remove red background */
 #all-games-link {
   margin: 0;
-  z-index: 100; /* Increased to ensure clickability */
-  background: rgba(255, 0, 0, 0.5); /* Temporary for debugging */
+  z-index: 100;
+  background: none; /* No background */
+  color: #FFFFFF; /* White text */
+  text-shadow: 1px 1px 2px #000000;
 }
 
-/* Game info container (new) */
+/* Game info container - Single line with Give Up, arrows, Game #X, Guesses */
 #game-info-container {
   width: 85vw;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-between; /* Left, center, right alignment */
   align-items: center;
-  margin-top: calc(2 * 1.8vh); /* Two lines below guess container */
+  margin-top: 1vh; /* Space below guess container */
   position: relative;
   z-index: 5;
 }
 
-/* Style for game info links */
-.game-info-link {
+.game-nav-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.new-game-number-display {
   font-family: Arial, sans-serif;
   font-size: 1.8vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  cursor: pointer;
-  text-decoration: underline;
-  pointer-events: auto;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+  text-align: center;
+  line-height: 1.8vh;
+  margin: 0 0.3vw; /* Tight spacing between text and arrows */
 }
 
-/* New game navigation arrows */
 .game-nav-arrow {
   background: none;
   border: none;
@@ -199,6 +203,7 @@ a {
   width: 2.5vh;
   height: 2.5vh;
   padding: 0;
+  margin: 0 0.3vw; /* Tight spacing */
 }
 
 .game-nav-arrow i {
@@ -214,18 +219,6 @@ a {
 .game-nav-arrow.disabled {
   opacity: 0.5;
   cursor: not-allowed;
-}
-
-/* Center game number display */
-.new-game-number-display {
-  font-family: Arial, sans-serif;
-  font-size: 1.8vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  text-align: center;
-  flex-grow: 1;
-  line-height: 1.8vh;
-  margin: 0 1vw; /* Small margin to space out from arrows */
 }
 
 /* Remove old game-number-display from game screen */
@@ -418,22 +411,21 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 85vw;
+  width: 85vw; /* Match guess container width */
+  height: calc(3.25vh * 1.2 * 2); /* Two lines of text height */
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
-  border-radius: 0.6vh;
+  border-radius: 0.6vh; /* Curved corners */
   padding: 0.5vh 0;
   box-sizing: border-box;
-  display: block; /* Always show the fade background */
-  height: calc(3.25vh * 1.2 * 2 + 1vh); /* Fixed height for two rows */
 }
 
 /* Remove conditional line classes */
 .hints-inline.lines-0::before,
 .hints-inline.lines-1::before,
 .hints-inline.lines-2::before {
-  display: block;
-  height: calc(3.25vh * 1.2 * 2 + 1vh); /* Fixed height for two rows */
+  width: 85vw;
+  height: calc(3.25vh * 1.2 * 2);
 }
 
 /* Keyboard styles */
@@ -710,6 +702,21 @@ a {
   padding: 1.265625vh 2.53125vw; /* Scaled proportionally to 75% of #next-game-btn-end */
 }
 
+/* Enlarge give up buttons by 100% */
+#give-up-yes-btn,
+#give-up-no-btn,
+#keyboard-give-up-yes-btn,
+#keyboard-give-up-no-btn {
+  font-size: 5vh; /* Doubled from 2.5vh */
+  padding: 1.5vh 4vw; /* Doubled padding */
+  background: #FFB300;
+  color: #000000;
+  border: 0.1vh solid #000000;
+  border-radius: 0.6vh;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
 @media (min-width: 601px) {
   #game-screen .control-btn:hover {
     font-size: 3.375vh;
@@ -767,14 +774,23 @@ a {
   font-size: 2vh;
 }
 
-/* Guess animation */
-#guess-input-container.wrong-guess {
-  animation: flashRed 0.35s ease;
-}
-
+/* Flash animations for guesses */
 @keyframes flashRed {
   0%, 100% { background-color: rgba(255, 255, 255, 0.85); }
   50% { background-color: #FF0000; }
+}
+
+@keyframes flashGreen {
+  0%, 100% { background-color: rgba(255, 255, 255, 0.85); }
+  50% { background-color: #00FF00; }
+}
+
+#guess-input-container.wrong-guess {
+  animation: flashRed 1.5s ease;
+}
+
+#guess-input-container.correct-guess {
+  animation: flashGreen 1.5s ease;
 }
 
 /* Pineapple rain animation */
@@ -1272,8 +1288,10 @@ a {
     font-size: 1.6vh;
     margin: 0;
     line-height: 2vh;
-    z-index: 100; /* Ensure it’s clickable */
-    background: rgba(255, 0, 0, 0.5); /* Temporary for debugging */
+    z-index: 100;
+    background: none; /* No background */
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
   }
 
   /* Central Area: 55.75vh (Hints, Guess Container, Links) */
@@ -1311,7 +1329,7 @@ a {
   }
   .hints-inline::before {
     width: 85vw;
-    height: calc(2.75vh * 1.2 * 2 + 1vh); /* Fixed height for two rows on mobile */
+    height: calc(2.75vh * 1.2 * 2); /* Two lines of text height for mobile */
   }
   #guess-container {
     margin: 1vh 0;
@@ -1368,34 +1386,46 @@ a {
     left: 1vw;
   }
 
-  /* Game # and Links: 5vh */
+  /* Game info container */
   #game-info-container {
     width: 85vw;
-    height: 5vh;
-    position: static; /* Keep in natural flow */
-    margin: 1vh 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .game-info-link {
-    font-size: 1.6vh;
-    line-height: 5vh; /* Center vertically */
+    margin-top: 0.5vh;
   }
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 5vh;
-    margin: 0 0.5vw; /* Adjusted margin */
+    margin: 0 0.3vw;
   }
   .game-nav-arrow {
     width: 2vh;
     height: 2vh;
+    margin: 0 0.3vw;
   }
   .game-nav-arrow i {
     font-size: 2vh;
   }
   .game-nav-arrow:hover i {
     font-size: 2.5vh;
+  }
+  .control-link {
+    font-size: 1.6vh;
+  }
+
+  /* Enlarge give up buttons */
+  #give-up-yes-btn,
+  #give-up-no-btn,
+  #keyboard-give-up-yes-btn,
+  #keyboard-give-up-no-btn {
+    font-size: 4vh; /* Doubled from 2vh */
+    padding: 0.6vh 3vw; /* Doubled padding */
+  }
+
+  /* Flash animations */
+  #guess-input-container.wrong-guess {
+    animation: flashRed 1.5s ease;
+  }
+  #guess-input-container.correct-guess {
+    animation: flashGreen 1.5s ease;
   }
 
   /* Keyboard Container: 21.25vh */

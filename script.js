@@ -19,6 +19,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let animationTimeout = null;
     let activeInput = null;
     let currentBackground = "newbackground.png";
+    let completedGames = JSON.parse(localStorage.getItem("completedGames")) || {};
 
     // DOM elements
     const gameScreen = document.getElementById("game-screen");
@@ -60,6 +61,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateTab = document.getElementById("private-tab");
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
+    const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
+    const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -187,7 +190,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (animationTimeout) {
                 clearTimeout(animationTimeout);
                 animationTimeout = null;
-                guessInputContainer.classList.remove("wrong-guess");
+                guessInputContainer.classList.remove("wrong-guess", "correct-guess");
                 guessInput.style.opacity = "1";
                 guessInput.style.visibility = "visible";
                 guessInput.style.color = "#000000";
@@ -287,7 +290,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         input.addEventListener("click", () => {
             activeInput = input;
             input.focus();
-            console.log("Form input fed:", input.id);
+            console.log("Form input focused:", input.id);
         });
         input.addEventListener("touchstart", (e) => {
             e.preventDefault();
@@ -491,7 +494,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Give Up link
-    if (giveUpLink && giveUpYesBtn && giveUpNoBtn) {
+    if (giveUpLink && giveUpYesBtn && giveUpNoBtn && keyboardGiveUpYesBtn && keyboardGiveUpNoBtn) {
         const handler = debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -520,7 +523,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, 100);
         giveUpLink.addEventListener(isMobile ? "touchstart" : "click", handler);
 
-        giveUpYesBtn.addEventListener("click", (e) => {
+        const giveUpYesHandler = debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Give Up Yes button clicked");
@@ -535,15 +538,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                 gameType = "pineapple";
             }
             saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
+            completedGames[currentGameNumber] = true;
+            localStorage.setItem("completedGames", JSON.stringify(completedGames));
             if (isMobile) {
                 showKeyboard();
             } else {
                 if (giveUpDialog) giveUpDialog.style.display = "none";
             }
             endGame(false, true);
-        });
+        }, 100);
 
-        giveUpNoBtn.addEventListener("click", (e) => {
+        giveUpYesBtn.addEventListener("click", giveUpYesHandler);
+        giveUpYesBtn.addEventListener("touchstart", giveUpYesHandler);
+        keyboardGiveUpYesBtn.addEventListener("click", giveUpYesHandler);
+        keyboardGiveUpYesBtn.addEventListener("touchstart", giveUpYesHandler);
+
+        const giveUpNoHandler = debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Give Up No button clicked");
@@ -556,7 +566,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.focus();
                 activeInput = guessInput;
             }
-        });
+        }, 100);
+
+        giveUpNoBtn.addEventListener("click", giveUpNoHandler);
+        giveUpNoBtn.addEventListener("touchstart", giveUpNoHandler);
+        keyboardGiveUpNoBtn.addEventListener("click", giveUpNoHandler);
+        keyboardGiveUpNoBtn.addEventListener("touchstart", giveUpNoHandler);
     }
 
     // Guesses link
@@ -968,6 +983,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             if (guess === secretWord) {
                 console.log("Correct guess!");
+                guessInputContainer.classList.add("correct-guess");
                 let normalizedGameNumber;
                 let gameType;
                 if (currentGameNumber.includes("- Private")) {
@@ -978,9 +994,20 @@ document.addEventListener("DOMContentLoaded", async () => {
                     gameType = "pineapple";
                 }
                 await saveGameResult(gameType, normalizedGameNumber, secretWord, guessCount);
-                endGame(true);
+                completedGames[currentGameNumber] = true;
+                localStorage.setItem("completedGames", JSON.stringify(completedGames));
+                animationTimeout = setTimeout(() => {
+                    guessInputContainer.classList.remove("correct-guess");
+                    endGame(true);
+                    guessInput.disabled = false;
+                    guessBtn.disabled = false;
+                    isProcessingGuess = false;
+                    initializeCursor();
+                    animationTimeout = null;
+                }, 1500);
             } else {
                 console.log("Incorrect guess");
+                guessInputContainer.classList.add("wrong-guess");
                 if (guessCount >= 5) {
                     let normalizedGameNumber;
                     let gameType;
@@ -992,15 +1019,25 @@ document.addEventListener("DOMContentLoaded", async () => {
                         gameType = "pineapple";
                     }
                     await saveGameResult(gameType, normalizedGameNumber, secretWord, "Lost");
-                    endGame(false);
+                    completedGames[currentGameNumber] = true;
+                    localStorage.setItem("completedGames", JSON.stringify(completedGames));
+                    animationTimeout = setTimeout(() => {
+                        guessInputContainer.classList.remove("wrong-guess");
+                        endGame(false);
+                        guessInput.disabled = false;
+                        guessBtn.disabled = false;
+                        isProcessingGuess = false;
+                        initializeCursor();
+                        animationTimeout = null;
+                    }, 1500);
                 } else {
-                    guessInputContainer.classList.add("wrong-guess");
                     if (hintIndex + 1 < hints.length) {
                         hintIndex++;
                         // Append the new hint with a separator
                         hintsContainer.innerHTML += ` <span class="separator yellow">| </span> ${hints[hintIndex]}`;
                     }
                     animationTimeout = setTimeout(() => {
+                        guessInputContainer.classList.remove("wrong-guess");
                         guessInput.value = "";
                         guessInput.disabled = false;
                         guessBtn.disabled = false;
@@ -1010,11 +1047,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                             guessInput.focus();
                         }
                         animationTimeout = null;
-                    }, 350);
+                    }, 1500);
                 }
             }
         } catch (error) {
             console.error("Error handling guess:", error.message);
+            guessInputContainer.classList.remove("wrong-guess", "correct-guess");
             guessInput.value = "";
             guessInput.disabled = false;
             guessBtn.disabled = false;
@@ -1170,9 +1208,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             allGames.forEach(game => {
                 const row = document.createElement("div");
                 row.classList.add("game-list-row");
+                const gameNum = game["Game Number"];
+                const displayWord = completedGames[`Game #${gameNum}`] ? game["Secret Word"].toUpperCase() : "Play Now";
                 row.innerHTML = `
-                    <span>${game["Game Number"]}</span>
-                    <span>${game["Secret Word"].toUpperCase()}</span>
+                    <span>${gameNum}</span>
+                    <span class="play-now">${displayWord}</span>
                     <span>${game["Guesses"] || "Not Played"}</span>
                 `;
                 row.addEventListener("click", async () => {
@@ -1194,9 +1234,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateGames.forEach(game => {
                 const row = document.createElement("div");
                 row.classList.add("game-list-row");
+                const gameNum = game["Game Number"];
+                const displayWord = completedGames[`${gameNum} - Private`] ? game["Secret Word"].toUpperCase() : "Play Now";
                 row.innerHTML = `
                     <span>${game["Name"] || "Unnamed"}</span>
-                    <span>${game["Secret Word"].toUpperCase()}</span>
+                    <span class="play-now">${displayWord}</span>
                     <span>${game["Guesses"] || "Not Played"}</span>
                 `;
                 row.addEventListener("click", async () => {
