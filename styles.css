@@ -332,7 +332,7 @@ a {
   font-size: 3.25vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: 2vh 0 1.625vh 0;
+  margin: 9.2vh 0 1.625vh 0; /* Increased margin-top by 7.2vh (2vh + 7.2vh) */
   text-align: center;
 }
 
@@ -1332,7 +1332,7 @@ a {
   }
   #hints-label {
     font-size: 2.75vh;
-    margin: 1.5vh 0 1.375vh 0;
+    margin: 7.9vh 0 1.375vh 0; /* Increased margin-top by 6.4vh (1.5vh + 6.4vh) */
   }
   .hints-inline {
     font-size: 2.75vh;
