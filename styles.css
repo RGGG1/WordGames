@@ -149,7 +149,6 @@ a {
   width: 90vw;
   height: 5vh;
   position: fixed;
-  /* Adjusted to move down by 2x button size (10vh) instead of 1.8vh * 2 */
   top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh + 8vh + 3.2vh + 1.8vh + 10vh);
   left: 50%;
   transform: translateX(-50%);
@@ -1012,8 +1011,7 @@ a {
 #form-content {
   display: none;
   width: 85vw;
-  /* Adjusted max-height to 90% of space between header (5vh) and ad box (4vh) */
-  max-height: calc(0.9 * (100vh - 5vh - 4vh));
+  max-height: calc(90vh - 5vh - 4vh);
   position: fixed;
   top: 5vh;
   left: 50%;
@@ -1085,7 +1083,6 @@ a {
   justify-content: space-between;
   align-items: center;
   position: fixed;
-  /* Moved down another line (add 1.8vh) */
   top: calc(5vh + 1.8vh + 1.8vh + 9vh + 2vh + 3.25vh * 1.2 * 2 + 2vh + 8vh + 3.2vh + 1.8vh);
   left: 50%;
   transform: translateX(-50%);
@@ -1171,8 +1168,7 @@ a {
     margin-bottom: 0;
   }
   #nav-arrows-container {
-    /* Adjusted to move down by 2x button size (9vh) instead of 1.6vh * 2 */
-    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh + 9vh);
+    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh + 9vh + 3.2vh);
     height: 4.5vh;
   }
   .nav-arrow {
@@ -1305,7 +1301,6 @@ a {
   }
   #game-select-content {
     width: 90vw;
-    /* Adjusted max-height to 90% of space between header (5vh) and keyboard (20vh + 4vh) */
     max-height: calc(0.9 * (100vh - 5vh - 4vh - 20vh - 4vh));
     padding: 1vh 1vw;
   }
@@ -1329,9 +1324,8 @@ a {
     margin: 0.5vh 0;
   }
   #form-content {
-    width: 90vw;
-    /* Adjusted max-height to 90% of space between header (5vh) and ad box (4vh) */
-    max-height: calc(0.9 * (100vh - 5vh - 4vh));
+    width: 90vw; /* Fixed typo by removing "NECESSARY" */
+    max-height: calc(90vh - 5vh - 4vh);
     padding: 1.5vh 1.5vw;
   }
   .form-input {
@@ -1372,7 +1366,7 @@ a {
   }
   #keyboard-give-up-content .dialog-message {
     font-size: 2vh;
-    margin-bottom: 0.75vh;
+    margin-bottom: 0.75vh; /* Fixed typo by removing "DEE" */
   }
   #keyboard-give-up-content .control-btn {
     font-size: 1.8vh;
@@ -1401,7 +1395,6 @@ a {
     padding: 0.3vh 1.5vw;
   }
   #bottom-controls-container {
-    /* Moved down another line (add 1.6vh) */
     top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh);
   }
   #give-up-link {
