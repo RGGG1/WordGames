@@ -21,27 +21,29 @@
         </div>
         <div id="game-controls-container">
             <span id="all-games-link" class="control-link">All Games</span>
-            <span id="give-up-link" class="control-link">Give Up</span>
-            <span id="guesses-link" class="control-link">Guesses: 0</span>
         </div>
         <div id="nav-arrows-container">
             <button id="prev-game-arrow" class="nav-arrow"><i class="fas fa-arrow-left"></i></button>
             <button id="next-game-arrow" class="nav-arrow"><i class="fas fa-arrow-right"></i></button>
         </div>
         <div id="main-content">
-            <span id="new-game-number-display" class="new-game-number-display"></span>
             <div id="guess-area">
                 <span id="hints-label">Hints</span>
                 <div id="hints-container" class="hints-inline"></div>
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is...</div>
+                            <div id="prompt">The Secret Word is...../div>
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                             <span class="cursor">|</span>
                         </div>
                         <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
                     </div>
+                </div>
+                <div id="game-info-container">
+                    <span id="give-up-link" class="control-link game-info-link">Give Up</span>
+                    <span id="new-game-number-display" class="new-game-number-display"></span>
+                    <span id="guesses-link" class="control-link game-info-link">Guesses: 0/5</span>
                 </div>
             </div>
         </div>
