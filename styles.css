@@ -1332,7 +1332,7 @@ a {
   }
   #hints-label {
     font-size: 2.75vh;
-    margin: 7.9vh 0 1.375vh 0; /* Increased margin-top by 6.4vh (1.5vh + 6.4vh) */
+    margin: 14vh 0 1.375vh 0; /* Increased margin-top by 6.4vh (1.5vh + 6.4vh) */
   }
   .hints-inline {
     font-size: 2.75vh;
