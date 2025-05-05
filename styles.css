@@ -89,7 +89,6 @@ a {
 
 .hamburger-menu {
   display: none;
-  /* Hidden by default, toggled via JavaScript */
 }
 
 #game-name {
@@ -161,7 +160,7 @@ a {
 }
 
 .nav-arrow {
-  background: none; /* Fixed: Removed invalid .easing.linear */
+  background: none;
   border: 0.1vh solid #FFB300;
   border-radius: 0.3vh;
   padding: 0.25vh;
@@ -502,41 +501,6 @@ a {
 
 .keyboard.show-alternate .keyboard-back-btn {
   display: block;
-}
-
-/* Styles for game-select-back-btn */
-#game-select-back-btn {
-  position: absolute;
-  top: 0.5vh;
-  left: 0.5vw;
-  background: none;
-  border: none;
-  font-size: 2.5vh;
-  color: #000000;
-  cursor: pointer;
-  z-index: 16;
-  display: none;
-}
-
-#game-select-back-btn i {
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
-#game-select-back-btn:hover i {
-  font-size: 3vh;
-}
-
-/* Show back button when game-select-content is active */
-#game-screen.game-select-active #game-select-back-btn {
-  display: block;
-}
-
-/* Hide keyboard content when game-select-content is active */
-#game-screen.game-select-active #keyboard-content,
-#game-screen.game-select-active #keyboard-guesses-content,
-#game-screen.game-select-active #keyboard-give-up-content,
-#game-screen.game-select-active #game-over {
-  display: none;
 }
 
 .alternate-content {
@@ -925,8 +889,8 @@ a {
 #game-select-content {
   display: none;
   width: 85vw;
-  /* Fixed: Simplified max-height calculation */
-  max-height: calc(0.9 * (100vh - 5vh - 20vh - 4vh));
+  /* Adjusted max-height to 90% of space between header (5vh) and keyboard (20vh + 4vh) */
+  max-height: calc(0.9 * (100vh - 5vh - 4vh - 20vh - 4vh));
   position: fixed;
   top: 5vh;
   left: 50%;
@@ -1048,8 +1012,8 @@ a {
 #form-content {
   display: none;
   width: 85vw;
-  /* Fixed: Simplified max-height calculation */
-  max-height: calc(0.9 * (100vh - 5vh - 20vh - 4vh));
+  /* Adjusted max-height to 90% of space between header (5vh) and ad box (4vh) */
+  max-height: calc(0.9 * (100vh - 5vh - 4vh));
   position: fixed;
   top: 5vh;
   left: 50%;
@@ -1207,8 +1171,8 @@ a {
     margin-bottom: 0;
   }
   #nav-arrows-container {
-    /* Position 2 lines above keyboard (100vh - 20vh - 4vh - 3.2vh) */
-    top: calc(100vh - 20vh - 4vh - 3.2vh);
+    /* Adjusted to move down by 2x button size (9vh) instead of 1.6vh * 2 */
+    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 2.75vh * 1.2 * 2 + 1.5vh + 9vh + 3.2vh + 1.6vh + 9vh);
     height: 4.5vh;
   }
   .nav-arrow {
@@ -1341,8 +1305,8 @@ a {
   }
   #game-select-content {
     width: 90vw;
-    /* Fixed: Simplified max-height calculation */
-    max-height: calc(0.9 * (100vh - 5vh - 20vh - 4vh));
+    /* Adjusted max-height to 90% of space between header (5vh) and keyboard (20vh + 4vh) */
+    max-height: calc(0.9 * (100vh - 5vh - 4vh - 20vh - 4vh));
     padding: 1vh 1vw;
   }
   #game-list-title {
@@ -1358,11 +1322,16 @@ a {
   .game-list-row {
     font-size: clamp(1.2vh, 1.6vw, 1.6vh);
   }
-  /* Removed: Styles for #official-back-btn and #private-back-btn as they no longer exist */
+  #official-back-btn,
+  #private-back-btn {
+    font-size: clamp(2vh, 2.5vw, 2.5vh);
+    padding: 0.5vh 1.5vw;
+    margin: 0.5vh 0;
+  }
   #form-content {
     width: 90vw;
-    /* Fixed: Simplified max-height calculation */
-    max-height: calc(0.9 * (100vh - 5vh - 20vh - 4vh));
+    /* Adjusted max-height to 90% of space between header (5vh) and ad box (4vh) */
+    max-height: calc(0.9 * (100vh - 5vh - 4vh));
     padding: 1.5vh 1.5vw;
   }
   .form-input {
@@ -1385,13 +1354,6 @@ a {
     font-size: 2.25vh;
   }
   .keyboard-back-btn:hover i {
-    font-size: 2.75vh;
-  }
-  /* Mobile styles for game-select-back-btn */
-  #game-select-back-btn {
-    font-size: 2.25vh;
-  }
-  #game-select-back-btn:hover i {
     font-size: 2.75vh;
   }
   #guesses-title {

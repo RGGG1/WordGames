@@ -58,8 +58,6 @@
         </div>
         <div id="keyboard-container" class="keyboard">
             <button id="keyboard-back-btn" class="keyboard-back-btn" style="display: none;"><i class="fas fa-arrow-left"></i></button>
-            <!-- NEW: Added game-select-back-btn for game select screen -->
-            <button id="game-select-back-btn" class="keyboard-back-btn" style="display: none;"><i class="fas fa-arrow-left"></i></button>
             <div id="keyboard-content" class="keyboard-content">
                 <div class="keyboard-row">
                     <button class="key">Q</button>
@@ -142,7 +140,7 @@
                     <span>Guesses</span>
                 </div>
                 <div id="official-list" class="game-list"></div>
-                <!-- REMOVED: <button id="official-back-btn" class="control-btn">Back</button> -->
+                <button id="official-back-btn" class="control-btn">Back</button>
             </div>
             <div id="private-games" class="tab-content">
                 <div class="game-list-header">
@@ -151,14 +149,14 @@
                     <span>Guesses</span>
                 </div>
                 <div id="private-list" class="game-list"></div>
-                <!-- REMOVED: <button id="private-back-btn" class="control-btn">Back</button> -->
+                <button id="private-back-btn" class="control-btn">Back</button>
                 <div class="back-btn-container">
                     <button id="create-pineapple" class="control-btn tap-here">Create a Wordy</button>
                 </div>
             </div>
         </div>
         <div class="form-content" id="form-content" style="display: none;">
-            <input id="game-name-input" class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
+            <input id="game-name-input" Class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
             <input id="secret-word" class="form-input" type="text" placeholder="Enter Secret Word" maxlength="50">
             <input id="hint-1" class="form-input" type="text" placeholder="Enter Hint 1" maxlength="50">
             <input id="hint-2" class="form-input" type="text" placeholder="Enter Hint 2" maxlength="50">
