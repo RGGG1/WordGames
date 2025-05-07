@@ -627,12 +627,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Previous game arrow
+    // Previous game arrow [MODIFIED]
     if (prevGameArrow) {
         prevGameArrow.addEventListener(isMobile ? "touchstart" : "click", async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Previous game arrow triggered", { isUILocked, isLoadingGame });
+            console.log("Previous game arrow triggered", { isUILocked, isLoadingGame, currentGameNumber });
             if (isUILocked || isLoadingGame) {
                 console.log("Previous game arrow ignored: UI locked or game loading");
                 return;
@@ -652,16 +652,22 @@ document.addEventListener("DOMContentLoaded", async () => {
                     currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
                     gameList = privateGames;
                 } else {
-                    currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
+                    const gameNum = currentGameNumber.replace("Game #", "");
+                    currentIndex = allGames.findIndex(game => game["Game Number"] === gameNum);
                     gameList = allGames;
                 }
-                console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length });
+                console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length, gameNum: currentGameNumber });
                 if (currentIndex === -1) {
+                    console.error("Game not found in list", { currentGameNumber, gameNumbers: gameList.map(g => g["Game Number"]) });
                     throw new Error(`Current game not found in game list: ${currentGameNumber}`);
                 }
                 if (currentIndex < gameList.length - 1) {
                     const targetGame = gameList[currentIndex + 1];
                     console.log("Loading previous game", { currentIndex, targetIndex: currentIndex + 1, targetGame });
+                    if (!targetGame || !targetGame["Game Number"]) {
+                        console.error("Invalid target game data", { targetGame });
+                        throw new Error("Invalid game data for previous game");
+                    }
                     currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
                     await preloadBackground(currentBackground);
                     loadGame(targetGame);
@@ -677,7 +683,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             } catch (error) {
                 console.error("Error navigating to previous game:", error.message);
                 if (formErrorDialog && formErrorMessage) {
-                    formErrorMessage.textContent = "Failed to load previous game.";
+                    formErrorMessage.textContent = "Failed to load previous game. Please try another game.";
                     formErrorDialog.style.display = "flex";
                 }
             } finally {
@@ -1328,37 +1334,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Next game button (end screen)
+    // Next game button (end screen) [MODIFIED]
     if (nextGameBtnEnd) {
         nextGameBtnEnd.addEventListener("click", () => {
-            console.log("Next game button (end screen) clicked");
-            let currentIndex;
-            let gameList;
-            let isPrivate = currentGameNumber.includes("- Private");
-            if (isPrivate) {
-                const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                gameList = privateGames;
-            } else {
-                currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
-                gameList = allGames;
-            }
-            if (currentIndex > 0) {
-                const targetGame = gameList[currentIndex - 1];
-                currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
-                loadGame(targetGame);
-                resetScreenDisplays(gameScreen);
-                adjustBackground();
-                updateArrowStates(currentIndex - 1, gameList);
-            } else {
-                if (allGames.length > 0) {
-                    currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
-                    loadGame(allGames[0]);
-                    resetScreenDisplays(gameScreen);
-                    adjustBackground();
-                    updateArrowStates(0, allGames);
-                }
-            }
+            console.log("Next game button (end screen) clicked, navigating to game select screen");
+            showGameSelectScreen();
         });
     }
 
@@ -1394,16 +1374,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Form back button
+    // Form back button [MODIFIED]
     if (formBackBtn) {
         formBackBtn.addEventListener("click", () => {
-            console.log("Form back button clicked");
+            console.log("Form back button clicked, returning to main game screen");
             if (allGames.length > 0) {
                 currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
                 loadGame(allGames[0]);
                 resetScreenDisplays(gameScreen);
                 adjustBackground();
                 updateArrowStates(0, allGames);
+            } else {
+                console.error("No official games available to load");
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "No games available to load.";
+                    formErrorDialog.style.display = "flex";
+                }
             }
         });
     }

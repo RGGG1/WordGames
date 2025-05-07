@@ -597,12 +597,6 @@ a {
   margin-bottom: 1vh;
 }
 
-#keyboard-give-up-content .dialog-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 2vw;
-}
-
 #keyboard-give-up-content .control-btn {
   font-size: 2vh;
   padding: 0.4vh 1.5vw;
@@ -1454,20 +1448,20 @@ a {
     display: none !important;
   }
   .keyboard-content {
-    gap: 0.4vh;
+    gap: 0.8vh; /* Doubled from 0.4vh */
   }
   .keyboard-row {
-    gap: 0.4vw;
+    gap: 0.8vw; /* Doubled from 0.4vw */
   }
   .key {
-    font-size: 1.8vh; /* Adjusted for smaller container */
-    width: 9.2vw;
-    max-width: 4.6vh;
+    font-size: 1.6vh; /* Reduced from 1.8vh to fit larger gaps */
+    width: 8.5vw; /* Reduced from 9.2vw to fit larger gaps廉政
+    max-width: 4.25vh; /* Adjusted proportionally */
   }
   .key.special {
-    width: 13.8vw;
-    max-width: 6.9vh;
-    font-size: 1.6vh;
+    width: 12.75vw; /* Reduced from 13.8vw to fit larger gaps */
+    max-width: 6.375vh; /* Adjusted proportionally */
+    font-size: 1.4vh; /* Reduced from 1.6vh */
   }
   .keyboard-back-btn {
     font-size: 2vh;
@@ -1485,8 +1479,8 @@ a {
     line-height: 2vh;
   }
   #guesses-close-btn {
-    font-size: 1.6vh;
-    padding: 0.3vh 1.5vw;
+    font-size: 3.2vh; /* Doubled from 1.6vh */
+    padding: 0.6vh 3vw; /* Doubled from 0.3vh 1.5vw */
     margin-bottom: 0.3vh;
   }
   #keyboard-give-up-content .dialog-message {
@@ -1494,8 +1488,8 @@ a {
     margin-bottom: 0.5vh;
   }
   #keyboard-give-up-content .control-btn {
-    font-size: 1.6vh;
-    padding: 0.3vh 1.5vw;
+    font-size: 3.2vh; /* Doubled from 1.6vh */
+    padding: 0.6vh 3vw; /* Doubled from 0.3vh 1.5vw */
   }
 
   /* Ad Box: 5vh */
@@ -1582,7 +1576,7 @@ a {
   #official-back-btn,
   #private-back-btn {
     font-size: clamp(2vh, 3vw, 3.15vh);
-    padding: 0.75vh 1.5vw;
+    padding: 0.75vh, 1.5vw;
     margin: 1vh 0;
   }
 
