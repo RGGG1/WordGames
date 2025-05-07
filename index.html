@@ -36,7 +36,7 @@
                 <div id="guess-container">
                     <div class="guess-input-wrapper">
                         <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is.</div>
+                            <div id="prompt">The Secret Word is...</div>
                             <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
                             <span class="cursor">|</span>
                         </div>
@@ -105,57 +105,27 @@
                 </div>
             </div>
         </div>
-        <div id="ad-box">
-            <p>Big Brain Games</p>
-        </div>
-    </div>
-
-    <div id="game-over">
-        <div id="header">
-            <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
-            <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
-            </div>
-            <span id="game-name">WORDY</span>
-        </div>
-        <span id="game-number-display" class="game-number-display"></span>
-        <span id="hard-luck-label">Hard Luck!</span>
-        <span id="well-done-label">Well Done!</span>
-        <span id="todays-word-label">Today's Word:</span>
-        <span id="todays-word"></span>
-        <div id="share-section">
-            <div style="height: 1.8vh;"></div>
-            <div id="share-box">
-                <div id="share-panel">
-                    <div id="share-text"></div>
+        <div id="game-over" class="alternate-content" style="display: none;">
+            <span id="game-number-display" class="game-number-display"></span>
+            <div id="share-section">
+                <div id="share-box">
+                    <div id="share-panel">
+                        <div id="share-text"></div>
+                    </div>
+                </div>
+                <div id="share-buttons">
+                    <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                    <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
-            <div id="share-buttons">
-                <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
-                <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
-                <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <div class="end-buttons">
+                <button id="next-game-btn-end" class="control-btn">Next Game</button>
+                <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
             </div>
         </div>
-        <div class="end-buttons">
-            <button id="next-game-btn-end" class="control-btn">Next Game</button>
-            <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
-        </div>
-        <div id="ad-box">
-            <p>Big Brain Games</p>
-        </div>
-    </div>
-
-    <div id="game-select-screen">
-        <div id="header">
-            <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
-            <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
-            </div>
-            <span id="game-name">WORDY</span>
-        </div>
-        <span id="game-number-display" class="game-number-display"></span>
-        <div id="game-select-content">
+        <div id="game-select-content" style="display: none;">
             <span id="game-list-title">Select a Game</span>
             <div id="tabs">
                 <span id="official-tab" class="tab-text active">Official</span>
@@ -183,21 +153,7 @@
                 </div>
             </div>
         </div>
-        <div id="ad-box">
-            <p>Big Brain Games</p>
-        </div>
-    </div>
-
-    <div id="create-form" class="create-form" style="display: none;">
-        <div id="header">
-            <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
-            <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
-            </div>
-            <span id="game-name">WORDY</span>
-        </div>
-        <span id="game-number-display" class="game-number-display"></span>
-        <div class="form-content">
+        <div class="form-content" id="form-content" style="display: none;">
             <input id="game-name-input" class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
             <input id="secret-word" class="form-input" type="text" placeholder="Enter Secret Word" maxlength="50">
             <input id="hint-1" class="form-input" type="text" placeholder="Enter Hint 1" maxlength="50">
