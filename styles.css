@@ -105,33 +105,28 @@ a {
   line-height: 2.5vh;
 }
 
-/* Game controls container */
-#game-controls-container {
-  width: 95vw;
+/* All Games link container */
+#all-games-container {
+  width: 85vw;
   height: auto;
-  padding: 0 2vw 0 0;
+  padding: 0;
   margin: 0;
   z-index: 20;
   background: none;
   position: fixed;
-  top: calc(5vh - 3.6vh);
+  top: 5vh; /* Directly below header */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  flex-direction: column;
-  align-items: flex-end;
+  justify-content: flex-end;
   pointer-events: auto;
 }
 
-.control-link {
+#all-games-link {
   font-family: Arial, sans-serif;
   font-size: 1.8vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  text-align: right;
-  position: static;
-  width: auto;
-  margin-bottom: 1.8vh;
   cursor: pointer;
   text-decoration: underline;
   pointer-events: auto;
@@ -139,20 +134,53 @@ a {
   -webkit-tap-highlight-color: transparent;
 }
 
-#all-games-link {
-  margin-top: 1.8vh;
+/* Game info container (Give Up, Game #X, Guesses) */
+#game-info-container {
+  width: 85vw;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  z-index: 20;
+  background: none;
+  position: fixed;
+  top: calc(5vh + 1.8vh); /* Below All Games link */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  pointer-events: auto;
 }
 
-#guesses-link {
-  margin-bottom: 0;
+.info-link {
+  font-family: Arial, sans-serif;
+  font-size: 1.8vh;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  cursor: pointer;
+  text-decoration: underline;
+  pointer-events: auto;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Game number display within game-info-container */
+.game-number-display {
+  font-family: Arial, sans-serif;
+  font-size: 1.8vh;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  text-align: center;
+  flex-grow: 1;
+  line-height: 1.8vh;
 }
 
 /* Navigation arrows container */
 #nav-arrows-container {
-  width: 90vw;
+  width: 85vw;
   height: 5vh;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 7.2vh);
+  top: calc(5vh + 1.8vh + 1.8vh + 0.9vh); /* Below game-info-container */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -190,21 +218,6 @@ a {
   cursor: not-allowed;
 }
 
-/* New game number display */
-.new-game-number-display {
-  font-family: Arial, sans-serif;
-  font-size: 1.8vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  text-align: left;
-  width: 85vw;
-  max-width: 85vw;
-  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 0.9vh + 1.8vh) auto 3.6vh auto;
-  z-index: 5;
-  line-height: 1.8vh;
-  overflow: hidden;
-}
-
 /* Game number display for game-over */
 #game-over .game-number-display {
   font-size: 1.8vh;
@@ -217,7 +230,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 1.8vh);
+  top: calc(5vh + 1.8vh + 1.8vh + 5vh - 4.5vh + 1.8vh);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -255,7 +268,7 @@ a {
 }
 
 .guess-input-wrapper {
-  width: 80vw;
+  width: 85vw;
   display: flex;
   align-items: center;
 }
@@ -693,6 +706,20 @@ a {
   pointer-events: none;
 }
 
+/* Background fade for game-select-content and form-content */
+#game-screen.game-select-active::before,
+#game-screen.form-active::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.9); /* 90% fade */
+  z-index: 10;
+  pointer-events: none;
+}
+
 /* Ad box */
 #ad-box {
   width: 100%;
@@ -704,7 +731,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 20;
+  z-index: 25; /* Above fade overlay */
   border-top: 0.1vh solid #CCCCCC;
   margin: 0;
   padding: 0;
@@ -877,7 +904,7 @@ a {
 #game-select-content {
   display: none;
   width: 85vw;
-  max-height: calc(100vh - 24vh - 5vh - 4vh); /* Above keyboard, below header, above ad box */
+  max-height: calc(100vh - 5vh - 4vh); /* Between header and ad box */
   position: fixed;
   top: 5vh; /* Below header */
   left: 50%;
@@ -997,7 +1024,7 @@ a {
 #form-content {
   display: none;
   width: 85vw;
-  max-height: calc(100vh - 24vh - 5vh - 4vh);
+  max-height: calc(90vh - 5vh - 4vh); /* 90vh between header and ad box */
   position: fixed;
   top: 5vh;
   left: 50%;
@@ -1101,18 +1128,25 @@ a {
     font-size: clamp(1.8vh, 2.25vw, 2.25vh);
     line-height: clamp(1.8vh, 2.25vw, 2.25vh);
   }
-  #game-controls-container {
-    top: calc(5vh - 3.2vh);
-  }
-  .control-link {
-    font-size: 1.6vh;
-    margin-bottom: 1.6vh;
+  #all-games-container {
+    top: 5vh;
   }
   #all-games-link {
-    margin-top: 1.6vh;
+    font-size: 1.6vh;
+  }
+  #game-info-container {
+    width: 85vw;
+    top: calc(5vh + 1.6vh);
+  }
+  .info-link {
+    font-size: 1.6vh;
+  }
+  .game-number-display {
+    font-size: 1.6vh;
+    line-height: 1.6vh;
   }
   #nav-arrows-container {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 6.4vh);
+    top: calc(5vh + 1.6vh + 1.6vh + 0.8vh);
     height: 4.5vh;
   }
   .nav-arrow {
@@ -1126,7 +1160,7 @@ a {
     font-size: 4.5vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh);
+    top: calc(5vh + 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh);
   }
   .guess-input-wrapper {
     width: 85vw;
@@ -1234,18 +1268,13 @@ a {
     font-size: 2vh;
     padding: 0.5vh 1.5vw;
   }
-  .new-game-number-display {
-    font-size: 1.6vh;
-    line-height: 1.6vh;
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh) auto 3.2vh auto;
-  }
   .pineapple-piece {
     animation-timing-function: linear;
     will-change: transform, opacity;
   }
   #game-select-content {
     width: 90vw;
-    max-height: calc(100vh - 24vh - 5vh - 4vh);
+    max-height: calc(100vh - 5vh - 4vh);
     padding: 1.5vh 1.5vw;
   }
   #game-list-title {
@@ -1269,23 +1298,24 @@ a {
   }
   #form-content {
     width: 90vw;
+    max-height: calc(90vh - 5vh - 4vh);
     padding: 1.5vh 1.5vw;
   }
   .form-input {
-    font-size: clamp(2.5vh, 3.75vw, 3.75vh);
-    padding: 0.4vh 1vw;
-    margin: 0.5vh auto;
+    font-size: clamp(2vh, 3vw, 3vh); /* Smaller font to fit more comfortably */
+    padding: 0.3vh 1vw;
+    margin: 0.2vh auto;
   }
   .form-input::placeholder {
-    font-size: 1.875vh;
+    font-size: 1.5vh;
   }
   .form-input:focus:not(:disabled)::after {
-    font-size: clamp(2.5vh, 3.75vw, 3.75vh);
+    font-size: clamp(2vh, 3vw, 3vh);
   }
   #form-content .control-btn {
-    font-size: 2vh;
-    padding: 0.4vh 1.5vw;
-    margin: 0.5vh 0;
+    font-size: 1.8vh;
+    padding: 0.3vh 1.5vw;
+    margin: 0.3vh 0;
   }
   .keyboard-back-btn {
     font-size: 2.25vh;
