@@ -22,7 +22,7 @@ a {
 #game-screen {
   display: flex;
   flex-direction: column;
-  height: 100%;
+  height: 100%; /* Changed from 100vh to 100% to better handle dynamic viewports */
   width: 100vw;
   box-sizing: border-box;
   overflow: hidden;
@@ -32,7 +32,7 @@ a {
   top: 0;
   left: 0;
   z-index: 1;
-  background: url('newbackground.png') no-repeat center top fixed, #FFFFFF;
+  background: url('newbackground.png') no-repeat center top fixed, #FFFFFF; /* Added fallback color */
   background-size: 100% calc(100% - 24vh);
   background-attachment: fixed;
 }
@@ -57,6 +57,7 @@ a {
 
 /* Ensure header consistency across all screens except guesses */
 #game-screen #header,
+#game-over #header,
 #game-select-screen #header,
 #create-form #header {
   width: 95vw;
@@ -129,7 +130,7 @@ a {
   height: auto;
   padding: 0 2vw 0 0;
   margin: 0;
-  z-index: 20;
+  z-index: 20; /* FIX: Increased to ensure buttons are above other elements */
   background: none;
   position: fixed;
   top: calc(5vh - 3.6vh);
@@ -138,7 +139,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  pointer-events: auto;
+  pointer-events: auto; /* FIX: Ensure touch events register */
 }
 
 .control-link {
@@ -152,9 +153,9 @@ a {
   margin-bottom: 1.8vh;
   cursor: pointer;
   text-decoration: underline;
-  pointer-events: auto;
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: transparent;
+  pointer-events: auto; /* FIX: Ensure tappable */
+  touch-action: manipulation; /* FIX: Optimize for touch */
+  -webkit-tap-highlight-color: transparent; /* FIX: Remove tap highlight */
 }
 
 #all-games-link {
@@ -241,6 +242,10 @@ a {
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   text-align: right;
+}
+
+#game-over .game-number-display {
+  display: none;
 }
 
 /* Main content (guess area) */
@@ -337,7 +342,7 @@ a {
 
 /* Cursor styling */
 .cursor {
-  display: inline-block !important;
+  display: inline-block !important; /* Ensure visibility on mobile */
   color: #000000;
   font-size: 4.5vh;
   line-height: 5.5vh;
@@ -436,14 +441,14 @@ a {
   width: 100vw;
   height: 20vh;
   max-height: 20vh;
-  display: none;
+  display: none; /* Hidden by default */
   flex-direction: column;
   align-items: center;
   justify-content: center;
   position: fixed;
   bottom: 4vh;
   background: #FFFFFF;
-  z-index: 15;
+  z-index: 15; /* FIX: Below buttons but above background */
   padding: 0.5vh 0.5vw;
   box-sizing: border-box;
   pointer-events: auto;
@@ -547,15 +552,8 @@ a {
 }
 
 .keyboard.show-guesses #keyboard-guesses-content,
-.keyboard.show-give-up #keyboard-give-up-content,
-.keyboard.show-game-over #game-over {
+.keyboard.show-give-up #keyboard-give-up-content {
   display: flex;
-}
-
-.keyboard.show-game-over .keyboard-content,
-.keyboard.show-game-over #keyboard-guesses-content,
-.keyboard.show-game-over #keyboard-give-up-content {
-  display: none;
 }
 
 #keyboard-guesses-content {
@@ -617,118 +615,6 @@ a {
   padding: 0.4vh 1.5vw;
 }
 
-/* Game-over content styling */
-#game-over {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  justify-content: space-between;
-  width: 100vw;
-  height: 20vh;
-  max-height: 20vh;
-  position: fixed;
-  bottom: 4vh;
-  background: #FFFFFF;
-  z-index: 15;
-  padding: 0.5vh 0.5vw;
-  box-sizing: border-box;
-  overflow-y: auto;
-}
-
-@media (min-width: 601px) {
-  #game-over {
-    display: none !important; /* Hide on desktop since keyboard isn't shown */
-  }
-}
-
-#game-over .game-number-display {
-  font-size: 1.8vh;
-  color: #000000;
-  text-shadow: 1px 1px 2px #FFFFFF;
-  margin: 0.5vh 0;
-}
-
-#game-over #share-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin: 0.5vh 0;
-}
-
-#game-over #share-box {
-  width: 85vw;
-  max-width: 30vh;
-  margin: 0.5vh auto;
-}
-
-#game-over #share-panel {
-  background: #000000;
-  color: #FFFFFF;
-  border-radius: 1vh;
-  padding: 1vh;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-  border: 0.4vh solid #FFB300;
-}
-
-#game-over #share-text {
-  font-size: 1.8vh;
-  margin-bottom: 0.5vh;
-  white-space: pre-line;
-}
-
-#game-over #share-text .guess-count {
-  font-size: 3.5vh;
-}
-
-#game-over #share-buttons {
-  display: flex;
-  gap: 2vw;
-  margin: 0.5vh 0;
-}
-
-#game-over #share-buttons a {
-  font-size: 4vh;
-  color: #000000;
-  text-decoration: none;
-  text-shadow: 1px 1px 2px #FFFFFF;
-}
-
-#game-over .end-buttons {
-  display: flex;
-  flex-direction: row;
-  gap: 2vw;
-  margin: 0.5vh 0;
-}
-
-#game-over .control-btn {
-  font-size: 2vh;
-  padding: 0.4vh 1.5vw;
-}
-
-/* Guess input container on game end */
-#guess-input-container.game-ended {
-  background-color: #008000; /* Green background */
-  animation: fadeGreen 0.5s ease forwards;
-}
-
-@keyframes fadeGreen {
-  0% { background-color: rgba(255, 255, 255, 0.85); }
-  100% { background-color: #008000; }
-}
-
-/* Background fade overlay on game end */
-#game-screen.game-ended::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
-  z-index: 10; /* Above background but below UI elements */
-  pointer-events: none;
-}
-
 /* Ad box */
 #ad-box {
   width: 100%;
@@ -744,6 +630,10 @@ a {
   border-top: 0.1vh solid #CCCCCC;
   margin: 0;
   padding: 0;
+}
+
+#game-over #ad-box {
+  bottom: 0;
 }
 
 #ad-box p {
@@ -810,12 +700,20 @@ a {
   box-sizing: border-box;
 }
 
+#next-game-btn-end {
+  font-size: 5.0625vh;
+  padding: 1.6875vh 3.375vw;
+}
+
 @media (min-width: 601px) {
   #game-screen .control-btn:hover {
     font-size: 3.375vh;
   }
   #game-screen .guess-btn:hover {
     font-size: 4vh;
+  }
+  #next-game-btn-end:hover {
+    font-size: 5.5625vh;
   }
 }
 
@@ -910,6 +808,42 @@ a {
 }
 
 /* Backgrounds for other screens */
+#game-over {
+  display: none;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: 100vh;
+  width: 100vw;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Added fallback color */
+  background-size: cover;
+  background-attachment: fixed;
+  z-index: 1;
+  overflow-y: auto;
+}
+
+#game-over::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.8);
+  z-index: 1;
+}
+
+#game-over > * {
+  position: relative;
+  z-index: 2;
+}
+
 #create-form {
   display: none;
   flex-direction: column;
@@ -921,7 +855,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Added fallback color */
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
@@ -940,12 +874,13 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Added fallback color */
   background-size: cover;
   background-attachment: fixed;
   z-index: 1;
 }
 
+#game-over::before,
 #game-select-screen::before,
 #create-form::before {
   content: '';
@@ -958,10 +893,16 @@ a {
   z-index: 1;
 }
 
+#game-over > *,
 #game-select-screen > *,
 #create-form > * {
   position: relative;
   z-index: 2;
+}
+
+#next-game-btn-end,
+#create-pineapple-end {
+  animation: none !important;
 }
 
 #guesses-screen {
@@ -999,8 +940,8 @@ a {
 /* Position #game-select-content to start 2 lines below header and end 2 lines above ad box */
 #game-select-content {
   width: 85vw;
-  height: 76.1vh;
-  margin: 12.7vh auto 0 auto;
+  height: 76.1vh; /* 100vh - 12.7vh (top) - 7.2vh (bottom gap) - 4vh (ad box) */
+  margin: 12.7vh auto 0 auto; /* Top margin = 5.5vh (header) + 7.2vh (2 lines) */
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -1013,7 +954,7 @@ a {
 #game-list-title {
   font-size: 3vh;
   font-weight: bold;
-  margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0;
+  margin: calc(3em - 2vh) 0 calc(0.3vh + 2vh) 0; /* Move up 2vh, add 2vh below */
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
 }
@@ -1043,7 +984,7 @@ a {
 .tab-content {
   display: none;
   width: 100%;
-  height: 53.175vh;
+  height: 53.175vh; /* 76.1vh - 15.3vh (title + tabs) - 7.625vh (button) */
   flex-direction: column;
   align-items: center;
 }
@@ -1112,6 +1053,124 @@ a {
 
 #end-graphic {
   display: none;
+}
+
+#hard-luck-label {
+  font-size: 3vh;
+  font-weight: bold;
+  color: #FFB300;
+  -webkit-text-stroke: 0.1vh #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+  margin: 0.5vh auto;
+  display: none;
+}
+
+#well-done-label {
+  font-size: 3vh;
+  font-weight: bold;
+  color: #FFB300;
+  -webkit-text-stroke: 0.1vh #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+  margin: 0.5vh auto;
+  display: none;
+}
+
+#todays-word-label {
+  font-size: 2vh;
+  font-weight: bold;
+  margin: 0.5vh auto;
+  white-space: pre-line;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+#todays-word {
+  font-size: 3vh;
+  text-transform: uppercase;
+  margin-bottom: 1vh;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+#share-box {
+  width: 85vw;
+  max-width: 30vh;
+  margin: 1vh auto;
+  text-align: center;
+}
+
+#share-panel {
+  background: #000000;
+  color: #FFFFFF;
+  border-radius: 1vh;
+  padding: 1.5vh;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  border: 0.4vh solid #FFB300;
+}
+
+#share-text {
+  font-size: 2vh;
+  margin-bottom: 0.5vh;
+  white-space: pre-line;
+}
+
+#share-text .guess-count {
+  font-size: 4vh;
+}
+
+#share-text .big-score {
+  font-size: 6.25vh;
+  margin-top: 0.25vh;
+}
+
+#share-text .small-game-number {
+  font-size: 1.5vh;
+}
+
+#share-text.big {
+  font-size: 3.75vh;
+}
+
+#share-text.italic {
+  font-size: 1.5vh;
+  font-style: italic;
+}
+
+#share-game-number {
+  font-size: 1.5vh;
+  margin-bottom: 0.5vh;
+  color: #000000;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+#share-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 1vh auto;
+  flex-grow: 1;
+}
+
+#share-buttons {
+  display: flex;
+  gap: 3vh; /* Doubled from 1.5vh to 3vh */
+  margin-bottom: 1.5vh;
+}
+
+#share-buttons a {
+  font-size: 3.375vh; /* Increased from 2.25vh by 150% (2.25 * 1.5 = 3.375) */
+  color: #000000;
+  text-decoration: none;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+.end-buttons {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5vh;
+  margin-top: 4vh; /* Increased from 2vh to 4vh to add two lines (2vh + 2vh) */
+  margin-bottom: 4vh;
 }
 
 .form-input {
@@ -1265,6 +1324,16 @@ a {
     font-size: clamp(2vh, 3vw, 3.15vh);
     padding: 0.75vh 1.5vw;
   }
+  .control-btn:hover {
+    font-size: clamp(2.5vh, 3.5vw, 3.65vh);
+  }
+  #next-game-btn-end {
+    font-size: 4vh;
+    padding: 0.75vh 2vw;
+  }
+  #next-game-btn-end:hover {
+    font-size: 5.225vh;
+  }
   #hints-label {
     font-size: 2.75vh;
     margin: 1.5vh 0 1.375vh 0;
@@ -1292,12 +1361,12 @@ a {
     bottom: 4vh;
   }
   #game-screen .keyboard {
-    display: flex;
+    display: flex; /* Only show keyboard on game-screen for mobile */
   }
   #game-over .keyboard,
   #game-select-screen .keyboard,
   #create-form .keyboard {
-    display: none !important;
+    display: none !important; /* Explicitly hide on other screens */
   }
   .keyboard-content {
     gap: 0.4vh;
@@ -1342,6 +1411,12 @@ a {
   .pineapple-piece {
     animation-timing-function: linear;
     will-change: transform, opacity;
+  }
+  #share-text {
+    font-size: 2vh;
+  }
+  #share-text .guess-count {
+    font-size: 4vh;
   }
   #game-select-content {
     width: 85vw;
@@ -1396,6 +1471,37 @@ a {
   #create-form .back-btn-container {
     margin: 1vh 0;
   }
+  #game-over {
+    height: 100vh;
+    padding-bottom: 0;
+    background-size: cover;
+    justify-content: flex-start;
+  }
+  #game-over #ad-box {
+    bottom: 0;
+  }
+  #game-over .keyboard,
+  #game-over #keyboard-container {
+    display: none !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  #share-section {
+    margin: 0 auto;
+  }
+  #share-buttons {
+    gap: 1.5vh; /* Doubled from 0.75vh (mobile original) to 1.5vh */
+    margin-bottom: 0.75vh;
+  }
+  #share-buttons a {
+    font-size: 3vh; /* Increased from 2vh (mobile original) by 150% (2 * 1.5 = 3) */
+  }
+  .end-buttons {
+    gap: 2vh;
+    margin-top: 3vh; /* Increased from 1vh to 3vh for mobile (1vh + 2vh) */
+    margin-bottom: 4vh;
+  }
   .keyboard-back-btn {
     font-size: 2.25vh;
   }
@@ -1421,28 +1527,6 @@ a {
     margin-bottom: 0.75vh;
   }
   #keyboard-give-up-content .control-btn {
-    font-size: 1.8vh;
-    padding: 0.3vh 1.5vw;
-  }
-  #game-over {
-    width: 100vw;
-    height: 20vh;
-    max-height: 20vh;
-    padding: 0.4vh 0.4vw;
-  }
-  #game-over .game-number-display {
-    font-size: 1.6vh;
-  }
-  #game-over #share-text {
-    font-size: 1.6vh;
-  }
-  #game-over #share-text .guess-count {
-    font-size: 3vh;
-  }
-  #game-over #share-buttons a {
-    font-size: 3.5vh;
-  }
-  #game-over .control-btn {
     font-size: 1.8vh;
     padding: 0.3vh 1.5vw;
   }
