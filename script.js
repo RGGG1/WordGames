@@ -63,7 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateContent = document.getElementById("private-games");
     const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
     const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
-    // NEW: Added keyboardEndContent
     const keyboardEndContent = document.getElementById("keyboard-end-content");
 
     // URLs
@@ -307,7 +306,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Show keyboard
-    // UPDATED: Reset fade effect and handle end content
     function showKeyboard() {
         if (!isMobile || !keyboardContainer || !keyboardContent || !keyboardGuessesContent || !keyboardGiveUpContent || !keyboardBackBtn) {
             console.log("Skipping showKeyboard: not mobile or elements missing");
@@ -1091,12 +1089,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // End game
-    // UPDATED: Handle mobile end content in keyboard container
+    // UPDATED: Ensure end screen is shown in keyboard container on mobile
     function endGame(won, gaveUp = false) {
         console.log("Ending game", { won, gaveUp, guessCount, secretWord });
         gameOver = true;
         guessInput.disabled = true;
         guessBtn.disabled = true;
+
+        // Ensure game-over screen is hidden on mobile
+        if (isMobile && gameOverScreen) {
+            gameOverScreen.style.display = "none";
+            console.log("Hiding game-over screen on mobile");
+        }
 
         let hardLuckLabel, wellDoneLabel, todaysWord, shareText;
         if (isMobile && keyboardEndContent) {
@@ -1139,6 +1143,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (isMobile && keyboardContainer && keyboardEndContent) {
             // Show end content in keyboard container
+            console.log("Displaying end screen in keyboard container");
             keyboardContainer.classList.add("show-end");
             keyboardContainer.style.display = "flex";
             keyboardContent.style.display = "none";
@@ -1148,10 +1153,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             keyboardBackBtn.style.display = "block";
             // Apply fade effect to game screen
             gameScreen.classList.add("game-ended");
+            gameScreen.style.display = "flex";
             gameScreen.style.opacity = "1";
             adjustBackground();
         } else {
             // Desktop: Navigate to game over screen
+            console.log("Displaying game-over screen on desktop");
             gameScreen.style.opacity = "0";
             setTimeout(() => {
                 resetScreenDisplays(gameOverScreen);
@@ -1162,7 +1169,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Trigger pineapple rain
-    // UPDATED: Single continuous 4-second wave
     function triggerPineappleRain() {
         console.log("Triggering pineapple rain");
         const container = document.createElement("div");
@@ -1258,14 +1264,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Show game select screen
     function showGameSelectScreen() {
-        console.log("Showing game select screen - Function Called");
+        console.log("Showing game select screen");
         resetScreenDisplays(gameSelectScreen);
         adjustBackground();
         displayGameList();
-        console.log("Game select screen should now be visible");
     }
 
     // Display game list
+    // UPDATED: Ensure game selection loads main game screen
     function displayGameList() {
         console.log("Displaying game list");
         const officialList = document.getElementById("official-list");
@@ -1288,13 +1294,26 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `;
                 row.addEventListener("click", async () => {
                     console.log("Official game selected:", game["Game Number"]);
-                    currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                    await preloadBackground(currentBackground);
-                    loadGame(game);
-                    resetScreenDisplays(gameScreen);
-                    adjustBackground();
-                    const currentIndex = allGames.findIndex(g => g["Game Number"] === game["Game Number"]);
-                    updateArrowStates(currentIndex, allGames);
+                    isLoadingGame = true;
+                    try {
+                        currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                        await preloadBackground(currentBackground);
+                        loadGame(game);
+                        resetScreenDisplays(gameScreen);
+                        gameScreen.style.display = "flex";
+                        adjustBackground();
+                        const currentIndex = allGames.findIndex(g => g["Game Number"] === game["Game Number"]);
+                        updateArrowStates(currentIndex, allGames);
+                        showKeyboard();
+                    } catch (error) {
+                        console.error("Error loading game:", error.message);
+                        if (formErrorDialog && formErrorMessage) {
+                            formErrorMessage.textContent = "Failed to load game. Please try again.";
+                            formErrorDialog.style.display = "flex";
+                        }
+                    } finally {
+                        isLoadingGame = false;
+                    }
                 });
                 officialList.appendChild(row);
             });
@@ -1316,13 +1335,26 @@ document.addEventListener("DOMContentLoaded", async () => {
                 `;
                 row.addEventListener("click", async () => {
                     console.log("Private game selected:", game["Game Number"]);
-                    currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                    await preloadBackground(currentBackground);
-                    loadGame(game);
-                    resetScreenDisplays(gameScreen);
-                    adjustBackground();
-                    const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
-                    updateArrowStates(currentIndex, privateGames);
+                    isLoadingGame = true;
+                    try {
+                        currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                        await preloadBackground(currentBackground);
+                        loadGame(game);
+                        resetScreenDisplays(gameScreen);
+                        gameScreen.style.display = "flex";
+                        adjustBackground();
+                        const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
+                        updateArrowStates(currentIndex, privateGames);
+                        showKeyboard();
+                    } catch (error) {
+                        console.error("Error loading game:", error.message);
+                        if (formErrorDialog && formErrorMessage) {
+                            formErrorMessage.textContent = "Failed to load game. Please try again.";
+                            formErrorDialog.style.display = "flex";
+                        }
+                    } finally {
+                        isLoadingGame = false;
+                    }
                 });
                 privateList.appendChild(row);
             });
@@ -1339,34 +1371,115 @@ document.addEventListener("DOMContentLoaded", async () => {
                 resetScreenDisplays(gameScreen);
                 adjustBackground();
                 updateArrowStates(0, allGames);
+                showKeyboard();
             }
         });
     }
 
     // Official back button
+    // UPDATED: Return to main game screen with current game
     if (officialBackBtn) {
         officialBackBtn.addEventListener("click", () => {
             console.log("Official back button clicked");
-            if (allGames.length > 0) {
+            if (currentGameNumber) {
+                // Load the current game
+                let game;
+                if (currentGameNumber.includes("- Private")) {
+                    const gameNum = currentGameNumber.split(" - ")[0];
+                    game = privateGames.find(g => g["Game Number"] === gameNum);
+                } else {
+                    const gameNum = currentGameNumber.replace("Game #", "");
+                    game = allGames.find(g => g["Game Number"] === gameNum);
+                }
+                if (game) {
+                    currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                    loadGame(game);
+                    resetScreenDisplays(gameScreen);
+                    adjustBackground();
+                    const currentIndex = currentGameNumber.includes("- Private") 
+                        ? privateGames.findIndex(g => g["Game Number"] === currentGameNumber.split(" - ")[0])
+                        : allGames.findIndex(g => g["Game Number"] === currentGameNumber.replace("Game #", ""));
+                    updateArrowStates(currentIndex, currentGameNumber.includes("- Private") ? privateGames : allGames);
+                    showKeyboard();
+                } else {
+                    console.error("Current game not found, loading first official game");
+                    if (allGames.length > 0) {
+                        currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
+                        loadGame(allGames[0]);
+                        resetScreenDisplays(gameScreen);
+                        adjustBackground();
+                        updateArrowStates(0, allGames);
+                        showKeyboard();
+                    }
+                }
+            } else if (allGames.length > 0) {
+                // Fallback to first official game
                 currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
                 loadGame(allGames[0]);
                 resetScreenDisplays(gameScreen);
                 adjustBackground();
                 updateArrowStates(0, allGames);
+                showKeyboard();
+            } else {
+                console.error("No games available to load");
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "No games available to load.";
+                    formErrorDialog.style.display = "flex";
+                }
             }
         });
     }
 
     // Private back button
+    // UPDATED: Return to main game screen with current game
     if (privateBackBtn) {
         privateBackBtn.addEventListener("click", () => {
             console.log("Private back button clicked");
-            if (allGames.length > 0) {
+            if (currentGameNumber) {
+                // Load the current game
+                let game;
+                if (currentGameNumber.includes("- Private")) {
+                    const gameNum = currentGameNumber.split(" - ")[0];
+                    game = privateGames.find(g => g["Game Number"] === gameNum);
+                } else {
+                    const gameNum = currentGameNumber.replace("Game #", "");
+                    game = allGames.find(g => g["Game Number"] === gameNum);
+                }
+                if (game) {
+                    currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                    loadGame(game);
+                    resetScreenDisplays(gameScreen);
+                    adjustBackground();
+                    const currentIndex = currentGameNumber.includes("- Private") 
+                        ? privateGames.findIndex(g => g["Game Number"] === currentGameNumber.split(" - ")[0])
+                        : allGames.findIndex(g => g["Game Number"] === currentGameNumber.replace("Game #", ""));
+                    updateArrowStates(currentIndex, currentGameNumber.includes("- Private") ? privateGames : allGames);
+                    showKeyboard();
+                } else {
+                    console.error("Current game not found, loading first official game");
+                    if (allGames.length > 0) {
+                        currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
+                        loadGame(allGames[0]);
+                        resetScreenDisplays(gameScreen);
+                        adjustBackground();
+                        updateArrowStates(0, allGames);
+                        showKeyboard();
+                    }
+                }
+            } else if (allGames.length > 0) {
+                // Fallback to first official game
                 currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
                 loadGame(allGames[0]);
                 resetScreenDisplays(gameScreen);
                 adjustBackground();
                 updateArrowStates(0, allGames);
+                showKeyboard();
+            } else {
+                console.error("No games available to load");
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "No games available to load.";
+                    formErrorDialog.style.display = "flex";
+                }
             }
         });
     }
@@ -1412,17 +1525,51 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Form back button
+    // UPDATED: Return to main game screen with current game
     if (formBackBtn) {
         formBackBtn.addEventListener("click", () => {
             console.log("Form back button clicked, returning to main game screen");
-            if (allGames.length > 0) {
+            if (currentGameNumber) {
+                // Load the current game
+                let game;
+                if (currentGameNumber.includes("- Private")) {
+                    const gameNum = currentGameNumber.split(" - ")[0];
+                    game = privateGames.find(g => g["Game Number"] === gameNum);
+                } else {
+                    const gameNum = currentGameNumber.replace("Game #", "");
+                    game = allGames.find(g => g["Game Number"] === gameNum);
+                }
+                if (game) {
+                    currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                    loadGame(game);
+                    resetScreenDisplays(gameScreen);
+                    adjustBackground();
+                    const currentIndex = currentGameNumber.includes("- Private") 
+                        ? privateGames.findIndex(g => g["Game Number"] === currentGameNumber.split(" - ")[0])
+                        : allGames.findIndex(g => g["Game Number"] === currentGameNumber.replace("Game #", ""));
+                    updateArrowStates(currentIndex, currentGameNumber.includes("- Private") ? privateGames : allGames);
+                    showKeyboard();
+                } else {
+                    console.error("Current game not found, loading first official game");
+                    if (allGames.length > 0) {
+                        currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
+                        loadGame(allGames[0]);
+                        resetScreenDisplays(gameScreen);
+                        adjustBackground();
+                        updateArrowStates(0, allGames);
+                        showKeyboard();
+                    }
+                }
+            } else if (allGames.length > 0) {
+                // Fallback to first official game
                 currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
                 loadGame(allGames[0]);
                 resetScreenDisplays(gameScreen);
                 adjustBackground();
                 updateArrowStates(0, allGames);
+                showKeyboard();
             } else {
-                console.error("No official games available to load");
+                console.error("No games available to load");
                 if (formErrorDialog && formErrorMessage) {
                     formErrorMessage.textContent = "No games available to load.";
                     formErrorDialog.style.display = "flex";
@@ -1480,6 +1627,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 resetScreenDisplays(gameScreen);
                 adjustBackground();
                 updateArrowStates(0, privateGames);
+                showKeyboard();
             } catch (error) {
                 console.error("Error creating private game:", error.message);
                 if (formErrorDialog && formErrorMessage) {

@@ -38,6 +38,19 @@ a {
   transition: opacity 0.2s ease; /* Added for faster screen transition */
 }
 
+/* NEW: Fade effect on game screen when game ends (from previous response) */
+#game-screen.game-ended #header,
+#game-screen.game-ended #game-controls-container,
+#game-screen.game-ended #main-content {
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+}
+
+#game-screen.game-ended #keyboard-container,
+#game-screen.game-ended #ad-box {
+  opacity: 1; /* Ensure keyboard and ad-box remain fully visible */
+}
+
 /* Header styling */
 #header {
   width: 95vw;
@@ -179,7 +192,7 @@ a {
 }
 
 .game-nav-wrapper {
-  display: flex judaica;
+  display: flex;
   align-items: center;
   justify-content: center;
 }
@@ -545,7 +558,8 @@ a {
 }
 
 .keyboard.show-guesses #keyboard-guesses-content,
-.keyboard.show-give-up #keyboard-give-up-content {
+.keyboard.show-give-up #keyboard-give-up-content,
+.keyboard.show-end #keyboard-end-content {
   display: flex;
 }
 
@@ -788,13 +802,13 @@ a {
   animation: flashGreen 0.5s ease; /* Reduced from 1.5s */
 }
 
-/* Pineapple rain animation - Updated for smooth 4-second fall */
+/* NEW: Updated pineapple rain animation (from previous response) */
 .pineapple-rain {
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   pointer-events: none;
   z-index: 1000;
 }
@@ -804,21 +818,17 @@ a {
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
   animation: fall 4s linear forwards;
   line-height: 1;
-  top: -5vh;
+  top: -10vh;
   opacity: 1;
 }
 
 @keyframes fall {
   0% { 
-      transform: translateY(-5vh) translateX(0) rotate(var(--rotation));
-      opacity: 1; 
-  }
-  90% { 
-      transform: translateY(100vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
+      transform: translateY(0) translateX(0) rotate(var(--rotation));
       opacity: 1; 
   }
   100% { 
-      transform: translateY(105vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
+      transform: translateY(110vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
       opacity: 0; 
   }
 }
@@ -1177,7 +1187,8 @@ a {
 }
 
 #share-buttons {
-  display: flex;
+  display: Tata
+  flex;
   gap: 3vh;
   margin-bottom: 1.5vh;
 }
@@ -1413,13 +1424,62 @@ a {
     font-size: 1.6vh;
   }
 
-  /* Enlarge give up buttons */
-  #give-up-yes-btn,
-  #give-up-no-btn,
+  /* NEW: Reduce Yes, No, Close button sizes (from previous response) */
   #keyboard-give-up-yes-btn,
-  #keyboard-give-up-no-btn {
-    font-size: 5vh; /* Increased from 4vh (25% larger) */
-    padding: 1vh 4vw; /* Increased padding for larger touch area */
+  #keyboard-give-up-no-btn,
+  #guesses-close-btn {
+    font-size: 2vh; /* Reduced from 5vh (original) and 3.2vh (mobile override) */
+    padding: 0.5vh 1.5vh; /* Reduced from 1vh 4vw and 0.6vh 3vw */
+    width: auto;
+    min-width: 15vw; /* Ensure usability */
+    height: 4vh;
+    line-height: 4vh;
+  }
+
+  #keyboard-give-up-content .dialog-buttons {
+    gap: 2vw; /* Smaller gap between Yes/No buttons */
+  }
+
+  #guesses-close-btn {
+    margin-top: 1vh; /* Adjust spacing */
+  }
+
+  /* NEW: Adjust keyboard keys horizontal spacing and size (from previous response) */
+  .keyboard-content {
+    gap: 0.8vh; /* Retained from original mobile styles */
+  }
+  .keyboard-row {
+    gap: 1.6vw; /* Doubled from 0.8vw */
+  }
+  .key {
+    font-size: 1.6vh; /* Retained from original mobile styles */
+    width: 7vw; /* Reduced from 8.5vw to accommodate larger gaps */
+    max-width: 3.5vh; /* Adjusted proportionally */
+    height: 100%;
+    margin: 0.8vw; /* Doubled horizontal margin from implied ~0.4vw */
+  }
+  .key.special {
+    width: 12vw; /* Reduced from 12.75vw */
+    max-width: 6vh; /* Adjusted proportionally */
+    font-size: 1.4vh; /* Retained from original mobile styles */
+  }
+
+  /* NEW: Center keyboard vertically in keyboard container (from previous response) */
+  .keyboard {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    height: 21.25vh;
+    padding: 0.5vh 0; /* Adjusted padding to avoid overflow */
+  }
+
+  .keyboard-content {
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center rows vertically */
+    height: 100%;
+    width: 100%;
   }
 
   /* Flash animations */
@@ -1447,22 +1507,6 @@ a {
   #create-form .keyboard {
     display: none !important;
   }
-  .keyboard-content {
-    gap: 0.8vh; /* Doubled from 0.4vh */
-  }
-  .keyboard-row {
-    gap: 0.8vw; /* Doubled from 0.4vw */
-  }
-  .key {
-    font-size: 1.6vh; /* Reduced from 1.8vh to fit larger gaps */
-    width: 8.5vw; /* Reduced from 9.2vw to fit larger gaps */
-    max-width: 4.25vh; /* Adjusted proportionally */
-  }
-  .key.special {
-    width: 12.75vw; /* Reduced from 13.8vw to fit larger gaps */
-    max-width: 6.375vh; /* Adjusted proportionally */
-    font-size: 1.4vh; /* Reduced from 1.6vh */
-  }
   .keyboard-back-btn {
     font-size: 2vh;
   }
@@ -1478,18 +1522,83 @@ a {
     max-height: 12vh; /* Adjusted for smaller keyboard container */
     line-height: 2vh;
   }
-  #guesses-close-btn {
-    font-size: 3.2vh; /* Doubled from 1.6vh */
-    padding: 0.6vh 3vw; /* Doubled from 0.3vh 1.5vw */
-    margin-bottom: 0.3vh;
-  }
   #keyboard-give-up-content .dialog-message {
     font-size: 1.8vh;
     margin-bottom: 0.5vh;
   }
-  #keyboard-give-up-content .control-btn {
-    font-size: 3.2vh; /* Doubled from 1.6vh */
-    padding: 0.6vh 3vw; /* Doubled from 0.3vh 1.5vw */
+
+  /* NEW: End content in keyboard container (retained from original mobile styles) */
+  .keyboard.show-end #keyboard-end-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 90vw;
+    height: 100%;
+    padding: 0.5vh 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+  #keyboard-end-content {
+    display: none;
+  }
+  #keyboard-end-content .end-label {
+    font-size: 2vh;
+    font-weight: bold;
+    color: #FFB300;
+    -webkit-text-stroke: 0.08vh #000000;
+    text-shadow: 1px 1px 2px #FFFFFF;
+    margin: 0.5vh 0;
+  }
+  #keyboard-end-content #todays-word-label {
+    font-size: 1.6vh;
+    font-weight: bold;
+    margin: 0.3vh 0;
+    color: #000000;
+    text-shadow: 1px 1px 2px #FFFFFF;
+  }
+  #keyboard-end-content #todays-word {
+    font-size: 2.4vh;
+    text-transform: uppercase;
+    margin: 0.3vh 0;
+    color: #000000;
+    text-shadow: 1px 1px 2px #FFFFFF;
+  }
+  #keyboard-end-content #share-section {
+    margin: 0.5vh 0;
+    width: 80vw;
+    max-width: 25vh;
+  }
+  #keyboard-end-content #share-label {
+    font-size: 1.6vh;
+    margin-bottom: 0.3vh;
+  }
+  #keyboard-end-content #share-buttons {
+    gap: 1vh;
+    margin-bottom: 0.5vh;
+  }
+  #keyboard-end-content #share-buttons a {
+    font-size: 3vh; /* Reduced from 4.5vh to fit */
+  }
+  #keyboard-end-content .end-buttons {
+    gap: 0.5vh;
+    margin: 0.5vh 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  #keyboard-end-content #next-game-btn-end,
+  #keyboard-end-content #create-pineapple-end {
+    font-size: 1.8vh;
+    padding: 0.4vh 1.5vw;
+  }
+  .keyboard.show-end .keyboard-content,
+  .keyboard.show-end #keyboard-guesses-content,
+  .keyboard.show-end #keyboard-give-up-content {
+    display: none;
+  }
+  .keyboard.show-end .keyboard-back-btn {
+    display: block;
   }
 
   /* Ad Box: 5vh */
@@ -1625,87 +1734,5 @@ a {
   }
   #share-text .guess-count {
     font-size: 4vh;
-  }
-
-  /* NEW: End content in keyboard container */
-  .keyboard.show-end #keyboard-end-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: space-between;
-    width: 90vw;
-    height: 100%;
-    padding: 0.5vh 0;
-    box-sizing: border-box;
-    overflow-y: auto;
-  }
-  #keyboard-end-content {
-    display: none;
-  }
-  #keyboard-end-content .end-label {
-    font-size: 2vh;
-    font-weight: bold;
-    color: #FFB300;
-    -webkit-text-stroke: 0.08vh #000000;
-    text-shadow: 1px 1px 2px #FFFFFF;
-    margin: 0.5vh 0;
-  }
-  #keyboard-end-content #todays-word-label {
-    font-size: 1.6vh;
-    font-weight: bold;
-    margin: 0.3vh 0;
-    color: #000000;
-    text-shadow: 1px 1px 2px #FFFFFF;
-  }
-  #keyboard-end-content #todays-word {
-    font-size: 2.4vh;
-    text-transform: uppercase;
-    margin: 0.3vh 0;
-    color: #000000;
-    text-shadow: 1px 1px 2px #FFFFFF;
-  }
-  #keyboard-end-content #share-section {
-    margin: 0.5vh 0;
-    width: 80vw;
-    max-width: 25vh;
-  }
-  #keyboard-end-content #share-label {
-    font-size: 1.6vh;
-    margin-bottom: 0.3vh;
-  }
-  #keyboard-end-content #share-buttons {
-    gap: 1vh;
-    margin-bottom: 0.5vh;
-  }
-  #keyboard-end-content #share-buttons a {
-    font-size: 3vh; /* Reduced from 4.5vh to fit */
-  }
-  #keyboard-end-content .end-buttons {
-    gap: 0.5vh;
-    margin: 0.5vh 0;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  #keyboard-end-content #next-game-btn-end,
-  #keyboard-end-content #create-pineapple-end {
-    font-size: 1.8vh;
-    padding: 0.4vh 1.5vw;
-  }
-  .keyboard.show-end .keyboard-content,
-  .keyboard.show-end #keyboard-guesses-content,
-  .keyboard.show-end #keyboard-give-up-content {
-    display: none;
-  }
-  .keyboard.show-end .keyboard-back-btn {
-    display: block;
-  }
-
-  /* NEW: Fade effect on game screen when game ends */
-  #game-screen.game-ended #header,
-  #game-screen.game-ended #game-controls-container,
-  #game-screen.game-ended #main-content {
-    opacity: 0.5;
-    transition: opacity 0.2s ease;
   }
 }
