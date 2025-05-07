@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateContent = document.getElementById("private-games");
 
     // URLs
-    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1KmNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
+    const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
     const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
     const defaultBackground = "newbackground.png";
@@ -352,13 +352,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeScreen.style.display = "none";
             activeScreen.offsetHeight; // Trigger reflow
             activeScreen.style.display = "flex";
-        }
-        // Remove game-select-active and form-active classes unless explicitly needed
-        if (activeScreen !== gameSelectContent) {
-            gameScreen.classList.remove("game-select-active");
-        }
-        if (activeScreen !== formContent) {
-            gameScreen.classList.remove("form-active");
         }
     }
 
@@ -761,7 +754,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (isUILocked) return;
             isUILocked = true;
             resetScreenDisplays(gameScreen);
-            gameScreen.classList.add("game-select-active");
             gameSelectContent.style.display = "flex";
             gameSelectContent.classList.add("active");
             officialTab.classList.add("active");
@@ -787,7 +779,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (isUILocked) return;
             isUILocked = true;
             resetScreenDisplays(gameScreen);
-            gameScreen.classList.add("form-active");
             formContent.style.display = "flex";
             formContent.classList.add("active");
             activeInput = document.getElementById("game-name-input");
@@ -808,7 +799,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (isUILocked) return;
             isUILocked = true;
             resetScreenDisplays(gameScreen);
-            gameScreen.classList.add("game-select-active");
             gameSelectContent.style.display = "flex";
             gameSelectContent.classList.add("active");
             privateTab.classList.add("active");
@@ -865,7 +855,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameSelectContent.classList.remove("active");
             resetScreenDisplays(gameScreen);
             gameScreen.style.display = "flex";
-            gameScreen.classList.remove("game-select-active");
             showKeyboard();
             activeInput = guessInput;
             if (activeInput && !isMobile) activeInput.focus();
@@ -887,7 +876,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameSelectContent.classList.remove("active");
             resetScreenDisplays(gameScreen);
             gameScreen.style.display = "flex";
-            gameScreen.classList.remove("game-select-active");
             showKeyboard();
             activeInput = guessInput;
             if (activeInput && !isMobile) activeInput.focus();
@@ -954,7 +942,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 formContent.style.display = "none";
                 formContent.classList.remove("active");
                 resetScreenDisplays(gameScreen);
-                gameScreen.classList.add("game-select-active");
                 gameSelectContent.style.display = "flex";
                 gameSelectContent.classList.add("active");
                 privateTab.classList.add("active");
@@ -1014,7 +1001,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             formContent.classList.remove("active");
             resetScreenDisplays(gameScreen);
             gameScreen.style.display = "flex";
-            gameScreen.classList.remove("form-active");
             showKeyboard();
             activeInput = guessInput;
             if (activeInput && !isMobile) activeInput.focus();
@@ -1108,8 +1094,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Show game select screen
     function showGameSelectScreen() {
         console.log("Showing game select overlay", { isUILocked });
-        resetScreenDisplays(gameScreen);
-        gameScreen.classList.add("game-select-active");
+        resetScreenDisplays(gameScreen); // Keep game-screen active
         gameSelectContent.style.display = "flex";
         gameSelectContent.classList.add("active");
         officialTab.classList.add("active");
@@ -1274,7 +1259,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         loadGame(game);
                         resetScreenDisplays(gameScreen);
                         gameScreen.style.display = "flex";
-                        gameScreen.classList.remove("game-select-active");
                         gameSelectContent.style.display = "none";
                         gameSelectContent.classList.remove("active");
                         showKeyboard();
@@ -1342,7 +1326,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         loadGame(game);
                         resetScreenDisplays(gameScreen);
                         gameScreen.style.display = "flex";
-                        gameScreen.classList.remove("game-select-active");
                         gameSelectContent.style.display = "none";
                         gameSelectContent.classList.remove("active");
                         showKeyboard();
@@ -1374,7 +1357,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 loadGame(allGames[0]);
                 resetScreenDisplays(gameScreen);
                 gameScreen.style.display = "flex";
-                gameScreen.classList.remove("game-select-active", "form-active");
                 showKeyboard();
                 activeInput = guessInput;
                 if (activeInput && !isMobile) activeInput.focus();
@@ -1512,7 +1494,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Guess added, current guesses:", guesses);
 
         if (guessesLink) {
-            guessesLink.textContent = `Guesses: ${guessCount}/5`;
+            guessesLink.textContent = `Guesses: ${guessCount}`;
         }
 
         if (guess === secretWord) {
@@ -1737,7 +1719,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (guessBtn) {
             guessBtn.disabled = false;
         }
-        if (guessesLink) guessesLink.textContent = "Guesses: 0/5";
+        if (guessesLink) guessesLink.textContent = "Guesses: 0";
         if (guessInputContainer) {
             guessInputContainer.classList.remove("game-ended", "wrong-guess");
             guessInputContainer.style.background = "rgba(255, 255, 255, 0.85)"; // Reset to default
@@ -1780,7 +1762,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Loaded hints:", hints);
 
         currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}${game["Game Name"] ? " - Private" : ""}`;
+        const newGameNumberDisplay = document.getElementById("new-game-number-display");
         const gameNumberDisplay = document.getElementById("game-number-display");
+        if (newGameNumberDisplay) {
+            newGameNumberDisplay.textContent = currentGameNumber;
+        }
         if (gameNumberDisplay) {
             gameNumberDisplay.textContent = currentGameNumber;
         }
