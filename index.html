@@ -21,8 +21,15 @@
         </div>
         <div id="game-controls-container">
             <span id="all-games-link" class="control-link">All Games</span>
+            <span id="give-up-link" class="control-link">Give Up</span>
+            <span id="guesses-link" class="control-link">Guesses: 0</span>
+        </div>
+        <div id="nav-arrows-container">
+            <button id="prev-game-arrow" class="nav-arrow"><i class="fas fa-arrow-left"></i></button>
+            <button id="next-game-arrow" class="nav-arrow"><i class="fas fa-arrow-right"></i></button>
         </div>
         <div id="main-content">
+            <span id="new-game-number-display" class="new-game-number-display"></span>
             <div id="guess-area">
                 <span id="hints-label">Hints</span>
                 <div id="hints-container" class="hints-inline"></div>
@@ -35,15 +42,6 @@
                         </div>
                         <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
                     </div>
-                </div>
-                <div id="game-info-container">
-                    <span id="give-up-link" class="control-link">Give Up</span>
-                    <div class="game-nav-wrapper">
-                        <button id="prev-game-arrow" class="game-nav-arrow"><i class="fas fa-arrow-left"></i></button>
-                        <span id="new-game-number-display" class="new-game-number-display"></span>
-                        <button id="next-game-arrow" class="game-nav-arrow"><i class="fas fa-arrow-right"></i></button>
-                    </div>
-                    <span id="guesses-link" class="control-link">Guesses: 0/5</span>
                 </div>
             </div>
         </div>
@@ -107,41 +105,25 @@
                 </div>
             </div>
         </div>
-        <div id="ad-box">
-            <p>Big Brain Games</p>
-        </div>
-    </div>
-
-    <div id="game-over">
-        <div id="header">
-            <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
-            <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
-            </div>
-            <span id="game-name">WORDY</span>
-        </div>
-        <span id="game-number-display" class="game-number-display"></span>
-        <span id="hard-luck-label">Hard Luck!</span>
-        <span id="well-done-label">Well Done!</span>
-        <span id="todays-word-label">Today's Word:</span>
-        <span id="todays-word"></span>
-        <div id="share-section">
-            <div style="height: 1.8vh;"></div>
-            <div id="share-box">
-                <div id="share-panel">
-                    <div id="share-text"></div>
+        <div id="game-over" class="alternate-content" style="display: none;">
+            <span id="game-number-display" class="game-number-display"></span>
+            <div id="share-section">
+                <div id="share-box">
+                    <div id="share-panel">
+                        <div id="share-text"></div>
+                    </div>
+                </div>
+                <div id="share-buttons">
+                    <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                    <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
                 </div>
             </div>
-            <div id="share-buttons">
-                <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
-                <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
-                <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+            <div class="end-buttons">
+                <button id="next-game-btn-end" class="control-btn">Next Game</button>
+                <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
             </div>
-        </div>
-        <div class="end-buttons">
-            <button id="next-game-btn-end" class="control-btn">Next Game</button>
-            <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
         </div>
         <div id="ad-box">
             <p>Big Brain Games</p>
