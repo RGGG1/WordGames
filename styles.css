@@ -179,7 +179,7 @@ a {
 }
 
 .game-nav-wrapper {
-  display: flex;
+  display: flex judaica;
   align-items: center;
   justify-content: center;
 }
@@ -788,7 +788,7 @@ a {
   animation: flashGreen 0.5s ease; /* Reduced from 1.5s */
 }
 
-/* Pineapple rain animation */
+/* Pineapple rain animation - Updated for smooth 4-second fall */
 .pineapple-rain {
   position: fixed;
   top: 0;
@@ -802,7 +802,7 @@ a {
 .pineapple-piece {
   position: absolute;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-  animation: fall linear forwards;
+  animation: fall 4s linear forwards;
   line-height: 1;
   top: -5vh;
   opacity: 1;
@@ -813,7 +813,7 @@ a {
       transform: translateY(-5vh) translateX(0) rotate(var(--rotation));
       opacity: 1; 
   }
-  80% { 
+  90% { 
       transform: translateY(100vh) translateX(calc(var(--drift) * 1vw)) rotate(var(--rotation));
       opacity: 1; 
   }
@@ -1455,7 +1455,7 @@ a {
   }
   .key {
     font-size: 1.6vh; /* Reduced from 1.8vh to fit larger gaps */
-    width: 8.5vw; /* Reduced from 9.2vw to fit larger gaps廉政
+    width: 8.5vw; /* Reduced from 9.2vw to fit larger gaps */
     max-width: 4.25vh; /* Adjusted proportionally */
   }
   .key.special {
@@ -1625,5 +1625,87 @@ a {
   }
   #share-text .guess-count {
     font-size: 4vh;
+  }
+
+  /* NEW: End content in keyboard container */
+  .keyboard.show-end #keyboard-end-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    width: 90vw;
+    height: 100%;
+    padding: 0.5vh 0;
+    box-sizing: border-box;
+    overflow-y: auto;
+  }
+  #keyboard-end-content {
+    display: none;
+  }
+  #keyboard-end-content .end-label {
+    font-size: 2vh;
+    font-weight: bold;
+    color: #FFB300;
+    -webkit-text-stroke: 0.08vh #000000;
+    text-shadow: 1px 1px 2px #FFFFFF;
+    margin: 0.5vh 0;
+  }
+  #keyboard-end-content #todays-word-label {
+    font-size: 1.6vh;
+    font-weight: bold;
+    margin: 0.3vh 0;
+    color: #000000;
+    text-shadow: 1px 1px 2px #FFFFFF;
+  }
+  #keyboard-end-content #todays-word {
+    font-size: 2.4vh;
+    text-transform: uppercase;
+    margin: 0.3vh 0;
+    color: #000000;
+    text-shadow: 1px 1px 2px #FFFFFF;
+  }
+  #keyboard-end-content #share-section {
+    margin: 0.5vh 0;
+    width: 80vw;
+    max-width: 25vh;
+  }
+  #keyboard-end-content #share-label {
+    font-size: 1.6vh;
+    margin-bottom: 0.3vh;
+  }
+  #keyboard-end-content #share-buttons {
+    gap: 1vh;
+    margin-bottom: 0.5vh;
+  }
+  #keyboard-end-content #share-buttons a {
+    font-size: 3vh; /* Reduced from 4.5vh to fit */
+  }
+  #keyboard-end-content .end-buttons {
+    gap: 0.5vh;
+    margin: 0.5vh 0;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  #keyboard-end-content #next-game-btn-end,
+  #keyboard-end-content #create-pineapple-end {
+    font-size: 1.8vh;
+    padding: 0.4vh 1.5vw;
+  }
+  .keyboard.show-end .keyboard-content,
+  .keyboard.show-end #keyboard-guesses-content,
+  .keyboard.show-end #keyboard-give-up-content {
+    display: none;
+  }
+  .keyboard.show-end .keyboard-back-btn {
+    display: block;
+  }
+
+  /* NEW: Fade effect on game screen when game ends */
+  #game-screen.game-ended #header,
+  #game-screen.game-ended #game-controls-container,
+  #game-screen.game-ended #main-content {
+    opacity: 0.5;
+    transition: opacity 0.2s ease;
   }
 }

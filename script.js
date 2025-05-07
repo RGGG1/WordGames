@@ -63,6 +63,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateContent = document.getElementById("private-games");
     const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
     const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
+    // NEW: Added keyboardEndContent
+    const keyboardEndContent = document.getElementById("keyboard-end-content");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -305,18 +307,22 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
 
     // Show keyboard
+    // UPDATED: Reset fade effect and handle end content
     function showKeyboard() {
         if (!isMobile || !keyboardContainer || !keyboardContent || !keyboardGuessesContent || !keyboardGiveUpContent || !keyboardBackBtn) {
             console.log("Skipping showKeyboard: not mobile or elements missing");
             return;
         }
         console.log("Showing keyboard");
-        keyboardContainer.classList.remove("show-alternate", "show-guesses", "show-give-up");
+        keyboardContainer.classList.remove("show-alternate", "show-guesses", "show-give-up", "show-end");
         keyboardContainer.style.display = "flex";
         keyboardContent.style.display = "flex";
         keyboardGuessesContent.style.display = "none";
         keyboardGiveUpContent.style.display = "none";
+        if (keyboardEndContent) keyboardEndContent.style.display = "none";
         keyboardBackBtn.style.display = "none";
+        // Remove game-ended class to reset fade effect
+        gameScreen.classList.remove("game-ended");
         keyboardContainer.offsetHeight; // Force reflow
         if (guessInput && !gameOver && !isProcessingGuess) {
             activeInput = guessInput;
@@ -627,7 +633,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Previous game arrow [MODIFIED]
+    // Previous game arrow
     if (prevGameArrow) {
         prevGameArrow.addEventListener(isMobile ? "touchstart" : "click", async (e) => {
             e.preventDefault();
@@ -1085,15 +1091,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // End game
+    // UPDATED: Handle mobile end content in keyboard container
     function endGame(won, gaveUp = false) {
         console.log("Ending game", { won, gaveUp, guessCount, secretWord });
         gameOver = true;
         guessInput.disabled = true;
         guessBtn.disabled = true;
-        const hardLuckLabel = document.getElementById("hard-luck-label");
-        const wellDoneLabel = document.getElementById("well-done-label");
-        const todaysWord = document.getElementById("todays-word");
-        const shareText = document.getElementById("share-text");
+
+        let hardLuckLabel, wellDoneLabel, todaysWord, shareText;
+        if (isMobile && keyboardEndContent) {
+            hardLuckLabel = keyboardEndContent.querySelector("#hard-luck-label");
+            wellDoneLabel = keyboardEndContent.querySelector("#well-done-label");
+            todaysWord = keyboardEndContent.querySelector("#todays-word");
+            shareText = keyboardEndContent.querySelector("#share-text");
+        } else {
+            hardLuckLabel = document.getElementById("hard-luck-label");
+            wellDoneLabel = document.getElementById("well-done-label");
+            todaysWord = document.getElementById("todays-word");
+            shareText = document.getElementById("share-text");
+        }
 
         if (hardLuckLabel && wellDoneLabel && todaysWord) {
             hardLuckLabel.style.display = won ? "none" : "block";
@@ -1121,46 +1137,67 @@ document.addEventListener("DOMContentLoaded", async () => {
             triggerPineappleRain();
         }
 
-        // Faster transition with immediate display change
-        gameScreen.style.opacity = "0";
-        setTimeout(() => {
-            resetScreenDisplays(gameOverScreen);
-            gameOverScreen.style.opacity = "1";
+        if (isMobile && keyboardContainer && keyboardEndContent) {
+            // Show end content in keyboard container
+            keyboardContainer.classList.add("show-end");
+            keyboardContainer.style.display = "flex";
+            keyboardContent.style.display = "none";
+            keyboardGuessesContent.style.display = "none";
+            keyboardGiveUpContent.style.display = "none";
+            keyboardEndContent.style.display = "flex";
+            keyboardBackBtn.style.display = "block";
+            // Apply fade effect to game screen
+            gameScreen.classList.add("game-ended");
+            gameScreen.style.opacity = "1";
             adjustBackground();
-        }, 200); // Matches CSS transition duration
+        } else {
+            // Desktop: Navigate to game over screen
+            gameScreen.style.opacity = "0";
+            setTimeout(() => {
+                resetScreenDisplays(gameOverScreen);
+                gameOverScreen.style.opacity = "1";
+                adjustBackground();
+            }, 200); // Matches CSS transition duration
+        }
     }
 
     // Trigger pineapple rain
+    // UPDATED: Single continuous 4-second wave
     function triggerPineappleRain() {
         console.log("Triggering pineapple rain");
         const container = document.createElement("div");
         container.classList.add("pineapple-rain");
         document.body.appendChild(container);
 
-        const numPieces = 35;
-        const waves = 3;
-        const waveDelay = 1000; // 1 second between waves
+        const numPieces = 50; // Increased for denser effect
+        const duration = 4000; // 4 seconds
 
-        for (let wave = 0; wave < waves; wave++) {
-            setTimeout(() => {
-                for (let i = 0; i < numPieces; i++) {
-                    const piece = document.createElement("div");
-                    piece.classList.add("pineapple-piece");
-                    piece.textContent = "🍍";
-                    piece.style.left = `${Math.random() * 100}vw`;
-                    piece.style.fontSize = `${1.5 + Math.random() * 2}vh`;
-                    piece.style.animationDuration = `${2 + Math.random() * 3}s`;
-                    piece.style.setProperty("--rotation", `${Math.random() * 360 - 180}deg`); // -180° to +180°
-                    piece.style.setProperty("--drift", `${-10 + Math.random() * 20}`);
-                    container.appendChild(piece);
-                }
-            }, wave * waveDelay);
-        }
+        // Spawn pineapples continuously over 4 seconds
+        const spawnInterval = duration / numPieces; // Time between each pineapple spawn
+        let spawned = 0;
+
+        const spawnPineapple = () => {
+            if (spawned < numPieces) {
+                const piece = document.createElement("div");
+                piece.classList.add("pineapple-piece");
+                piece.textContent = "🍍";
+                piece.style.left = `${Math.random() * 100}vw`;
+                piece.style.fontSize = `${1.5 + Math.random() * 2}vh`;
+                piece.style.animationDelay = `${spawned * spawnInterval}ms`;
+                piece.style.setProperty("--rotation", `${Math.random() * 360 - 180}deg`); // -180° to +180°
+                piece.style.setProperty("--drift", `${-10 + Math.random() * 20}`);
+                container.appendChild(piece);
+                spawned++;
+                setTimeout(spawnPineapple, spawnInterval);
+            }
+        };
+
+        spawnPineapple();
 
         setTimeout(() => {
             container.remove();
             console.log("Pineapple rain animation completed");
-        }, 6000 + (waves - 1) * waveDelay);
+        }, duration + 4000); // Duration + 4s animation time
     }
 
     // Setup share buttons
@@ -1334,7 +1371,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Next game button (end screen) [MODIFIED]
+    // Next game button (end screen)
     if (nextGameBtnEnd) {
         nextGameBtnEnd.addEventListener("click", () => {
             console.log("Next game button (end screen) clicked, navigating to game select screen");
@@ -1374,7 +1411,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Form back button [MODIFIED]
+    // Form back button
     if (formBackBtn) {
         formBackBtn.addEventListener("click", () => {
             console.log("Form back button clicked, returning to main game screen");
@@ -1453,7 +1490,60 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
+    // NEW: Add keyboard end content dynamically
+    if (isMobile && keyboardContainer && !keyboardEndContent) {
+        const endContent = document.createElement("div");
+        endContent.id = "keyboard-end-content";
+        endContent.classList.add("alternate-content");
+        endContent.innerHTML = `
+            <span id="hard-luck-label" class="end-label" style="display: none;">Hard Luck!</span>
+            <span id="well-done-label" class="end-label" style="display: none;">Well Done!</span>
+            <span id="todays-word-label">Today's word was:</span>
+            <span id="todays-word"></span>
+            <div id="share-section">
+                <span id="share-label">Share your results!</span>
+                <div id="share-buttons">
+                    <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                    <a id="share-instagram" href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="end-buttons">
+                <button id="next-game-btn-end" class="control-btn">Next Game</button>
+                <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
+            </div>
+        `;
+        keyboardContainer.appendChild(endContent);
+        console.log("Dynamically added keyboard-end-content");
+
+        // Reattach event listeners for dynamically added buttons
+        const nextGameBtnEndDynamic = endContent.querySelector("#next-game-btn-end");
+        const createPineappleEndDynamic = endContent.querySelector("#create-pineapple-end");
+        if (nextGameBtnEndDynamic) {
+            nextGameBtnEndDynamic.addEventListener("click", () => {
+                console.log("Next game button (end screen) clicked, navigating to game select screen");
+                showGameSelectScreen();
+            });
+        }
+        if (createPineappleEndDynamic) {
+            createPineappleEndDynamic.addEventListener("click", () => {
+                console.log("Create Pineapple link (end screen) clicked");
+                resetScreenDisplays(createForm);
+                adjustBackground();
+                formInputs.forEach(input => {
+                    input.value = "";
+                    input.disabled = false;
+                });
+            });
+        }
+    }
+
     // Initialize cursor and load games
     initializeCursor();
     await loadGames();
+
+    if (isMobile) {
+        showKeyboard();
+    }
 });
