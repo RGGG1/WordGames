@@ -13,23 +13,23 @@
 <body>
     <div id="game-screen">
         <div id="header">
-            <button id="hamburger-btn" class="menu-btn"><i class="fas fa-bars"></i></button>
-            <div id="hamburger-menu" class="hamburger-menu">
-                <button id="home-btn" class="menu-item">Home</button>
-            </div>
             <span id="game-name">WORDY</span>
         </div>
         <div id="game-controls-container">
             <span id="all-games-link" class="control-link">All Games</span>
-            <span id="give-up-link" class="control-link">Give Up</span>
-            <span id="guesses-link" class="control-link">Guesses: 0</span>
-        </div>
-        <div id="nav-arrows-container">
-            <button id="prev-game-arrow" class="nav-arrow"><i class="fas fa-arrow-left"></i></button>
-            <button id="next-game-arrow" class="nav-arrow"><i class="fas fa-arrow-right"></i></button>
+            <div class="control-link-placeholder"></div>
+            <div class="control-link-placeholder"></div>
         </div>
         <div id="main-content">
-            <span id="new-game-number-display" class="new-game-number-display"></span>
+            <div id="game-number-container">
+                <span id="give-up-link" class="control-link game-control-left">Give Up</span>
+                <span id="new-game-number-display" class="new-game-number-display">
+                    <span id="prev-game-arrow" class="nav-arrow">←</span>&nbsp;&nbsp;
+                    <span id="game-number-text"></span>&nbsp;&nbsp;
+                    <span id="next-game-arrow" class="nav-arrow">→</span>
+                </span>
+                <span id="guesses-link" class="control-link game-control-right">Guesses: 0</span>
+            </div>
             <div id="guess-area">
                 <span id="hints-label">Hints</span>
                 <div id="hints-container" class="hints-inline"></div>
