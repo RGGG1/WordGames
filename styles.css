@@ -138,25 +138,27 @@ a {
   align-items: center;
   margin: 0 auto;
   z-index: 12;
+  line-height: 1.6vh; /* Consistent line height for alignment */
 }
 
 /* Game number display (center) */
 .new-game-number-display {
   font-family: Arial, sans-serif;
-  font-size: 1.8vh;
+  font-size: 1.6vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   text-align: center;
   display: inline-flex;
   align-items: center;
-  line-height: 1.8vh;
+  line-height: 1.6vh; /* Match container */
+  vertical-align: middle;
 }
 
 /* Control links on game number line */
 .game-control-left,
 .game-control-right {
   font-family: Arial, sans-serif;
-  font-size: 1.8vh;
+  font-size: 1.6vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   text-decoration: underline;
@@ -165,6 +167,8 @@ a {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   width: 20vw; /* Matches hints and guess box alignment */
+  line-height: 1.6vh; /* Consistent line height */
+  vertical-align: middle;
 }
 
 .game-control-left {
@@ -177,13 +181,16 @@ a {
 
 /* Navigation arrows */
 .nav-arrow {
-  font-size: 1.8vh;
+  font-size: 3.2vh; /* Larger for sensitivity */
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
   background: none;
   border: none;
-  padding: 0;
+  padding: 1vh 2vw; /* Larger touch target */
+  display: inline-block;
+  line-height: 1.6vh; /* Align with text */
+  vertical-align: middle; /* Center vertically */
 }
 
 .nav-arrow.disabled {
@@ -1003,7 +1010,7 @@ a {
 }
 
 /* Form content overlay */
-#form-content {
+.form-content {
   display: none;
   width: 85vw;
   max-height: 90vh; /* Fit between header and keyboard */
@@ -1022,7 +1029,7 @@ a {
   overflow-y: auto;
 }
 
-#form-content.active {
+.form-content.active {
   display: flex;
 }
 
@@ -1125,22 +1132,28 @@ a {
   }
   #game-number-container {
     margin: 0 auto;
+    line-height: 1.6vh; /* Consistent line height */
   }
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
+    vertical-align: middle;
   }
   .game-control-left,
   .game-control-right {
     font-size: 1.6vh;
+    line-height: 1.6vh;
+    vertical-align: middle;
   }
   .nav-arrow {
-    font-size: 3.2vh; /* Doubled from 1.6vh */
+    font-size: 3.2vh; /* Larger for sensitivity */
     padding: 1vh 2vw; /* Larger touch target */
-    display: inline-block; /* Ensure padding applies */
+    display: inline-block;
+    line-height: 1.6vh; /* Align with text */
+    vertical-align: middle; /* Center vertically */
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh); /* Restored original position */
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh + 16.5vh); /* Original + 5 lines (16.5vh) */
     height: auto; /* Allow content to flow */
   }
   .guess-input-wrapper {
