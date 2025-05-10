@@ -122,7 +122,7 @@ a {
 #game-number-wrapper {
   width: 100vw;
   position: fixed;
-  bottom: calc(20vh + 4vh); /* Above keyboard (20vh) and ad box (4vh) */
+  bottom: calc(20vh + 4vh + 5vh); /* Above keyboard (20vh), ad box (4vh), plus 1.5 lines (5vh) */
   left: 50%;
   transform: translateX(-50%);
   z-index: 12; /* Above game-screen, below dialogs */
@@ -138,7 +138,8 @@ a {
   align-items: center;
   margin: 0 auto;
   z-index: 12;
-  line-height: 1.6vh; /* Consistent line height for alignment */
+  line-height: 1.6vh; /* Consistent line height */
+  height: 1.6vh; /* Fixed height for alignment */
 }
 
 /* Game number display (center) */
@@ -150,8 +151,10 @@ a {
   text-align: center;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   line-height: 1.6vh; /* Match container */
   vertical-align: middle;
+  height: 1.6vh; /* Match container */
 }
 
 /* Control links on game number line */
@@ -169,6 +172,7 @@ a {
   width: 20vw; /* Matches hints and guess box alignment */
   line-height: 1.6vh; /* Consistent line height */
   vertical-align: middle;
+  height: 1.6vh; /* Match container */
 }
 
 .game-control-left {
@@ -187,10 +191,11 @@ a {
   cursor: pointer;
   background: none;
   border: none;
-  padding: 1vh 2vw; /* Larger touch target */
+  padding: 0 2vw; /* Horizontal padding for touch target */
   display: inline-block;
   line-height: 1.6vh; /* Align with text */
   vertical-align: middle; /* Center vertically */
+  height: 1.6vh; /* Match text height */
 }
 
 .nav-arrow.disabled {
@@ -210,7 +215,7 @@ a {
 #main-content {
   width: 100vw;
   position: fixed;
-  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 1.8vh);
+  top: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh - 4.5vh + 1.8vh + 16.5vh - 5vh); /* Original + 5 lines - 1.5 lines */
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -330,6 +335,8 @@ a {
   text-shadow: 1px 1px 2px #000000;
   margin: 2vh 0 1.625vh 0;
   text-align: center;
+  visibility: visible; /* Ensure visibility */
+  opacity: 1; /* Ensure visibility */
 }
 
 /* Hint countdown */
@@ -359,6 +366,8 @@ a {
   justify-content: center;
   flex-wrap: wrap;
   word-break: break-word;
+  visibility: visible; /* Ensure visibility */
+  opacity: 1; /* Ensure visibility */
 }
 
 .hints-inline .separator {
@@ -1128,32 +1137,36 @@ a {
     margin-bottom: 1.6vh;
   }
   #game-number-wrapper {
-    bottom: calc(20vh + 4vh); /* Above keyboard (20vh) and ad box (4vh) */
+    bottom: calc(20vh + 4vh + 5vh); /* Moved up 1.5 lines */
   }
   #game-number-container {
     margin: 0 auto;
-    line-height: 1.6vh; /* Consistent line height */
+    line-height: 1.6vh;
+    height: 1.6vh;
   }
   .new-game-number-display {
     font-size: 1.6vh;
     line-height: 1.6vh;
     vertical-align: middle;
+    height: 1.6vh;
   }
   .game-control-left,
   .game-control-right {
     font-size: 1.6vh;
     line-height: 1.6vh;
     vertical-align: middle;
+    height: 1.6vh;
   }
   .nav-arrow {
     font-size: 3.2vh; /* Larger for sensitivity */
-    padding: 1vh 2vw; /* Larger touch target */
+    padding: 0 2vw; /* Horizontal padding only */
     display: inline-block;
     line-height: 1.6vh; /* Align with text */
     vertical-align: middle; /* Center vertically */
+    height: 1.6vh;
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh + 16.5vh); /* Original + 5 lines (16.5vh) */
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh + 16.5vh - 5vh); /* Adjusted -1.5 lines */
     height: auto; /* Allow content to flow */
   }
   .guess-input-wrapper {
@@ -1212,12 +1225,16 @@ a {
   #hints-label {
     font-size: 2.75vh;
     margin: 1.5vh 0 1.375vh 0;
+    visibility: visible; /* Ensure visibility */
+    opacity: 1; /* Ensure visibility */
   }
   .hints-inline {
     font-size: 2.75vh;
     -webkit-text-stroke: 0.08vh #000000;
     min-height: calc(2.75vh * 1.2 * 2);
     margin: 0 0 1.5vh 0;
+    visibility: visible; /* Ensure visibility */
+    opacity: 1; /* Ensure visibility */
   }
   .hints-inline .separator {
     -webkit-text-stroke: 0.08vh #000000;

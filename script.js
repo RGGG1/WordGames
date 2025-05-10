@@ -1453,14 +1453,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         tempContainer.style.maxWidth = "82.5vw";
         tempContainer.style.whiteSpace = "normal";
         tempContainer.style.lineHeight = "1.2";
-        tempContainer.style.display = "inline-block";
+        tempContainer.style.display = "inline-flex"; // Match .hints-inline
         tempContainer.style.wordBreak = "break-word";
-        tempContainer.textContent = hintsArray.join(" | ");
+        tempContainer.textContent = hintsArray.join(" • "); // Use • separator
         document.body.appendChild(tempContainer);
         
         const height = tempContainer.offsetHeight;
         const lineHeight = (isMobile ? 2.75 : 3.25) * 1.2;
-        const lines = Math.ceil(height / lineHeight);
+        const lines = Math.ceil(height / lineHeight) || 1; // Ensure at least 1 line
         
         document.body.removeChild(tempContainer);
         return lines;
@@ -1469,23 +1469,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Update hint fade
     function updateHintFade(hintsContainer, visibleHints) {
         const lines = calculateHintLines(visibleHints);
-        hintsContainer.classList.remove('lines-1', 'lines-2');
-        if (lines === 1) {
-            hintsContainer.classList.add('lines-1');
-        } else if (lines >= 2) {
-            hintsContainer.classList.add('lines-2');
-        }
+        hintsContainer.classList.remove('lines-0', 'lines-1', 'lines-2');
+        hintsContainer.classList.add(`lines-${Math.min(lines, 2)}`);
+        lastHintLines = lines; // Store line count
+        console.log("Hint fade updated:", { visibleHints, lines });
     }
 
     // Build hint HTML
     function buildHintHTML(hintsArray) {
-        if (hintsArray.length === 0) return "";
+        if (hintsArray.length === 0) return "No hints provided.";
         
         const htmlParts = [];
         hintsArray.forEach((hint, index) => {
-            htmlParts.push(hint);
+            htmlParts.push(`<span>${hint}</span>`);
             if (index < hintsArray.length - 1) {
-                htmlParts.push(' <span class="separator yellow">|</span> ');
+                htmlParts.push('<span class="separator"> • </span>');
             }
         });
         
@@ -1499,28 +1497,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.error("hints-container element not found");
             return;
         }
-        console.log("Setting up hints:", hints, "hintIndex:", hintIndex);
+        console.log("Setting up hints:", { hints, hintIndex });
         hintsContainer.innerHTML = "";
+        hintsContainer.style.display = "flex"; // Match .hints-inline
+        hintsContainer.style.visibility = "visible"; // Ensure visibility
+        hintsContainer.style.opacity = "1"; // Ensure visibility
         const visibleHints = hints.slice(0, hintIndex + 1);
-        if (visibleHints.length > 0) {
-            hintsContainer.innerHTML = buildHintHTML(visibleHints);
-            hintsContainer.style.display = "block";
-            lastHintLines = calculateHintLines(visibleHints); // Store line count
-            updateHintFade(hintsContainer, visibleHints);
-            console.log("Hints displayed:", visibleHints, "Lines:", lastHintLines);
-        } else {
-            hintsContainer.style.display = "block";
-            hintsContainer.classList.add('lines-0');
-            lastHintLines = 0; // No hints, so 0 lines
-            console.log("No hints to display yet, reserving space");
-        }
+        hintsContainer.innerHTML = buildHintHTML(visibleHints);
+        updateHintFade(hintsContainer, visibleHints);
+        console.log("Hints displayed:", { visibleHints, html: hintsContainer.innerHTML });
     }
 
     // Adjust background without cache-busting for stability
     function adjustBackground() {
         console.log("Adjusting background to:", currentBackground);
         if (gameScreen) {
-            gameScreen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
+            gameScreen.style.background = `url('${currentBackground}') no-repeat center top fixed, #FFFFFF`;
             gameScreen.style.backgroundSize = "100% calc(100% - 24vh)";
             gameScreen.style.backgroundAttachment = "fixed";
             gameScreen.offsetHeight;
@@ -1541,8 +1533,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             const visibleHints = hints.slice(0, hintIndex + 1);
             hintsContainer.innerHTML = buildHintHTML(visibleHints);
-            hintsContainer.style.display = "block";
-            lastHintLines = calculateHintLines(visibleHints); // Store line count
+            hintsContainer.style.display = "flex";
+            hintsContainer.style.visibility = "visible";
+            hintsContainer.style.opacity = "1";
             updateHintFade(hintsContainer, visibleHints);
             console.log("Revealed hint:", visibleHints[visibleHints.length - 1], "Lines:", lastHintLines);
         }
@@ -1648,7 +1641,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
             hintsContainer.innerHTML = won ? "Well Done" : "Hard Luck";
-            hintsContainer.style.display = "block";
+            hintsContainer.style.display = "flex";
+            hintsContainer.style.visibility = "visible";
+            hintsContainer.style.opacity = "1";
             hintsContainer.classList.remove('lines-0', 'lines-1', 'lines-2');
             hintsContainer.classList.add(`lines-${lastHintLines || 1}`); // Use last hint lines or fallback to 1
             console.log("Hints container updated to:", hintsContainer.innerHTML, "Lines:", lastHintLines);
@@ -1731,8 +1726,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupKeyboardListeners();
     }
 
-    // Start pineapple rain
-    function startPineappleRain() {
+       // Start pineapple rain
+       function startPineappleRain() {
         console.log("Starting pineapple rain animation");
         const rainContainer = document.createElement("div");
         rainContainer.className = "pineapple-rain";
@@ -1800,103 +1795,105 @@ document.addEventListener("DOMContentLoaded", async () => {
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
             hintsContainer.innerHTML = "";
-            hintsContainer.style.display = "block";
+            hintsContainer.style.display = "flex"; // Match .hints-inline
+            hintsContainer.style.visibility = "visible"; // Ensure visibility
+            hintsContainer.style.opacity = "1"; // Ensure visibility
             hintsContainer.classList.remove('lines-1', 'lines-2');
             hintsContainer.classList.add('lines-0');
             console.log("Hints container reset");
         }
-        // Restore Hints label visibility
-const hintsLabel = document.getElementById("hints-label");
-if (hintsLabel) {
-    hintsLabel.style.visibility = "visible";
-    console.log("Hints label visibility restored");
-}
-if (animationTimeout) {
-    clearTimeout(animationTimeout);
-    animationTimeout = null;
-}
-document.querySelectorAll(".pineapple-rain").forEach(el => el.remove());
-if (document.getElementById("game-over")) {
-    document.getElementById("game-over").style.display = "none";
-}
-if (document.getElementById("main-content")) {
-    document.getElementById("main-content").style.display = "flex"; // Restore guess area
-}
-console.log("Game state fully reset");
-}
-
-// Load game
-function loadGame(game) {
-console.log("Loading game:", game);
-if (!game || !game["Secret Word"]) {
-    console.error("Invalid game data:", game);
-    return;
-}
-secretWord = game["Secret Word"].toUpperCase();
-hints = [
-    game["Hint 1"]?.toUpperCase() || "",
-    game["Hint 2"]?.toUpperCase() || "",
-    game["Hint 3"]?.toUpperCase() || "",
-    game["Hint 4"]?.toUpperCase() || "",
-    game["Hint 5"]?.toUpperCase() || ""
-].filter(hint => hint.trim() !== "");
-hintIndex = firstGuessMade ? hints.length - 1 : 0;
-currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}`;
-console.log("Game loaded:", { secretWord, hints, hintIndex, currentGameNumber });
-
-resetGame();
-
-if (gameNumberText) {
-    gameNumberText.textContent = currentGameNumber;
-}
-
-const resultsKey = currentGameNumber.includes("- Private") ? "privatePineappleResults" : "pineappleResults";
-const normalizedGameNumber = currentGameNumber.includes("- Private")
-    ? currentGameNumber.split(" - ")[0]
-    : currentGameNumber.replace("Game #", "");
-const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
-const pastResult = results[normalizedGameNumber];
-
-if (pastResult && pastResult.secretWord === secretWord && pastResult.guesses !== "-") {
-    console.log("Game already completed:", pastResult);
-    guessCount = pastResult.guesses === "Gave Up" || pastResult.guesses === "X" ? 0 : parseInt(pastResult.guesses);
-    guessesLink.textContent = `Guesses: ${guessCount}`;
-    endGame(pastResult.guesses !== "Gave Up" && pastResult.guesses !== "X", pastResult.guesses === "Gave Up");
-} else {
-    setupHints();
-}
-
-if (guessInput && !isMobile) {
-    guessInput.focus();
-    activeInput = guessInput;
-}
-initializeCursor();
-adjustBackground();
-}
-
-// Initialize game
-async function initializeGame() {
-console.log("Initializing game");
-isUILocked = true;
-isLoadingGame = true;
-try {
-    await fetchGameData();
-    await fetchPrivateGames();
-    displayGameList();
-} catch (error) {
-    console.error("Initialization error:", error);
-    if (formErrorDialog && formErrorMessage) {
-        formErrorMessage.textContent = "Failed to initialize game. Please try again.";
-        formErrorDialog.style.display = "flex";
+        const hintsLabel = document.getElementById("hints-label");
+        if (hintsLabel) {
+            hintsLabel.style.visibility = "visible";
+            console.log("Hints label visibility restored");
+        }
+        if (animationTimeout) {
+            clearTimeout(animationTimeout);
+            animationTimeout = null;
+        }
+        document.querySelectorAll(".pineapple-rain").forEach(el => el.remove());
+        if (document.getElementById("game-over")) {
+            document.getElementById("game-over").style.display = "none";
+        }
+        if (document.getElementById("main-content")) {
+            document.getElementById("main-content").style.display = "flex"; // Restore guess area
+        }
+        console.log("Game state fully reset");
     }
-} finally {
-    isUILocked = false;
-    isLoadingGame = false;
-}
-}
 
-// Start the game
-console.log("Starting game initialization");
-initializeGame();
-initializeCursor();
+    // Load game
+    function loadGame(game) {
+        console.log("Loading game:", game);
+        if (!game || !game["Secret Word"]) {
+            console.error("Invalid game data:", game);
+            return;
+        }
+        secretWord = game["Secret Word"].toUpperCase();
+        hints = [
+            game["Hint 1"]?.toUpperCase() || "",
+            game["Hint 2"]?.toUpperCase() || "",
+            game["Hint 3"]?.toUpperCase() || "",
+            game["Hint 4"]?.toUpperCase() || "",
+            game["Hint 5"]?.toUpperCase() || ""
+        ].filter(hint => hint.trim() !== "");
+        console.log("Hints loaded:", hints); // Debug hints
+        hintIndex = firstGuessMade ? hints.length - 1 : 0;
+        currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}`;
+        console.log("Game loaded:", { secretWord, hints, hintIndex, currentGameNumber });
+
+        resetGame();
+
+        if (gameNumberText) {
+            gameNumberText.textContent = currentGameNumber;
+        }
+
+        const resultsKey = currentGameNumber.includes("- Private") ? "privatePineappleResults" : "pineappleResults";
+        const normalizedGameNumber = currentGameNumber.includes("- Private")
+            ? currentGameNumber.split(" - ")[0]
+            : currentGameNumber.replace("Game #", "");
+        const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
+        const pastResult = results[normalizedGameNumber];
+
+        setupHints(); // Always call to ensure hints display, even for completed games
+
+        if (pastResult && pastResult.secretWord === secretWord && pastResult.guesses !== "-") {
+            console.log("Game already completed:", pastResult);
+            guessCount = pastResult.guesses === "Gave Up" || pastResult.guesses === "X" ? 0 : parseInt(pastResult.guesses);
+            guessesLink.textContent = `Guesses: ${guessCount}`;
+            endGame(pastResult.guesses !== "Gave Up" && pastResult.guesses !== "X", pastResult.guesses === "Gave Up");
+        }
+
+        if (guessInput && !isMobile) {
+            guessInput.focus();
+            activeInput = guessInput;
+        }
+        initializeCursor();
+        adjustBackground();
+    }
+
+    // Initialize game
+    async function initializeGame() {
+        console.log("Initializing game");
+        isUILocked = true;
+        isLoadingGame = true;
+        try {
+            await fetchGameData();
+            await fetchPrivateGames();
+            displayGameList();
+        } catch (error) {
+            console.error("Initialization error:", error);
+            if (formErrorDialog && formErrorMessage) {
+                formErrorMessage.textContent = "Failed to initialize game. Please try again.";
+                formErrorDialog.style.display = "flex";
+            }
+        } finally {
+            isUILocked = false;
+            isLoadingGame = false;
+        }
+    }
+
+    // Start the game
+    console.log("Starting game initialization");
+    initializeGame();
+    initializeCursor();
 });
