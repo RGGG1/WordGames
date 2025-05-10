@@ -118,14 +118,26 @@ a {
   margin-bottom: 1.8vh;
 }
 
+/* Game number wrapper */
+#game-number-wrapper {
+  width: 100vw;
+  position: fixed;
+  bottom: calc(20vh + 4vh); /* Above keyboard (20vh) and ad box (4vh) */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 12; /* Above game-screen, below dialogs */
+  display: flex;
+  justify-content: center;
+}
+
 /* Game number container */
 #game-number-container {
   width: 85vw;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: calc(5vh + 3 * 1.8vh + 1.8vh + 5vh + 0.9vh + 1.8vh) auto 3.6vh auto;
-  z-index: 5;
+  margin: 0 auto;
+  z-index: 12;
 }
 
 /* Game number display (center) */
@@ -1108,10 +1120,11 @@ a {
     height: 1.6vh;
     margin-bottom: 1.6vh;
   }
+  #game-number-wrapper {
+    bottom: calc(20vh + 4vh); /* Above keyboard (20vh) and ad box (4vh) */
+  }
   #game-number-container {
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 6.6vh) auto 3.2vh auto; /* Position below guess box */
-    position: relative; /* Flow naturally */
-    top: 0; /* Remove top offset */
+    margin: 0 auto;
   }
   .new-game-number-display {
     font-size: 1.6vh;
@@ -1127,7 +1140,7 @@ a {
     display: inline-block; /* Ensure padding applies */
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh - 6.6vh); /* Move up two lines */
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh); /* Restored original position */
     height: auto; /* Allow content to flow */
   }
   .guess-input-wrapper {
