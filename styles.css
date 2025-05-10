@@ -138,8 +138,8 @@ a {
   align-items: center;
   margin: 0 auto;
   z-index: 12;
-  line-height: 1.6vh; /* Consistent line height */
-  height: 1.6vh; /* Fixed height for alignment */
+  height: 2vh; /* Modified: Increased for better touch targets and alignment */
+  line-height: 2vh; /* Modified: Matches height for consistent text alignment */
 }
 
 /* Game number display (center) */
@@ -149,12 +149,11 @@ a {
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   text-align: center;
-  display: inline-flex;
+  display: flex; /* Modified: Changed to flex for consistent alignment */
   align-items: center;
   justify-content: center;
-  line-height: 1.6vh; /* Match container */
-  vertical-align: middle;
-  height: 1.6vh; /* Match container */
+  line-height: 2vh; /* Modified: Matches container */
+  height: 2vh; /* Modified: Matches container */
 }
 
 /* Control links on game number line */
@@ -170,9 +169,10 @@ a {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
   width: 20vw; /* Matches hints and guess box alignment */
-  line-height: 1.6vh; /* Consistent line height */
-  vertical-align: middle;
-  height: 1.6vh; /* Match container */
+  line-height: 2vh; /* Modified: Consistent line height */
+  height: 2vh; /* Modified: Match container */
+  display: flex; /* Modified: Added flex for alignment */
+  align-items: center;
 }
 
 .game-control-left {
@@ -185,17 +185,20 @@ a {
 
 /* Navigation arrows */
 .nav-arrow {
-  font-size: 3.2vh; /* Larger for sensitivity */
+  font-size: 1.6vh; /* Modified: Matches other elements for alignment */
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
   background: none;
   border: none;
-  padding: 0 2vw; /* Horizontal padding for touch target */
-  display: inline-block;
-  line-height: 1.6vh; /* Align with text */
-  vertical-align: middle; /* Center vertically */
-  height: 1.6vh; /* Match text height */
+  padding: 0 1vw; /* Modified: Reduced for tighter fit */
+  display: flex; /* Modified: Flex for centering */
+  align-items: center;
+  justify-content: center;
+  line-height: 2vh; /* Modified: Align with text */
+  height: 2vh; /* Modified: Match text height */
+  transform: scale(1.5); /* Modified: Visual size increase without affecting layout */
+  transform-origin: center;
 }
 
 .nav-arrow.disabled {
@@ -1141,29 +1144,26 @@ a {
   }
   #game-number-container {
     margin: 0 auto;
-    line-height: 1.6vh;
-    height: 1.6vh;
+    line-height: 2vh; /* Modified: Matches height */
+    height: 2vh; /* Modified: Consistent height */
   }
   .new-game-number-display {
     font-size: 1.6vh;
-    line-height: 1.6vh;
-    vertical-align: middle;
-    height: 1.6vh;
+    line-height: 2vh; /* Modified: Matches container */
+    height: 2vh; /* Modified: Matches container */
   }
   .game-control-left,
   .game-control-right {
     font-size: 1.6vh;
-    line-height: 1.6vh;
-    vertical-align: middle;
-    height: 1.6vh;
+    line-height: 2vh; /* Modified: Matches container */
+    height: 2vh; /* Modified: Matches container */
   }
   .nav-arrow {
-    font-size: 3.2vh; /* Larger for sensitivity */
-    padding: 0 2vw; /* Horizontal padding only */
-    display: inline-block;
-    line-height: 1.6vh; /* Align with text */
-    vertical-align: middle; /* Center vertically */
-    height: 1.6vh;
+    font-size: 1.6vh; /* Modified: Matches other elements */
+    padding: 0 1vw; /* Modified: Reduced for alignment */
+    line-height: 2vh; /* Modified: Align with text */
+    height: 2vh; /* Modified: Matches text height */
+    transform: scale(1.5); /* Modified: Visual size increase */
   }
   #main-content {
     top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh + 16.5vh - 5vh); /* Adjusted -1.5 lines */
