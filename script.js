@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchMoved = false;
-    const touchThreshold = 10; // Pixels for movement threshold
+    const touchThreshold = 5; // Reduced from 10 to 5 pixels for higher sensitivity
 
     // Debounce utility
     function debounce(func, wait) {
@@ -621,7 +621,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Previous game arrow
     if (prevGameArrow) {
-        prevGameArrow.addEventListener(isMobile ? "touchstart" : "click", async (e) => {
+        prevGameArrow.addEventListener(isMobile ? "touchstart" : "click", debounce(async (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Previous game arrow triggered", { isUILocked, isLoadingGame });
@@ -677,12 +677,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isLoadingGame = false;
                 prevGameArrow.style.opacity = "1";
             }
-        });
+        }, 50), { passive: false }); // Reduced from 100ms to 50ms
     }
 
     // Next game arrow
     if (nextGameArrow) {
-        nextGameArrow.addEventListener(isMobile ? "touchstart" : "click", async (e) => {
+        nextGameArrow.addEventListener(isMobile ? "touchstart" : "click", debounce(async (e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Next game arrow triggered", { isUILocked, isLoadingGame });
@@ -738,7 +738,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isLoadingGame = false;
                 nextGameArrow.style.opacity = "1";
             }
-        });
+        }, 50), { passive: false }); // Reduced from 100ms to 50ms
     }
 
     // Update arrow states
@@ -1806,67 +1806,97 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Hints container reset");
         }
         // Restore Hints label visibility
-        const hintsLabel = document.getElementById("hints-label");
-        if (hintsLabel) {
-            hintsLabel.style.visibility = "visible";
-            console.log("Hints label restored");
-        }
-        document.getElementById("game-over").style.display = "none";
-        document.getElementById("main-content").style.display = "flex";
-        showKeyboard();
-        setupKeyboardListeners();
-        }
-        
-        // Load game
-        function loadGame(game) {
-            console.log("Loading game:", game);
-            resetGame();
-            secretWord = game["Secret Word"].toUpperCase();
-            hints = [
-                game["Hint 1"]?.toUpperCase() || "",
-                game["Hint 2"]?.toUpperCase() || "",
-                game["Hint 3"]?.toUpperCase() || "",
-                game["Hint 4"]?.toUpperCase() || "",
-                game["Hint 5"]?.toUpperCase() || ""
-            ].filter(hint => hint);
-            console.log("Loaded hints:", hints);
-        
-            currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}${game["Game Name"] ? " - Private" : ""}`;
-            const gameNumberTextElement = document.getElementById("game-number-text"); // Updated to new element
-            const gameNumberDisplay = document.getElementById("game-number-display");
-            if (gameNumberTextElement) {
-                gameNumberTextElement.textContent = currentGameNumber; // Set text in new span
-            }
-            if (gameNumberDisplay) {
-                gameNumberDisplay.textContent = currentGameNumber;
-            }
-        
-            setupHints();
-        
-            if (guessInput) {
-                guessInput.disabled = false;
-                if (!isMobile) {
-                    guessInput.focus();
-                }
-                activeInput = guessInput;
-            }
-            if (guessBtn) {
-                guessBtn.disabled = false;
-            }
-        
-            showKeyboard();
-            setupKeyboardListeners();
-        }
-        
-        // Initialize
-        initializeCursor();
-        console.log("Starting initial game data fetch");
-        await fetchGameData();
-        await fetchPrivateGames();
-        displayGameList();
-        // Force initial repaint
-        gameScreen.style.display = "none";
-        gameScreen.offsetHeight;
-        gameScreen.style.display = "flex";
-        adjustBackground();
-        });
+const hintsLabel = document.getElementById("hints-label");
+if (hintsLabel) {
+    hintsLabel.style.visibility = "visible";
+    console.log("Hints label visibility restored");
+}
+if (animationTimeout) {
+    clearTimeout(animationTimeout);
+    animationTimeout = null;
+}
+document.querySelectorAll(".pineapple-rain").forEach(el => el.remove());
+if (document.getElementById("game-over")) {
+    document.getElementById("game-over").style.display = "none";
+}
+if (document.getElementById("main-content")) {
+    document.getElementById("main-content").style.display = "flex"; // Restore guess area
+}
+console.log("Game state fully reset");
+}
+
+// Load game
+function loadGame(game) {
+console.log("Loading game:", game);
+if (!game || !game["Secret Word"]) {
+    console.error("Invalid game data:", game);
+    return;
+}
+secretWord = game["Secret Word"].toUpperCase();
+hints = [
+    game["Hint 1"]?.toUpperCase() || "",
+    game["Hint 2"]?.toUpperCase() || "",
+    game["Hint 3"]?.toUpperCase() || "",
+    game["Hint 4"]?.toUpperCase() || "",
+    game["Hint 5"]?.toUpperCase() || ""
+].filter(hint => hint.trim() !== "");
+hintIndex = firstGuessMade ? hints.length - 1 : 0;
+currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}`;
+console.log("Game loaded:", { secretWord, hints, hintIndex, currentGameNumber });
+
+resetGame();
+
+if (gameNumberText) {
+    gameNumberText.textContent = currentGameNumber;
+}
+
+const resultsKey = currentGameNumber.includes("- Private") ? "privatePineappleResults" : "pineappleResults";
+const normalizedGameNumber = currentGameNumber.includes("- Private")
+    ? currentGameNumber.split(" - ")[0]
+    : currentGameNumber.replace("Game #", "");
+const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
+const pastResult = results[normalizedGameNumber];
+
+if (pastResult && pastResult.secretWord === secretWord && pastResult.guesses !== "-") {
+    console.log("Game already completed:", pastResult);
+    guessCount = pastResult.guesses === "Gave Up" || pastResult.guesses === "X" ? 0 : parseInt(pastResult.guesses);
+    guessesLink.textContent = `Guesses: ${guessCount}`;
+    endGame(pastResult.guesses !== "Gave Up" && pastResult.guesses !== "X", pastResult.guesses === "Gave Up");
+} else {
+    setupHints();
+}
+
+if (guessInput && !isMobile) {
+    guessInput.focus();
+    activeInput = guessInput;
+}
+initializeCursor();
+adjustBackground();
+}
+
+// Initialize game
+async function initializeGame() {
+console.log("Initializing game");
+isUILocked = true;
+isLoadingGame = true;
+try {
+    await fetchGameData();
+    await fetchPrivateGames();
+    displayGameList();
+} catch (error) {
+    console.error("Initialization error:", error);
+    if (formErrorDialog && formErrorMessage) {
+        formErrorMessage.textContent = "Failed to initialize game. Please try again.";
+        formErrorDialog.style.display = "flex";
+    }
+} finally {
+    isUILocked = false;
+    isLoadingGame = false;
+}
+}
+
+// Start the game
+console.log("Starting game initialization");
+initializeGame();
+initializeCursor();
+});

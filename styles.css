@@ -1109,7 +1109,9 @@ a {
     margin-bottom: 1.6vh;
   }
   #game-number-container {
-    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 0.8vh + 1.6vh) auto 3.2vh auto;
+    margin: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh + 9vh + 1.5vh + 6.6vh) auto 3.2vh auto; /* Position below guess box */
+    position: relative; /* Flow naturally */
+    top: 0; /* Remove top offset */
   }
   .new-game-number-display {
     font-size: 1.6vh;
@@ -1120,10 +1122,13 @@ a {
     font-size: 1.6vh;
   }
   .nav-arrow {
-    font-size: 1.6vh;
+    font-size: 3.2vh; /* Doubled from 1.6vh */
+    padding: 1vh 2vw; /* Larger touch target */
+    display: inline-block; /* Ensure padding applies */
   }
   #main-content {
-    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh);
+    top: calc(5vh + 3 * 1.6vh + 1.6vh + 4.5vh - 4vh + 1.6vh - 6.6vh); /* Move up two lines */
+    height: auto; /* Allow content to flow */
   }
   .guess-input-wrapper {
     width: 85vw;
