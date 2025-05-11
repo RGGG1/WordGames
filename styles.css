@@ -38,7 +38,8 @@ a {
 /* Black background for header on All Games and End screens */
 #game-select-content.active ~ #header,
 #game-over.active ~ #header {
-  background: #000000;
+  background: #000000 !important;
+  background-image: none !important;
 }
 
 #game-name {
@@ -55,10 +56,10 @@ a {
 /* Game screen (main content area) */
 #game-screen {
   position: fixed;
-  top: 5vh;
+  top: 5vh; /* Below header */
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 12vh - 20vh - 4vh); /* Header, game-controls, keyboard, adbox */
+  height: calc(100vh - 5vh - 12vh - 20vh - 4vh); /* Header (5vh), game-controls (12vh), keyboard (20vh), adbox (4vh) */
   background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
   background-size: cover; /* Stretch/squeeze to fit */
   z-index: 10;
@@ -86,7 +87,7 @@ a {
   width: 100vw;
   height: 12vh;
   position: fixed;
-  bottom: calc(20vh + 4vh); /* Above keyboard and adbox */
+  bottom: calc(20vh + 4vh); /* Above keyboard (20vh) and adbox (4vh) */
   left: 0;
   z-index: 20;
   background: rgba(255, 255, 255, 0.85); /* White background with opacity */
@@ -94,6 +95,8 @@ a {
   flex-direction: column;
   align-items: center;
   padding: 0 2vw;
+  padding-bottom: 0; /* No bottom padding */
+  margin-bottom: 0; /* No bottom margin */
   box-sizing: border-box;
 }
 
@@ -197,14 +200,16 @@ a {
   width: 100vw;
   height: 20vh;
   position: fixed;
-  bottom: 4vh; /* Above adbox */
+  bottom: 4vh; /* Above adbox (4vh) */
   left: 0;
   z-index: 15;
-  background: #FFFFFF;
+  background: #FFFFFF; /* White background */
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 0 1vw; /* Thin spacing on the sides */
+  padding-top: 0; /* No top padding */
+  margin-top: 0; /* No top margin */
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -310,7 +315,7 @@ a {
   position: fixed;
   bottom: 0;
   left: 0;
-  background: #F0F0F0;
+  background: #F0F0F0; /* No background image */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -495,7 +500,7 @@ a {
   left: 0;
   width: 100vw;
   height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
-  background: #000000;
+  background: #000000; /* No background image */
   z-index: 13;
   flex-direction: column;
   align-items: center;
@@ -519,7 +524,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #000000;
+  background: #000000; /* No background image */
   z-index: 13;
   flex-direction: column;
   align-items: center;
@@ -670,7 +675,7 @@ a {
   left: 0;
   width: 100vw;
   height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
-  background: #000000;
+  background: #000000; /* No background image */
   z-index: 13;
   flex-direction: column;
   align-items: center;
