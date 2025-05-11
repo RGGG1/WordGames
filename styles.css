@@ -54,12 +54,13 @@ a {
   width: 100vw;
   height: calc(100vh - 5vh - 12vh - 20vh - 5vh); /* Header, controls, keyboard, adbox, gap */
   background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
-  background-size: contain; /* Changed to contain to show full image */
+  background-size: contain;
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
+  position: relative; /* Added to make absolute positioning of hints relative to game-screen */
 }
 
 /* Main content (hints, guess box) */
@@ -317,6 +318,7 @@ a {
   margin: 0;
   padding: 0;
   z-index: 11;
+  position: relative; /* Ensure z-index works correctly */
 }
 
 #guess-container {
@@ -406,8 +408,13 @@ a {
   font-size: 2.75vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  margin: 1.5vh 0 1.375vh 0;
+  position: absolute;
+  bottom: calc(2.75vh * 3 + 1.5vh); /* Three lines (2.75vh * 3) plus padding from bottom */
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
+  background: none; /* Remove any background */
+  z-index: 12; /* Ensure it appears above hints-container */
 }
 
 .hints-inline {
@@ -418,12 +425,15 @@ a {
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   -webkit-text-stroke: 0.08vh #000000;
-  margin: 0 0 1.5vh 0;
+  position: absolute;
+  bottom: 1.5vh; /* Two lines from bottom (approx 2.75vh * 2 / 2 + padding) */
+  left: 50%;
+  transform: translateX(-50%);
   text-align: center;
   max-width: 82.5vw;
   white-space: normal;
   line-height: 1.2;
-  min-height: calc(2.75vh * 1.2 * 2);
+  min-height: calc(2.75vh * 1.2);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -443,7 +453,7 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 85vw;
+  width: calc(100% + 2vw); /* Slightly wider than text to cover padding */
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
@@ -458,12 +468,12 @@ a {
 
 .hints-inline.lines-1::before {
   display: block;
-  height: calc(2.75vh * 1.2 + 1vh);
+  height: calc(2.75vh * 1.2 + 1vh); /* Match single line height */
 }
 
 .hints-inline.lines-2::before {
   display: block;
-  height: calc(2.75vh * 1.2 * 2 + 1vh);
+  height: calc(2.75vh * 1.2 * 2 + 1vh); /* Match two-line height */
 }
 
 /* Game select and form content overlays */
@@ -805,7 +815,7 @@ a {
 
 /* Buttons */
 .control-btn {
-  font-size: clamp(2vh, 2.5vw, 2.5vh);
+  font-size: clamp(2vh, 2.5vw, 2  0);
   padding: 0.5vh 1.5vw;
   background: #FFB300;
   color: #000000;
