@@ -27,7 +27,8 @@ a {
   left: 0;
   z-index: 50;
   background: url('newbackground.png') no-repeat center center fixed;
-  background-size: cover; /* Stretch/squeeze to fit */
+  background-size: contain; /* Fit fully without cropping */
+  background-position: center; /* Ensure it's centered */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -60,7 +61,8 @@ a {
   width: 100vw;
   height: calc(100vh - 5vh - 12vh - 20vh - 4vh); /* Header, game-controls, keyboard, adbox */
   background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
-  background-size: cover; /* Stretch/squeeze to fit */
+  background-size: contain; /* Fit fully without cropping */
+  background-position: center; /* Ensure it's centered */
   z-index: 10;
   display: flex;
   flex-direction: column;
