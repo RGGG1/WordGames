@@ -58,7 +58,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh); /* Updated: header (5vh), game-controls (5.2vh), keyboard (19.3vh), adbox (4vh), +3.5vh (+1vh added) */
+  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 3.5vh); /* Updated: header (5vh), game-controls (5.2vh), keyboard (19.3vh), adbox (3.5vh) */
   background: transparent; /* Transparent to show body background */
   z-index: 10;
   display: flex;
@@ -68,24 +68,47 @@ a {
   position: relative;
 }
 
-/* Main content (hints, guess box) */
+/* Main content (hints and guess containers) */
 #main-content {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center; /* Changed from flex-end to center to ensure visibility */
+  justify-content: center; /* Center content vertically */
   position: relative;
+  z-index: 11;
+}
+
+/* Hints container */
+#hints-container-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #FFFFFF; /* Opaque white to obscure body background */
+  padding: 1vh 0;
+  margin-bottom: 0.5vh; /* Space between hints and guess container */
+  z-index: 12;
+}
+
+/* Guess container */
+#guess-container-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #FFFFFF; /* Opaque white to obscure body background */
+  padding: 1vh 0;
   z-index: 11;
 }
 
 /* Game controls container with white background */
 #game-controls-container {
   width: 100vw;
-  height: 5.2vh; /* Reduced: 6.5vh - 0.3vh - 1vh = 5.2vh */
+  height: 5.2vh; /* Unchanged: 6.5vh - 0.3vh - 1vh */
   position: fixed;
-  bottom: calc(19.3vh + 4vh); /* Updated: keyboard (19.3vh) + adbox (4vh) */
+  bottom: calc(19.3vh + 3.5vh); /* Updated: keyboard (19.3vh) + adbox (3.5vh) */
   left: 0;
   z-index: 20;
   background: #FFFFFF; /* Fully opaque white */
@@ -205,12 +228,12 @@ a {
 /* Keyboard container */
 .keyboard {
   width: 100vw;
-  height: 19.3vh; /* Increased: 19vh + 0.3vh = 19.3vh */
+  height: 19.3vh; /* Unchanged: 19vh + 0.3vh */
   position: fixed;
-  bottom: 4vh; /* Above adbox */
+  bottom: 3.5vh; /* Moved up: 4vh - 0.5vh */
   left: 0;
   z-index: 15;
-  background: #FFFFFF;
+  background: #FFFFFF; /* Fully opaque white */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -250,7 +273,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.75vw; /* Increased: 0.5vw * 1.5 = 0.75vw */
+  gap: 0.75vw; /* Unchanged: 0.5vw * 1.5 */
   flex: 1;
 }
 
@@ -317,11 +340,11 @@ a {
 /* Ad box */
 #ad-box {
   width: 100vw;
-  height: 4vh; /* Unchanged */
+  height: 3.5vh; /* Reduced to match keyboard shift (4vh - 0.5vh) */
   position: fixed;
-  bottom: 0;
+  bottom: 0; /* At the bottom */
   left: 0;
-  background: #F0F0F0;
+  background: #F0F0F0; /* Opaque to obscure body background */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -336,20 +359,7 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Guess area styling */
-#guess-area {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background: none;
-  margin: 0;
-  padding: 0;
-  z-index: 11;
-  position: relative;
-  /* Removed transform: translateY(-2vh) to prevent pushing content out of view */
-}
-
+/* Guess container styling */
 #guess-container {
   display: flex;
   flex-direction: row;
@@ -462,7 +472,7 @@ a {
   flex-wrap: wrap;
   word-break: break-word;
   z-index: 11;
-  margin-bottom: 4.95vh; /* Move up 1.5 lines (3.3vh * 1.5) */
+  margin-bottom: 0.5vh; /* Reduced, as container handles spacing */
 }
 
 .hints-inline .separator {
@@ -506,7 +516,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
+  height: calc(100vh - 5vh - 3.5vh); /* Updated: header (5vh), adbox (3.5vh) */
   background: #000000; /* Black background for All Games screen */
   z-index: 13;
   flex-direction: column;
@@ -626,7 +636,7 @@ a {
 
 .back-btn-container {
   position: fixed;
-  bottom: 4vh;
+  bottom: 3.5vh; /* Updated to match adbox */
   width: 100vw;
   background: #000000;
   z-index: 14;
@@ -681,7 +691,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
+  height: calc(100vh - 5vh - 3.5vh); /* Updated: header (5vh), adbox (3.5vh) */
   background: #000000;
   z-index: 13;
   flex-direction: column;
@@ -695,7 +705,7 @@ a {
   #game-over {
     position: fixed;
     top: 5vh;
-    height: calc(100vh - 5vh - 4vh); /* Adjust for desktop */
+    height: calc(100vh - 5vh - 3.5vh); /* Updated for desktop */
   }
 }
 
@@ -955,11 +965,11 @@ a {
     display: none;
   }
   #game-controls-container {
-    height: 5.2vh; /* Updated: 6.5vh - 0.3vh - 1vh = 5.2vh */
-    bottom: 4vh; /* Above adbox only, since keyboard is hidden */
+    height: 5.2vh; /* Unchanged */
+    bottom: 3.5vh; /* Updated: above adbox only */
   }
   #game-screen {
-    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh); /* Updated for desktop: header (5vh), game-controls (5.2vh), adbox (4vh), +3.5vh */
+    height: calc(100vh - 5vh - 5.2vh - 3.5vh); /* Updated: header (5vh), game-controls (5.2vh), adbox (3.5vh) */
   }
   #game-select-content {
     position: absolute;
@@ -972,7 +982,7 @@ a {
   }
   .back-btn-container {
     position: fixed;
-    bottom: 4vh;
+    bottom: 3.5vh; /* Updated to match adbox */
     padding: 1vh 0;
   }
   .game-list {
