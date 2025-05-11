@@ -4,8 +4,8 @@ body {
   padding: 0;
   text-align: center;
   user-select: none;
-  background: url('newbackground.png') no-repeat center center / contain, #FFFFFF;
-  background-size: 100% calc(5vh + (100vh - 5vh - 5.2vh - 19.3vh - 4vh - 20vh + 3.5vh) + 10vh + 10vh);
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Background on body */
+  background-size: cover; /* Ensure background covers entire viewport */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -27,7 +27,7 @@ a {
   top: 0;
   left: 0;
   z-index: 50;
-  background: transparent;
+  background: transparent; /* Transparent to show body background */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,7 +38,7 @@ a {
 /* Black background for header on All Games and End Game screens */
 #game-select-content.active ~ #header,
 #game-over.active ~ #header {
-  background: #000000;
+  background: #000000; /* Explicitly black for All Games and End Game screens */
 }
 
 #game-name {
@@ -52,14 +52,14 @@ a {
   line-height: 2.5vh;
 }
 
-/* Game screen (now only contains game-over and overlays) */
+/* Game screen (main content area) */
 #game-screen {
   position: fixed;
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh - 20vh + 3.5vh);
-  background: transparent;
+  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh); /* Updated: header (5vh), game-controls (5.2vh), keyboard (19.3vh), adbox (4vh), +3.5vh (+1vh added) */
+  background: transparent; /* Transparent to show body background */
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -68,45 +68,27 @@ a {
   position: relative;
 }
 
-/* New hints box */
-#hints-box {
-  position: fixed;
-  top: calc(100vh - 5.2vh - 19.3vh - 4vh - 20vh);
-  left: 0;
-  width: 100vw;
-  height: 10vh;
-  background: transparent;
-  z-index: 12;
+/* Main content (hints, guess box) */
+#main-content {
+  width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: center; /* Changed from flex-end to center to ensure visibility */
+  position: relative;
+  z-index: 11;
 }
 
-/* New guess box */
-#guess-box {
-  position: fixed;
-  top: calc(100vh - 5.2vh - 19.3vh - 4vh - 10vh);
-  left: 0;
-  width: 100vw;
-  height: 10vh;
-  background: transparent;
-  z-index: 12;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Game controls container */
+/* Game controls container with white background */
 #game-controls-container {
   width: 100vw;
-  height: 5.2vh;
+  height: 5.2vh; /* Reduced: 6.5vh - 0.3vh - 1vh = 5.2vh */
   position: fixed;
-  bottom: calc(19.3vh + 4vh);
+  bottom: calc(19.3vh + 4vh); /* Updated: keyboard (19.3vh) + adbox (4vh) */
   left: 0;
   z-index: 20;
-  background: #FFFFFF;
+  background: #FFFFFF; /* Fully opaque white */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -119,16 +101,12 @@ a {
 #game-select-content.active ~ #game-controls-container,
 #game-select-content.active ~ #keyboard-container,
 #game-select-content.active ~ #game-over,
-#game-select-content.active ~ #form-content,
-#game-select-content.active ~ #hints-box,
-#game-select-content.active ~ #guess-box {
+#game-select-content.active ~ #form-content {
   display: none !important;
 }
 
-/* Hide game controls, hints, and guess box when game-over is active */
-#game-over.active ~ #game-controls-container,
-#game-over.active ~ #hints-box,
-#game-over.active ~ #guess-box {
+/* Hide game controls when game-over is active */
+#game-over.active ~ #game-controls-container {
   display: none;
 }
 
@@ -183,7 +161,7 @@ a {
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   display: inline-flex;
-  align-items: center;
+  align-items: center; /* Ensure vertical centering */
   line-height: 1.6vh;
 }
 
@@ -207,16 +185,16 @@ a {
 }
 
 .nav-arrow {
-  font-size: 1.6vh;
+  font-size: 1.6vh; /* Matches game-number-text font-size */
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
   background: none;
   border: none;
-  padding: 0 0.5vw;
-  line-height: 1.6vh;
+  padding: 0 0.5vw; /* Small padding for touch targets */
+  line-height: 1.6vh; /* Match game-number-text line-height */
   display: inline-flex;
-  align-items: center;
+  align-items: center; /* Center vertically */
 }
 
 .nav-arrow.disabled {
@@ -227,16 +205,16 @@ a {
 /* Keyboard container */
 .keyboard {
   width: 100vw;
-  height: 19.3vh;
+  height: 19.3vh; /* Increased: 19vh + 0.3vh = 19.3vh */
   position: fixed;
-  bottom: 4vh;
+  bottom: 4vh; /* Above adbox */
   left: 0;
   z-index: 15;
   background: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 1vw;
+  padding: 0 1vw; /* Thin spacing on the sides */
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -256,12 +234,12 @@ a {
 .keyboard-content {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-content: flex-start; /* Align rows to the top */
   width: 100%;
   height: 100%;
-  gap: 0.5vh;
-  margin-top: 0;
-  padding-top: 0;
+  gap: 0.5vh; /* Keep the spacing between rows */
+  margin-top: 0; /* Explicitly remove any top margin */
+  padding-top: 0; /* Explicitly remove any top padding */
 }
 
 .keyboard.show-alternate .keyboard-content {
@@ -272,15 +250,15 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.75vw;
+  gap: 0.75vw; /* Increased: 0.5vw * 1.5 = 0.75vw */
   flex: 1;
 }
 
 .key {
   font-size: 2vh;
-  width: 8.5vw;
+  width: 8.5vw; /* Adjusted to match the image proportions */
   max-width: 4.25vh;
-  height: 5.5vh;
+  height: 5.5vh; /* Fixed height to match image proportions */
   background: #D3D6DA;
   border: 0.1vh solid #999999;
   border-radius: 0.5vh;
@@ -293,7 +271,7 @@ a {
 }
 
 .key.special {
-  width: 12.75vw;
+  width: 12.75vw; /* Adjusted for special keys like Enter and Backspace */
   max-width: 6.375vh;
   font-size: 1.8vh;
 }
@@ -339,7 +317,7 @@ a {
 /* Ad box */
 #ad-box {
   width: 100vw;
-  height: 4vh;
+  height: 4vh; /* Unchanged */
   position: fixed;
   bottom: 0;
   left: 0;
@@ -358,19 +336,31 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Guess container and input wrapper */
+/* Guess area styling */
+#guess-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  margin: 0;
+  padding: 0;
+  z-index: 11;
+  position: relative;
+  /* Removed transform: translateY(-2vh) to prevent pushing content out of view */
+}
+
 #guess-container {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   width: 100%;
-  height: 100%;
+  margin-bottom: 0.5vh;
 }
 
 .guess-input-wrapper {
   width: 85vw;
-  height: 100%;
   display: flex;
   align-items: center;
 }
@@ -378,37 +368,37 @@ a {
 #guess-input-container {
   position: relative;
   width: calc(100% - 30%);
-  height: 8vh;
+  height: 9vh;
   background: rgba(255, 255, 255, 0.85);
   border-radius: 0.6vh 0 0 0.6vh;
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 0.5vh 2.5vw;
+  padding: 1vh 2.5vw;
 }
 
 #prompt {
-  font-size: 2vh;
+  font-size: 2.4vh;
   color: #000000;
   text-shadow: 1px 1px 2px #FFFFFF;
   position: absolute;
-  top: 0.5vh;
+  top: 0.75vh;
   left: 1vw;
   text-align: left;
 }
 
 #guess-input {
-  font-size: 3.5vh;
+  font-size: 3.75vh;
   font-weight: bold;
   background: transparent;
   border: none;
   width: 100%;
-  height: 5vh;
-  line-height: 3.5vh;
+  height: 6vh;
+  line-height: 4vh;
   text-align: center;
   position: absolute;
-  top: calc(50% + 2vh);
+  top: calc(50% + 2.4vh);
   transform: translateY(-50%);
   padding: 0 2.5vw;
   color: #000000;
@@ -424,8 +414,8 @@ a {
 .cursor {
   display: inline-block !important;
   color: #000000;
-  font-size: 3.5vh;
-  line-height: 3.5vh;
+  font-size: 3.75vh;
+  line-height: 4vh;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
@@ -442,37 +432,19 @@ a {
   display: none !important;
 }
 
-/* Hints styling */
-#hints-section {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-}
-
-#hints-container-wrapper {
-  width: 85vw;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 #hints-label {
   font-family: 'Luckiest Guy', cursive;
-  font-size: 2.5vh;
+  font-size: 2.75vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   text-align: center;
   background: none;
   z-index: 12;
-  margin-bottom: 0.3vh;
+  margin-bottom: 0.5vh; /* Space between label and hints */
 }
 
 .hints-inline {
-  font-size: 2.5vh;
+  font-size: 2.75vh;
   font-weight: bold;
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
@@ -483,13 +455,14 @@ a {
   max-width: 82.5vw;
   white-space: normal;
   line-height: 1.2;
-  min-height: calc(2.5vh * 1.2);
+  min-height: calc(2.75vh * 1.2);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
   word-break: break-word;
   z-index: 11;
+  margin-bottom: 4.95vh; /* Move up 1.5 lines (3.3vh * 1.5) */
 }
 
 .hints-inline .separator {
@@ -517,44 +490,13 @@ a {
 }
 
 .hints-inline.lines-1::before {
-  height: calc(2.5vh * 1.2 + 0.8vh);
+  display: block;
+  height: calc(2.75vh * 1.2 + 1vh);
 }
 
 .hints-inline.lines-2::before {
-  height: calc(2.5vh * 1.2 * 2 + 0.8vh);
-}
-
-/* Guess section */
-#guess-section {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  margin: 0;
-}
-
-#guess-container-wrapper {
-  width: 85vw;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.guess-btn {
-  font-size: 2.5vh;
-  height: 8vh;
-  width: 30%;
-  background: #FFB300;
-  color: #000000;
-  border: none;
-  border-radius: 0 0.6vh 0.6vh 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  display: block;
+  height: calc(2.75vh * 1.2 * 2 + 1vh);
 }
 
 /* Game select and form content overlays */
@@ -564,22 +506,22 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh);
-  background: #000000;
+  height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
+  background: #000000; /* Black background for All Games screen */
   z-index: 13;
   flex-direction: column;
   align-items: center;
   padding: 1.5vh 1.5vw;
   box-sizing: border-box;
-  overflow-y: auto;
+  overflow-y: auto; /* Enable scrolling for the entire content */
 }
 
 #game-select-content .game-list-container {
   width: 100%;
-  height: calc(100% - 10vh);
-  overflow-y: auto;
+  height: calc(100% - 10vh); /* Adjust height to account for tabs and title */
+  overflow-y: auto; /* Enable scrolling */
   padding-bottom: 0;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 #form-content {
@@ -739,7 +681,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh);
+  height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
   background: #000000;
   z-index: 13;
   flex-direction: column;
@@ -753,7 +695,7 @@ a {
   #game-over {
     position: fixed;
     top: 5vh;
-    height: calc(100vh - 5vh - 4vh);
+    height: calc(100vh - 5vh - 4vh); /* Adjust for desktop */
   }
 }
 
@@ -762,7 +704,7 @@ a {
 }
 
 #game-over #game-number-display {
-  display: none;
+  display: none; /* Hide game number display on end screen */
 }
 
 #game-over #share-section {
@@ -910,6 +852,19 @@ a {
   cursor: pointer;
 }
 
+.guess-btn {
+  font-size: 3vh;
+  height: 9vh;
+  width: 30%;
+  background: #FFB300;
+  color: #000000;
+  border: none;
+  border-radius: 0 0.6vh 0.6vh 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Color classes */
 .green { color: #006400; }
 .yellow { color: #FFB300; }
@@ -999,17 +954,12 @@ a {
   #game-name-mobile {
     display: none;
   }
-  #game-screen {
-    height: calc(100vh - 5vh - 5.2vh - 4vh - 20vh + 3.5vh);
-  }
-  #hints-box {
-    top: calc(100vh - 5.2vh - 4vh - 20vh);
-  }
-  #guess-box {
-    top: calc(100vh - 5.2vh - 4vh - 10vh);
-  }
   #game-controls-container {
-    bottom: 4vh;
+    height: 5.2vh; /* Updated: 6.5vh - 0.3vh - 1vh = 5.2vh */
+    bottom: 4vh; /* Above adbox only, since keyboard is hidden */
+  }
+  #game-screen {
+    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh); /* Updated for desktop: header (5vh), game-controls (5.2vh), adbox (4vh), +3.5vh */
   }
   #game-select-content {
     position: absolute;
@@ -1027,36 +977,5 @@ a {
   }
   .game-list {
     padding-bottom: 0;
-  }
-  #hints-label {
-    font-size: 2.75vh;
-  }
-  .hints-inline {
-    font-size: 2.75vh;
-    min-height: calc(2.75vh * 1.2);
-  }
-  .hints-inline.lines-1::before {
-    height: calc(2.75vh * 1.2 + 1vh);
-  }
-  .hints-inline.lines-2::before {
-    height: calc(2.75vh * 1.2 * 2 + 1vh);
-  }
-  #prompt {
-    font-size: 2.4vh;
-  }
-  #guess-input {
-    font-size: 3.75vh;
-    line-height: 4vh;
-  }
-  .cursor {
-    font-size: 3.75vh;
-    line-height: 4vh;
-  }
-  .guess-btn {
-    font-size: 3vh;
-    height: 9vh;
-  }
-  #guess-input-container {
-    height: 9vh;
   }
 }
