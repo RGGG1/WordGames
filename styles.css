@@ -58,7 +58,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 6.5vh - 19vh - 4vh + 2.5vh); /* Corrected: header (5vh), game-controls (6.5vh), keyboard (19vh), adbox (4vh), +2.5vh */
+  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh); /* Updated: header (5vh), game-controls (5.2vh), keyboard (19.3vh), adbox (4vh), +3.5vh (+1vh added) */
   background: transparent; /* Transparent to show body background */
   z-index: 10;
   display: flex;
@@ -75,7 +75,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-end; /* Align content to the bottom */
+  justify-content: center; /* Changed from flex-end to center to ensure visibility */
   position: relative;
   z-index: 11;
 }
@@ -83,9 +83,9 @@ a {
 /* Game controls container with white background */
 #game-controls-container {
   width: 100vw;
-  height: 6.5vh; /* Reduced from 7.5vh to 6.5vh (-1vh) */
+  height: 5.2vh; /* Reduced: 6.5vh - 0.3vh - 1vh = 5.2vh */
   position: fixed;
-  bottom: calc(19vh + 4vh); /* Keyboard (19vh) + adbox (4vh) */
+  bottom: calc(19.3vh + 4vh); /* Updated: keyboard (19.3vh) + adbox (4vh) */
   left: 0;
   z-index: 20;
   background: #FFFFFF; /* Fully opaque white */
@@ -185,7 +185,7 @@ a {
 }
 
 .nav-arrow {
-  font-size: 1.6vh; /* Reduced from 6.4vh to match game-number-text font-size */
+  font-size: 1.6vh; /* Matches game-number-text font-size */
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
@@ -205,7 +205,7 @@ a {
 /* Keyboard container */
 .keyboard {
   width: 100vw;
-  height: 19vh; /* Unchanged from previous reduction */
+  height: 19.3vh; /* Increased: 19vh + 0.3vh = 19.3vh */
   position: fixed;
   bottom: 4vh; /* Above adbox */
   left: 0;
@@ -250,7 +250,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5vw; /* Keep the spacing between keys */
+  gap: 0.75vw; /* Increased: 0.5vw * 1.5 = 0.75vw */
   flex: 1;
 }
 
@@ -347,7 +347,7 @@ a {
   padding: 0;
   z-index: 11;
   position: relative;
-  transform: translateY(-2vh); /* Moved up by 2vh */
+  /* Removed transform: translateY(-2vh) to prevent pushing content out of view */
 }
 
 #guess-container {
@@ -955,11 +955,11 @@ a {
     display: none;
   }
   #game-controls-container {
-    height: 6.5vh; /* Adjusted for desktop (-1vh from 7.5vh) */
+    height: 5.2vh; /* Updated: 6.5vh - 0.3vh - 1vh = 5.2vh */
     bottom: 4vh; /* Above adbox only, since keyboard is hidden */
   }
   #game-screen {
-    height: calc(100vh - 5vh - 6.5vh - 4vh + 2.5vh); /* Corrected for desktop: header (5vh), game-controls (6.5vh), adbox (4vh), +2.5vh */
+    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh); /* Updated for desktop: header (5vh), game-controls (5.2vh), adbox (4vh), +3.5vh */
   }
   #game-select-content {
     position: absolute;
