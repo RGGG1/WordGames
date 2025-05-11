@@ -1,10 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDY</title>
+    <!-- Link to Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Link to Google Fonts for Luckiest Guy -->
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <!-- Link to local CSS -->
+    <link rel="stylesheet" href="styles.css">
+</head>
 <body>
+    <!-- Header Section -->
     <div id="header">
         <span id="game-name">WORDY</span>
         <span id="all-games-link" class="control-link">All Games</span>
     </div>
+
+    <!-- Game Screen Section (contains game-over and overlays) -->
     <div id="game-screen">
-        <!-- Game over content -->
+        <!-- Game Over Content -->
         <div id="game-over" class="alternate-content" style="display: none;">
             <div id="share-section">
                 <div id="share-box">
@@ -24,7 +40,8 @@
                 <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
             </div>
         </div>
-        <!-- Game select overlay -->
+
+        <!-- Game Select Overlay -->
         <div id="game-select-content" style="display: none;">
             <span id="game-list-title">Select a Game</span>
             <div id="tabs">
@@ -59,7 +76,8 @@
                 </div>
             </div>
         </div>
-        <!-- Form content overlay -->
+
+        <!-- Form Content Overlay -->
         <div class="form-content" id="form-content" style="display: none;">
             <input id="game-name-input" class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
             <input id="secret-word" class="form-input" type="text" placeholder="Enter Secret Word" maxlength="50">
@@ -74,7 +92,8 @@
             </div>
         </div>
     </div>
-    <!-- New hints box -->
+
+    <!-- Hints Box Section -->
     <div id="hints-box">
         <div id="hints-section">
             <div id="hints-container-wrapper">
@@ -83,7 +102,8 @@
             </div>
         </div>
     </div>
-    <!-- New guess box -->
+
+    <!-- Guess Box Section -->
     <div id="guess-box">
         <div id="guess-section">
             <div id="guess-container-wrapper">
@@ -100,6 +120,8 @@
             </div>
         </div>
     </div>
+
+    <!-- Game Controls Section -->
     <div id="game-controls-container">
         <span id="game-name-mobile" style="display: none;">WORDY</span>
         <div id="game-number-container">
@@ -112,6 +134,8 @@
             <span id="guesses-link" class="control-link game-control-right">Guesses: 0</span>
         </div>
     </div>
+
+    <!-- Keyboard Section -->
     <div id="keyboard-container" class="keyboard">
         <button id="keyboard-back-btn" class="keyboard-back-btn" style="display: none;"><i class="fas fa-arrow-left"></i></button>
         <div id="keyboard-content" class="keyboard-content">
@@ -163,9 +187,12 @@
             </div>
         </div>
     </div>
+
+    <!-- Ad Box Section -->
     <div id="ad-box">
         <p>Big Brain Games</p>
     </div>
+
     <!-- Dialogs -->
     <div id="give-up-dialog" class="dialog" style="display: none;">
         <div class="dialog-content">
@@ -191,5 +218,8 @@
             <button id="guesses-close-btn" class="control-btn">Close</button>
         </div>
     </div>
+
+    <!-- Link to local JavaScript -->
     <script src="script.js"></script>
 </body>
+</html>
