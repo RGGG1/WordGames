@@ -58,7 +58,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 12vh - 20vh - 4vh); /* Header, game-controls, keyboard, adbox */
+  height: calc(100vh - 5vh - 33vh); /* Header, distance to top of game controls (24vh + 9vh) */
   background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
   background-size: cover; /* Stretch/squeeze to fit */
   z-index: 10;
@@ -84,12 +84,12 @@ a {
 /* Game controls container with white background */
 #game-controls-container {
   width: 100vw;
-  height: 12vh;
+  height: 9vh; /* Reduced from 12vh to fit one line of text */
   position: fixed;
   bottom: calc(20vh + 4vh); /* Above keyboard and adbox */
   left: 0;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.85); /* White background with opacity */
+  background: #FFFFFF; /* Fully opaque white */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -97,8 +97,16 @@ a {
   box-sizing: border-box;
 }
 
-/* Hide game controls when game-select-content or game-over is active */
+/* Hide sections when game-select-content is active */
+#game-select-content.active ~ #game-screen,
 #game-select-content.active ~ #game-controls-container,
+#game-select-content.active ~ #keyboard-container,
+#game-select-content.active ~ #game-over,
+#game-select-content.active ~ #form-content {
+  display: none !important;
+}
+
+/* Hide game controls when game-over is active */
 #game-over.active ~ #game-controls-container {
   display: none;
 }
@@ -209,8 +217,9 @@ a {
   overflow: hidden;
 }
 
-/* Hide keyboard when game-select-content is active */
-#game-select-content.active ~ #keyboard-container {
+/* Hide keyboard when game-select-content or game-over is active */
+#game-select-content.active ~ #keyboard-container,
+#game-over.active ~ #keyboard-container {
   display: none !important;
 }
 
@@ -679,11 +688,6 @@ a {
   overflow-y: auto;
 }
 
-/* Hide keyboard on game over screen */
-#game-over.active ~ #keyboard-container {
-  display: none !important;
-}
-
 @media (min-width: 601px) {
   #game-over {
     position: fixed;
@@ -948,11 +952,11 @@ a {
     display: none;
   }
   #game-controls-container {
-    height: 12vh;
+    height: 9vh; /* Consistent height */
     bottom: 4vh; /* Above adbox only, since keyboard is hidden */
   }
   #game-screen {
-    height: calc(100vh - 5vh - 12vh - 4vh); /* Header, game-controls, adbox */
+    height: calc(100vh - 5vh - 9vh - 4vh); /* Header, game-controls, adbox */
   }
   #game-select-content {
     position: absolute;
