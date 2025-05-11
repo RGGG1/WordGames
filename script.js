@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const nextGameArrow = document.getElementById("next-game-arrow");
     const gameNumberText = document.getElementById("game-number-text");
     const guessInput = document.getElementById("guess-input");
-    const guessArea = document.getElementById("guess-area");
+    const guessSection = document.getElementById("guess-section");
     const guessInputContainer = document.getElementById("guess-input-container");
     const formErrorDialog = document.getElementById("form-error-dialog");
     const formErrorOkBtn = document.getElementById("form-error-ok-btn");
@@ -226,19 +226,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInputContainer.addEventListener("touchstart", handler);
     }
 
-    // Setup guess area
-    if (guessArea) {
+    // Setup guess section
+    if (guessSection) {
         const handler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guess area triggered");
+            console.log("Guess section triggered");
             if (!gameOver && !guessInput.disabled && !isProcessingGuess && !isMobile) {
                 guessInput.focus();
                 activeInput = guessInput;
             }
         };
-        guessArea.addEventListener("click", handler);
-        guessArea.addEventListener("touchstart", handler);
+        guessSection.addEventListener("click", handler);
+        guessSection.addEventListener("touchstart", handler);
+    } else {
+        console.error("guess-section not found in DOM");
     }
 
     // Setup guess button
@@ -1531,7 +1533,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Adjust background (Modified to apply background to body)
+    // Adjust background
     function adjustBackground() {
         console.log("Adjusting background to:", currentBackground);
         document.body.style.background = `url('${currentBackground}') no-repeat center center fixed, #FFFFFF`;
@@ -1839,11 +1841,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     game["Hint 4"]?.toUpperCase() || "",
                     game["Hint 5"]?.toUpperCase() || ""
                 ].filter(hint => hint.trim() !== "");
-                console.log("Loaded hints:", hints);
-    
-                hintIndex = firstGuessMade ? hints.length - 1 : 0;
-                currentGameNumber = game["Display Name"] || (game["Game Name"] ? `Game #${game["Game Number"]} - ${game["Game Name"]}` : `Game #${game["Game Number"]}`);
-                console.log("Set currentGameNumber:", currentGameNumber);
+                hintIndex = 0;
+                currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}`;
+                console.log("Game loaded", { secretWord, hints, currentGameNumber });
     
                 if (gameNumberText) {
                     gameNumberText.textContent = currentGameNumber;
@@ -1851,41 +1851,43 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.error("game-number-text element not found");
                 }
     
-                const gameNameElements = document.querySelectorAll("#game-name, #game-name-mobile");
-                gameNameElements.forEach(element => {
-                    element.textContent = game["Game Name"] ? game["Game Name"].toUpperCase() : "WORDY";
-                });
-    
-                setupHints();
-                initializeCursor();
-    
-                const resultsKey = currentGameNumber.includes("- Private") ? "privatePineappleResults" : "pineappleResults";
-                const normalizedGameNumber = currentGameNumber.includes("- Private") 
-                    ? currentGameNumber.split(" - ")[0] 
-                    : currentGameNumber.replace("Game #", "");
-                const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
-    
-                if (results[normalizedGameNumber]) {
-                    const pastResult = results[normalizedGameNumber];
-                    console.log(`Found past result for ${resultsKey}[${normalizedGameNumber}]:`, pastResult);
-                    if (pastResult.secretWord === secretWord) {
-                        if (pastResult.guesses === "Gave Up") {
-                            gaveUp = true;
-                            endGame(false, true);
-                        } else if (pastResult.guesses === "X" || Number.isInteger(parseInt(pastResult.guesses))) {
-                            guessCount = parseInt(pastResult.guesses) || 0;
-                            guesses = Array(guessCount).fill("PAST_GUESS");
-                            if (guessesLink) {
-                                guessesLink.textContent = `Guesses: ${guessCount}`;
-                            }
-                            endGame(true);
-                        }
-                    }
+                let resultsKey = "pineappleResults";
+                let normalizedGameNumber = String(game["Game Number"]);
+                if (currentGameNumber.includes("- Private")) {
+                    resultsKey = "privatePineappleResults";
+                    normalizedGameNumber = game["Game Number"];
+                } else {
+                    normalizedGameNumber = game["Game Number"];
                 }
     
-                console.log("Game loaded successfully:", { secretWord, currentGameNumber, hintIndex });
+                const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
+                const pastResult = results[normalizedGameNumber];
+                console.log(`Checking past result for ${resultsKey}[${normalizedGameNumber}]:`, pastResult);
+    
+                if (pastResult && pastResult.secretWord === secretWord) {
+                    console.log("Found valid past result, processing...");
+                    if (pastResult.guesses === "Gave Up") {
+                        gaveUp = true;
+                        endGame(false, true);
+                    } else if (pastResult.guesses === "X") {
+                        endGame(false);
+                    } else {
+                        guessCount = parseInt(pastResult.guesses) || 0;
+                        if (guessesLink) {
+                            guessesLink.textContent = `Guesses: ${guessCount}`;
+                        }
+                        endGame(true);
+                    }
+                } else {
+                    console.log("No valid past result, setting up new game");
+                    setupHints();
+                    if (guessInput && !isMobile) {
+                        guessInput.focus();
+                        activeInput = guessInput;
+                    }
+                }
             } catch (error) {
-                console.error("Error loading game:", error);
+                console.error("Error in loadGame:", error.message);
                 if (formErrorDialog && formErrorMessage) {
                     formErrorMessage.textContent = "Failed to load game.";
                     formErrorDialog.style.display = "flex";
@@ -1900,18 +1902,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Initializing game");
             await fetchGameData();
             await fetchPrivateGames();
-            displayGameList();
             initializeCursor();
-            adjustBackground();
             setupEventListeners();
             setupKeyboardListeners();
-    
-            if (isMobile && !gameOver) {
-                showKeyboard();
-            } else if (guessInput && !isMobile) {
-                guessInput.focus();
-                activeInput = guessInput;
-            }
+            adjustBackground();
+            console.log("Game initialization complete");
         }
     
         // Start the game

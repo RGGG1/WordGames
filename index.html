@@ -18,19 +18,23 @@
     <div id="game-screen">
         <!-- Main game content -->
         <div id="main-content">
-            <div id="hints-container-wrapper">
-                <span id="hints-label">Hints</span>
-                <div id="hints-container" class="hints-inline"></div>
+            <div id="hints-section">
+                <div id="hints-container-wrapper">
+                    <span id="hints-label">Hints</span>
+                    <div id="hints-container" class="hints-inline"></div>
+                </div>
             </div>
-            <div id="guess-container-wrapper">
-                <div id="guess-container">
-                    <div class="guess-input-wrapper">
-                        <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is...</div>
-                            <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
-                            <span class="cursor">|</span>
+            <div id="guess-section">
+                <div id="guess-container-wrapper">
+                    <div id="guess-container">
+                        <div class="guess-input-wrapper">
+                            <div id="guess-input-container">
+                                <div id="prompt">The Secret Word is...</div>
+                                <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
+                                <span class="cursor">|</span>
+                            </div>
+                            <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
                         </div>
-                        <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
                     </div>
                 </div>
             </div>
