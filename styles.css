@@ -4,8 +4,7 @@ body {
   padding: 0;
   text-align: center;
   user-select: none;
-  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Background on body */
-  background-size: cover; /* Ensure background covers entire viewport */
+  background: #FFFFFF; /* Fallback background */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -19,6 +18,26 @@ a {
   text-decoration: underline;
 }
 
+/* Combined header and game screen background */
+#header, #game-screen {
+  background: url('newbackground.png') no-repeat center center, #FFFFFF;
+  background-size: contain; /* Changed to contain */
+}
+
+/* Black background for header and game screen when All Games or End Game screens are active */
+#game-select-content.active ~ #header,
+#game-over.active ~ #header,
+#game-select-content.active ~ #game-screen,
+#game-over.active ~ #game-screen {
+  background: #000000; /* Black background */
+}
+
+/* Hide game controls when All Games or End Game screens are active */
+#game-select-content.active ~ #game-controls-container,
+#game-over.active ~ #game-controls-container {
+  display: none !important;
+}
+
 /* Header styling */
 #header {
   width: 100vw;
@@ -27,18 +46,11 @@ a {
   top: 0;
   left: 0;
   z-index: 50;
-  background: transparent; /* Transparent to show body background */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5vh 2vw;
   box-sizing: border-box;
-}
-
-/* Black background for header on All Games and End Game screens */
-#game-select-content.active ~ #header,
-#game-over.active ~ #header {
-  background: #000000; /* Explicitly black for All Games and End Game screens */
 }
 
 #game-name {
@@ -58,8 +70,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh); /* Updated: header (5vh), game-controls (5.2vh), keyboard (19.3vh), adbox (4vh), +3.5vh (+1vh added) */
-  background: transparent; /* Transparent to show body background */
+  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 0.5vh); /* Reduced by 0.5vh */
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -94,20 +105,6 @@ a {
   align-items: center;
   padding: 0 2vw;
   box-sizing: border-box;
-}
-
-/* Hide sections when game-select-content is active */
-#game-select-content.active ~ #game-screen,
-#game-select-content.active ~ #game-controls-container,
-#game-select-content.active ~ #keyboard-container,
-#game-select-content.active ~ #game-over,
-#game-select-content.active ~ #form-content {
-  display: none !important;
-}
-
-/* Hide game controls when game-over is active */
-#game-over.active ~ #game-controls-container {
-  display: none;
 }
 
 #game-name-mobile {
@@ -205,16 +202,16 @@ a {
 /* Keyboard container */
 .keyboard {
   width: 100vw;
-  height: 19.3vh; /* Increased: 19vh + 0.3vh = 19.3vh */
+  height: 19.3vh;
   position: fixed;
-  bottom: 4vh; /* Above adbox */
+  bottom: 4vh;
   left: 0;
   z-index: 15;
   background: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 1vw; /* Thin spacing on the sides */
+  padding: 0 1vw 0.5vh 1vw; /* Added 0.5vh bottom padding */
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -959,7 +956,7 @@ a {
     bottom: 4vh; /* Above adbox only, since keyboard is hidden */
   }
   #game-screen {
-    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh); /* Updated for desktop: header (5vh), game-controls (5.2vh), adbox (4vh), +3.5vh */
+    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh - 0.5vh); /* Reduced by 0.5vh */
   }
   #game-select-content {
     position: absolute;
