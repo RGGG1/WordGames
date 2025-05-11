@@ -11,21 +11,17 @@
     <link rel="icon" type="image/png" href="wordy_favicon.png">
 </head>
 <body>
+    <div id="header">
+        <span id="game-name">WORDY</span>
+    </div>
     <div id="game-screen">
-        <div id="header">
-            <span id="game-name">WORDY</span>
-        </div>
-        <div id="game-controls-container">
-            <span id="all-games-link" class="control-link">All Games</span>
-            <div class="control-link-placeholder"></div>
-            <div class="control-link-placeholder"></div>
-        </div>
+        <!-- Main game content -->
         <div id="main-content">
             <div id="game-number-container">
                 <span id="give-up-link" class="control-link game-control-left">Give Up</span>
                 <span id="new-game-number-display" class="new-game-number-display">
-                    <span id="prev-game-arrow" class="nav-arrow">←</span>&nbsp;&nbsp;
-                    <span id="game-number-text"></span>&nbsp;&nbsp;
+                    <span id="prev-game-arrow" class="nav-arrow">←</span>  
+                    <span id="game-number-text"></span>  
                     <span id="next-game-arrow" class="nav-arrow">→</span>
                 </span>
                 <span id="guesses-link" class="control-link game-control-right">Guesses: 0</span>
@@ -45,66 +41,7 @@
                 </div>
             </div>
         </div>
-        <div id="give-up-dialog" class="dialog" style="display: none;">
-            <div class="dialog-content">
-                <span class="dialog-message">Are you sure you want to give up?</span>
-                <div class="dialog-buttons">
-                    <button id="give-up-yes-btn" class="control-btn">Yes</button>
-                    <button id="give-up-no-btn" class="control-btn">No</button>
-                </div>
-            </div>
-        </div>
-        <div id="keyboard-container" class="keyboard">
-            <button id="keyboard-back-btn" class="keyboard-back-btn" style="display: none;"><i class="fas fa-arrow-left"></i></button>
-            <div id="keyboard-content" class="keyboard-content">
-                <div class="keyboard-row">
-                    <button class="key">Q</button>
-                    <button class="key">W</button>
-                    <button class="key">E</button>
-                    <button class="key">R</button>
-                    <button class="key">T</button>
-                    <button class="key">Y</button>
-                    <button class="key">U</button>
-                    <button class="key">I</button>
-                    <button class="key">O</button>
-                    <button class="key">P</button>
-                </div>
-                <div class="keyboard-row">
-                    <button class="key">A</button>
-                    <button class="key">S</button>
-                    <button class="key">D</button>
-                    <button class="key">F</button>
-                    <button class="key">G</button>
-                    <button class="key">H</button>
-                    <button class="key">J</button>
-                    <button class="key">K</button>
-                    <button class="key">L</button>
-                </div>
-                <div class="keyboard-row">
-                    <button class="key special" id="key-enter">ENTER</button>
-                    <button class="key">Z</button>
-                    <button class="key">X</button>
-                    <button class="key">C</button>
-                    <button class="key">V</button>
-                    <button class="key">B</button>
-                    <button class="key">N</button>
-                    <button class="key">M</button>
-                    <button class="key special" id="key-backspace"><i class="fas fa-backspace"></i></button>
-                </div>
-            </div>
-            <div id="keyboard-guesses-content" class="alternate-content" style="display: none;">
-                <span id="guesses-title">Your Guesses</span>
-                <div id="guesses-list"></div>
-                <button id="guesses-close-btn" class="control-btn">Close</button>
-            </div>
-            <div id="keyboard-give-up-content" class="alternate-content" style="display: none;">
-                <span class="dialog-message">Are you sure you want to give up?</span>
-                <div class="dialog-buttons">
-                    <button id="keyboard-give-up-yes-btn" class="control-btn">Yes</button>
-                    <button id="keyboard-give-up-no-btn" class="control-btn">No</button>
-                </div>
-            </div>
-        </div>
+        <!-- Game over content -->
         <div id="game-over" class="alternate-content" style="display: none;">
             <span id="game-number-display" class="game-number-display"></span>
             <div id="share-section">
@@ -125,6 +62,7 @@
                 <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
             </div>
         </div>
+        <!-- Game select overlay -->
         <div id="game-select-content" style="display: none;">
             <span id="game-list-title">Select a Game</span>
             <div id="tabs">
@@ -153,6 +91,7 @@
                 </div>
             </div>
         </div>
+        <!-- Form content overlay -->
         <div class="form-content" id="form-content" style="display: none;">
             <input id="game-name-input" class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
             <input id="secret-word" class="form-input" type="text" placeholder="Enter Secret Word" maxlength="50">
@@ -166,11 +105,77 @@
                 <button id="form-back-btn" class="control-btn">Back</button>
             </div>
         </div>
-        <div id="ad-box">
-            <p>Big Brain Games</p>
+    </div>
+    <div id="game-controls-container">
+        <span id="game-name-mobile" style="display: none;">WORDY</span>
+        <span id="all-games-link" class="control-link">All Games</span>
+        <div class="control-link-placeholder"></div>
+        <div class="control-link-placeholder"></div>
+    </div>
+    <div id="keyboard-container" class="keyboard">
+        <button id="keyboard-back-btn" class="keyboard-back-btn" style="display: none;"><i class="fas fa-arrow-left"></i></button>
+        <div id="keyboard-content" class="keyboard-content">
+            <div class="keyboard-row">
+                <button class="key">Q</button>
+                <button class="key">W</button>
+                <button class="key">E</button>
+                <button class="key">R</button>
+                <button class="key">T</button>
+                <button class="key">Y</button>
+                <button class="key">U</button>
+                <button class="key">I</button>
+                <button class="key">O</button>
+                <button class="key">P</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key">A</button>
+                <button class="key">S</button>
+                <button class="key">D</button>
+                <button class="key">F</button>
+                <button class="key">G</button>
+                <button class="key">H</button>
+                <button class="key">J</button>
+                <button class="key">K</button>
+                <button class="key">L</button>
+            </div>
+            <div class="keyboard-row">
+                <button class="key special" id="key-enter">ENTER</button>
+                <button class="key">Z</button>
+                <button class="key">X</button>
+                <button class="key">C</button>
+                <button class="key">V</button>
+                <button class="key">B</button>
+                <button class="key">N</button>
+                <button class="key">M</button>
+                <button class="key special" id="key-backspace"><i class="fas fa-backspace"></i></button>
+            </div>
+        </div>
+        <div id="keyboard-guesses-content" class="alternate-content" style="display: none;">
+            <span id="guesses-title">Your Guesses</span>
+            <div id="guesses-list"></div>
+            <button id="guesses-close-btn" class="control-btn">Close</button>
+        </div>
+        <div id="keyboard-give-up-content" class="alternate-content" style="display: none;">
+            <span class="dialog-message">Are you sure you want to give up?</span>
+            <div class="dialog-buttons">
+                <button id="keyboard-give-up-yes-btn" class="control-btn">Yes</button>
+                <button id="keyboard-give-up-no-btn" class="control-btn">No</button>
+            </div>
         </div>
     </div>
-
+    <div id="ad-box">
+        <p>Big Brain Games</p>
+    </div>
+    <!-- Dialogs -->
+    <div id="give-up-dialog" class="dialog" style="display: none;">
+        <div class="dialog-content">
+            <span class="dialog-message">Are you sure you want to give up?</span>
+            <div class="dialog-buttons">
+                <button id="give-up-yes-btn" class="control-btn">Yes</button>
+                <button id="give-up-no-btn" class="control-btn">No</button>
+            </div>
+        </div>
+    </div>
     <div id="form-error-dialog" class="dialog" style="display: none;">
         <div class="dialog-content">
             <span class="dialog-message"></span>
@@ -179,19 +184,16 @@
             </div>
         </div>
     </div>
-
-    <div id="guesses-screen">
+    <div id="guesses-screen" style="display: none;">
         <div id="guesses-content">
             <span id="guesses-title">Your Guesses</span>
             <div id="guesses-list"></div>
             <button id="guesses-close-btn" class="control-btn">Close</button>
         </div>
     </div>
-
     <script>
-        // Set initial background to prevent flash
         document.getElementById("game-screen").style.background = `url('newbackground.png') no-repeat center top fixed`;
-        document.getElementById("game-screen").style.backgroundSize = "100% calc(100% - 24vh)";
+        document.getElementById("game-screen").style.backgroundSize = "100% 100%";
     </script>
     <script src="script.js"></script>
 </body>
