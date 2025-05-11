@@ -517,12 +517,10 @@ a {
 }
 
 .hints-inline.lines-1::before {
-  display: block;
   height: calc(2.5vh * 1.2 + 0.8vh);
 }
 
 .hints-inline.lines-2::before {
-  display: block;
   height: calc(2.5vh * 1.2 * 2 + 0.8vh);
 }
 
