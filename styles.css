@@ -59,7 +59,7 @@ a {
   top: 5vh; /* Below header */
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 12vh - 20vh - 4vh); /* Header (5vh), game-controls (12vh), keyboard (20vh), adbox (4vh) */
+  height: calc(100vh - 5vh - 12vh - 17.5vh - 4vh); /* Updated: Header (5vh), game-controls (12vh), keyboard (17.5vh), adbox (4vh) */
   background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
   background-size: cover; /* Stretch/squeeze to fit */
   z-index: 10;
@@ -87,10 +87,10 @@ a {
   width: 100vw;
   height: 12vh;
   position: fixed;
-  bottom: calc(20vh + 4vh); /* Above keyboard (20vh) and adbox (4vh) */
+  bottom: calc(17.5vh + 4vh); /* Updated: Above keyboard (17.5vh) and adbox (4vh) */
   left: 0;
   z-index: 20;
-  background: rgba(255, 255, 255, 0.85); /* White background with opacity */
+  background: rgba(255, 255, 255, 0.85) !important; /* Enforce white background */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -198,7 +198,7 @@ a {
 /* Keyboard container */
 .keyboard {
   width: 100vw;
-  height: 20vh;
+  height: 17.5vh; /* Updated: Reduced to fit content (3 rows × 5.5vh + 2 gaps × 0.5vh) */
   position: fixed;
   bottom: 4vh; /* Above adbox (4vh) */
   left: 0;
@@ -245,7 +245,8 @@ a {
   justify-content: center;
   align-items: center;
   gap: 0.5vw; /* Keep the spacing between keys */
-  flex: 1;
+  height: auto; /* Let the row height be determined by content */
+  min-height: 5.5vh; /* Match the key height for consistency */
 }
 
 .key {
@@ -456,6 +457,7 @@ a {
   word-break: break-word;
   z-index: 11;
   margin-bottom: 4.95vh; /* Move up 1.5 lines (3.3vh * 1.5) */
+  position: relative; /* Ensure positioning context for ::before */
 }
 
 .hints-inline .separator {
@@ -475,11 +477,11 @@ a {
   border-radius: 0.6vh;
   padding: 0.5vh 0;
   box-sizing: border-box;
-  display: none;
+  display: block; /* Always display by default */
 }
 
 .hints-inline.lines-0::before {
-  display: none;
+  display: none; /* Hide only when no hints are present */
 }
 
 .hints-inline.lines-1::before {
@@ -944,6 +946,16 @@ a {
   #form-content,
   #game-over {
     background: #000000;
+  }
+  #game-screen {
+    height: calc(100vh - 5vh - 12vh - 17.5vh - 4vh); /* Updated: Ensure consistency */
+    overflow: hidden;
+  }
+  #game-controls-container {
+    bottom: calc(17.5vh + 4vh); /* Updated: Above keyboard (17.5vh) and adbox (4vh) */
+    z-index: 20;
+    display: flex !important;
+    background: rgba(255, 255, 255, 0.85) !important;
   }
 }
 
