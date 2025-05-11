@@ -5,7 +5,7 @@ body {
   text-align: center;
   user-select: none;
   background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Background on body */
-  background-size: cover; /* Ensure background covers entire viewport */
+  background-size: contain; /* Ensure background covers entire viewport */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
