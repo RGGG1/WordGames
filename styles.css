@@ -12,10 +12,16 @@ body {
   overflow: hidden;
 }
 
-/* Links styling */
-a {
-  color: #00BFFF;
-  text-decoration: underline;
+/* Background container to hold the background image for header + game screen */
+#background-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 21.5vh); /* On mobile: Stop at top of game-controls (100vh - (17.5vh + 4vh)) */
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
+  background-size: cover; /* Fit the container dimensions */
+  z-index: 5; /* Below header and game screen but above any other background layers */
 }
 
 /* Header styling */
@@ -26,8 +32,7 @@ a {
   top: 0;
   left: 0;
   z-index: 50;
-  background: url('newbackground.png') no-repeat center center fixed;
-  background-size: cover; /* Stretch/squeeze to fit */
+  background: transparent; /* Background is now on the container */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -36,8 +41,8 @@ a {
 }
 
 /* Black background for header on All Games and End screens */
-#game-select-content.active ~ #header,
-#game-over.active ~ #header {
+#game-select-content.active ~ #background-container,
+#game-over.active ~ #background-container {
   background: #000000 !important;
   background-image: none !important;
 }
@@ -59,9 +64,8 @@ a {
   top: 5vh; /* Below header */
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 12vh - 17.5vh - 4vh); /* Updated: Header (5vh), game-controls (12vh), keyboard (17.5vh), adbox (4vh) */
-  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
-  background-size: cover; /* Stretch/squeeze to fit */
+  height: calc(100vh - 5vh - 12vh - 17.5vh - 4vh); /* Header (5vh), game-controls (12vh), keyboard (17.5vh), adbox (4vh) */
+  background: transparent; /* Background is now on the container */
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -87,7 +91,7 @@ a {
   width: 100vw;
   height: 12vh;
   position: fixed;
-  bottom: calc(17.5vh + 4vh); /* Updated: Above keyboard (17.5vh) and adbox (4vh) */
+  bottom: calc(17.5vh + 4vh); /* Above keyboard (17.5vh) and adbox (4vh) */
   left: 0;
   z-index: 20;
   background: rgba(255, 255, 255, 0.85) !important; /* Enforce white background */
@@ -104,6 +108,69 @@ a {
 #game-select-content.active ~ #game-controls-container,
 #game-over.active ~ #game-controls-container {
   display: none;
+}
+
+/* Keyboard container */
+.keyboard {
+  width: 100vw;
+  height: 17.5vh; /* Reduced to fit content (3 rows × 5.5vh + 2 gaps × 0.5vh) */
+  position: fixed;
+  bottom: 4vh; /* Above adbox (4vh) */
+  left: 0;
+  z-index: 15;
+  background: #FFFFFF; /* White background */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 1vw; /* Thin spacing on the sides */
+  padding-top: 0; /* No top padding */
+  margin-top: 0; /* No top margin */
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Mobile-specific styles */
+@media (max-width: 600px) or (max-height: 600px) {
+  #background-container {
+    height: calc(100vh - 21.5vh); /* Stop at top of game-controls */
+  }
+  #game-screen {
+    height: calc(100vh - 5vh - 12vh - 17.5vh - 4vh); /* Ensure consistency */
+    overflow: hidden;
+  }
+  #game-controls-container {
+    bottom: calc(17.5vh + 4vh); /* Above keyboard (17.5vh) and adbox (4vh) */
+    z-index: 20;
+    display: flex !important;
+    background: rgba(255, 255, 255, 0.85) !important;
+  }
+}
+
+/* Desktop-specific styles */
+@media (min-width: 601px) {
+  #background-container {
+    height: calc(100vh - 4vh); /* Stop at top of game-controls (no keyboard) */
+  }
+  #game-screen {
+    height: calc(100vh - 5vh - 12vh - 4vh); /* Header, game-controls, adbox */
+  }
+  #game-controls-container {
+    height: 12vh;
+    bottom: 4vh; /* Above adbox only, since keyboard is hidden */
+  }
+  .keyboard {
+    display: none !important;
+  }
+}
+
+/* Rest of the CSS remains unchanged */
+a {
+  color: #00BFFF;
+  text-decoration: underline;
+}
+
+#game-select-content.active ~ #keyboard-container {
+  display: none !important;
 }
 
 #game-name-mobile {
@@ -130,7 +197,6 @@ a {
   touch-action: manipulation;
 }
 
-/* Position All Games link in the header */
 #all-games-link {
   font-family: Arial, sans-serif;
   font-size: 1.6vh;
@@ -141,7 +207,6 @@ a {
   margin-right: 2vw;
 }
 
-/* Game number container inside game controls */
 #game-number-container {
   width: 85vw;
   display: flex;
@@ -181,7 +246,7 @@ a {
 }
 
 .nav-arrow {
-  font-size: 6.4vh; /* Increased by 100% from 3.2vh */
+  font-size: 6.4vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
@@ -195,45 +260,15 @@ a {
   cursor: not-allowed;
 }
 
-/* Keyboard container */
-.keyboard {
-  width: 100vw;
-  height: 17.5vh; /* Updated: Reduced to fit content (3 rows × 5.5vh + 2 gaps × 0.5vh) */
-  position: fixed;
-  bottom: 4vh; /* Above adbox (4vh) */
-  left: 0;
-  z-index: 15;
-  background: #FFFFFF; /* White background */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 1vw; /* Thin spacing on the sides */
-  padding-top: 0; /* No top padding */
-  margin-top: 0; /* No top margin */
-  box-sizing: border-box;
-  overflow: hidden;
-}
-
-/* Hide keyboard when game-select-content is active */
-#game-select-content.active ~ #keyboard-container {
-  display: none !important;
-}
-
-@media (min-width: 601px) {
-  .keyboard {
-    display: none !important;
-  }
-}
-
 .keyboard-content {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* Align rows to the top */
+  justify-content: flex-start;
   width: 100%;
   height: 100%;
-  gap: 0.5vh; /* Keep the spacing between rows */
-  margin-top: 0; /* Explicitly remove any top margin */
-  padding-top: 0; /* Explicitly remove any top padding */
+  gap: 0.5vh;
+  margin-top: 0;
+  padding-top: 0;
 }
 
 .keyboard.show-alternate .keyboard-content {
@@ -244,16 +279,16 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.5vw; /* Keep the spacing between keys */
-  height: auto; /* Let the row height be determined by content */
-  min-height: 5.5vh; /* Match the key height for consistency */
+  gap: 0.5vw;
+  height: auto;
+  min-height: 5.5vh;
 }
 
 .key {
   font-size: 2vh;
-  width: 8.5vw; /* Adjusted to match the image proportions */
+  width: 8.5vw;
   max-width: 4.25vh;
-  height: 5.5vh; /* Fixed height to match image proportions */
+  height: 5.5vh;
   background: #D3D6DA;
   border: 0.1vh solid #999999;
   border-radius: 0.5vh;
@@ -266,7 +301,7 @@ a {
 }
 
 .key.special {
-  width: 12.75vw; /* Adjusted for special keys like Enter and Backspace */
+  width: 12.75vw;
   max-width: 6.375vh;
   font-size: 1.8vh;
 }
@@ -309,14 +344,13 @@ a {
   display: flex;
 }
 
-/* Ad box */
 #ad-box {
   width: 100vw;
   height: 4vh;
   position: fixed;
   bottom: 0;
   left: 0;
-  background: #F0F0F0; /* No background image */
+  background: #F0F0F0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -331,7 +365,6 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Guess area styling */
 #guess-area {
   width: 100%;
   display: flex;
@@ -434,7 +467,7 @@ a {
   text-align: center;
   background: none;
   z-index: 12;
-  margin-bottom: 0.5vh; /* Space between label and hints */
+  margin-bottom: 0.5vh;
 }
 
 .hints-inline {
@@ -456,8 +489,8 @@ a {
   flex-wrap: wrap;
   word-break: break-word;
   z-index: 11;
-  margin-bottom: 4.95vh; /* Move up 1.5 lines (3.3vh * 1.5) */
-  position: relative; /* Ensure positioning context for ::before */
+  margin-bottom: 4.95vh;
+  position: relative;
 }
 
 .hints-inline .separator {
@@ -477,11 +510,11 @@ a {
   border-radius: 0.6vh;
   padding: 0.5vh 0;
   box-sizing: border-box;
-  display: block; /* Always display by default */
+  display: block;
 }
 
 .hints-inline.lines-0::before {
-  display: none; /* Hide only when no hints are present */
+  display: none;
 }
 
 .hints-inline.lines-1::before {
@@ -494,29 +527,28 @@ a {
   height: calc(2.75vh * 1.2 * 2 + 1vh);
 }
 
-/* Game select and form content overlays */
 #game-select-content {
   display: none;
   position: fixed;
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
-  background: #000000; /* No background image */
+  height: calc(100vh - 5vh - 4vh);
+  background: #000000;
   z-index: 13;
   flex-direction: column;
   align-items: center;
   padding: 1.5vh 1.5vw;
   box-sizing: border-box;
-  overflow-y: auto; /* Enable scrolling for the entire content */
+  overflow-y: auto;
 }
 
 #game-select-content .game-list-container {
   width: 100%;
-  height: calc(100% - 10vh); /* Adjust height to account for tabs and title */
-  overflow-y: auto; /* Enable scrolling */
+  height: calc(100% - 10vh);
+  overflow-y: auto;
   padding-bottom: 0;
-  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  -webkit-overflow-scrolling: touch;
 }
 
 #form-content {
@@ -526,7 +558,7 @@ a {
   left: 0;
   width: 100%;
   height: 100%;
-  background: #000000; /* No background image */
+  background: #000000;
   z-index: 13;
   flex-direction: column;
   align-items: center;
@@ -669,15 +701,14 @@ a {
   text-transform: none;
 }
 
-/* Game over content */
 #game-over {
   display: none;
   position: fixed;
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
-  background: #000000; /* No background image */
+  height: calc(100vh - 5vh - 4vh);
+  background: #000000;
   z-index: 13;
   flex-direction: column;
   align-items: center;
@@ -686,7 +717,6 @@ a {
   overflow-y: auto;
 }
 
-/* Hide keyboard on game over screen */
 #game-over.active ~ #keyboard-container {
   display: none !important;
 }
@@ -695,7 +725,7 @@ a {
   #game-over {
     position: fixed;
     top: 5vh;
-    height: calc(100vh - 5vh - 4vh); /* Adjust for desktop */
+    height: calc(100vh - 5vh - 4vh);
   }
 }
 
@@ -704,7 +734,7 @@ a {
 }
 
 #game-over #game-number-display {
-  display: none; /* Hide game number display on end screen */
+  display: none;
 }
 
 #game-over #share-section {
@@ -759,7 +789,6 @@ a {
   margin: 0.5vh 0;
 }
 
-/* Dialogs */
 .dialog {
   position: fixed;
   top: 0;
@@ -800,7 +829,6 @@ a {
   padding: 0.5vh 1.5vw;
 }
 
-/* Guesses screen */
 #guesses-screen {
   position: fixed;
   top: 0;
@@ -841,7 +869,6 @@ a {
   text-shadow: 1px 1px 2px #FFFFFF;
 }
 
-/* Buttons */
 .control-btn {
   font-size: clamp(2vh, 2.5vw, 2.5vh);
   padding: 0.5vh 1.5vw;
@@ -865,7 +892,6 @@ a {
   align-items: center;
 }
 
-/* Color classes */
 .green { color: #006400; }
 .yellow { color: #FFB300; }
 .orange { color: #FF4500; }
@@ -880,7 +906,6 @@ a {
   text-shadow: 1px 1px 2px #000000;
 }
 
-/* Animations */
 #guess-input-container.wrong-guess {
   animation: flashRed 0.35s ease;
 }
@@ -934,7 +959,6 @@ a {
   }
 }
 
-/* Mobile-specific styles */
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
     display: flex;
@@ -947,29 +971,11 @@ a {
   #game-over {
     background: #000000;
   }
-  #game-screen {
-    height: calc(100vh - 5vh - 12vh - 17.5vh - 4vh); /* Updated: Ensure consistency */
-    overflow: hidden;
-  }
-  #game-controls-container {
-    bottom: calc(17.5vh + 4vh); /* Updated: Above keyboard (17.5vh) and adbox (4vh) */
-    z-index: 20;
-    display: flex !important;
-    background: rgba(255, 255, 255, 0.85) !important;
-  }
 }
 
-/* Desktop-specific styles */
 @media (min-width: 601px) {
   #game-name-mobile {
     display: none;
-  }
-  #game-controls-container {
-    height: 12vh;
-    bottom: 4vh; /* Above adbox only, since keyboard is hidden */
-  }
-  #game-screen {
-    height: calc(100vh - 5vh - 12vh - 4vh); /* Header, game-controls, adbox */
   }
   #game-select-content {
     position: absolute;
