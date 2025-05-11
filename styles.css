@@ -27,21 +27,18 @@ a {
   left: 0;
   z-index: 50;
   background: url('newbackground.png') no-repeat center center fixed;
-  background-size: contain; /* Fit fully without cropping */
-  background-position: center;
+  background-size: cover; /* Stretch/squeeze to fit */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5vh 2vw;
   box-sizing: border-box;
-  margin: 0; /* Ensure no margin causing gaps */
 }
 
 /* Black background for header on All Games and End screens */
 #game-select-content.active ~ #header,
 #game-over.active ~ #header {
-  background: #000000 !important; /* Higher specificity to override JavaScript */
-  background-image: none !important;
+  background: #000000;
 }
 
 #game-name {
@@ -63,15 +60,13 @@ a {
   width: 100vw;
   height: calc(100vh - 5vh - 12vh - 20vh - 4vh); /* Header, game-controls, keyboard, adbox */
   background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
-  background-size: contain; /* Fit fully without cropping */
-  background-position: center;
+  background-size: cover; /* Stretch/squeeze to fit */
   z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
   overflow: hidden;
   position: relative;
-  margin: 0; /* Ensure no margin causing gaps */
 }
 
 /* Main content (hints, guess box) */
@@ -99,8 +94,6 @@ a {
   flex-direction: column;
   align-items: center;
   padding: 0 2vw;
-  padding-bottom: 0; /* Remove bottom padding */
-  margin-bottom: 0; /* Remove bottom margin */
   box-sizing: border-box;
 }
 
@@ -212,8 +205,6 @@ a {
   flex-direction: column;
   align-items: center;
   padding: 0 1vw; /* Thin spacing on the sides */
-  padding-top: 0; /* Remove top padding */
-  margin-top: 0; /* Remove top margin */
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -460,7 +451,6 @@ a {
   word-break: break-word;
   z-index: 11;
   margin-bottom: 4.95vh; /* Move up 1.5 lines (3.3vh * 1.5) */
-  position: relative; /* Ensure positioning context for ::before */
 }
 
 .hints-inline .separator {
@@ -471,14 +461,14 @@ a {
 .hints-inline::before {
   content: '';
   position: absolute;
-  top: 0; /* Align to the top of the container */
-  left: 0; /* Align to the left */
-  width: 100%; /* Span the full width of the text */
-  height: 100%; /* Span the full height of the text */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 2vw);
   background: rgba(255, 255, 255, 0.4);
-  z-index: -1; /* Ensure it's behind the text */
+  z-index: -1;
   border-radius: 0.6vh;
-  padding: 0.5vh 1vw; /* Adjust padding to match text alignment */
+  padding: 0.5vh 0;
   box-sizing: border-box;
   display: none;
 }
@@ -489,10 +479,12 @@ a {
 
 .hints-inline.lines-1::before {
   display: block;
+  height: calc(2.75vh * 1.2 + 1vh);
 }
 
 .hints-inline.lines-2::before {
   display: block;
+  height: calc(2.75vh * 1.2 * 2 + 1vh);
 }
 
 /* Game select and form content overlays */

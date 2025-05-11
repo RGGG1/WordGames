@@ -1532,33 +1532,25 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     
         // Adjust background
-function adjustBackground() {
-    console.log("Adjusting background to:", currentBackground);
-    if (gameScreen) {
-        if (gameSelectContent.classList.contains("active") || formContent.classList.contains("active")) {
-            gameScreen.style.background = `#FFFFFF`; // Fallback color when overlays are active
-        } else {
-            gameScreen.style.background = `url('${currentBackground}') no-repeat center center fixed, #FFFFFF`;
-            gameScreen.style.backgroundSize = "contain";
-            gameScreen.style.backgroundPosition = "center";
-            gameScreen.style.backgroundAttachment = "fixed";
+        function adjustBackground() {
+            console.log("Adjusting background to:", currentBackground);
+            if (gameScreen) {
+                if (gameSelectContent.classList.contains("active") || formContent.classList.contains("active")) {
+                    gameScreen.style.background = `#FFFFFF`; // Fallback color when overlays are active
+                } else {
+                    gameScreen.style.background = `url('${currentBackground}') no-repeat center center fixed, #FFFFFF`;
+                    gameScreen.style.backgroundSize = "contain";
+                    gameScreen.style.backgroundAttachment = "fixed";
+                }
+                gameScreen.offsetHeight;
+            }
+            if (header) {
+                header.style.background = `url('${currentBackground}') no-repeat center center fixed`;
+                header.style.backgroundSize = "cover";
+                header.style.backgroundAttachment = "fixed";
+                header.offsetHeight;
+            }
         }
-        gameScreen.offsetHeight;
-    }
-    if (header) {
-        // Check if All Games or End screen is active
-        if (gameSelectContent.classList.contains("active") || gameOverScreen.classList.contains("active")) {
-            header.style.background = `#000000`; // Black background for All Games and End screens
-            header.style.backgroundImage = "none";
-        } else {
-            header.style.background = `url('${currentBackground}') no-repeat center center fixed`;
-            header.style.backgroundSize = "contain";
-            header.style.backgroundPosition = "center";
-            header.style.backgroundAttachment = "fixed";
-        }
-        header.offsetHeight;
-    }
-}
     
         window.addEventListener("resize", adjustBackground);
     
