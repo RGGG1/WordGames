@@ -4,7 +4,8 @@ body {
   padding: 0;
   text-align: center;
   user-select: none;
-  background: #FFFFFF;
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Moved background to body */
+  background-size: cover; /* Ensure background covers entire viewport */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -26,8 +27,7 @@ a {
   top: 0;
   left: 0;
   z-index: 50;
-  background: url('newbackground.png') no-repeat center center fixed;
-  background-size: cover; /* Stretch/squeeze to fit */
+  background: transparent; /* Remove background from header */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -38,7 +38,7 @@ a {
 /* Black background for header on All Games and End screens */
 #game-select-content.active ~ #header,
 #game-over.active ~ #header {
-  background: #000000;
+  background: #000000; /* Ensure black background for All Games and game-over screens */
 }
 
 #game-name {
@@ -58,9 +58,8 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 33vh); /* Header, distance to top of game controls (24vh + 9vh) */
-  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
-  background-size: cover; /* Stretch/squeeze to fit */
+  height: calc(100vh - 5vh - 7.5vh - 4vh + 2.5vh); /* Adjusted: +2.5vh, game-controls now 7.5vh */
+  background: transparent; /* Remove background from game-screen */
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -84,9 +83,9 @@ a {
 /* Game controls container with white background */
 #game-controls-container {
   width: 100vw;
-  height: 9vh; /* Reduced from 12vh to fit one line of text */
+  height: 7.5vh; /* Reduced from 9vh to 7.5vh (-1.5vh) */
   position: fixed;
-  bottom: calc(20vh + 4vh); /* Above keyboard and adbox */
+  bottom: calc(19vh + 4vh); /* Adjusted for keyboard height (now 19vh) */
   left: 0;
   z-index: 20;
   background: #FFFFFF; /* Fully opaque white */
@@ -203,7 +202,7 @@ a {
 /* Keyboard container */
 .keyboard {
   width: 100vw;
-  height: 20vh;
+  height: 19vh; /* Reduced from 20vh to 19vh (-1vh) */
   position: fixed;
   bottom: 4vh; /* Above adbox */
   left: 0;
@@ -315,7 +314,7 @@ a {
 /* Ad box */
 #ad-box {
   width: 100vw;
-  height: 4vh;
+  height: 4vh; /* Unchanged */
   position: fixed;
   bottom: 0;
   left: 0;
@@ -345,6 +344,7 @@ a {
   padding: 0;
   z-index: 11;
   position: relative;
+  transform: translateY(-2vh); /* Moved up by 2vh */
 }
 
 #guess-container {
@@ -504,7 +504,7 @@ a {
   left: 0;
   width: 100vw;
   height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
-  background: #000000;
+  background: #000000; /* Black background for All Games screen */
   z-index: 13;
   flex-direction: column;
   align-items: center;
@@ -952,11 +952,11 @@ a {
     display: none;
   }
   #game-controls-container {
-    height: 9vh; /* Consistent height */
+    height: 7.5vh; /* Adjusted for desktop (-1.5vh) */
     bottom: 4vh; /* Above adbox only, since keyboard is hidden */
   }
   #game-screen {
-    height: calc(100vh - 5vh - 9vh - 4vh); /* Header, game-controls, adbox */
+    height: calc(100vh - 5vh - 7.5vh - 4vh + 2.5vh); /* Adjusted: +2.5vh, game-controls now 7.5vh */
   }
   #game-select-content {
     position: absolute;

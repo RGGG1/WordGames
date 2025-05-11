@@ -1532,25 +1532,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     
         // Adjust background
-        function adjustBackground() {
-            console.log("Adjusting background to:", currentBackground);
-            if (gameScreen) {
-                if (gameSelectContent.classList.contains("active") || formContent.classList.contains("active")) {
-                    gameScreen.style.background = `#FFFFFF`; // Fallback color when overlays are active
-                } else {
-                    gameScreen.style.background = `url('${currentBackground}') no-repeat center center fixed, #FFFFFF`;
-                    gameScreen.style.backgroundSize = "contain";
-                    gameScreen.style.backgroundAttachment = "fixed";
-                }
-                gameScreen.offsetHeight;
-            }
-            if (header) {
-                header.style.background = `url('${currentBackground}') no-repeat center center fixed`;
-                header.style.backgroundSize = "cover";
-                header.style.backgroundAttachment = "fixed";
-                header.offsetHeight;
-            }
-        }
+function adjustBackground() {
+    console.log("Adjusting background to:", currentBackground);
+    document.body.style.background = `url('${currentBackground}') no-repeat center center fixed, #FFFFFF`;
+    document.body.style.backgroundSize = "cover";
+    document.body.offsetHeight;
+}
     
         window.addEventListener("resize", adjustBackground);
     
