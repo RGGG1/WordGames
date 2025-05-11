@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
     const gameControlsContainer = document.getElementById("game-controls-container");
+    const header = document.getElementById("header");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -1530,13 +1531,19 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Adjusting background to:", currentBackground);
         if (gameScreen) {
             if (gameSelectContent.classList.contains("active") || formContent.classList.contains("active")) {
-                gameScreen.style.background = `none`;
+                gameScreen.style.background = `#FFFFFF`; // Fallback color when overlays are active
             } else {
-                gameScreen.style.background = `url('${currentBackground}') no-repeat center top fixed`;
-                gameScreen.style.backgroundSize = "cover";
+                gameScreen.style.background = `url('${currentBackground}') no-repeat center center fixed, #FFFFFF`;
+                gameScreen.style.backgroundSize = "contain";
                 gameScreen.style.backgroundAttachment = "fixed";
             }
             gameScreen.offsetHeight;
+        }
+        if (header) {
+            header.style.background = `url('${currentBackground}') no-repeat center center fixed`;
+            header.style.backgroundSize = "cover";
+            header.style.backgroundAttachment = "fixed";
+            header.offsetHeight;
         }
     }
 
@@ -1826,87 +1833,87 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Load game
-    function loadGame(game) {
-        if (!game) {
-            console.error("No game provided to loadGame");
-            return;
-        }
-        console.log("Loading game:", game);
-        resetGame();
-        isLoadingGame = true;
-        try {
-            secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "";
-            if (!secretWord) {
-                throw new Error("Invalid secret word in game data");
-            }
-            hints = [
-                game["Hint 1"]?.toUpperCase() || "",
-                game["Hint 2"]?.toUpperCase() || "",
-                game["Hint 3"]?.toUpperCase() || "",
-                game["Hint 4"]?.toUpperCase() || "",
-                game["Hint 5"]?.toUpperCase() || ""
-            ].filter(hint => hint);
-            if (hints.length === 0) {
-                console.warn("No valid hints provided, initializing empty hints array");
-                hints = [];
-            }
-            hintIndex = 0;
-
-            const isPrivate = game["Display Name"] && game["Display Name"].includes("-");
-            currentGameNumber = isPrivate ? game["Display Name"] : `Game #${game["Game Number"]}`;
-            if (gameNumberText) {
-                gameNumberText.textContent = currentGameNumber;
-            } else {
-                console.error("game-number-text element not found");
-            }
-
-            setupHints();
-            if (guessInput && !gameOver) {
-                guessInput.disabled = false;
-                guessInput.value = "";
-                if (!isMobile) {
-                    guessInput.focus();
-                }
-                activeInput = guessInput;
-                guessInput.dispatchEvent(new Event("guessProcessed"));
-            }
-            if (guessBtn) {
-                guessBtn.disabled = false;
-            }
-            console.log("Game loaded successfully:", { currentGameNumber, secretWord, hints });
-        } catch (error) {
-            console.error("Error loading game:", error.message);
-            if (formErrorDialog && formErrorMessage) {
-                formErrorMessage.textContent = "Failed to load game.";
-                formErrorDialog.style.display = "flex";
-            }
-        } finally {
-            isLoadingGame = false;
-        }
+function loadGame(game) {
+    if (!game) {
+        console.error("No game provided to loadGame");
+        return;
     }
-
-    // Initialize game
-    async function initializeGame() {
-        console.log("Initializing game...");
-        isUILocked = true;
-        isLoadingGame = true;
-        try {
-            await fetchGameData();
-            await fetchPrivateGames();
-            initializeCursor();
-            console.log("Game initialized successfully");
-        } catch (error) {
-            console.error("Initialization error:", error);
-            if (formErrorDialog && formErrorMessage) {
-                formErrorMessage.textContent = "Failed to initialize game.";
-                formErrorDialog.style.display = "flex";
-            }
-        } finally {
-            isUILocked = false;
-            isLoadingGame = false;
+    console.log("Loading game:", game);
+    resetGame();
+    isLoadingGame = true;
+    try {
+        secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "";
+        if (!secretWord) {
+            throw new Error("Invalid secret word in game data");
         }
-    }
+        hints = [
+            game["Hint 1"]?.toUpperCase() || "",
+            game["Hint 2"]?.toUpperCase() || "",
+            game["Hint 3"]?.toUpperCase() || "",
+            game["Hint 4"]?.toUpperCase() || "",
+            game["Hint 5"]?.toUpperCase() || ""
+        ].filter(hint => hint);
+        if (hints.length === 0) {
+            console.warn("No valid hints provided, initializing empty hints array");
+            hints = [];
+        }
+        hintIndex = 0;
 
-    // Start the game
-    initializeGame();
+        const isPrivate = game["Display Name"] && game["Display Name"].includes("-");
+        currentGameNumber = isPrivate ? game["Display Name"] : `Game #${game["Game Number"]}`;
+        if (gameNumberText) {
+            gameNumberText.textContent = currentGameNumber;
+        } else {
+            console.error("game-number-text element not found");
+        }
+
+        setupHints();
+        if (guessInput && !gameOver) {
+            guessInput.disabled = false;
+            guessInput.value = "";
+            if (!isMobile) {
+                guessInput.focus();
+            }
+            activeInput = guessInput;
+            guessInput.dispatchEvent(new Event("guessProcessed"));
+        }
+        if (guessBtn) {
+            guessBtn.disabled = false;
+        }
+        console.log("Game loaded successfully:", { currentGameNumber, secretWord, hints });
+    } catch (error) {
+        console.error("Error loading game:", error.message);
+        if (formErrorDialog && formErrorMessage) {
+            formErrorMessage.textContent = "Failed to load game.";
+            formErrorDialog.style.display = "flex";
+        }
+    } finally {
+        isLoadingGame = false;
+    }
+}
+
+// Initialize game
+async function initializeGame() {
+    console.log("Initializing game...");
+    isUILocked = true;
+    isLoadingGame = true;
+    try {
+        await fetchGameData();
+        await fetchPrivateGames();
+        initializeCursor();
+        console.log("Game initialized successfully");
+    } catch (error) {
+        console.error("Initialization error:", error);
+        if (formErrorDialog && formErrorMessage) {
+            formErrorMessage.textContent = "Failed to initialize game.";
+            formErrorDialog.style.display = "flex";
+        }
+    } finally {
+        isUILocked = false;
+        isLoadingGame = false;
+    }
+}
+
+// Start the game
+initializeGame();
 });

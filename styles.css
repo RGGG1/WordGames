@@ -25,7 +25,7 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 30;
+  z-index: 50; /* Increased z-index to ensure visibility */
   background: url('newbackground.png') no-repeat center center fixed;
   background-size: cover;
   display: flex;
@@ -54,7 +54,7 @@ a {
   width: 100vw;
   height: calc(100vh - 5vh - 12vh - 20vh - 5vh); /* Header, controls, keyboard, adbox, gap */
   background: url('newbackground.png') no-repeat center center fixed, #FFFFFF;
-  background-size: cover;
+  background-size: contain; /* Changed to contain to show full image */
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -162,7 +162,7 @@ a {
 }
 
 .nav-arrow {
-  font-size: 1.6vh;
+  font-size: 3.2vh; /* Doubled from 1.6vh */
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
@@ -188,7 +188,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0.4vh 0.4vw;
+  padding: 0 0.4vw; /* Removed top/bottom padding */
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -210,7 +210,7 @@ a {
   justify-content: space-between;
   width: 100%;
   height: 100%;
-  gap: 0.4vh;
+  gap: 0.8vh; /* Adjusted gap for better spacing */
 }
 
 .keyboard.show-alternate .keyboard-content {
@@ -221,7 +221,7 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.4vw;
+  gap: 0.8vw; /* Increased gap for better spacing between keys */
   flex: 1;
 }
 
@@ -473,14 +473,21 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh);
+  height: calc(100vh - 5vh - 4vh - 6vh); /* Adjusted for header, adbox, and back button */
   background: #000000;
   z-index: 13;
   flex-direction: column;
   align-items: center;
   padding: 1.5vh 1.5vw;
   box-sizing: border-box;
+  overflow: hidden; /* Prevent overflow */
+}
+
+#game-select-content .game-list-container {
+  width: 100%;
+  height: 100%;
   overflow-y: auto;
+  padding-bottom: 0;
 }
 
 #form-content {
@@ -565,7 +572,7 @@ a {
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0;
-  padding-bottom: 2vh; /* Reduced to ensure buttons are below list */
+  padding-bottom: 0; /* Removed padding to fit within container */
 }
 
 .game-list-row {
@@ -583,19 +590,25 @@ a {
   text-shadow: 1px 1px 2px #000000;
 }
 
+.back-btn-container {
+  position: fixed;
+  bottom: 4vh; /* Positioned above the adbox */
+  width: 100vw;
+  background: #000000;
+  z-index: 14;
+  display: flex;
+  justify-content: center;
+  gap: 2vw;
+  padding: 1vh 0;
+  box-sizing: border-box;
+}
+
 #official-back-btn,
 #private-back-btn,
 #create-pineapple {
   font-size: clamp(2vh, 2.5vw, 2.5vh);
   padding: 0.5vh 3vw;
   margin: 0;
-}
-
-.back-btn-container {
-  margin-top: 2vh; /* Two lines of space above buttons */
-  display: flex;
-  justify-content: center;
-  gap: 2vw;
 }
 
 .form-input {
@@ -886,7 +899,7 @@ a {
 /* Mobile-specific styles */
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
-    display: none;
+    display: flex; /* Ensure header is visible on mobile */
   }
   #game-name-mobile {
     display: block;
@@ -913,22 +926,18 @@ a {
   #game-select-content {
     position: absolute;
     top: 0;
-    height: 100%;
+    height: calc(100% - 6vh); /* Adjusted for back button */
   }
   #game-select-content,
   #form-content {
     background: rgba(255, 255, 255, 0.8);
   }
-  #official-back-btn,
-  #private-back-btn,
-  #create-pineapple {
-    position: static;
-    margin: 1vh 0;
+  .back-btn-container {
+    position: fixed;
+    bottom: 4vh;
+    padding: 1vh 0;
   }
   .game-list {
     padding-bottom: 0;
-  }
-  .back-btn-container {
-    margin-top: 1vh;
   }
 }
