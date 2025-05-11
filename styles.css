@@ -25,14 +25,20 @@ a {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 50; /* Increased z-index to ensure visibility */
+  z-index: 50;
   background: url('newbackground.png') no-repeat center center fixed;
   background-size: cover;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between; /* Changed to space-between to position All Games on the right */
   align-items: center;
   padding: 0.5vh 2vw;
   box-sizing: border-box;
+}
+
+/* Black background for header on All Games and End screens */
+#game-select-content.active ~ #header,
+#game-over.active ~ #header {
+  background: #000000;
 }
 
 #game-name {
@@ -60,7 +66,7 @@ a {
   flex-direction: column;
   align-items: center;
   overflow: hidden;
-  position: relative; /* Added to make absolute positioning of hints relative to game-screen */
+  position: relative;
 }
 
 /* Main content (hints, guess box) */
@@ -70,11 +76,12 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end; /* Align content to the bottom */
   position: relative;
   z-index: 11;
 }
 
-/* Game controls container */
+/* Game controls container with white background */
 #game-controls-container {
   width: 100vw;
   height: 12vh;
@@ -82,10 +89,10 @@ a {
   bottom: calc(20vh + 5vh); /* Above keyboard and adbox with gap */
   left: 0;
   z-index: 20;
-  background: none;
+  background: rgba(255, 255, 255, 0.85); /* White background with opacity */
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
+  align-items: center; /* Center the content */
   padding: 0 2vw;
   box-sizing: border-box;
 }
@@ -119,8 +126,15 @@ a {
   touch-action: manipulation;
 }
 
+/* Position All Games link in the header */
 #all-games-link {
-  margin-top: 0.5vh;
+  font-family: Arial, sans-serif;
+  font-size: 1.6vh;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-right: 2vw;
 }
 
 /* Game number container inside game controls */
@@ -163,7 +177,7 @@ a {
 }
 
 .nav-arrow {
-  font-size: 3.2vh; /* Doubled from 1.6vh */
+  font-size: 6.4vh; /* Increased by 100% from 3.2vh */
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
@@ -182,14 +196,14 @@ a {
   width: 100vw;
   height: 20vh;
   position: fixed;
-  bottom: 5vh; /* Adjusted for 1vh gap above adbox */
+  bottom: 5vh;
   left: 0;
   z-index: 15;
   background: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 0.4vw; /* Removed top/bottom padding */
+  padding: 0 1vw; /* Thin spacing on the sides */
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -211,7 +225,7 @@ a {
   justify-content: space-between;
   width: 100%;
   height: 100%;
-  gap: 0.8vh; /* Adjusted gap for better spacing */
+  gap: 0.5vh; /* Reduced gap to fit rows tightly */
 }
 
 .keyboard.show-alternate .keyboard-content {
@@ -222,15 +236,15 @@ a {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 0.8vw; /* Increased gap for better spacing between keys */
+  gap: 0.5vw; /* Adjusted gap to match the image */
   flex: 1;
 }
 
 .key {
   font-size: 2vh;
-  width: 9.2vw;
-  max-width: 4.6vh;
-  height: 100%;
+  width: 8.5vw; /* Adjusted to match the image proportions */
+  max-width: 4.25vh;
+  height: 5.5vh; /* Fixed height to match image proportions */
   background: #D3D6DA;
   border: 0.1vh solid #999999;
   border-radius: 0.5vh;
@@ -243,8 +257,8 @@ a {
 }
 
 .key.special {
-  width: 13.8vw;
-  max-width: 6.9vh;
+  width: 12.75vw; /* Adjusted for special keys like Enter and Backspace */
+  max-width: 6.375vh;
   font-size: 1.8vh;
 }
 
@@ -318,7 +332,7 @@ a {
   margin: 0;
   padding: 0;
   z-index: 11;
-  position: relative; /* Ensure z-index works correctly */
+  position: relative;
 }
 
 #guess-container {
@@ -408,13 +422,10 @@ a {
   font-size: 2.75vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  position: absolute;
-  bottom: calc(2.75vh * 3 + 1.5vh); /* Three lines (2.75vh * 3) plus padding from bottom */
-  left: 50%;
-  transform: translateX(-50%);
   text-align: center;
-  background: none; /* Remove any background */
-  z-index: 12; /* Ensure it appears above hints-container */
+  background: none;
+  z-index: 12;
+  margin-bottom: 0.5vh; /* Space between label and hints */
 }
 
 .hints-inline {
@@ -425,10 +436,6 @@ a {
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   -webkit-text-stroke: 0.08vh #000000;
-  position: absolute;
-  bottom: 1.5vh; /* Two lines from bottom (approx 2.75vh * 2 / 2 + padding) */
-  left: 50%;
-  transform: translateX(-50%);
   text-align: center;
   max-width: 82.5vw;
   white-space: normal;
@@ -440,6 +447,7 @@ a {
   flex-wrap: wrap;
   word-break: break-word;
   z-index: 11;
+  margin-bottom: 1vh; /* Space between hints and guess box */
 }
 
 .hints-inline .separator {
@@ -453,7 +461,7 @@ a {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: calc(100% + 2vw); /* Slightly wider than text to cover padding */
+  width: calc(100% + 2vw);
   background: rgba(255, 255, 255, 0.4);
   z-index: -1;
   border-radius: 0.6vh;
@@ -468,12 +476,12 @@ a {
 
 .hints-inline.lines-1::before {
   display: block;
-  height: calc(2.75vh * 1.2 + 1vh); /* Match single line height */
+  height: calc(2.75vh * 1.2 + 1vh);
 }
 
 .hints-inline.lines-2::before {
   display: block;
-  height: calc(2.75vh * 1.2 * 2 + 1vh); /* Match two-line height */
+  height: calc(2.75vh * 1.2 * 2 + 1vh);
 }
 
 /* Game select and form content overlays */
@@ -483,21 +491,22 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh - 6vh); /* Adjusted for header, adbox, and back button */
+  height: calc(100vh - 5vh - 4vh - 6vh);
   background: #000000;
   z-index: 13;
   flex-direction: column;
   align-items: center;
   padding: 1.5vh 1.5vw;
   box-sizing: border-box;
-  overflow: hidden; /* Prevent overflow */
+  overflow-y: auto; /* Enable scrolling for the entire content */
 }
 
 #game-select-content .game-list-container {
   width: 100%;
-  height: 100%;
-  overflow-y: auto;
+  height: calc(100% - 10vh); /* Adjust height to account for tabs and title */
+  overflow-y: auto; /* Enable scrolling */
   padding-bottom: 0;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 #form-content {
@@ -582,7 +591,7 @@ a {
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0;
-  padding-bottom: 0; /* Removed padding to fit within container */
+  padding-bottom: 0;
 }
 
 .game-list-row {
@@ -602,7 +611,7 @@ a {
 
 .back-btn-container {
   position: fixed;
-  bottom: 4vh; /* Positioned above the adbox */
+  bottom: 4vh;
   width: 100vw;
   background: #000000;
   z-index: 14;
@@ -653,11 +662,11 @@ a {
 /* Game over content */
 #game-over {
   display: none;
-  position: absolute;
-  top: 0;
+  position: fixed; /* Changed to fixed to span full height */
+  top: 5vh; /* Below header */
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
   background: #000000;
   z-index: 13;
   flex-direction: column;
@@ -667,16 +676,25 @@ a {
   overflow-y: auto;
 }
 
+/* Hide keyboard on game over screen */
+#game-over.active ~ #keyboard-container {
+  display: none !important;
+}
+
 @media (min-width: 601px) {
   #game-over {
     position: fixed;
-    bottom: calc(4vh);
-    height: 20vh;
+    top: 5vh;
+    height: calc(100vh - 5vh - 4vh); /* Adjust for desktop */
   }
 }
 
 .keyboard.show-game-over #game-over {
   display: flex;
+}
+
+#game-over #game-number-display {
+  display: none; /* Hide game number display on end screen */
 }
 
 #game-over #share-section {
@@ -815,7 +833,7 @@ a {
 
 /* Buttons */
 .control-btn {
-  font-size: clamp(2vh, 2.5vw, 2  0);
+  font-size: clamp(2vh, 2.5vw, 2.5vh);
   padding: 0.5vh 1.5vw;
   background: #FFB300;
   color: #000000;
@@ -909,7 +927,7 @@ a {
 /* Mobile-specific styles */
 @media (max-width: 600px) or (max-height: 600px) {
   #header {
-    display: flex; /* Ensure header is visible on mobile */
+    display: flex;
   }
   #game-name-mobile {
     display: block;
@@ -936,7 +954,7 @@ a {
   #game-select-content {
     position: absolute;
     top: 0;
-    height: calc(100% - 6vh); /* Adjusted for back button */
+    height: calc(100% - 6vh);
   }
   #game-select-content,
   #form-content {
