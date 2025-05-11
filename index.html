@@ -17,15 +17,6 @@
     <div id="game-screen">
         <!-- Main game content -->
         <div id="main-content">
-            <div id="game-number-container">
-                <span id="give-up-link" class="control-link game-control-left">Give Up</span>
-                <span id="new-game-number-display" class="new-game-number-display">
-                    <span id="prev-game-arrow" class="nav-arrow">←</span>  
-                    <span id="game-number-text"></span>  
-                    <span id="next-game-arrow" class="nav-arrow">→</span>
-                </span>
-                <span id="guesses-link" class="control-link game-control-right">Guesses: 0</span>
-            </div>
             <div id="guess-area">
                 <span id="hints-label">Hints</span>
                 <div id="hints-container" class="hints-inline"></div>
@@ -76,7 +67,9 @@
                     <span>Guesses</span>
                 </div>
                 <div id="official-list" class="game-list"></div>
-                <button id="official-back-btn" class="control-btn">Back</button>
+                <div class="back-btn-container">
+                    <button id="official-back-btn" class="control-btn">Back</button>
+                </div>
             </div>
             <div id="private-games" class="tab-content">
                 <div class="game-list-header">
@@ -85,8 +78,8 @@
                     <span>Guesses</span>
                 </div>
                 <div id="private-list" class="game-list"></div>
-                <button id="private-back-btn" class="control-btn">Back</button>
                 <div class="back-btn-container">
+                    <button id="private-back-btn" class="control-btn">Back</button>
                     <button id="create-pineapple" class="control-btn tap-here">Create a Wordy</button>
                 </div>
             </div>
@@ -109,8 +102,15 @@
     <div id="game-controls-container">
         <span id="game-name-mobile" style="display: none;">WORDY</span>
         <span id="all-games-link" class="control-link">All Games</span>
-        <div class="control-link-placeholder"></div>
-        <div class="control-link-placeholder"></div>
+        <div id="game-number-container">
+            <span id="give-up-link" class="control-link game-control-left">Give Up</span>
+            <span id="new-game-number-display" class="new-game-number-display">
+                <span id="prev-game-arrow" class="nav-arrow">←</span>  
+                <span id="game-number-text"></span>  
+                <span id="next-game-arrow" class="nav-arrow">→</span>
+            </span>
+            <span id="guesses-link" class="control-link game-control-right">Guesses: 0</span>
+        </div>
     </div>
     <div id="keyboard-container" class="keyboard">
         <button id="keyboard-back-btn" class="keyboard-back-btn" style="display: none;"><i class="fas fa-arrow-left"></i></button>
@@ -191,10 +191,6 @@
             <button id="guesses-close-btn" class="control-btn">Close</button>
         </div>
     </div>
-    <script>
-        document.getElementById("game-screen").style.background = `url('newbackground.png') no-repeat center top fixed`;
-        document.getElementById("game-screen").style.backgroundSize = "100% 100%";
-    </script>
     <script src="script.js"></script>
 </body>
 </html>
