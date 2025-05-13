@@ -17,7 +17,7 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: calc(5vh + (100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh));
+  height: calc(5vh + (100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh)); /* Reduced by 0.5 lines */
   background: url('newbackground.png') no-repeat center center;
   background-size: cover;
   z-index: 1;
@@ -47,7 +47,7 @@ a {
 #game-select-content.active ~ #header,
 #form-content.active ~ #header,
 #game-over.active ~ #header {
-  background: #000000;
+  background: #000000 !important; /* Enforce black background */
 }
 
 #game-name {
@@ -66,7 +66,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh);
+  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh); /* Reduced by 0.5 lines */
   background: transparent;
   z-index: 10;
   display: flex;
@@ -102,16 +102,18 @@ a {
   box-sizing: border-box;
 }
 
+/* Hide game controls on end screen */
+#game-over.active ~ #game-controls-container,
+#game-over.active #game-controls-container {
+  display: none !important;
+}
+
 #game-select-content.active ~ #game-screen,
 #game-select-content.active ~ #game-controls-container,
 #game-select-content.active ~ #keyboard-container,
 #game-select-content.active ~ #game-over,
 #game-select-content.active ~ #form-content {
   display: none !important;
-}
-
-#game-over.active ~ #game-controls-container {
-  display: none;
 }
 
 #game-name-mobile {
@@ -187,17 +189,17 @@ a {
 }
 
 .nav-arrow {
-  font-size: 2vh; /* Increased from 1.6vh */
+  font-size: 4vh; /* Increased from 2vh to 4vh (100% increase) */
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
   background: none;
   border: none;
-  padding: 0.5vh 1vw; /* Increased padding for larger touch area */
-  line-height: 2vh;
+  padding: 0.5vh 1vw;
+  line-height: 4vh;
   display: inline-flex;
   align-items: center;
-  touch-action: manipulation; /* Improve touch responsiveness */
+  touch-action: manipulation;
 }
 
 .nav-arrow.disabled {
@@ -216,7 +218,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 1vw;
+  padding: 0 1vw 1.2vh 1vw; /* Added 0.5 lines (2vh * 1.2 * 0.5 = 1.2vh) padding-bottom */
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -439,7 +441,7 @@ a {
   background: none;
   z-index: 12;
   margin-bottom: 2vh;
-  margin-top: 4.125vh; /* Added 1.5 lines (2.75vh * 1.2 * 1.5) */
+  margin-top: 4.125vh; /* 1.5 lines (2.75vh * 1.2 * 1.5) */
 }
 
 .hints-inline {
@@ -447,11 +449,11 @@ a {
   font-weight: bold;
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
+  color: #000000; /* Changed to black for better contrast */
+  text-shadow: 2px 2px 4px #FFFFFF; /* Enhanced shadow for readability */
   -webkit-text-stroke: 0.08vh #000000;
   text-align: center;
-  max-width: 90vw; /* Adjusted to match new background width */
+  max-width: 90vw;
   width: 90vw;
   white-space: normal;
   line-height: 1.2;
@@ -461,11 +463,11 @@ a {
   justify-content: center;
   flex-wrap: wrap;
   word-break: break-word;
-  z-index: 11;
-  background: rgba(255, 255, 255, 0.85); /* New opaque background */
+  z-index: 12; /* Increased to ensure visibility over background */
+  background: rgba(255, 255, 255, 0.85);
   border-radius: 0.6vh;
   padding: 0.5vh 1vw;
-  margin-bottom: calc(4.95vh + 6.6vh + 4.125vh); /* Existing margin + 1.5 lines (2.75vh * 1.2 * 1.5) */
+  margin-bottom: calc(4.95vh + 6.6vh + 4.125vh - 13.2vh); /* Reduced by 4 lines (2.75vh * 1.2 * 4) */
 }
 
 .hints-inline .separator {
@@ -473,9 +475,8 @@ a {
   color: #FFB300;
 }
 
-/* Removed .hints-inline::before and related styles */
 .hints-inline.lines-0 {
-  background: rgba(255, 255, 255, 0.85); /* Ensure background even with no hints */
+  background: rgba(255, 255, 255, 0.85);
 }
 
 /* Animation for letter-by-letter reveal */
@@ -779,7 +780,7 @@ a {
 .dialog-buttons {
   display: flex;
   justify-content: center;
-  gap: 4vw; /* Increased from 2vw to add ~5 characters spacing (2vw ≈ 3 chars, 4vw ≈ 5–6 chars) */
+  gap: 4vw;
 }
 
 .dialog-buttons .control-btn {
@@ -940,7 +941,7 @@ a {
     bottom: 4vh;
   }
   #game-screen {
-    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh);
+    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh); /* Reduced by 0.5 lines */
   }
   #game-select-content {
     position: absolute;
@@ -960,6 +961,6 @@ a {
     padding-bottom: 0;
   }
   #background-container {
-    height: calc(5vh + (100vh - 5vh - 5.2vh - 4vh + 3.5vh));
+    height: calc(5vh + (100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh)); /* Reduced by 0.5 lines */
   }
 }
