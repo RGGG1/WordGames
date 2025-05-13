@@ -4,7 +4,8 @@ body {
   padding: 0;
   text-align: center;
   user-select: none;
-  background: #000000; /* Black background for body */
+  background: url('newbackground.png') no-repeat center center fixed, #FFFFFF; /* Background on body */
+  background-size: contain; /* Ensure background covers entire viewport */
   min-height: 100vh;
   display: flex;
   flex-direction: column;
@@ -26,7 +27,7 @@ a {
   top: 0;
   left: 0;
   z-index: 50;
-  background: transparent; /* Transparent to show game-screen background */
+  background: transparent; /* Transparent to show body background */
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -34,44 +35,10 @@ a {
   box-sizing: border-box;
 }
 
-/* Game screen (background image container) */
-#game-screen {
-  position: fixed;
-  top: 5vh;
-  left: 0;
-  width: 100vw;
-  height: 46.8vh; /* 100vh - header (5vh) - hints (14.5vh) - guess-container (5.2vh) - game-controls (5.2vh) - keyboard (19.3vh) - adbox (4vh) */
-  background: url('newbackground.png') no-repeat center center fixed;
-  background-size: contain; /* Ensure entire image is visible */
-  background-color: transparent; /* Transparent fallback */
-  z-index: 10;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  overflow: hidden;
-  position: relative;
-}
-
-/* Black background for header on All Games, End Game, and Form screens */
+/* Black background for header on All Games and End Game screens */
 #game-select-content.active ~ #header,
-#game-over.active ~ #header,
-#form-content.active ~ #header {
-  background: #000000; /* Explicitly black for these screens */
-}
-
-/* Hide game screen content when overlays are active */
-#game-select-content.active ~ #hints,
-#game-select-content.active ~ #guess-container,
-#game-select-content.active ~ #game-controls-container,
-#game-select-content.active ~ #keyboard-container,
-#game-over.active ~ #hints,
-#game-over.active ~ #guess-container,
-#game-over.active ~ #game-controls-container,
-#game-over.active ~ #keyboard-container,
-#form-content.active ~ #hints,
-#form-content.active ~ #guess-container,
-#form-content.active ~ #keyboard-container {
-  display: none !important;
+#game-over.active ~ #header {
+  background: #000000; /* Explicitly black for All Games and End Game screens */
 }
 
 #game-name {
@@ -85,104 +52,311 @@ a {
   line-height: 2.5vh;
 }
 
-/* Hints container */
-#hints {
-  width: 100vw;
-  height: 14.5vh; /* Fixed height for hints */
+/* Game screen (main content area) */
+#game-screen {
   position: fixed;
-  top: calc(5vh + 46.8vh); /* Below header + game-screen */
+  top: 5vh;
   left: 0;
-  background: #000000; /* Black background */
-  z-index: 11;
+  width: 100vw;
+  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh); /* Updated: header (5vh), game-controls (5.2vh), keyboard (19.3vh), adbox (4vh), +3.5vh (+1vh added) */
+  background: transparent; /* Transparent to show body background */
+  z-index: 10;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Main content (hints, guess box) */
+#main-content {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center; /* Changed from flex-end to center to ensure visibility */
+  position: relative;
+  z-index: 11;
+}
+
+/* Game controls container with white background */
+#game-controls-container {
+  width: 100vw;
+  height: 5.2vh; /* Reduced: 6.5vh - 0.3vh - 1vh = 5.2vh */
+  position: fixed;
+  bottom: calc(19.3vh + 4vh); /* Updated: keyboard (19.3vh) + adbox (4vh) */
+  left: 0;
+  z-index: 20;
+  background: #FFFFFF; /* Fully opaque white */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   padding: 0 2vw;
   box-sizing: border-box;
 }
 
-#hints-label {
-  font-family: 'Luckiest Guy', cursive;
-  font-size: 2.75vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  text-align: center;
-  background: none;
-  z-index: 12;
-  margin-bottom: 0.5vh;
+/* Hide sections when game-select-content is active */
+#game-select-content.active ~ #game-screen,
+#game-select-content.active ~ #game-controls-container,
+#game-select-content.active ~ #keyboard-container,
+#game-select-content.active ~ #game-over,
+#game-select-content.active ~ #form-content {
+  display: none !important;
 }
 
-.hints-inline {
-  font-size: 2.75vh;
-  font-weight: bold;
+/* Hide game controls when game-over is active */
+#game-over.active ~ #game-controls-container {
+  display: none;
+}
+
+#game-name-mobile {
+  font-family: 'Luckiest Guy', cursive;
+  font-size: clamp(2vh, 2.5vw, 2.5vh);
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  font-family: 'Luckiest Guy', cursive;
+  color: #000000;
+  -webkit-text-stroke: 0.1vh #FFFFFF;
+  align-self: flex-start;
+  margin: 0.5vh 2vw;
+}
+
+.control-link {
+  font-family: Arial, sans-serif;
+  font-size: 1.6vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  -webkit-text-stroke: 0.08vh #000000;
-  text-align: center;
-  max-width: 82.5vw;
-  white-space: normal;
-  line-height: 1.2;
-  min-height: calc(2.75vh * 1.2);
+  text-align: right;
+  margin-bottom: 0.5vh;
+  cursor: pointer;
+  text-decoration: underline;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
+
+/* Position All Games link in the header */
+#all-games-link {
+  font-family: Arial, sans-serif;
+  font-size: 1.6vh;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-right: 2vw;
+}
+
+/* Game number container inside game controls */
+#game-number-container {
+  width: 85vw;
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  flex-wrap: wrap;
-  word-break: break-word;
-  z-index: 11;
+  margin: 0.5vh auto;
+  z-index: 12;
 }
 
-.hints-inline .separator {
-  -webkit-text-stroke: 0.08vh #000000;
-  color: #FFB300;
+.new-game-number-display {
+  font-family: Arial, sans-serif;
+  font-size: 1.6vh;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  display: inline-flex;
+  align-items: center; /* Ensure vertical centering */
+  line-height: 1.6vh;
 }
 
-.hints-inline::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: calc(100% + 2vw);
-  background: rgba(255, 255, 255, 0.4);
-  z-index: -1;
-  border-radius: 0.6vh;
-  padding: 0.5vh 0;
-  box-sizing: border-box;
-  display: none;
+.game-control-left,
+.game-control-right {
+  font-family: Arial, sans-serif;
+  font-size: 1.6vh;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  text-decoration: underline;
+  cursor: pointer;
+  width: 20vw;
 }
 
-.hints-inline.lines-0::before {
-  display: none;
+.game-control-left {
+  text-align: left;
 }
 
-.hints-inline.lines-1::before {
-  display: block;
-  height: calc(2.75vh * 1.2 + 1vh);
+.game-control-right {
+  text-align: right;
 }
 
-.hints-inline.lines-2::before {
-  display: block;
-  height: calc(2.75vh * 1.2 * 2 + 1vh);
+.nav-arrow {
+  font-size: 1.6vh; /* Matches game-number-text font-size */
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0 0.5vw; /* Small padding for touch targets */
+  line-height: 1.6vh; /* Match game-number-text line-height */
+  display: inline-flex;
+  align-items: center; /* Center vertically */
 }
 
-/* Guess container */
-#guess-container {
+.nav-arrow.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Keyboard container */
+.keyboard {
   width: 100vw;
-  height: 5.2vh; /* Matches game-controls height for consistency */
+  height: 19.3vh; /* Increased: 19vh + 0.3vh = 19.3vh */
   position: fixed;
-  top: calc(5vh + 46.8vh + 14.5vh); /* Below header + game-screen + hints */
+  bottom: 4vh; /* Above adbox */
   left: 0;
-  background: #000000; /* Black background */
-  z-index: 11;
+  z-index: 15;
+  background: #FFFFFF;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding: 0 2vw;
+  padding: 0 1vw; /* Thin spacing on the sides */
   box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* Hide keyboard when game-select-content or game-over is active */
+#game-select-content.active ~ #keyboard-container,
+#game-over.active ~ #keyboard-container {
+  display: none !important;
+}
+
+@media (min-width: 601px) {
+  .keyboard {
+    display: none !important;
+  }
+}
+
+.keyboard-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Align rows to the top */
+  width: 100%;
+  height: 100%;
+  gap: 0.5vh; /* Keep the spacing between rows */
+  margin-top: 0; /* Explicitly remove any top margin */
+  padding-top: 0; /* Explicitly remove any top padding */
+}
+
+.keyboard.show-alternate .keyboard-content {
+  display: none;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75vw; /* Increased: 0.5vw * 1.5 = 0.75vw */
+  flex: 1;
+}
+
+.key {
+  font-size: 2vh;
+  width: 8.5vw; /* Adjusted to match the image proportions */
+  max-width: 4.25vh;
+  height: 5.5vh; /* Fixed height to match image proportions */
+  background: #D3D6DA;
+  border: 0.1vh solid #999999;
+  border-radius: 0.5vh;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  box-sizing: border-box;
+}
+
+.key.special {
+  width: 12.75vw; /* Adjusted for special keys like Enter and Backspace */
+  max-width: 6.375vh;
+  font-size: 1.8vh;
+}
+
+.keyboard-back-btn {
+  position: absolute;
+  top: 0.5vh;
+  left: 0.5vw;
+  background: none;
+  border: none;
+  font-size: 2.25vh;
+  color: #000000;
+  cursor: pointer;
+  z-index: 16;
+  display: none;
+}
+
+.keyboard-back-btn i {
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+.keyboard.show-alternate .keyboard-back-btn {
+  display: block;
+}
+
+.alternate-content {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 90vw;
+  height: 100%;
+  text-align: center;
+  padding: 1vh 0;
+  box-sizing: border-box;
+}
+
+.keyboard.show-guesses #keyboard-guesses-content,
+.keyboard.show-give-up #keyboard-give-up-content {
+  display: flex;
+}
+
+/* Ad box */
+#ad-box {
+  width: 100vw;
+  height: 4vh; /* Unchanged */
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  background: #F0F0F0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 20;
+  border-top: 0.1vh solid #CCCCCC;
+}
+
+#ad-box p {
+  margin: 0;
+  font-size: 1.5vh;
+  color: #666666;
+  text-shadow: 1px 1px 2px #FFFFFF;
+}
+
+/* Guess area styling */
+#guess-area {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: none;
+  margin: 0;
+  padding: 0;
+  z-index: 11;
+  position: relative;
+  /* Removed transform: translateY(-2vh) to prevent pushing content out of view */
+}
+
+#guess-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0.5vh;
 }
 
 .guess-input-wrapper {
@@ -258,155 +432,96 @@ a {
   display: none !important;
 }
 
-.guess-btn {
-  font-size: 3vh;
-  height: 9vh;
-  width: 30%;
-  background: #FFB300;
-  color: #000000;
-  border: none;
-  border-radius: 0 0.6vh 0.6vh 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-/* Game controls container */
-#game-controls-container {
-  width: 100vw;
-  height: 5.2vh;
-  position: fixed;
-  top: calc(5vh + 46.8vh + 14.5vh + 5.2vh); /* Below header + game-screen + hints + guess-container */
-  left: 0;
-  z-index: 20;
-  background: #FFFFFF; /* Opaque white */
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 2vw;
-  box-sizing: border-box;
-}
-
-#game-name-mobile {
+#hints-label {
   font-family: 'Luckiest Guy', cursive;
-  font-size: clamp(2vh, 2.5vw, 2.5vh);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #000000;
-  -webkit-text-stroke: 0.1vh #FFFFFF;
-  align-self: flex-start;
-  margin: 0.5vh 2vw;
-}
-
-.control-link {
-  font-family: Arial, sans-serif;
-  font-size: 1.6vh;
+  font-size: 2.75vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
-  text-align: right;
-  margin-bottom: 0.5vh;
-  cursor: pointer;
-  text-decoration: underline;
-  pointer-events: auto;
-  touch-action: manipulation;
-}
-
-#all-games-link {
-  font-family: Arial, sans-serif;
-  font-size: 1.6vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  text-decoration: underline;
-  cursor: pointer;
-  margin-right: 2vw;
-}
-
-#game-number-container {
-  width: 85vw;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0.5vh auto;
-  z-index: 12;
-}
-
-.new-game-number-display {
-  font-family: Arial, sans-serif;
-  font-size: 1.6vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  display: inline-flex;
-  align-items: center;
-  line-height: 1.6vh;
-}
-
-.game-control-left,
-.game-control-right {
-  font-family: Arial, sans-serif;
-  font-size: 1.6vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  text-decoration: underline;
-  cursor: pointer;
-  width: 20vw;
-}
-
-.game-control-left {
-  text-align: left;
-}
-
-.game-control-right {
-  text-align: right;
-}
-
-.nav-arrow {
-  font-size: 1.6vh;
-  color: #FFFFFF;
-  text-shadow: 1px 1px 2px #000000;
-  cursor: pointer;
+  text-align: center;
   background: none;
-  border: none;
-  padding: 0 0.5vw;
-  line-height: 1.6vh;
-  display: inline-flex;
-  align-items: center;
+  z-index: 12;
+  margin-bottom: 0.5vh; /* Space between label and hints */
 }
 
-.nav-arrow.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-/* Keyboard container */
-.keyboard {
-  width: 100vw;
-  height: 19.3vh;
-  position: fixed;
-  top: calc(5vh + 46.8vh + 14.5vh + 5.2vh + 5.2vh); /* Below header + game-screen + hints + guess-container + game-controls */
-  left: 0;
-  z-index: 15;
-  background: #FFFFFF;
+.hints-inline {
+  font-size: 2.75vh;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-family: 'Luckiest Guy', cursive;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  -webkit-text-stroke: 0.08vh #000000;
+  text-align: center;
+  max-width: 82.5vw;
+  white-space: normal;
+  line-height: 1.2;
+  min-height: calc(2.75vh * 1.2);
   display: flex;
-  flex-direction: column;
   align-items: center;
-  padding: 0 1vw;
+  justify-content: center;
+  flex-wrap: wrap;
+  word-break: break-word;
+  z-index: 11;
+  margin-bottom: 4.95vh; /* Move up 1.5 lines (3.3vh * 1.5) */
+}
+
+.hints-inline .separator {
+  -webkit-text-stroke: 0.08vh #000000;
+  color: #FFB300;
+}
+
+.hints-inline::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: calc(100% + 2vw);
+  background: rgba(255, 255, 255, 0.4);
+  z-index: -1;
+  border-radius: 0.6vh;
+  padding: 0.5vh 0;
   box-sizing: border-box;
-  overflow: hidden;
+  display: none;
 }
 
-@media (min-width: 601px) {
-  .keyboard {
-    display: none !important;
-  }
+.hints-inline.lines-0::before {
+  display: none;
 }
 
-.keyboard-content {
-  display: flex;
+.hints-inline.lines-1::before {
+  display: block;
+  height: calc(2.75vh * 1.2 + 1vh);
+}
+
+.hints-inline.lines-2::before {
+  display: block;
+  height: calc(2.75vh * 1.2 * 2 + 1vh);
+}
+
+/* Game select and form content overlays */
+#game-select-content {
+  display: none;
+  position: fixed;
+  top: 5vh;
+  left: 0;
+  width: 100vw;
+  height: calc(100vh - 5vh - 4vh); /* Full height minus header and adbox */
+  background: #000000; /* Black background for All Games screen */
+  z-index: 13;
   flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
+  padding: 1.5vh 1.5vw;
+  box-sizing: border-box;
+  overflow-y: auto; /* Enable scrolling for the entire content */
+}
+
+#game-select-content .game-list-container {
   width: 100%;
+  height: calc(100% - 10vh); /* Adjust height to account for tabs and title */
+  overflow-y: auto; /* Enable scrolling */
   padding-bottom: 0;
-  -webkit-overflow-scrolling: touch;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 #form-content {
@@ -469,13 +584,6 @@ a {
 
 .tab-content.active {
   display: flex;
-}
-
-.game-list-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
 }
 
 .game-list-header {
@@ -587,8 +695,16 @@ a {
   #game-over {
     position: fixed;
     top: 5vh;
-    height: calc(100vh - 5vh - 4vh);
+    height: calc(100vh - 5vh - 4vh); /* Adjust for desktop */
   }
+}
+
+.keyboard.show-game-over #game-over {
+  display: flex;
+}
+
+#game-over #game-number-display {
+  display: none; /* Hide game number display on end screen */
 }
 
 #game-over #share-section {
@@ -736,6 +852,19 @@ a {
   cursor: pointer;
 }
 
+.guess-btn {
+  font-size: 3vh;
+  height: 9vh;
+  width: 30%;
+  background: #FFB300;
+  color: #000000;
+  border: none;
+  border-radius: 0 0.6vh 0.6vh 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 /* Color classes */
 .green { color: #006400; }
 .yellow { color: #FFB300; }
@@ -825,18 +954,12 @@ a {
   #game-name-mobile {
     display: none;
   }
-  #game-screen {
-    height: 66.1vh; /* 100vh - header (5vh) - hints (14.5vh) - guess-container (5.2vh) - game-controls (5.2vh) - adbox (4vh) */
-  }
-  #hints {
-    top: calc(5vh + 66.1vh); /* Below header + game-screen */
-  }
-  #guess-container {
-    top: calc(5vh + 66.1vh + 14.5vh); /* Below header + game-screen + hints */
-  }
   #game-controls-container {
-    top: calc(5vh + 66.1vh + 14.5vh + 5.2vh); /* Below header + game-screen + hints + guess-container */
-    bottom: 4vh; /* Above adbox only */
+    height: 5.2vh; /* Updated: 6.5vh - 0.3vh - 1vh = 5.2vh */
+    bottom: 4vh; /* Above adbox only, since keyboard is hidden */
+  }
+  #game-screen {
+    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh); /* Updated for desktop: header (5vh), game-controls (5.2vh), adbox (4vh), +3.5vh */
   }
   #game-select-content {
     position: absolute;
@@ -855,24 +978,4 @@ a {
   .game-list {
     padding-bottom: 0;
   }
-}
-
-/* Ad box */
-#ad-box {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 100vw;
-  height: 4vh;
-  background: #000000;
-  color: #FFFFFF;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 20;
-}
-
-#ad-box p {
-  margin: 0;
-  font-size: 1.6vh;
 }
