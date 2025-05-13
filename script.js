@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const paddingRight = parseFloat(containerStyles.paddingRight);
             const containerWidth = guessInputContainer.offsetWidth;
 
-            let cursorLeft = paddingLeft + textWidth;
+            let cursorLeft = paddingLeft<br> + textWidth;
             const cursorWidth = parseFloat(getComputedStyle(cursor).width);
             const maxLeft = containerWidth - paddingRight - cursorWidth;
 
@@ -1085,7 +1085,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Show game select screen
+        // Show game select screen
     function showGameSelectScreen() {
         console.log("Showing game select overlay", { isUILocked });
         resetScreenDisplays(gameSelectContent);
@@ -1904,4 +1904,3 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Start the game
     initializeGame();
 });
-    

@@ -17,7 +17,7 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: calc(5vh + (100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh)); /* Reduced by 0.5 lines */
+  height: calc(5vh + (100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh)); /* Reduced by additional 0.5 lines */
   background: url('newbackground.png') no-repeat center center;
   background-size: cover;
   z-index: 1;
@@ -43,13 +43,6 @@ a {
   box-sizing: border-box;
 }
 
-/* Black header background for specified screens */
-#game-select-content.active ~ #header,
-#form-content.active ~ #header,
-#game-over.active ~ #header {
-  background: #000000 !important; /* Enforce black background */
-}
-
 #game-name {
   font-family: 'Luckiest Guy', cursive;
   font-size: clamp(2vh, 2.5vw, 2.5vh);
@@ -66,7 +59,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh); /* Reduced by 0.5 lines */
+  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh); /* Reduced by additional 0.5 lines */
   background: transparent;
   z-index: 10;
   display: flex;
@@ -98,7 +91,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 2vw;
+  padding: 0 2vw 1.65vh 2vw; /* Added 0.5 lines (1.65vh) to bottom */
   box-sizing: border-box;
 }
 
@@ -189,7 +182,7 @@ a {
 }
 
 .nav-arrow {
-  font-size: 4vh; /* Increased from 2vh to 4vh (100% increase) */
+  font-size: 4vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
@@ -218,7 +211,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 1vw 1.2vh 1vw; /* Added 0.5 lines (2vh * 1.2 * 0.5 = 1.2vh) padding-bottom */
+  padding: 0 1vw 1.2vh 1vw;
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -441,7 +434,7 @@ a {
   background: none;
   z-index: 12;
   margin-bottom: 2vh;
-  margin-top: 4.125vh; /* 1.5 lines (2.75vh * 1.2 * 1.5) */
+  margin-top: 7.425vh; /* Increased by 1 line (3.3vh) from 4.125vh */
 }
 
 .hints-inline {
@@ -449,12 +442,12 @@ a {
   font-weight: bold;
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
-  color: #000000; /* Changed to black for better contrast */
-  text-shadow: 2px 2px 4px #FFFFFF; /* Enhanced shadow for readability */
+  color: #FFFFFF; /* Changed to white */
+  text-shadow: 2px 2px 4px #000000; /* Adjusted for white text */
   -webkit-text-stroke: 0.08vh #000000;
   text-align: center;
-  max-width: 90vw;
-  width: 90vw;
+  max-width: 85vw; /* Match guess-input-wrapper */
+  width: 85vw; /* Match guess-input-wrapper */
   white-space: normal;
   line-height: 1.2;
   min-height: calc(2.75vh * 1.2 * 2.5); /* 2.5 lines */
@@ -463,11 +456,11 @@ a {
   justify-content: center;
   flex-wrap: wrap;
   word-break: break-word;
-  z-index: 12; /* Increased to ensure visibility over background */
+  z-index: 12;
   background: rgba(255, 255, 255, 0.85);
   border-radius: 0.6vh;
   padding: 0.5vh 1vw;
-  margin-bottom: calc(4.95vh + 6.6vh + 4.125vh - 13.2vh); /* Reduced by 4 lines (2.75vh * 1.2 * 4) */
+  margin-bottom: calc(4.95vh + 6.6vh + 4.125vh - 13.2vh);
 }
 
 .hints-inline .separator {
@@ -678,6 +671,15 @@ a {
   padding: 0.4vh 0.4vw;
   box-sizing: border-box;
   overflow-y: auto;
+  color: #FFFFFF; /* Set all text to white */
+}
+
+#game-over * {
+  color: #FFFFFF !important; /* Ensure all nested elements have white text */
+}
+
+#game-over .control-btn {
+  color: #000000 !important; /* Override for control buttons */
 }
 
 @media (min-width: 601px) {
@@ -928,7 +930,16 @@ a {
   #game-select-content,
   #form-content,
   #game-over {
+    top: 0;
+    height: 100vh;
     background: #000000;
+    z-index: 13; /* Ensure it appears above other content */
+  }
+  /* Hide the header when these screens are active */
+  #game-select-content.active ~ #header,
+  #form-content.active ~ #header,
+  #game-over.active ~ #header {
+    display: none !important;
   }
 }
 
@@ -941,7 +952,7 @@ a {
     bottom: 4vh;
   }
   #game-screen {
-    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh); /* Reduced by 0.5 lines */
+    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh - 1.65vh); /* Reduced by additional 0.5 lines */
   }
   #game-select-content {
     position: absolute;
@@ -961,6 +972,6 @@ a {
     padding-bottom: 0;
   }
   #background-container {
-    height: calc(5vh + (100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh)); /* Reduced by 0.5 lines */
+    height: calc(5vh + (100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh - 1.65vh)); /* Reduced by additional 0.5 lines */
   }
 }
