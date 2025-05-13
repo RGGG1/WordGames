@@ -1778,7 +1778,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, 13500);
     }
 
-        // Reset game
+    // Reset game
     function resetGame() {
         console.log("Resetting game state");
         gameOver = false;
@@ -1813,82 +1813,4 @@ document.addEventListener("DOMContentLoaded", async () => {
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
             hintsContainer.innerHTML = "";
-            hintsContainer.style.display = "block";
-        }
-        const hintsLabel = document.getElementById("hints-label");
-        if (hintsLabel) {
-            hintsLabel.style.visibility = "visible";
-        }
-        if (gameControlsContainer) {
-            gameControlsContainer.style.display = "flex";
-        }
-        if (isMobile && keyboardContainer) {
-            keyboardContainer.style.display = "flex";
-            showKeyboard();
-        }
-        console.log("Game state reset complete");
-    }
-
-    // Load game
-    function loadGame(game) {
-        console.log("Loading game:", game);
-        resetGame();
-        currentGameNumber = game["Display Name"] || `Game #${game["Game Number"]}`;
-        secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "";
-        hints = [
-            game["Hint 1"]?.toUpperCase() || "",
-            game["Hint 2"]?.toUpperCase() || "",
-            game["Hint 3"]?.toUpperCase() || "",
-            game["Hint 4"]?.toUpperCase() || "",
-            game["Hint 5"]?.toUpperCase() || ""
-        ].filter(hint => hint);
-        hintIndex = 0;
-        console.log("Game loaded", { currentGameNumber, secretWord, hints });
-
-        const gameNumberText = document.getElementById("game-number-text");
-        if (gameNumberText) {
-            gameNumberText.textContent = currentGameNumber;
-        }
-
-        const resultsKey = currentGameNumber.includes("- Private") ? "privatePineappleResults" : "pineappleResults";
-        const normalizedGameNumber = currentGameNumber.includes("- Private") 
-            ? currentGameNumber.split(" - ")[0] 
-            : currentGameNumber.replace("Game #", "");
-        const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
-        const pastResult = results[normalizedGameNumber];
-
-        if (pastResult && pastResult.secretWord === secretWord) {
-            console.log("Found past result for game", { normalizedGameNumber, pastResult });
-            if (pastResult.guesses === "Gave Up" || pastResult.guesses === "X") {
-                gaveUp = pastResult.guesses === "Gave Up";
-                endGame(false, gaveUp);
-                return;
-            } else if (pastResult.guesses !== "-") {
-                guessCount = parseInt(pastResult.guesses);
-                guessesLink.textContent = `Guesses: ${guessCount}`;
-                endGame(true);
-                return;
-            }
-        }
-
-        setupHints();
-        if (guessInput && !isMobile) {
-            guessInput.focus();
-            activeInput = guessInput;
-        }
-        initializeCursor();
-    }
-
-    // Initialize game
-    async function initializeGame() {
-        console.log("Initializing game");
-        await fetchPrivateGames();
-        await fetchGameData();
-        initializeCursor();
-        setupEventListeners();
-        setupKeyboardListeners();
-    }
-
-    // Start the game
-    initializeGame();
-});
+            hints
