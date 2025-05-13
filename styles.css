@@ -40,7 +40,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 14.5vh - 5.2vh - 19.3vh - 4vh); /* header (5vh), hints (14.5vh), game-controls (5.2vh), keyboard (19.3vh), adbox (4vh) */
+  height: 46.8vh; /* 100vh - header (5vh) - hints (14.5vh) - guess-container (5.2vh) - game-controls (5.2vh) - keyboard (19.3vh) - adbox (4vh) */
   background: url('newbackground.png') no-repeat center center fixed;
   background-size: contain; /* Ensure entire image is visible */
   background-color: transparent; /* Transparent fallback */
@@ -90,7 +90,7 @@ a {
   width: 100vw;
   height: 14.5vh; /* Fixed height for hints */
   position: fixed;
-  top: calc(5vh + (100vh - 5vh - 14.5vh - 5.2vh - 19.3vh - 4vh)); /* Below game-screen */
+  top: calc(5vh + 46.8vh); /* Below header + game-screen */
   left: 0;
   background: #000000; /* Black background */
   z-index: 11;
@@ -173,7 +173,7 @@ a {
   width: 100vw;
   height: 5.2vh; /* Matches game-controls height for consistency */
   position: fixed;
-  top: calc(5vh + (100vh - 5vh - 14.5vh - 5.2vh - 19.3vh - 4vh) + 14.5vh); /* Below hints */
+  top: calc(5vh + 46.8vh + 14.5vh); /* Below header + game-screen + hints */
   left: 0;
   background: #000000; /* Black background */
   z-index: 11;
@@ -276,7 +276,7 @@ a {
   width: 100vw;
   height: 5.2vh;
   position: fixed;
-  top: calc(5vh + (100vh - 5vh - 14.5vh - 5.2vh - 19.3vh - 4vh) + 14.5vh + 5.2vh); /* Below guess-container */
+  top: calc(5vh + 46.8vh + 14.5vh + 5.2vh); /* Below header + game-screen + hints + guess-container */
   left: 0;
   z-index: 20;
   background: #FFFFFF; /* Opaque white */
@@ -382,7 +382,7 @@ a {
   width: 100vw;
   height: 19.3vh;
   position: fixed;
-  top: calc(5vh + (100vh - 5vh - 14.5vh - 5.2vh - 19.3vh - 4vh) + 14.5vh + 5.2vh + 5.2vh); /* Below game-controls */
+  top: calc(5vh + 46.8vh + 14.5vh + 5.2vh + 5.2vh); /* Below header + game-screen + hints + guess-container + game-controls */
   left: 0;
   z-index: 15;
   background: #FFFFFF;
@@ -826,16 +826,16 @@ a {
     display: none;
   }
   #game-screen {
-    height: calc(100vh - 5vh - 14.5vh - 5.2vh - 4vh); /* No keyboard on desktop */
+    height: 66.1vh; /* 100vh - header (5vh) - hints (14.5vh) - guess-container (5.2vh) - game-controls (5.2vh) - adbox (4vh) */
   }
   #hints {
-    top: calc(5vh + (100vh - 5vh - 14.5vh - 5.2vh - 4vh));
+    top: calc(5vh + 66.1vh); /* Below header + game-screen */
   }
   #guess-container {
-    top: calc(5vh + (100vh - 5vh - 14.5vh - 5.2vh - 4vh) + 14.5vh);
+    top: calc(5vh + 66.1vh + 14.5vh); /* Below header + game-screen + hints */
   }
   #game-controls-container {
-    top: calc(5vh + (100vh - 5vh - 14.5vh - 5.2vh - 4vh) + 14.5vh + 5.2vh);
+    top: calc(5vh + 66.1vh + 14.5vh + 5.2vh); /* Below header + game-screen + hints + guess-container */
     bottom: 4vh; /* Above adbox only */
   }
   #game-select-content {
