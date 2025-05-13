@@ -17,7 +17,7 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: calc(5vh + (100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh)); /* Reduced by 0.5 lines */
+  height: calc(5vh + (100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh)); /* Reduced by 1 line (0.5 for keyboard + 0.5 for game controls) */
   background: url('newbackground.png') no-repeat center center;
   background-size: cover;
   z-index: 1;
@@ -43,11 +43,11 @@ a {
   box-sizing: border-box;
 }
 
-/* Black header background for specified screens */
+/* Hide header on specified screens */
 #game-select-content.active ~ #header,
 #form-content.active ~ #header,
 #game-over.active ~ #header {
-  background: #000000 !important; /* Enforce black background */
+  display: none !important; /* Hide header to allow screens to cover top */
 }
 
 #game-name {
@@ -66,7 +66,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh); /* Reduced by 0.5 lines */
+  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh); /* Reduced by 1 line */
   background: transparent;
   z-index: 10;
   display: flex;
@@ -98,7 +98,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 2vw;
+  padding: 0 2vw 1.65vh 2vw; /* Added 0.5 line padding-bottom */
   box-sizing: border-box;
 }
 
@@ -189,7 +189,7 @@ a {
 }
 
 .nav-arrow {
-  font-size: 4vh; /* Increased from 2vh to 4vh (100% increase) */
+  font-size: 4vh;
   color: #FFFFFF;
   text-shadow: 1px 1px 2px #000000;
   cursor: pointer;
@@ -218,7 +218,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 1vw 1.2vh 1vw; /* Added 0.5 lines (2vh * 1.2 * 0.5 = 1.2vh) padding-bottom */
+  padding: 0 1vw 1.2vh 1vw; /* Adjusted for consistency */
   box-sizing: border-box;
   overflow: hidden;
 }
@@ -347,7 +347,8 @@ a {
   margin: 0;
   padding: 0;
   z-index: 11;
-  position: relative;
+  position: absolute; /* Position absolutely for anchoring */
+  bottom: 3.3vh; /* 1 line from bottom (2.75vh * 1.2) */
 }
 
 #guess-container {
@@ -449,12 +450,12 @@ a {
   font-weight: bold;
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
-  color: #000000; /* Changed to black for better contrast */
-  text-shadow: 2px 2px 4px #FFFFFF; /* Enhanced shadow for readability */
+  color: #FFFFFF; /* White text for mobile */
+  text-shadow: 2px 2px 4px #000000;
   -webkit-text-stroke: 0.08vh #000000;
   text-align: center;
-  max-width: 90vw;
-  width: 90vw;
+  max-width: 85vw; /* Match guess box width */
+  width: 85vw; /* Match guess box width */
   white-space: normal;
   line-height: 1.2;
   min-height: calc(2.75vh * 1.2 * 2.5); /* 2.5 lines */
@@ -463,11 +464,11 @@ a {
   justify-content: center;
   flex-wrap: wrap;
   word-break: break-word;
-  z-index: 12; /* Increased to ensure visibility over background */
+  z-index: 12;
   background: rgba(255, 255, 255, 0.85);
   border-radius: 0.6vh;
   padding: 0.5vh 1vw;
-  margin-bottom: calc(4.95vh + 6.6vh + 4.125vh - 13.2vh); /* Reduced by 4 lines (2.75vh * 1.2 * 4) */
+  margin-bottom: calc(4.95vh + 6.6vh + 4.125vh - 13.2vh); /* Adjusted spacing */
 }
 
 .hints-inline .separator {
@@ -483,7 +484,7 @@ a {
 .hints-inline span.letter {
   display: inline-block;
   opacity: 0;
-  animation: revealLetter 0.05s forwards;
+  animation: revealLetter 0.1s forwards; /* Slowed down from 0.05s to 0.1s */
 }
 
 @keyframes revealLetter {
@@ -493,10 +494,10 @@ a {
 #game-select-content {
   display: none;
   position: fixed;
-  top: 5vh;
+  top: 0; /* Cover header space */
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh);
+  height: 100vh; /* Full height */
   background: #000000;
   z-index: 13;
   flex-direction: column;
@@ -516,11 +517,11 @@ a {
 
 #form-content {
   display: none;
-  position: absolute;
-  top: 0;
+  position: fixed; /* Changed to fixed to cover header */
+  top: 0; /* Cover header space */
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh; /* Full height */
   background: #000000;
   z-index: 13;
   flex-direction: column;
@@ -667,10 +668,10 @@ a {
 #game-over {
   display: none;
   position: fixed;
-  top: 5vh;
+  top: 0; /* Cover header space */
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 4vh);
+  height: 100vh; /* Full height */
   background: #000000;
   z-index: 13;
   flex-direction: column;
@@ -930,6 +931,9 @@ a {
   #game-over {
     background: #000000;
   }
+  #guess-area {
+    bottom: 3.3vh; /* Anchor 1 line from bottom */
+  }
 }
 
 @media (min-width: 601px) {
@@ -939,18 +943,20 @@ a {
   #game-controls-container {
     height: 5.2vh;
     bottom: 4vh;
+    padding-bottom: 0; /* No extra padding on desktop */
   }
   #game-screen {
     height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh); /* Reduced by 0.5 lines */
   }
   #game-select-content {
-    position: absolute;
-    top: 0;
-    height: calc(100% - 6vh);
+    position: fixed;
+    top: 5vh;
+    height: calc(100vh - 5vh - 4vh);
   }
-  #game-select-content,
   #form-content {
-    background: rgba(255, 255, 255, 0.8);
+    position: fixed;
+    top: 5vh;
+    height: calc(100vh - 5vh - 4vh);
   }
   .back-btn-container {
     position: fixed;
@@ -962,5 +968,12 @@ a {
   }
   #background-container {
     height: calc(5vh + (100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh)); /* Reduced by 0.5 lines */
+  }
+  #guess-area {
+    position: relative; /* Reset to relative for desktop */
+    bottom: auto;
+  }
+  .hints-inline {
+    color: #000000; /* Black text for desktop */
   }
 }
