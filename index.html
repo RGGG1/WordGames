@@ -11,95 +11,98 @@
     <link rel="icon" type="image/png" href="wordy_favicon.png">
 </head>
 <body>
-    <div id="header">
-        <span id="game-name">WORDY</span>
-        <span id="all-games-link" class="control-link">All Games</span> <!-- Moved to header -->
-    </div>
-    <div id="game-screen">
-        <!-- Main game content -->
-        <div id="main-content">
-            <div id="guess-area">
-                <span id="hints-label">Hints</span>
-                <div id="hints-container" class="hints-inline"></div>
-                <div id="guess-container">
-                    <div class="guess-input-wrapper">
-                        <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is..</div>
-                            <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
-                            <span class="cursor">|</span>
+    <!-- Added background-container to wrap header and game-screen for background image -->
+    <div id="background-container">
+        <div id="header">
+            <span id="game-name">WORDY</span>
+            <span id="all-games-link" class="control-link">All Games</span>
+        </div>
+        <div id="game-screen">
+            <!-- Main game content -->
+            <div id="main-content">
+                <div id="guess-area">
+                    <span id="hints-label">Hints</span>
+                    <div id="hints-container" class="hints-inline"></div>
+                    <div id="guess-container">
+                        <div class="guess-input-wrapper">
+                            <div id="guess-input-container">
+                                <div id="prompt">The Secret Word is..</div>
+                                <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
+                                <span class="cursor">|</span>
+                            </div>
+                            <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
                         </div>
-                        <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
                     </div>
                 </div>
             </div>
-        </div>
-        <!-- Game over content -->
-        <div id="game-over" class="alternate-content" style="display: none;">
-            <div id="share-section">
-                <div id="share-box">
-                    <div id="share-panel">
-                        <div id="share-text"></div>
+            <!-- Game over content -->
+            <div id="game-over" class="alternate-content" style="display: none;">
+                <div id="share-section">
+                    <div id="share-box">
+                        <div id="share-panel">
+                            <div id="share-text"></div>
+                        </div>
+                    </div>
+                    <div id="share-buttons">
+                        <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                        <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                        <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                        <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
                     </div>
                 </div>
-                <div id="share-buttons">
-                    <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                    <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
-                    <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
-                    <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                <div class="end-buttons">
+                    <button id="next-game-btn-end" class="control-btn">Next Game</button>
+                    <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
                 </div>
             </div>
-            <div class="end-buttons">
-                <button id="next-game-btn-end" class="control-btn">Next Game</button>
-                <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
-            </div>
-        </div>
-        <!-- Game select overlay -->
-        <div id="game-select-content" style="display: none;">
-            <span id="game-list-title">Select a Game</span>
-            <div id="tabs">
-                <span id="official-tab" class="tab-text active">Official</span>
-                <span id="private-tab" class="tab-text">Private</span>
-            </div>
-            <div id="official-games" class="tab-content active">
-                <div class="game-list-container">
-                    <div class="game-list-header">
-                        <span>Game #</span>
-                        <span>Word</span>
-                        <span>Guesses</span>
+            <!-- Game select overlay -->
+            <div id="game-select-content" style="display: none;">
+                <span id="game-list-title">Select a Game</span>
+                <div id="tabs">
+                    <span id="official-tab" class="tab-text active">Official</span>
+                    <span id="private-tab" class="tab-text">Private</span>
+                </div>
+                <div id="official-games" class="tab-content active">
+                    <div class="game-list-container">
+                        <div class="game-list-header">
+                            <span>Game #</span>
+                            <span>Word</span>
+                            <span>Guesses</span>
+                        </div>
+                        <div id="official-list" class="game-list"></div>
                     </div>
-                    <div id="official-list" class="game-list"></div>
+                    <div class="back-btn-container">
+                        <button id="official-back-btn" class="control-btn">Back</button>
+                    </div>
                 </div>
+                <div id="private-games" class="tab-content">
+                    <div class="game-list-container">
+                        <div class="game-list-header">
+                            <span>Name</span>
+                            <span>Word</span>
+                            <span>Guesses</span>
+                        </div>
+                        <div id="private-list" class="game-list"></div>
+                    </div>
+                    <div class="back-btn-container">
+                        <button id="private-back-btn" class="control-btn">Back</button>
+                        <button id="create-pineapple" class="control-btn tap-here">Create a Wordy</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Form content overlay -->
+            <div class="form-content" id="form-content" style="display: none;">
+                <input id="game-name-input" class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
+                <input id="secret-word" class="form-input" type="text" placeholder="Enter Secret Word" maxlength="50">
+                <input id="hint-1" class="form-input" type="text" placeholder="Enter Hint 1" maxlength="50">
+                <input id="hint-2" class="form-input" type="text" placeholder="Enter Hint 2" maxlength="50">
+                <input id="hint-3" class="form-input" type="text" placeholder="Enter Hint 3" maxlength="50">
+                <input id="hint-4" class="form-input" type="text" placeholder="Enter Hint 4" maxlength="50">
+                <input id="hint-5" class="form-input" type="text" placeholder="Enter Hint 5" maxlength="50">
+                <button id="confirm-btn" class="control-btn">Confirm</button>
                 <div class="back-btn-container">
-                    <button id="official-back-btn" class="control-btn">Back</button>
+                    <button id="form-back-btn" class="control-btn">Back</button>
                 </div>
-            </div>
-            <div id="private-games" class="tab-content">
-                <div class="game-list-container">
-                    <div class="game-list-header">
-                        <span>Name</span>
-                        <span>Word</span>
-                        <span>Guesses</span>
-                    </div>
-                    <div id="private-list" class="game-list"></div>
-                </div>
-                <div class="back-btn-container">
-                    <button id="private-back-btn" class="control-btn">Back</button>
-                    <button id="create-pineapple" class="control-btn tap-here">Create a Wordy</button>
-                </div>
-            </div>
-        </div>
-        <!-- Form content overlay -->
-        <div class="form-content" id="form-content" style="display: none;">
-            <input id="game-name-input" class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
-            <input id="secret-word" class="form-input" type="text" placeholder="Enter Secret Word" maxlength="50">
-            <input id="hint-1" class="form-input" type="text" placeholder="Enter Hint 1" maxlength="50">
-            <input id="hint-2" class="form-input" type="text" placeholder="Enter Hint 2" maxlength="50">
-            <input id="hint-3" class="form-input" type="text" placeholder="Enter Hint 3" maxlength="50">
-            <input id="hint-4" class="form-input" type="text" placeholder="Enter Hint 4" maxlength="50">
-            <input id="hint-5" class="form-input" type="text" placeholder="Enter Hint 5" maxlength="50">
-            <button id="confirm-btn" class="control-btn">Confirm</button>
-            <div class="back-btn-container">
-                <button id="form-back-btn" class="control-btn">Back</button>
             </div>
         </div>
     </div>
