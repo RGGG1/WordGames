@@ -301,6 +301,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         input.addEventListener("input", () => {
             console.log("Form input updated:", input.id, input.value);
             input.value = input.value.toUpperCase();
+       emm
         });
     });
 
@@ -470,7 +471,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         };
         keyboardGiveUpContent.addEventListener("click", handler);
-        keyboardGuessesContent.addEventListener("touchstart", handler);
+        keyboardGiveUpContent.addEventListener("touchstart", handler);
     }
 
     // Tab navigation
@@ -773,7 +774,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Arrow states updated", { currentIndex, gameListLength: gameList.length, prevDisabled: currentIndex >= gameList.length - 1, nextDisabled: currentIndex <= 0 });
     }
 
-       // Create a Wordy button
+    // Create a Wordy button
     if (createPineappleBtn && formContent) {
         createPineappleBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
             e.preventDefault();
@@ -1036,7 +1037,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessesCloseBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
-    // Mobile give-up buttons
+       // Mobile give-up buttons
     const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
     const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
 
@@ -1465,7 +1466,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tempContainer.style.fontFamily = "'Luckiest Guy', cursive";
         tempContainer.style.position = "absolute";
         tempContainer.style.visibility = "hidden";
-        tempContainer.style.maxWidth = "82.5vw";
+        tempContainer.style.maxWidth = "90vw"; // Updated to match new hints width
         tempContainer.style.whiteSpace = "normal";
         tempContainer.style.lineHeight = "1.2";
         tempContainer.style.display = "inline-block";
@@ -1481,24 +1482,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         return lines;
     }
 
-    // Update hint fade
+    // Update hint fade (Removed since fade is deleted)
     function updateHintFade(hintsContainer, visibleHints) {
+        // No-op: Fade background removed per requirements
         const lines = calculateHintLines(visibleHints);
-        hintsContainer.classList.remove('lines-1', 'lines-2');
-        if (lines === 1) {
-            hintsContainer.classList.add('lines-1');
-        } else if (lines >= 2) {
-            hintsContainer.classList.add('lines-2');
-        }
+        lastHintLines = lines;
+        console.log("Hint lines calculated:", lines);
     }
 
-    // Build hint HTML
+    // Build hint HTML with letter-by-letter animation
     function buildHintHTML(hintsArray) {
         if (hintsArray.length === 0) return "";
         
         const htmlParts = [];
         hintsArray.forEach((hint, index) => {
-            htmlParts.push(hint);
+            // Wrap each letter in a span for animation, only for the latest hint
+            if (index === hintsArray.length - 1 && index === hintIndex) {
+                const letters = hint.split("").map((letter, i) => {
+                    return `<span class="letter" style="animation-delay: ${i * 0.05}s">${letter}</span>`;
+                }).join("");
+                htmlParts.push(letters);
+            } else {
+                htmlParts.push(hint);
+            }
             if (index < hintsArray.length - 1) {
                 htmlParts.push(' <span class="separator yellow">|</span> ');
             }
@@ -1525,13 +1531,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Hints displayed:", visibleHints, "Lines:", lastHintLines);
         } else {
             hintsContainer.style.display = "block";
-            hintsContainer.classList.add('lines-0');
+            hintsContainer.innerHTML = ""; // Empty but with background
             lastHintLines = 0;
-            console.log("No hints to display yet, reserving space");
+            console.log("No hints to display, showing empty background");
         }
     }
 
-    // Adjust background (Updated to target #background-container)
+    // Adjust background
     function adjustBackground() {
         console.log("Adjusting background to:", currentBackground);
         const backgroundContainer = document.getElementById("background-container");
@@ -1540,7 +1546,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             backgroundContainer.style.backgroundSize = "cover";
             backgroundContainer.offsetHeight; // Force reflow
         }
-        document.body.style.background = "#FFFFFF"; // Ensure body has no background
+        document.body.style.background = "#FFFFFF";
     }
 
     window.addEventListener("resize", adjustBackground);
@@ -1636,7 +1642,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem(resultsKey, JSON.stringify(results));
             console.log(`Game result saved for ${resultsKey}[${normalizedGameNumber}]:`, results[normalizedGameNumber]);
         } else {
-            console.log(`Game result not saved for ${resultsKey}[${normalizedGameNumber}]: existing score '${results[normalizedGameNumber].guesses}' is not '-' and will be preserved`, results[normalizedGameNumber]);
+            console.log(`Game result not saved for ${resultsKey}[${normalizedGameNumber}]: existing score '${results[normalizedGameNumber].guesses}' is not '-' and will be preserved`);
         }
     }
 
@@ -1662,8 +1668,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (hintsContainer) {
             hintsContainer.innerHTML = won ? "Well Done" : "Hard Luck";
             hintsContainer.style.display = "block";
-            hintsContainer.classList.remove('lines-0', 'lines-1', 'lines-2');
-            hintsContainer.classList.add(`lines-${lastHintLines || 1}`);
             console.log("Hints container updated to:", hintsContainer.innerHTML, "Lines:", lastHintLines);
         }
 
@@ -1675,7 +1679,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Ensure keyboard is hidden and game-over screen is shown
         if (isMobile && keyboardContainer) {
-            keyboardContainer.style.display = "none"; // Hide keyboard on mobile
+            keyboardContainer.style.display = "none";
         }
         mainContent.style.display = "none";
         const gameOverScreen = document.getElementById("game-over");
@@ -1686,7 +1690,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gameNumberDisplay = document.getElementById("game-number-display");
 
         if (gameNumberDisplay) {
-            gameNumberDisplay.style.display = "none"; // Ensure game number is hidden
+            gameNumberDisplay.style.display = "none";
         }
 
         let shareMessage;
@@ -1697,7 +1701,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         if (shareText) {
-            shareMessage = shareMessage.replace(currentGameNumber + "\n", ""); // Remove game number from share text
+            shareMessage = shareMessage.replace(currentGameNumber + "\n", "");
             shareText.innerHTML = shareMessage.replace(/\n/g, "<br>");
         }
 
@@ -1807,8 +1811,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
             hintsContainer.innerHTML = "";
-            hintsContainer.style.display = "none";
-            hintsContainer.classList.remove('lines-0', 'lines-1', 'lines-2');
+            hintsContainer.style.display = "block"; // Keep background visible
         }
         const hintsLabel = document.getElementById("hints-label");
         if (hintsLabel) {
@@ -1825,14 +1828,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Game state reset complete");
     }
 
-    // Load game (Updated to prevent loading in completed state)
+    // Load game
     function loadGame(game) {
         if (!game) {
             console.error("No game provided to loadGame");
             return;
         }
         console.log("Loading game:", game);
-        resetGame(); // Ensure game state is fully reset
+        resetGame();
         isLoadingGame = true;
         try {
             secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "";
@@ -1845,7 +1848,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             ].filter(hint => hint.trim() !== "");
             console.log("Loaded hints:", hints);
 
-            hintIndex = 0; // Always start with the first hint for a new game
+            hintIndex = 0;
             currentGameNumber = game["Display Name"] || (game["Game Name"] ? `Game #${game["Game Number"]} - ${game["Game Name"]}` : `Game #${game["Game Number"]}`);
             console.log("Set currentGameNumber:", currentGameNumber);
 
@@ -1863,38 +1866,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             setupHints();
             initializeCursor();
 
-            // Check past results but only apply if the game was explicitly completed
-            const resultsKey = currentGameNumber.includes("- Private") ? "privatePineappleResults" : "pineappleResults";
-            const normalizedGameNumber = currentGameNumber.includes("- Private") 
-                ? currentGameNumber.split(" - ")[0] 
-                : currentGameNumber.replace("Game #", "");
-            const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
-
-            if (results[normalizedGameNumber]) {
-                const pastResult = results[normalizedGameNumber];
-                console.log(`Found past result for ${resultsKey}[${normalizedGameNumber}]:`, pastResult);
-                if (pastResult.secretWord === secretWord) {
-                    if (pastResult.guesses === "Gave Up") {
-                        gaveUp = true;
-                        endGame(false, true);
-                    } else if (pastResult.guesses === "X" || Number.isInteger(parseInt(pastResult.guesses))) {
-                        guessCount = parseInt(pastResult.guesses) || 0;
-                        guesses = Array(guessCount).fill("PAST_GUESS");
-                        if (guessesLink) {
-                            guessesLink.textContent = `Guesses: ${guessCount}`;
-                        }
-                        endGame(true);
-                    } else {
-                        // If past result exists but isn't a completion state, reset for fresh play
-                        console.log("Past result found but not completed, starting fresh");
-                        resetGame();
-                        setupHints();
-                        initializeCursor();
-                    }
-                }
-            } else {
-                console.log("No past result found, starting fresh game");
-            }
+            // Always load as fresh game, regardless of past results
+            console.log("Loading game in fresh state");
+            resetGame();
+            setupHints();
+            initializeCursor();
 
             console.log("Game loaded successfully:", { secretWord, currentGameNumber, hintIndex });
         } catch (error) {
