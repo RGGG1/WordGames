@@ -2,57 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Wordy - Big Brain Word Game</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WORDY</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" as="style" onload="this.rel='stylesheet'" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'" crossorigin>
-    <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-    <link rel="icon" type="image/png" href="wordy_favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
 </head>
 <body>
     <div id="header">
         <span id="game-name">WORDY</span>
-        <span id="all-games-link" class="control-link">All Games</span> <!-- Moved to header -->
+        <span id="all-games-link" class="control-link">All Games</span>
     </div>
     <div id="game-screen">
-        <!-- Main game content -->
-        <div id="main-content">
-            <div id="guess-area">
-                <span id="hints-label">Hints</span>
-                <div id="hints-container" class="hints-inline"></div>
-                <div id="guess-container">
-                    <div class="guess-input-wrapper">
-                        <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is..</div>
-                            <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
-                            <span class="cursor">|</span>
-                        </div>
-                        <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Game over content -->
-        <div id="game-over" class="alternate-content" style="display: none;">
-            <div id="share-section">
-                <div id="share-box">
-                    <div id="share-panel">
-                        <div id="share-text"></div>
-                    </div>
-                </div>
-                <div id="share-buttons">
-                    <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                    <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
-                    <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
-                    <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-            <div class="end-buttons">
-                <button id="next-game-btn-end" class="control-btn">Next Game</button>
-                <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
-            </div>
-        </div>
         <!-- Game select overlay -->
         <div id="game-select-content" style="display: none;">
             <span id="game-list-title">Select a Game</span>
@@ -101,6 +63,40 @@
             <div class="back-btn-container">
                 <button id="form-back-btn" class="control-btn">Back</button>
             </div>
+        </div>
+        <!-- Game over content -->
+        <div id="game-over" class="alternate-content" style="display: none;">
+            <div id="share-section">
+                <div id="share-box">
+                    <div id="share-panel">
+                        <div id="share-text"></div>
+                    </div>
+                </div>
+                <div id="share-buttons">
+                    <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                    <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="end-buttons">
+                <button id="next-game-btn-end" class="control-btn">Next Game</button>
+                <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
+            </div>
+        </div>
+    </div>
+    <div id="hints">
+        <span id="hints-label">Hints</span>
+        <div id="hints-container" class="hints-inline"></div>
+    </div>
+    <div id="guess-container">
+        <div class="guess-input-wrapper">
+            <div id="guess-input-container">
+                <div id="prompt">The Secret Word is..</div>
+                <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
+                <span class="cursor">|</span>
+            </div>
+            <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
         </div>
     </div>
     <div id="game-controls-container">
