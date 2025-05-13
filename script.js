@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchMoved = false;
-    const touchThreshold = 5; // Reduced from 10 to 5 for more sensitivity
+    const touchThreshold = 10;
 
     // Debounce utility
     function debounce(func, wait) {
@@ -1026,7 +1026,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
         guessesCloseBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
-
     // Mobile give-up buttons
     const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
     const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
@@ -1456,7 +1455,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         tempContainer.style.fontFamily = "'Luckiest Guy', cursive";
         tempContainer.style.position = "absolute";
         tempContainer.style.visibility = "hidden";
-        tempContainer.style.maxWidth = "85vw"; // Match hint width
+        tempContainer.style.maxWidth = "90vw";
         tempContainer.style.whiteSpace = "normal";
         tempContainer.style.lineHeight = "1.2";
         tempContainer.style.display = "inline-block";
@@ -1487,7 +1486,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintsArray.forEach((hint, index) => {
             if (index === hintsArray.length - 1 && index === hintIndex) {
                 const letters = hint.split("").map((letter, i) => {
-                    return `<span class="letter" style="animation-delay: ${i * 0.1}s">${letter}</span>`; // Slowed to 0.1s
+                    return `<span class="letter" style="animation-delay: ${i * 0.05}s">${letter}</span>`;
                 }).join("");
                 htmlParts.push(letters);
             } else {
@@ -1656,14 +1655,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         adjustBackground();
 
         if (guessInput && guessInputContainer) {
-            guessInput.value = secretWord; // Show secret word in input
+            guessInput.value = secretWord; // Show secret word in all cases
             guessInputContainer.classList.add("game-ended");
             guessInput.dispatchEvent(new Event("guessProcessed"));
         }
 
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
-            hintsContainer.innerHTML = `Secret word: ${secretWord}`; // Show secret word consistently
+            hintsContainer.innerHTML = won ? "Well Done" : "Hard Luck";
             hintsContainer.style.display = "block";
             console.log("Hints container updated to:", hintsContainer.innerHTML, "Lines:", lastHintLines);
         }
@@ -1813,4 +1812,96 @@ document.addEventListener("DOMContentLoaded", async () => {
         const hintsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
             hintsContainer.innerHTML = "";
-            hints
+            hintsContainer.style.display = "block";
+        }
+        const hintsLabel = document.getElementById("hints-label");
+        if (hintsLabel) {
+            hintsLabel.style.visibility = "visible";
+        }
+        if (animationTimeout) {
+            clearTimeout(animationTimeout);
+            animationTimeout = null;
+        }
+        const pineappleRain = document.querySelector(".pineapple-rain");
+        if (pineappleRain) {
+            pineappleRain.remove();
+        }
+        if (gameControlsContainer) {
+            gameControlsContainer.style.display = "flex";
+        }
+        console.log("Game state reset complete");
+    }
+
+    // Load game
+    function loadGame(game) {
+        if (!game) {
+            console.error("No game provided to loadGame");
+            return;
+        }
+        console.log("Loading game:", game);
+        resetGame();
+        isLoadingGame = true;
+        try {
+            secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "";
+            hints = [
+                game["Hint 1"]?.toUpperCase() || "",
+                game["Hint 2"]?.toUpperCase() || "",
+                game["Hint 3"]?.toUpperCase() || "",
+                game["Hint 4"]?.toUpperCase() || "",
+                game["Hint 5"]?.toUpperCase() || ""
+            ].filter(hint => hint.trim() !== "");
+            console.log("Loaded hints:", hints);
+
+            hintIndex = 0;
+            currentGameNumber = game["Display Name"] || (game["Game Name"] ? `Game #${game["Game Number"]} - ${game["Game Name"]}` : `Game #${game["Game Number"]}`);
+            console.log("Set currentGameNumber:", currentGameNumber);
+
+            if (gameNumberText) {
+                gameNumberText.textContent = currentGameNumber;
+            } else {
+                console.error("game-number-text element not found");
+            }
+
+            const gameNameElements = document.querySelectorAll("#game-name, #game-name-mobile");
+            gameNameElements.forEach(element => {
+                element.textContent = game["Game Name"] ? game["Game Name"].toUpperCase() : "WORDY";
+            });
+
+            setupHints();
+            initializeCursor();
+
+            console.log("Game loaded successfully:", { secretWord, currentGameNumber, hintIndex });
+        } catch (error) {
+            console.error("Error loading game:", error);
+            if (formErrorDialog && formErrorMessage) {
+                formErrorMessage.textContent = "Failed to load game.";
+                formErrorDialog.style.display = "flex";
+            }
+        } finally {
+            isLoadingGame = false;
+        }
+    }
+
+    // Initialize game
+    async function initializeGame() {
+        console.log("Initializing game");
+        await fetchGameData();
+        await fetchPrivateGames();
+        displayGameList();
+        initializeCursor();
+        adjustBackground();
+        setupEventListeners();
+        setupKeyboardListeners();
+
+        if (isMobile && !gameOver) {
+            showKeyboard();
+        } else if (guessInput && !isMobile) {
+            guessInput.focus();
+            activeInput = guessInput;
+        }
+    }
+
+    // Start the game
+    initializeGame();
+});
+    
