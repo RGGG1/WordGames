@@ -1175,250 +1175,137 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Fetch private games
-    async function fetchPrivateGames() {
-        try {
-            console.log("Fetching private games from:", privateUrl);
-            const response = await fetch(privateUrl, {
-                method: "GET",
-                mode: "cors",
-                cache: "no-cache",
-                headers: { "Accept": "text/csv" }
+async function fetchPrivateGames() {
+    try {
+        console.log("Fetching private games from:", privateUrl);
+        const response = await fetch(privateUrl, {
+            method: "GET",
+            mode: "cors",
+            cache: "no-cache",
+            headers: { "Accept": "text/csv" }
+        });
+        if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
+        const text = await response.text();
+
+        const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
+        privateGames = parsed.data
+            .filter(game => game["Game Name"] && game["Secret Word"])
+            .map((game, index) => ({
+                ...game,
+                "Game Number": `P${Date.now()}-${index}`, // Unique ID using timestamp and index
+                "Display Name": `Game #${index + 1} - ${game["Game Name"]}`
+            }))
+            .sort((a, b) => {
+                // Sort by timestamp in descending order (newest first)
+                const aTime = parseInt(a["Game Number"].split('-')[0].substring(1));
+                const bTime = parseInt(b["Game Number"].split('-')[0].substring(1));
+                return bTime - aTime;
             });
-            if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
-            const text = await response.text();
-
-            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
-            privateGames = parsed.data
-                .filter(game => game["Game Name"] && game["Secret Word"])
-                .map((game, index) => ({
-                    ...game,
-                    "Game Number": String(index + 1),
-                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}`
-                }))
-                .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
-            console.log("Parsed private games:", privateGames);
-        } catch (error) {
-            console.error("Error in fetchPrivateGames:", error.message);
-            privateGames = [];
-        }
+        console.log("Parsed private games:", privateGames);
+    } catch (error) {
+        console.error("Error in fetchPrivateGames:", error.message);
+        privateGames = [];
     }
+}
 
-    // Display game list
-    function displayGameList() {
-        const officialList = document.getElementById("official-list");
-        if (officialList) {
-            officialList.innerHTML = "";
-            const gameNameElement = document.getElementById("game-name");
-            if (gameNameElement) {
-                gameNameElement.textContent = "WORDY";
+    const privateList = document.getElementById("private-list");
+if (privateList) {
+    privateList.innerHTML = "";
+    console.log("Populating private games list", privateGames);
+
+    if (!privateGames.length) {
+        privateList.innerHTML = "<div>No private games yet</div>";
+    } else {
+        const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
+        console.log("Private game results from localStorage:", results);
+        privateGames.forEach(game => {
+            const gameNumber = game["Game Number"];
+            const gameName = game["Game Name"].toUpperCase();
+            const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
+            const pastResult = results[gameNumber];
+            let guessesDisplay = '-';
+            let showSecretWord = false;
+
+            if (pastResult && pastResult.secretWord === secretWord) {
+                guessesDisplay = pastResult.guesses;
+                showSecretWord = true; // Show secret word only if game was played
             }
-            console.log("Populating official games list with:", allGames);
 
-            if (!allGames || allGames.length === 0) {
-                console.log("No official games to display");
-                officialList.innerHTML = "<div>No official games available</div>";
-            } else {
-                const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
-                allGames.forEach((game, index) => {
-                    const gameNumber = game["Game Number"];
-                    const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
-                    const pastResult = results[gameNumber];
-                    let guessesDisplay = '-';
-                    if (pastResult) {
-                        if (pastResult.guesses === "Gave Up") {
-                            guessesDisplay = "Gave Up";
-                        } else if (pastResult.guesses === "X") {
-                            guessesDisplay = "X";
-                        } else if (pastResult.secretWord === secretWord) {
-                            guessesDisplay = pastResult.guesses;
-                        }
-                    }
+            const displayWord = showSecretWord ? secretWord : "Play Now";
 
-                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
-                    const displayWord = showSecretWord ? secretWord : "Play Now";
-
-                    const gameItem = document.createElement("div");
-                    gameItem.className = "game-list-row";
-                    gameItem.innerHTML = `
-                        <span>${gameNumber}</span>
-                        <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
-                        <span>${guessesDisplay}</span>
-                    `;
-                    if (isMobile) {
-                        gameItem.addEventListener("touchstart", (e) => {
-                            touchStartX = e.touches[0].clientX;
-                            touchStartY = e.touches[0].clientY;
-                            touchMoved = false;
-                            console.log("Touch started on game item", { x: touchStartX, y: touchStartY });
-                        });
-                        gameItem.addEventListener("touchmove", (e) => {
-                            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
-                            const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-                            if (deltaX > touchThreshold || deltaY > touchThreshold) {
-                                touchMoved = true;
-                                console.log("Touch moved, marking as scroll", { deltaX, deltaY });
-                            }
-                        });
-                        gameItem.addEventListener("touchend", async (e) => {
-                            e.preventDefault();
-                            if (!touchMoved && !isUILocked) {
-                                console.log("Touch ended without movement, selecting game:", game);
-                                isUILocked = true;
-                                currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                                await preloadBackground(currentBackground);
-                                loadGame(game);
-                                resetScreenDisplays(gameScreen);
-                                gameScreen.style.display = "flex";
-                                gameSelectContent.style.display = "none";
-                                gameSelectContent.classList.remove("active");
-                                showKeyboard();
-                                activeInput = guessInput;
-                                if (activeInput && !isMobile) activeInput.focus();
-                                adjustBackground();
-                                setupKeyboardListeners();
-                                const currentIndex = allGames.findIndex(g => g["Game Number"] === game["Game Number"]);
-                                updateArrowStates(currentIndex, allGames);
-                                setTimeout(() => { isUILocked = false; }, 500);
-                            } else {
-                                console.log("Touch ended with movement, ignoring as scroll");
-                            }
-                        });
-                    } else {
-                        gameItem.addEventListener("click", async () => {
-                            console.log("Clicked official game:", game, { isUILocked });
-                            if (isUILocked) return;
-                            isUILocked = true;
-                            currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                            await preloadBackground(currentBackground);
-                            loadGame(game);
-                            resetScreenDisplays(gameScreen);
-                            gameScreen.style.display = "flex";
-                            gameSelectContent.style.display = "none";
-                            gameSelectContent.classList.remove("active");
-                            showKeyboard();
-                            activeInput = guessInput;
-                            if (activeInput && !isMobile) activeInput.focus();
-                            adjustBackground();
-                            setupKeyboardListeners();
-                            const currentIndex = allGames.findIndex(g => g["Game Number"] === game["Game Number"]);
-                            updateArrowStates(currentIndex, allGames);
-                            setTimeout(() => { isUILocked = false; }, 500);
-                        });
-                    }
-                    officialList.appendChild(gameItem);
-                    console.log(`Rendered official game ${gameNumber}: Secret Word: ${secretWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
+            const gameItem = document.createElement("div");
+            gameItem.className = "game-list-row";
+            gameItem.innerHTML = `
+                <span>${gameName}</span>
+                <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
+                <span>${guessesDisplay}</span>
+            `;
+            if (isMobile) {
+                gameItem.addEventListener("touchstart", (e) => {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                    touchMoved = false;
+                    console.log("Touch started on private game item", { x: touchStartX, y: touchStartY });
                 });
-                setTimeout(() => {
-                    officialList.style.display = "none";
-                    officialList.offsetHeight;
-                    officialList.style.display = "flex";
-                    console.log("Forced repaint on official-list");
-                }, 0);
-            }
-        }
-
-        const privateList = document.getElementById("private-list");
-        if (privateList) {
-            privateList.innerHTML = "";
-            console.log("Populating private games list", privateGames);
-
-            if (!privateGames.length) {
-                privateList.innerHTML = "<div>No private games yet</div>";
-            } else {
-                const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
-                console.log("Private game results from localStorage:", results);
-                privateGames.forEach(game => {
-                    const gameNumber = game["Game Number"];
-                    const gameName = game["Game Name"].toUpperCase();
-                    const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
-                    const pastResult = results[gameNumber];
-                    let guessesDisplay = '-';
-                    if (pastResult) {
-                        if (pastResult.guesses === "Gave Up") {
-                            guessesDisplay = "Gave Up";
-                        } else if (pastResult.guesses === "X") {
-                            guessesDisplay = "X";
-                        } else if (pastResult.secretWord === secretWord) {
-                            guessesDisplay = pastResult.guesses;
-                        }
+                gameItem.addEventListener("touchmove", (e) => {
+                    const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+                    const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+                    if (deltaX > touchThreshold || deltaY > touchThreshold) {
+                        touchMoved = true;
+                        console.log("Touch moved on private game, marking as scroll", { deltaX, deltaY });
                     }
-                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
-                    const displayWord = showSecretWord ? secretWord : "Play Now";
-
-                    const gameItem = document.createElement("div");
-                    gameItem.className = "game-list-row";
-                    gameItem.innerHTML = `
-                        <span>${gameName}</span>
-                        <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
-                        <span>${guessesDisplay}</span>
-                    `;
-                    if (isMobile) {
-                        gameItem.addEventListener("touchstart", (e) => {
-                            touchStartX = e.touches[0].clientX;
-                            touchStartY = e.touches[0].clientY;
-                            touchMoved = false;
-                            console.log("Touch started on private game item", { x: touchStartX, y: touchStartY });
-                        });
-                        gameItem.addEventListener("touchmove", (e) => {
-                            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
-                            const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-                            if (deltaX > touchThreshold || deltaY > touchThreshold) {
-                                touchMoved = true;
-                                console.log("Touch moved on private game, marking as scroll", { deltaX, deltaY });
-                            }
-                        });
-                        gameItem.addEventListener("touchend", async (e) => {
-                            e.preventDefault();
-                            if (!touchMoved && !isUILocked) {
-                                console.log("Touch ended without movement, selecting private game:", game);
-                                isUILocked = true;
-                                currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                                await preloadBackground(currentBackground);
-                                loadGame(game);
-                                resetScreenDisplays(gameScreen);
-                                gameScreen.style.display = "flex";
-                                gameSelectContent.style.display = "none";
-                                gameSelectContent.classList.remove("active");
-                                showKeyboard();
-                                activeInput = guessInput;
-                                if (activeInput && !isMobile) activeInput.focus();
-                                adjustBackground();
-                                setupKeyboardListeners();
-                                const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
-                                updateArrowStates(currentIndex, privateGames);
-                                setTimeout(() => { isUILocked = false; }, 500);
-                            } else {
-                                console.log("Touch ended with movement, ignoring as scroll");
-                            }
-                        });
+                });
+                gameItem.addEventListener("touchend", async (e) => {
+                    e.preventDefault();
+                    if (!touchMoved && !isUILocked) {
+                        console.log("Touch ended without movement, selecting private game:", game);
+                        isUILocked = true;
+                        currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                        await preloadBackground(currentBackground);
+                        loadGame(game);
+                        resetScreenDisplays(gameScreen);
+                        gameScreen.style.display = "flex";
+                        gameSelectContent.style.display = "none";
+                        gameSelectContent.classList.remove("active");
+                        showKeyboard();
+                        activeInput = guessInput;
+                        if (activeInput && !isMobile) activeInput.focus();
+                        adjustBackground();
+                        setupKeyboardListeners();
+                        const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
+                        updateArrowStates(currentIndex, privateGames);
+                        setTimeout(() => { isUILocked = false; }, 500);
                     } else {
-                        gameItem.addEventListener("click", async () => {
-                            console.log("Clicked private game:", game, { isUILocked });
-                            if (isUILocked) return;
-                            isUILocked = true;
-                            currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                            await preloadBackground(currentBackground);
-                            loadGame(game);
-                            resetScreenDisplays(gameScreen);
-                            gameScreen.style.display = "flex";
-                            gameSelectContent.style.display = "none";
-                            gameSelectContent.classList.remove("active");
-                            showKeyboard();
-                            activeInput = guessInput;
-                            if (activeInput && !isMobile) activeInput.focus();
-                            adjustBackground();
-                            setupKeyboardListeners();
-                            const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
-                            updateArrowStates(currentIndex, privateGames);
-                            setTimeout(() => { isUILocked = false; }, 500);
-                        });
+                        console.log("Touch ended with movement, ignoring as scroll");
                     }
-                    privateList.appendChild(gameItem);
-                    console.log(`Rendered private game ${gameNumber}: Name: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
+                });
+            } else {
+                gameItem.addEventListener("click", async () => {
+                    console.log("Clicked private game:", game, { isUILocked });
+                    if (isUILocked) return;
+                    isUILocked = true;
+                    currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                    await preloadBackground(currentBackground);
+                    loadGame(game);
+                    resetScreenDisplays(gameScreen);
+                    gameScreen.style.display = "flex";
+                    gameSelectContent.style.display = "none";
+                    gameSelectContent.classList.remove("active");
+                    showKeyboard();
+                    activeInput = guessInput;
+                    if (activeInput && !isMobile) activeInput.focus();
+                    adjustBackground();
+                    setupKeyboardListeners();
+                    const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
+                    updateArrowStates(currentIndex, privateGames);
+                    setTimeout(() => { isUILocked = false; }, 500);
                 });
             }
-        }
+            privateList.appendChild(gameItem);
+            console.log(`Rendered private game ${gameNumber}: Name: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
+        });
     }
+}
 
     // Setup event listeners
     function setupEventListeners() {
