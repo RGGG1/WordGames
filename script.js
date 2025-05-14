@@ -11,6 +11,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let allGames = [];
     let privateGames = [];
     let currentGameNumber = null;
+    let currentGameId = null;
     let guessCount = 0;
     let gaveUp = false;
     let isProcessingGuess = false;
@@ -470,7 +471,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         };
         keyboardGiveUpContent.addEventListener("click", handler);
-        keyboardGiveUpContent.addEventListener("touchstart", handler); // Fixed to reference giveUpContent
+        keyboardGiveUpContent.addEventListener("touchstart", handler);
     }
 
     // Tab navigation
@@ -555,7 +556,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             let normalizedGameNumber;
             let gameType;
             if (currentGameNumber.includes("- Private")) {
-                normalizedGameNumber = currentGameNumber.split(" - ")[0]; // Use P{timestamp}-{index}
+                normalizedGameNumber = currentGameId; // Use raw Game Number
                 gameType = "privatePineapple";
             } else {
                 normalizedGameNumber = currentGameNumber.replace("Game #", "");
@@ -648,15 +649,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             isLoadingGame = true;
             prevGameArrow.style.opacity = "0.7";
             try {
-                if (!currentGameNumber) {
-                    throw new Error("No current game number set");
+                if (!currentGameNumber || !currentGameId) {
+                    throw new Error("No current game number or ID set");
                 }
                 let currentIndex;
                 let gameList;
                 let isPrivate = currentGameNumber.includes("- Private");
                 if (isPrivate) {
-                    const currentNum = currentGameNumber.split(" - ")[0]; // Extract P{timestamp}-{index}
-                    currentIndex = privateGames.findIndex(game => game["Game Number"] === currentNum);
+                    currentIndex = privateGames.findIndex(game => game["Game Number"] === currentGameId);
                     gameList = privateGames;
                 } else {
                     currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
@@ -664,7 +664,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
                 console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length });
                 if (currentIndex === -1) {
-                    throw new Error(`Current game not found in game list: ${currentGameNumber}`);
+                    throw new Error(`Current game not found in game list: ${currentGameNumber}, ID: ${currentGameId}`);
                 }
                 if (currentIndex < gameList.length - 1) {
                     const targetGame = gameList[currentIndex + 1];
@@ -709,15 +709,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             isLoadingGame = true;
             nextGameArrow.style.opacity = "0.7";
             try {
-                if (!currentGameNumber) {
-                    throw new Error("No current game number set");
+                if (!currentGameNumber || !currentGameId) {
+                    throw new Error("No current game number or ID set");
                 }
                 let currentIndex;
                 let gameList;
                 let isPrivate = currentGameNumber.includes("- Private");
                 if (isPrivate) {
-                    const currentNum = currentGameNumber.split(" - ")[0]; // Extract P{timestamp}-{index}
-                    currentIndex = privateGames.findIndex(game => game["Game Number"] === currentNum);
+                    currentIndex = privateGames.findIndex(game => game["Game Number"] === currentGameId);
                     gameList = privateGames;
                 } else {
                     currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
@@ -725,7 +724,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
                 console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length });
                 if (currentIndex === -1) {
-                    throw new Error(`Current game not found in game list: ${currentGameNumber}`);
+                    throw new Error(`Current game not found in game list: ${currentGameNumber}, ID: ${currentGameId}`);
                 }
                 if (currentIndex > 0) {
                     const targetGame = gameList[currentIndex - 1];
@@ -1042,7 +1041,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             let normalizedGameNumber;
             let gameType;
             if (currentGameNumber.includes("- Private")) {
-                normalizedGameNumber = currentGameNumber.split(" - ")[0]; // Use P{timestamp}-{index}
+                normalizedGameNumber = currentGameId; // Use raw Game Number
                 gameType = "privatePineapple";
             } else {
                 normalizedGameNumber = currentGameNumber.replace("Game #", "");
@@ -1492,14 +1491,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (index === hintsArray.length - 1 && index === hintIndex) {
                 // For the latest hint, animate letter by letter, preserving internal spaces
                 const letters = trimmedHint.split("").map((letter, i) => {
-                    // Use   for spaces to ensure proper rendering
-                    const displayChar = letter === " " ? " " : letter;
+                    // Use &nbsp; for spaces to ensure proper rendering
+                    const displayChar = letter === " " ? "&nbsp;" : letter;
                     return `<span class="letter" style="animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                 }).join("");
                 htmlParts.push(letters);
             } else {
                 // For previous hints, display as is, preserving internal spaces
-                htmlParts.push(trimmedHint.replace(/ /g, " "));
+                htmlParts.push(trimmedHint.replace(/ /g, "&nbsp;"));
             }
             if (index < hintsArray.length - 1) {
                 htmlParts.push(' <span class="separator yellow">|</span> ');
@@ -1590,7 +1589,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             let normalizedGameNumber;
             let gameType;
             if (currentGameNumber.includes("- Private")) {
-                normalizedGameNumber = currentGameNumber.split(" - ")[0]; // Use P{timestamp}-{index}
+                normalizedGameNumber = currentGameId; // Use raw Game Number
                 gameType = "privatePineapple";
             } else {
                 normalizedGameNumber = currentGameNumber.replace("Game #", "");
@@ -1621,7 +1620,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 // All hints revealed, end game as loss
                 saveGameResult(
                     currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple",
-                    currentGameNumber.includes("- Private") ? currentGameNumber.split(" - ")[0] : currentGameNumber.replace("Game #", ""),
+                    currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", ""),
                     secretWord,
                     "X"
                 );
@@ -1637,7 +1636,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let normalizedGameNumber = String(gameNumber);
         if (gameType === "pineapple") {
             normalizedGameNumber = gameNumber.replace("Game #", "");
-        } // No change for private games, use full Game Number (P{timestamp}-{index})
+        }
         console.log(`Normalized game number: ${normalizedGameNumber}`);
         const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
         if (!results[normalizedGameNumber] || results[normalizedGameNumber].guesses === '-') {
@@ -1649,7 +1648,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // End game
+        // End game
     function endGame(won, gaveUp = false) {
         console.log("Ending game", { won, gaveUp, guessCount, secretWord });
         gameOver = true;
@@ -1748,6 +1747,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         setupKeyboardListeners();
+
+        // Update private games list if this was a private game
+        if (currentGameNumber.includes("- Private")) {
+            displayGameList();
+            console.log("Private games list updated after game end");
+        }
     }
 
     // Start pineapple rain
@@ -1784,7 +1789,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, 13500);
     }
 
-        // Reset game
+    // Reset game
     function resetGame() {
         console.log("Resetting game state");
         gameOver = false;
@@ -1860,8 +1865,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Loaded hints:", hints);
 
             hintIndex = 0;
+            currentGameId = game["Game Number"];
             currentGameNumber = game["Display Name"] || (game["Game Name"] ? `Game #${game["Game Number"]} - ${game["Game Name"]}` : `Game #${game["Game Number"]}`);
-            console.log("Set currentGameNumber:", currentGameNumber);
+            console.log("Set currentGameId:", currentGameId, "currentGameNumber:", currentGameNumber);
 
             if (gameNumberText) {
                 gameNumberText.textContent = currentGameNumber;
@@ -1877,7 +1883,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             setupHints();
             initializeCursor();
 
-            console.log("Game loaded successfully:", { secretWord, currentGameNumber, hintIndex });
+            console.log("Game loaded successfully:", { secretWord, currentGameId, currentGameNumber, hintIndex });
         } catch (error) {
             console.error("Error loading game:", error);
             if (formErrorDialog && formErrorMessage) {
