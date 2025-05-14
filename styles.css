@@ -434,7 +434,7 @@ a {
   background: none;
   z-index: 12;
   margin-bottom: 2vh;
-  margin-top: 8.075vh; /* Increased by 1.5 lines (4.95vh) from 4.125vh */
+  margin-top: 7.075vh; /* Increased by 1.5 lines (4.95vh) from 4.125vh */
 }
 
 .hints-inline {
