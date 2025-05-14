@@ -655,9 +655,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 let gameList;
                 let isPrivate = currentGameNumber.includes("- Private");
                 if (isPrivate) {
-                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                    currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                    gameList = privateGames;
+                const currentNum = currentGameNumber.split(" - ")[0]; // Extract P{timestamp}-{index}
+                currentIndex = privateGames.findIndex(game => game["Game Number"] === currentNum);
+                gameList = privateGames;
                 } else {
                     currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
                     gameList = allGames;
@@ -716,9 +716,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 let gameList;
                 let isPrivate = currentGameNumber.includes("- Private");
                 if (isPrivate) {
-                    const currentNum = parseInt(currentGameNumber.split(" - ")[0]);
-                    currentIndex = privateGames.findIndex(game => game["Game Number"] === String(currentNum));
-                    gameList = privateGames;
+                const currentNum = currentGameNumber.split(" - ")[0]; // Extract P{timestamp}-{index}
+                currentIndex = privateGames.findIndex(game => game["Game Number"] === currentNum);
+                gameList = privateGames;
                 } else {
                     currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
                     gameList = allGames;
