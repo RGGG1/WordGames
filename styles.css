@@ -17,8 +17,8 @@ body {
   top: 0;
   left: 0;
   width: 100vw;
-  height: calc(5vh + (100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh)); /* Reduced by additional 0.5 lines */
-  background: url('newbackground.png') no-repeat center center;
+  height: calc(5vh + (100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 2.15vh)); /* Adjusted for 0.5vh increase in game controls */
+  background: url('newbackground.png') no-repeat gcenter center;
   background-size: cover;
   z-index: 1;
 }
@@ -59,7 +59,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh); /* Reduced by additional 0.5 lines */
+  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 2.15vh); /* Adjusted for 0.5vh increase in game controls */
   background: transparent;
   z-index: 10;
   display: flex;
@@ -91,7 +91,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 0 2vw 1.65vh 2vw; /* Added 0.5 lines (1.65vh) to bottom */
+  padding: 0 2vw 2.15vh 2vw; /* Increased from 1.65vh to 2.15vh for extra 0.5vh */
   box-sizing: border-box;
 }
 
@@ -434,7 +434,7 @@ a {
   background: none;
   z-index: 12;
   margin-bottom: 2vh;
-  margin-top: 7.425vh; /* Increased by 1 line (3.3vh) from 4.125vh */
+  margin-top: 9.375vh; /* Increased by 1.5 lines (4.95vh) from 7.425vh */
 }
 
 .hints-inline {
@@ -442,15 +442,15 @@ a {
   font-weight: bold;
   text-transform: uppercase;
   font-family: 'Luckiest Guy', cursive;
-  color: #FFFFFF; /* Changed to white */
-  text-shadow: 2px 2px 4px #000000; /* Adjusted for white text */
+  color: #FFFFFF;
+  text-shadow: 2px 2px 4px #000000;
   -webkit-text-stroke: 0.08vh #000000;
   text-align: center;
-  max-width: 85vw; /* Match guess-input-wrapper */
-  width: 85vw; /* Match guess-input-wrapper */
+  max-width: 85vw;
+  width: 85vw;
   white-space: normal;
   line-height: 1.2;
-  min-height: calc(2.75vh * 1.2 * 2.5); /* 2.5 lines */
+  min-height: calc(2.75vh * 1.2 * 2.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -671,15 +671,15 @@ a {
   padding: 0.4vh 0.4vw;
   box-sizing: border-box;
   overflow-y: auto;
-  color: #FFFFFF; /* Set all text to white */
+  color: #FFFFFF;
 }
 
 #game-over * {
-  color: #FFFFFF !important; /* Ensure all nested elements have white text */
+  color: #FFFFFF !important;
 }
 
 #game-over .control-btn {
-  color: #000000 !important; /* Override for control buttons */
+  color: #000000 !important;
 }
 
 @media (min-width: 601px) {
@@ -698,11 +698,34 @@ a {
   display: none;
 }
 
-#game-over #share-section {
+#game-over #result-section {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin: 0.5vh 0;
+}
+
+#game-over #secret-word-label {
+  font-size: 2.5vh;
+  font-family: 'Luckiest Guy', cursive;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  margin-bottom: 0.5vh;
+}
+
+#game-over #secret-word-text {
+  font-size: 3vh;
+  font-family: 'Luckiest Guy', cursive;
+  color: #FFFFFF;
+  text-shadow: 1px 1px 2px #000000;
+  text-transform: uppercase;
+}
+
+#game-over #share-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2.2vh 0; /* 2 lines ≈ 2 * 1.1vh */
 }
 
 #game-over #share-box {
@@ -933,7 +956,7 @@ a {
     top: 0;
     height: 100vh;
     background: #000000;
-    z-index: 13; /* Ensure it appears above other content */
+    z-index: 13;
   }
   /* Hide the header when these screens are active */
   #game-select-content.active ~ #header,
@@ -952,7 +975,7 @@ a {
     bottom: 4vh;
   }
   #game-screen {
-    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh - 1.65vh); /* Reduced by additional 0.5 lines */
+    height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh - 2.15vh); /* Adjusted for 0.5vh increase */
   }
   #game-select-content {
     position: absolute;
@@ -972,6 +995,6 @@ a {
     padding-bottom: 0;
   }
   #background-container {
-    height: calc(5vh + (100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh - 1.65vh)); /* Reduced by additional 0.5 lines */
+    height: calc(5vh + (100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh - 2.15vh)); /* Adjusted for 0.5vh increase */
   }
 }

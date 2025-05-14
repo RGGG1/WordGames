@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
-    const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9p-LX7kc__5-iAMaXz2itGmffgHu0b05_IRvFFAadH64Z-M/pub?output=csv";
+    const privateUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTIMKVHVz5EaVdJ5YfZJwLW72R9aI1Si9 Naomi5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
     const webAppUrl = "https://script.google.com/macros/s/AKfycbyFVSK9mHruHEaX_ImhUobprQczd3JOQWQ9QzK9qwN0kgaAtOLZ_wk2u8HkGifd8oS15w/exec";
     const defaultBackground = "newbackground.png";
 
@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchMoved = false;
-    const touchThreshold = 10;
+    const touchThreshold = 5; // Reduced for increased sensitivity
 
     // Debounce utility
     function debounce(func, wait) {
@@ -132,10 +132,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             const containerStyles = getComputedStyle(guessInputContainer);
             const paddingLeft = parseFloat(containerStyles.paddingLeft);
-            const paddingRight = parseFloat(containerStyles.paddingRight);
+            const paddingantiumRight = parseFloat(containerStyles.paddingRight);
             const containerWidth = guessInputContainer.offsetWidth;
 
-            let cursorLeft = paddingLeft<br> + textWidth;
+            let cursorLeft = paddingLeft + textWidth;
             const cursorWidth = parseFloat(getComputedStyle(cursor).width);
             const maxLeft = containerWidth - paddingRight - cursorWidth;
 
@@ -800,7 +800,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Create Wordy end button triggered", { isUILocked });
             if (isUILocked) return;
-            isUILocked = true;
+            isUILocked = true
+
             resetScreenDisplays(gameSelectContent);
             gameSelectContent.style.display = "flex";
             gameSelectContent.classList.add("active");
@@ -829,7 +830,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (isUILocked) return;
             isUILocked = true;
             resetGame();
-            showGameSelectScreen(); // Navigate to All Games screen
+            showGameSelectScreen();
             document.getElementById("game-over").style.display = "none";
             document.getElementById("game-over").classList.remove("active");
             adjustBackground();
@@ -1026,6 +1027,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
         guessesCloseBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
+
     // Mobile give-up buttons
     const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
     const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
@@ -1085,7 +1087,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-        // Show game select screen
+    // Show game select screen
     function showGameSelectScreen() {
         console.log("Showing game select overlay", { isUILocked });
         resetScreenDisplays(gameSelectContent);
@@ -1102,7 +1104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupKeyboardListeners();
     }
 
-    // Fetch game data with enhanced error handling
+        // Fetch game data with enhanced error handling
     async function fetchGameData() {
         try {
             console.log("Fetching official games from:", officialUrl);
@@ -1341,6 +1343,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             guessesDisplay = pastResult.guesses;
                         }
                     }
+                    // Apply same visibility logic as official games
                     const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
                     const displayWord = showSecretWord ? secretWord : "Play Now";
 
@@ -1413,7 +1416,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         });
                     }
                     privateList.appendChild(gameItem);
-                    console.log(`Rendered private game ${gameNumber}: Name: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
+                    console.log(`Rendered private game ${gameNumber}: Name: ${gameName}, Word: ${displayWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
                 });
             }
         }
@@ -1688,21 +1691,29 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameOverScreen.classList.add("active");
 
         const shareText = document.getElementById("share-text");
+        const secretWordText = document.getElementById("secret-word-text");
         const gameNumberDisplay = document.getElementById("game-number-display");
 
         if (gameNumberDisplay) {
             gameNumberDisplay.style.display = "none";
         }
 
+        // Set secret word text
+        if (secretWordText) {
+            secretWordText.textContent = secretWord;
+        }
+
         let shareMessage;
+        let normalizedGameNumber = currentGameNumber.includes("- Private") 
+            ? `Game #${currentGameNumber.split(" - ")[0]}`
+            : currentGameNumber;
         if (gaveUp || !won) {
-            shareMessage = `Play WORDY\nThe secret word was ${secretWord}`;
+            shareMessage = `Play ${normalizedGameNumber}`;
         } else {
-            shareMessage = `${currentGameNumber}\nI solved WORDY in\n<span class="guess-count">${guessCount}</span>\n${guessCount === 1 ? 'guess' : 'guesses'}`;
+            shareMessage = `I solved ${normalizedGameNumber} in ${guessCount} ${guessCount === 1 ? 'guess' : 'guesses'}`;
         }
 
         if (shareText) {
-            shareMessage = shareMessage.replace(currentGameNumber + "\n", "");
             shareText.innerHTML = shareMessage.replace(/\n/g, "<br>");
         }
 
@@ -1714,18 +1725,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         if (shareButtons.whatsapp) {
-            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
         }
         if (shareButtons.telegram) {
-            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage)}`;
         }
         if (shareButtons.twitter) {
-            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
         }
         if (shareButtons.instagram) {
             shareButtons.instagram.addEventListener("click", (e) => {
                 e.preventDefault();
-                navigator.clipboard.writeText(shareMessage.replace(/<[^>]+>/g, '')).then(() => {
+                navigator.clipboard.writeText(shareMessage).then(() => {
                     alert("Score copied to clipboard! Paste it into your Instagram post.");
                     window.open("https://www.instagram.com/", "_blank");
                 }).catch(err => {
@@ -1809,7 +1820,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameScreen) {
             gameScreen.classList.remove("game-ended");
         }
-        const hintsContainer = document.getElementById("hints-container");
+        const saladsContainer = document.getElementById("hints-container");
         if (hintsContainer) {
             hintsContainer.innerHTML = "";
             hintsContainer.style.display = "block";
