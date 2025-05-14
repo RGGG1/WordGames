@@ -1480,26 +1480,32 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Build hint HTML with letter-by-letter animation
-    function buildHintHTML(hintsArray) {
-        if (hintsArray.length === 0) return "";
-        
-        const htmlParts = [];
-        hintsArray.forEach((hint, index) => {
-            if (index === hintsArray.length - 1 && index === hintIndex) {
-                const letters = hint.split("").map((letter, i) => {
-                    return `<span class="letter" style="animation-delay: ${i * 0.05}s">${letter}</span>`;
-                }).join("");
-                htmlParts.push(letters);
-            } else {
-                htmlParts.push(hint);
-            }
-            if (index < hintsArray.length - 1) {
-                htmlParts.push(' <span class="separator yellow">|</span> ');
-            }
-        });
-        
-        return htmlParts.join("");
-    }
+function buildHintHTML(hintsArray) {
+    if (hintsArray.length === 0) return "";
+    
+    const htmlParts = [];
+    hintsArray.forEach((hint, index) => {
+        // Trim only leading and trailing spaces
+        const trimmedHint = hint.trim();
+        if (index === hintsArray.length - 1 && index === hintIndex) {
+            // For the latest hint, animate letter by letter, preserving internal spaces
+            const letters = trimmedHint.split("").map((letter, i) => {
+                // Use &nbsp; for spaces to ensure proper rendering
+                const displayChar = letter === " " ? "&nbsp;" : letter;
+                return `<span class="letter" style="animation-delay: ${i * 0.05}s">${displayChar}</span>`;
+            }).join("");
+            htmlParts.push(letters);
+        } else {
+            // For previous hints, display as is, preserving internal spaces
+            htmlParts.push(trimmedHint.replace(/ /g, "&nbsp;"));
+        }
+        if (index < hintsArray.length - 1) {
+            htmlParts.push(' <span class="separator yellow">|</span> ');
+        }
+    });
+    
+    return htmlParts.join("");
+}
 
     // Setup hints
     function setupHints() {
