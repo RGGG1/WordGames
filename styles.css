@@ -59,7 +59,7 @@ a {
   top: 5vh;
   left: 0;
   width: 100vw;
-  height: calc(100vh - 5vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh); /* Reduced by additional 0.5 lines */
+  height: calc(100vh - 5vh - 5.2vh - 4vh + 3.5vh - 1.65vh - 1.65vh); /* Reduced by additional 0.5 lines */
   background: transparent;
   z-index: 10;
   display: flex;
@@ -434,7 +434,7 @@ a {
   background: none;
   z-index: 12;
   margin-bottom: 2vh;
-  margin-top: 7.425vh; /* Increased by 1 line (3.3vh) from 4.125vh */
+  margin-top: 9.075vh; /* Increased by 1.5 lines (4.95vh) from 4.125vh */
 }
 
 .hints-inline {

@@ -135,7 +135,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const paddingRight = parseFloat(containerStyles.paddingRight);
             const containerWidth = guessInputContainer.offsetWidth;
 
-            let cursorLeft = paddingLeft<br> + textWidth;
+            let cursorLeft = paddingLeft + textWidth;
             const cursorWidth = parseFloat(getComputedStyle(cursor).width);
             const maxLeft = containerWidth - paddingRight - cursorWidth;
 
@@ -470,7 +470,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         };
         keyboardGiveUpContent.addEventListener("click", handler);
-        keyboardGiveUpContent.addEventListener("touchstart", handler);
+        keyboardGuessesContent.addEventListener("touchstart", handler);
     }
 
     // Tab navigation
@@ -1026,6 +1026,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
         guessesCloseBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
+
     // Mobile give-up buttons
     const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
     const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
@@ -1085,7 +1086,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-        // Show game select screen
+    // Show game select screen
     function showGameSelectScreen() {
         console.log("Showing game select overlay", { isUILocked });
         resetScreenDisplays(gameSelectContent);
@@ -1102,7 +1103,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         setupKeyboardListeners();
     }
 
-    // Fetch game data with enhanced error handling
+        // Fetch game data with enhanced error handling
     async function fetchGameData() {
         try {
             console.log("Fetching official games from:", officialUrl);
