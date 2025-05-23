@@ -17,7 +17,6 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    /* Adjusted height to account for new sections */
     height: calc(5vh + 15vh + (100vh - 5vh - 15vh - 10vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh));
     background: url('newbackground.png') no-repeat center center;
     background-size: cover;
@@ -77,100 +76,108 @@ a {
 
 #hint-section {
     width: 100%;
-    height: 15vh; /* Fixed height for hints section */
+    height: 15vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    margin-top: 5vh; /* Below header */
+    margin-top: 5vh;
     padding: 1vh 0;
     z-index: 12;
 }
 
 .hint {
     font-family: 'Luckiest Guy', cursive;
-    font-size: 2.75vh;
+    font-size: 3.7125vh;
     color: #FFFFFF;
-    text-shadow: 2px 2px 4px #000000;
-    -webkit-text-stroke: 0.08vh #000000;
+    text-shadow: 2.7px 2.7px 5.4px #000000;
+    -webkit-text-stroke: 0.108vh #000000;
     text-align: center;
     max-width: 85vw;
     white-space: normal;
     line-height: 1.2;
-    display: none; /* Hidden by default, shown via JS */
+    display: none;
     align-items: center;
     justify-content: center;
     flex-wrap: wrap;
     word-break: break-word;
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 0.6vh;
-    padding: 0.5vh 1vw;
-    margin: 0.5vh 0;
-}
-
-.hint-speech-bubble {
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 1vh;
+    border-radius: 0.81vh;
+    padding: 0.675vh 1.35vw;
+    margin: 0.675vh 0;
     position: relative;
-    padding: 1vh 2vw;
+    box-sizing: border-box;
 }
 
-.hint-speech-bubble::after {
+.hint-shape-speech-bubble {
+    border-radius: 1.35vh;
+    position: relative;
+}
+.hint-shape-speech-bubble::after {
     content: '';
     position: absolute;
-    bottom: -0.5vh;
-    left: 50%;
+    bottom: calc(-1 * var(--tail-size, 0.675vh));
+    left: var(--tail-pos, 50%);
     transform: translateX(-50%);
-    border-width: 0.5vh 0.5vh 0;
+    border-width: var(--tail-size, 0.675vh) var(--tail-size, 0.675vh) 0;
     border-style: solid;
-    border-color: rgba(255, 255, 255, 0.85) transparent;
+    border-color: inherit transparent;
 }
 
-.hint-star {
-    background: rgba(255, 255, 255, 0.85);
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    padding: 1vh 2vw;
+.hint-shape-star {
+    clip-path: polygon(
+        50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%,
+        50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
+    ); /* Default 5-point star */
+    padding: 1.35vh 2.7vw; /* 35% larger than original 1vh 2vw */
+    box-sizing: border-box;
 }
 
-.hint-circle {
-    background: rgba(255, 255, 255, 0.85);
+.hint-shape-circle {
     border-radius: 50%;
-    padding: 1vh 2vw;
 }
 
-.hint-cloud {
-    background: rgba(255, 255, 255, 0.85);
-    border-radius: 1vh;
+.hint-shape-cloud {
+    border-radius: 1.35vh;
     position: relative;
-    padding: 1vh 2vw;
 }
-
-.hint-cloud::before,
-.hint-cloud::after {
+.hint-shape-cloud::before,
+.hint-shape-cloud::after {
     content: '';
     position: absolute;
-    background: rgba(255, 255, 255, 0.85);
+    background: inherit;
     border-radius: 50%;
 }
-
-.hint-cloud::before {
-    width: 3vh;
-    height: 3vh;
-    top: -1.5vh;
-    left: 20%;
+.hint-shape-cloud::before {
+    width: var(--puff1-size, 4.05vh);
+    height: var(--puff1-size, 4.05vh);
+    top: calc(-1 * var(--puff1-size, 4.05vh) / 2);
+    left: var(--puff1-pos, 20%);
+}
+.hint-shape-cloud::after {
+    width: var(--puff2-size, 2.7vh);
+    height: var(--puff2-size, 2.7vh);
+    top: calc(-1 * var(--puff2-size, 2.7vh) / 2);
+    left: var(--puff2-pos, 40%);
 }
 
-.hint-cloud::after {
-    width: 2vh;
-    height: 2vh;
-    top: -1vh;
-    left: 40%;
-}
-
-.hint-hexagon {
-    background: rgba(255, 255, 255, 0.85);
+.hint-shape-hexagon {
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    padding: 1vh 2vw;
+}
+
+.hint-shape-heart {
+    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 50% 80%, 18% 100%, 0% 38%);
+}
+
+.hint-shape-diamond {
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+.hint-shape-triangle {
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+}
+
+.hint-shape-pentagon {
+    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
 }
 
 .hint span.letter {
@@ -185,7 +192,6 @@ a {
 #game-screen {
     position: relative;
     width: 100vw;
-    /* Adjusted height to fit between hint-section and guess-box */
     height: calc(100vh - 5vh - 15vh - 10vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh);
     background: transparent;
     z-index: 10;
@@ -193,12 +199,13 @@ a {
 
 #guess-box {
     width: 100%;
-    height: 10vh; /* Fixed height for guess box section */
-    display: flex;
+    height: 10vh;
+    display: flex !important;
     justify-content: center;
     align-items: center;
     padding: 1vh 0;
-    z-index: 11;
+    z-index: 100;
+    position: relative;
 }
 
 #guess-area {
@@ -990,6 +997,11 @@ a {
     #form-content.active ~ #header,
     #game-over.active ~ #header {
         display: none !important;
+    }
+    .hint {
+        font-size: 3.7125vh;
+        padding: 0.675vh 1.35vw;
+        margin: 0.675vh 0;
     }
 }
 
