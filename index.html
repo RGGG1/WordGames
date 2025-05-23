@@ -10,7 +10,7 @@
     <meta name="theme-color" content="#FFB300">
     <meta property="og:title" content="WORDY by Big Brain Games">
     <meta property="og:description" content="Can you guess the secret word? Play WORDY and challenge your friends!">
-    <meta property="og:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
+    <meta_PROPERTY="og:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
     <meta property="og:url" content="https://wordy.bigbraingames.net">
     <meta property="og:type" content="website">
     <meta name="twitter:card" content="summary_large_image">
@@ -27,11 +27,16 @@
     <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
 </head>
 <body>
-    <div id="background-container"></div>
+    <!-- Header Section -->
     <div id="header">
         <span id="game-name">WORDY</span>
         <a href="#" id="all-games-link">All Games</a>
     </div>
+
+    <!-- Background Container (for game screen) -->
+    <div id="background-container"></div>
+
+    <!-- Game Screen Section -->
     <div id="main-content">
         <div id="hint-section">
             <div id="hint-1" class="hint"></div>
@@ -40,44 +45,9 @@
             <div id="hint-4" class="hint"></div>
             <div id="hint-5" class="hint"></div>
         </div>
-        <div id="game-screen" class="screen">
-            <!-- Game screen content -->
-        </div>
-        <div id="guess-box">
-            <div id="guess-area">
-                <div id="guess-container">
-                    <div class="guess-input-wrapper">
-                        <div id="guess-input-container">
-                            <div id="prompt">The Secret Word is....</div>
-                            <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
-                            <span class="cursor">|</span>
-                        </div>
-                        <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- Game over content -->
-        <div id="game-over" class="alternate-content" style="display: none;">
-            <div id="share-section">
-                <div id="share-box">
-                    <div id="share-panel">
-                        <div id="share-text"></div>
-                    </div>
-                </div>
-                <div id="share-buttons">
-                    <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                    <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
-                    <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
-                    <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
-                </div>
-            </div>
-            <div class="end-buttons">
-                <button id="next-game-btn-end" class="control-btn">Next Game</button>
-                <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
-            </div>
-        </div>
-        <!-- Game select overlay -->
+        <div id="game-screen" class="screen"></div>
+
+        <!-- Game Select Overlay -->
         <div id="game-select-content" style="display: none;">
             <span id="game-list-title">Select a Game</span>
             <div id="tabs">
@@ -112,7 +82,8 @@
                 </div>
             </div>
         </div>
-        <!-- Form content overlay -->
+
+        <!-- Form Content Overlay -->
         <div class="form-content" id="form-content" style="display: none;">
             <input id="game-name-input" class="form-input" type="text" placeholder="Enter Game Name" maxlength="50">
             <input id="secret-word" class="form-input" type="text" placeholder="Enter Secret Word" maxlength="50">
@@ -126,7 +97,48 @@
                 <button id="form-back-btn" class="control-btn">Back</button>
             </div>
         </div>
+
+        <!-- Game Over Overlay -->
+        <div id="game-over" class="alternate-content" style="display: none;">
+            <div id="share-section">
+                <div id="share-box">
+                    <div id="share-panel">
+                        <div id="share-text"></div>
+                    </div>
+                </div>
+                <div id="share-buttons">
+                    <a id="share-whatsapp" href="#" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a id="share-telegram" href="#" target="_blank"><i class="fab fa-telegram"></i></a>
+                    <a id="share-twitter" href="#" target="_blank"><i class="fab fa-x-twitter"></i></a>
+                    <a id="share-instagram" href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="end-buttons">
+                <button id="next-game-btn-end" class="control-btn">Next Game</button>
+                <button id="create-pineapple-end" class="control-btn">Create a Wordy</button>
+            </div>
+        </div>
     </div>
+
+    <!-- Guess Area Section -->
+    <div id="guess-section">
+        <div id="guess-box">
+            <div id="guess-area">
+                <div id="guess-container">
+                    <div class="guess-input-wrapper">
+                        <div id="guess-input-container">
+                            <div id="prompt">The Secret Word is....</div>
+                            <input type="text" id="guess-input" autocomplete="off" autocorrect="off" spellcheck="false">
+                            <span class="cursor">|</span>
+                        </div>
+                        <button id="guess-btn" class="guess-btn"><span>GUESS</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Controls Section -->
     <div id="game-controls-container">
         <span id="game-name-mobile" style="display: none;">WORDY</span>
         <div id="game-number-container">
@@ -139,6 +151,8 @@
             <span id="guesses-link" class="control-link game-control-right">Guesses: 0</span>
         </div>
     </div>
+
+    <!-- Keyboard Section -->
     <div id="keyboard-container" class="keyboard">
         <button id="keyboard-back-btn" class="keyboard-back-btn" style="display: none;"><i class="fas fa-arrow-left"></i></button>
         <div id="keyboard-content" class="keyboard-content">
@@ -190,10 +204,13 @@
             </div>
         </div>
     </div>
+
+    <!-- Ad Box Section -->
     <div id="ad-box">
         <p>Big Brain Games</p>
     </div>
-    <!-- Dialogs -->
+
+    <!-- Dialogs (Overlays) -->
     <div id="give-up-dialog" class="dialog" style="display: none;">
         <div class="dialog-content">
             <span class="dialog-message">Are you sure you want to give up?</span>
@@ -218,6 +235,7 @@
             <button id="guesses-close-btn" class="control-btn">Close</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
