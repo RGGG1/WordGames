@@ -6,7 +6,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     let secretWord = "";
     let hints = [];
     let hintIndex = 0;
-    let lastHintLines = 0;
     let firstGuessMade = false;
     let allGames = [];
     let privateGames = [];
@@ -965,7 +964,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         confirmBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
-    // Form error dialog
+       // Form error dialog
     if (formErrorDialog && formErrorOkBtn && formErrorMessage) {
         formErrorOkBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
             e.preventDefault();
@@ -1342,6 +1341,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     let guessesDisplay = '-';
                     let showSecretWord = false;
 
+                    console.log(`Checking result for game ${gameNumber}:`, pastResult);
+
                     if (pastResult) {
                         if (pastResult.guesses === "Gave Up") {
                             guessesDisplay = "Gave Up";
@@ -1350,7 +1351,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             guessesDisplay = "X";
                             showSecretWord = true;
                         } else if (pastResult.secretWord === secretWord) {
-                            guessesDisplay = pastResult.guesses;
+                            guessesDisplay = pastResult.guesses.toString();
                             showSecretWord = true;
                         }
                     }
@@ -1428,6 +1429,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                     privateList.appendChild(gameItem);
                     console.log(`Rendered private game ${gameNumber}: Name: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
                 });
+                // Force repaint to ensure proper rendering
+                setTimeout(() => {
+                    privateList.style.display = "none";
+                    privateList.offsetHeight;
+                    privateList.style.display = "flex";
+                    console.log("Forced repaint on private-list");
+                }, 0);
             }
         }
     }
@@ -1461,88 +1469,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Calculate hint lines
-    function calculateHintLines(hintsArray) {
-        const tempContainer = document.createElement("div");
-        tempContainer.style.fontSize = isMobile ? "2.75vh" : "3.25vh";
-        tempContainer.style.fontFamily = "'Luckiest Guy', cursive";
-        tempContainer.style.position = "absolute";
-        tempContainer.style.visibility = "hidden";
-        tempContainer.style.maxWidth = "90vw";
-        tempContainer.style.whiteSpace = "normal";
-        tempContainer.style.lineHeight = "1.2";
-        tempContainer.style.display = "inline-block";
-        tempContainer.style.wordBreak = "break-word";
-        tempContainer.textContent = hintsArray.join(" | ");
-        document.body.appendChild(tempContainer);
-        
-        const height = tempContainer.offsetHeight;
-        const lineHeight = (isMobile ? 2.75 : 3.25) * 1.2;
-        const lines = Math.ceil(height / lineHeight);
-        
-        document.body.removeChild(tempContainer);
-        return lines;
-    }
-
-    // Update hint fade (No-op since fade is removed)
-    function updateHintFade(hintsContainer, visibleHints) {
-        const lines = calculateHintLines(visibleHints);
-        lastHintLines = lines;
-        console.log("Hint lines calculated:", lines);
-    }
-
-    // Build hint HTML with letter-by-letter animation
-    function buildHintHTML(hintsArray) {
-        if (hintsArray.length === 0) return "";
-        
-        const htmlParts = [];
-        hintsArray.forEach((hint, index) => {
-            // Trim only leading and trailing spaces
-            const trimmedHint = hint.trim();
-            if (index === hintsArray.length - 1 && index === hintIndex) {
-                // For the latest hint, animate letter by letter, preserving internal spaces
-                const letters = trimmedHint.split("").map((letter, i) => {
-                    // Use   for spaces to ensure proper rendering
-                    const displayChar = letter === " " ? " " : letter;
-                    return `<span class="letter" style="animation-delay: ${i * 0.05}s">${displayChar}</span>`;
-                }).join("");
-                htmlParts.push(letters);
-            } else {
-                // For previous hints, display as is, preserving internal spaces
-                htmlParts.push(trimmedHint.replace(/ /g, " "));
-            }
-            if (index < hintsArray.length - 1) {
-                htmlParts.push(' <span class="separator yellow">|</span> ');
-            }
-        });
-        
-        return htmlParts.join("");
-    }
-
-    // Setup hints
-    function setupHints() {
-        const hintsContainer = document.getElementById("hints-container");
-        if (!hintsContainer) {
-            console.error("hints-container element not found");
-            return;
-        }
-        console.log("Setting up hints:", hints, "hintIndex:", hintIndex);
-        hintsContainer.innerHTML = "";
-        const visibleHints = hints.slice(0, hintIndex + 1);
-        if (visibleHints.length > 0) {
-            hintsContainer.innerHTML = buildHintHTML(visibleHints);
-            hintsContainer.style.display = "block";
-            lastHintLines = calculateHintLines(visibleHints);
-            updateHintFade(hintsContainer, visibleHints);
-            console.log("Hints displayed:", visibleHints, "Lines:", lastHintLines);
-        } else {
-            hintsContainer.style.display = "block";
-            hintsContainer.innerHTML = "";
-            lastHintLines = 0;
-            console.log("No hints to display, showing empty background");
-        }
-    }
-
     // Adjust background
     function adjustBackground() {
         console.log("Adjusting background to:", currentBackground);
@@ -1557,22 +1483,56 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     window.addEventListener("resize", adjustBackground);
 
+    // Setup hints
+    function setupHints() {
+        console.log("Setting up hints:", hints, "hintIndex:", hintIndex);
+        // Reset all hint containers
+        for (let i = 1; i <= 5; i++) {
+            const hintElement = document.getElementById(`hint-${i}`);
+            if (hintElement) {
+                hintElement.style.display = "none";
+                hintElement.innerHTML = "";
+            }
+        }
+
+        // Display hints up to the current hintIndex
+        const visibleHints = hints.slice(0, hintIndex + 1);
+        visibleHints.forEach((hint, index) => {
+            const hintElement = document.getElementById(`hint-${index + 1}`);
+            if (hintElement) {
+                hintElement.innerHTML = hint.replace(/ /g, " "); // Preserve spaces
+                hintElement.style.display = "block";
+                // Animate the latest hint
+                if (index === hintIndex) {
+                    const letters = hint.split("").map((letter, i) => {
+                        const displayChar = letter === " " ? " " : letter;
+                        return `<span class="letter" style="animation-delay: ${i * 0.05}s">${displayChar}</span>`;
+                    }).join("");
+                    hintElement.innerHTML = letters;
+                }
+            }
+        });
+        console.log("Hints displayed:", visibleHints);
+    }
+
     // Reveal hint
     function revealHint() {
         hintIndex++;
         console.log("Revealing hint, new hintIndex:", hintIndex, "total hints:", hints.length);
         if (hintIndex < hints.length) {
-            const hintsContainer = document.getElementById("hints-container");
-            if (!hintsContainer) {
-                console.error("hints-container element not found in revealHint");
-                return;
+            const hintElement = document.getElementById(`hint-${hintIndex + 1}`);
+            if (hintElement) {
+                const hint = hints[hintIndex];
+                hintElement.innerHTML = hint.replace(/ /g, " ");
+                hintElement.style.display = "block";
+                // Animate letter by letter
+                const letters = hint.split("").map((letter, i) => {
+                    const displayChar = letter === " " ? " " : letter;
+                    return `<span class="letter" style="animation-delay: ${i * 0.05}s">${displayChar}</span>`;
+                }).join("");
+                hintElement.innerHTML = letters;
+                console.log("Revealed hint:", hint);
             }
-            const visibleHints = hints.slice(0, hintIndex + 1);
-            hintsContainer.innerHTML = buildHintHTML(visibleHints);
-            hintsContainer.style.display = "block";
-            lastHintLines = calculateHintLines(visibleHints);
-            updateHintFade(hintsContainer, visibleHints);
-            console.log("Revealed hint:", visibleHints[visibleHints.length - 1], "Lines:", lastHintLines);
         }
     }
 
@@ -1657,6 +1617,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             console.log(`Game result not saved for ${resultsKey}[${normalizedGameNumber}]: existing score '${results[normalizedGameNumber].guesses}' is not '-' and will be preserved`);
         }
+        // Log the full results for debugging
+        console.log(`Current ${resultsKey} in localStorage:`, results);
     }
 
     // End game
@@ -1677,17 +1639,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessInput.dispatchEvent(new Event("guessProcessed"));
         }
 
-        const hintsContainer = document.getElementById("hints-container");
-        if (hintsContainer) {
-            hintsContainer.innerHTML = won ? "Well Done" : "Hard Luck";
-            hintsContainer.style.display = "block";
-            console.log("Hints container updated to:", hintsContainer.innerHTML, "Lines:", lastHintLines);
-        }
-
-        const hintsLabel = document.getElementById("hints-label");
-        if (hintsLabel) {
-            hintsLabel.style.visibility = "hidden";
-            console.log("Hints label hidden");
+        // Update all hints to show "Well Done" or "Hard Luck" in the center (Hint 3)
+        for (let i = 1; i <= 5; i++) {
+            const hintElement = document.getElementById(`hint-${i}`);
+            if (hintElement) {
+                if (i === 3) { // Center hint (Hint 3)
+                    hintElement.innerHTML = won ? "Well Done" : "Hard Luck";
+                    hintElement.style.display = "block";
+                } else {
+                    hintElement.style.display = "none"; // Hide other hints
+                }
+            }
         }
 
         // Hide game controls
@@ -1800,14 +1762,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, 13500);
     }
 
-        // Reset game
+    // Reset game
     function resetGame() {
         console.log("Resetting game state");
         gameOver = false;
         secretWord = "";
         hints = [];
         hintIndex = 0;
-        lastHintLines = 0;
         firstGuessMade = false;
         guessCount = 0;
         gaveUp = false;
@@ -1831,15 +1792,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (gameScreen) {
             gameScreen.classList.remove("game-ended");
-        }
-        const hintsContainer = document.getElementById("hints-container");
-        if (hintsContainer) {
-            hintsContainer.innerHTML = "";
-            hintsContainer.style.display = "block";
-        }
-        const hintsLabel = document.getElementById("hints-label");
-        if (hintsLabel) {
-            hintsLabel.style.visibility = "visible";
         }
         if (animationTimeout) {
             clearTimeout(animationTimeout);
@@ -1882,14 +1834,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             const isPrivate = game["Display Name"] && game["Display Name"].includes("-");
             if (isPrivate) {
                 // For private games, use only the game number part (e.g., "Game #1")
-                currentGameNumber = game["Display Name"].split("-")[0].trim();
+                currentGameNumber = game["Display Name"].split("-")[0].trim() + " - Private";
             } else {
                 currentGameNumber = `Game #${game["Game Number"]}`;
             }
-            console.log("Set currentGameId:", currentGameId, "currentGameNumber:", currentGameNumber);
+            console.log("Set currentGameId:", currentGameId, "currentGameNumber:", currentGameNumber, "isPrivate:", isPrivate);
 
             if (gameNumberText) {
-                gameNumberText.textContent = currentGameNumber;
+                gameNumberText.textContent = currentGameNumber.split(" -")[0]; // Display only the game number part
             } else {
                 console.error("game-number-text element not found");
             }
