@@ -61,6 +61,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
     const gameControlsContainer = document.getElementById("game-controls-container");
+    const shareSection = document.getElementById("share-section");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -89,6 +90,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         'pop', 'stretch', 'zoom', 'bounce', 'spin',
         'slide-left', 'slide-right', 'slide-up', 'slide-down', 'letter'
     ];
+
+    // Hint reveal order mapping: index to hint ID
+    const hintRevealOrder = ['hint-1', 'hint-2', 'hint-4', 'hint-5', 'hint-3'];
 
     // Randomize hint styles
     function randomizeHintStyles() {
@@ -139,6 +143,20 @@ document.addEventListener("DOMContentLoaded", async () => {
             };
         });
     }
+
+    // Adjust background
+    function adjustBackground() {
+        console.log("Adjusting background to:", currentBackground);
+        const backgroundContainer = document.getElementById("background-container");
+        if (backgroundContainer) {
+            backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
+            backgroundContainer.style.backgroundSize = "cover";
+            backgroundContainer.offsetHeight;
+        }
+        document.body.style.background = "#FFFFFF";
+    }
+
+    window.addEventListener("resize", adjustBackground);
 
     // Setup guess input
     if (guessInput) {
@@ -424,7 +442,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             officialContent.classList.add("active");
             officialContent.style.display = "flex";
             privateContent.classList.remove("active");
-            privateContent_slot = "none";
+            privateContent.style.display = "none";
             displayGameList();
             setupKeyboardListeners();
         });
@@ -1052,7 +1070,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadGame(latestGame);
             resetScreenDisplays(gameScreen);
             showKeyboard();
-            setupEventListeners();
             setupKeyboardListeners();
             updateArrowStates(0, allGames);
         } catch (error) {
@@ -1076,7 +1093,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             loadGame(allGames[0]);
             resetScreenDisplays(gameScreen);
             showKeyboard();
-            setupEventListeners();
             setupKeyboardListeners();
             updateArrowStates(0, allGames);
             if (formErrorDialog && formErrorMessage) {
@@ -1336,48 +1352,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Setup event listeners
-    function setupEventListeners() {
-        document.querySelectorAll("#game-name").forEach(name => {
-            name.addEventListener(isMobile ? "touchstart" : "click", async () => {
-                console.log("Game name clicked", { isUILocked });
-                if (isUILocked) return;
-                isUILocked = true;
-                resetGame();
-                currentBackground = allGames[0]["Background"] && allGames[0]["Background"].trim() !== "" ? allGames[0]["Background"] : defaultBackground;
-                await preloadBackground(currentBackground);
-                loadGame(allGames[0]);
-                resetScreenDisplays(gameScreen);
-                showKeyboard();
-                activeInput = guessInput;
-                if (activeInput && !isMobile) activeInput.focus();
-                adjustBackground();
-                setupKeyboardListeners();
-                updateArrowStates(0, allGames);
-                setTimeout(() => { isUILocked = false; }, 500);
-            });
-        });
-
-        guessInput.addEventListener("focus", () => {
-            console.log("Guess input focused");
-            activeInput = guessInput;
-        });
-    }
-
-    // Adjust background
-    function adjustBackground() {
-        console.log("Adjusting background to:", currentBackground);
-        const backgroundContainer = document.getElementById("background-container");
-        if (backgroundContainer) {
-            backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
-            backgroundContainer.style.backgroundSize = "cover";
-            backgroundContainer.offsetHeight;
-        }
-        document.body.style.background = "#FFFFFF";
-    }
-
-    window.addEventListener("resize", adjustBackground);
-
     // Setup hints
     function setupHints() {
         console.log("Setting up hints:", hints, "hintIndex:", hintIndex, "hintStyles:", hintStyles);
@@ -1395,14 +1369,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const visibleHints = hints.slice(0, hintIndex + 1);
         visibleHints.forEach((hint, index) => {
-            const hintElement = document.getElementById(`hint-${index + 1}`);
+            const hintElement = document.getElementById(hintRevealOrder[index]);
             if (hintElement && hintStyles[index]) {
                 hintElement.innerHTML = hint.replace(/ /g, " ");
                 hintElement.style.display = "flex";
                 const effect = hintStyles[index].effect;
                 if (effect === "letter") {
                     const letters = hint.split("").map((letter, i) => {
-                        const displayChar = letter === " " ? "&nbsp;" : letter;
+                        const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
                     hintElement.innerHTML = letters;
@@ -1422,7 +1396,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintIndex++;
         console.log("Revealing hint, new hintIndex:", hintIndex, "total hints:", hints.length);
         if (hintIndex < hints.length) {
-            const hintElement = document.getElementById(`hint-${hintIndex + 1}`);
+            const hintElement = document.getElementById(hintRevealOrder[hintIndex]);
             if (hintElement && hintStyles[hintIndex]) {
                 const hint = hints[hintIndex];
                 hintElement.innerHTML = hint.replace(/ /g, " ");
@@ -1430,7 +1404,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const effect = hintStyles[hintIndex].effect;
                 if (effect === "letter") {
                     const letters = hint.split("").map((letter, i) => {
-                        const displayChar = letter === " " ? "&nbsp;" : letter;
+                        const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
                     hintElement.innerHTML = letters;
@@ -1545,12 +1519,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         for (let i = 1; i <= 5; i++) {
             const hintElement = document.getElementById(`hint-${i}`);
             if (hintElement) {
-                if (i === 3) {
-                    hintElement.innerHTML = won ? "Well Done" : "Hard Luck";
-                    hintElement.style.display = "flex";
-                } else {
-                    hintElement.style.display = "none";
-                }
+                hintElement.style.display = "none";
             }
         }
 
@@ -1565,6 +1534,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const shareText = document.getElementById("share-text");
         const gameNumberDisplay = document.getElementById("game-number-display");
+        const gameOverMessage = document.createElement("span");
+        gameOverMessage.id = "game-over-message";
+        gameOverMessage.textContent = won ? "Well Done" : "Hard Luck";
+        gameOverScreen.insertBefore(gameOverMessage, shareSection);
 
         if (gameNumberDisplay) {
             gameNumberDisplay.style.display = "none";
@@ -1631,31 +1604,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         rainContainer.className = "pineapple-rain";
         document.body.appendChild(rainContainer);
 
-        function createWave(waveNumber) {
-            const pieces = Array(40).fill("🍍");
-            pieces.forEach(() => {
-                const piece = document.createElement("div");
-                piece.className = "pineapple-piece";
-                piece.textContent = "🍍";
-                piece.style.left = `${Math.random() * 100}vw`;
-                piece.style.animationDuration = `${Math.random() * 3.5 + 2.5}s`;
-                piece.style.fontSize = `${Math.random() * 1.5 + 0.8}vh`;
-                piece.style.animationDelay = `${waveNumber * 0.2 + Math.random() * 0.15}s`;
-                piece.style.setProperty('--rotation', `${Math.random() * 360}deg`);
-                piece.style.setProperty('--drift', `${Math.random() * 2 - 1}`);
-                rainContainer.appendChild(piece);
-            });
-        }
-
-        const waveCount = isMobile ? 6 : 5;
-        for (let i = 0; i < waveCount; i++) {
-            createWave(i);
+        for (let i = 0; i < 20; i++) {
+            const piece = document.createElement("div");
+            piece.className = "pineapple-piece";
+            piece.textContent = "🍍";
+            piece.style.left = `${Math.random() * 100}%`;
+            piece.style.animationDuration = `${2 + Math.random() * 3}s`;
+            piece.style.setProperty('--drift', Math.random() * 2 - 1);
+            piece.style.setProperty('--rotation', `${Math.random() * 720}deg`);
+            rainContainer.appendChild(piece);
         }
 
         setTimeout(() => {
             rainContainer.remove();
             console.log("Pineapple rain animation ended");
-        }, 13500);
+        }, 5000);
     }
 
     // Reset game
