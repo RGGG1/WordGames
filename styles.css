@@ -19,36 +19,13 @@ body {
 
 #background-container {
     position: fixed;
-    top: 0;
+    top: 5vh;
     left: 0;
     width: 100%;
-    height: calc(100% - 4vh);
+    height: 81vh; /* 100vh - 5vh (header) - 10vh (guess-area) - 4vh (ad-box) */
     background: url('newbackground.png') no-repeat center center;
     background-size: cover;
     z-index: -1;
-}
-
-#game-name,
-#game-name-mobile {
-    font-size: 2.5vh;
-    color: #000000;
-    -webkit-text-stroke: 1px #FFFFFF;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-    text-align: center;
-    cursor: pointer;
-}
-
-#game-name-mobile {
-    display: none;
-}
-
-@media screen and (max-width: 768px) {
-    #game-name {
-        display: none;
-    }
-    #game-name-mobile {
-        display: inline;
-    }
 }
 
 #header {
@@ -65,6 +42,14 @@ body {
     z-index: 100;
 }
 
+#game-name {
+    font-size: 2.5vh;
+    color: #000000;
+    -webkit-text-stroke: 1px #FFFFFF;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
 #all-games-link {
     font-size: 1.6vh;
     color: #FFFFFF;
@@ -72,159 +57,235 @@ body {
     text-decoration: underline;
 }
 
-.screen {
-    display: none;
+#game-screen {
+    display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100vh;
-    padding: 0;
-    margin: 0;
+    height: 81vh; /* 100vh - 5vh (header) - 10vh (guess-area) - 4vh (ad-box) */
+    position: fixed;
+    top: 5vh;
+    left: 0;
+    z-index: 10;
 }
 
-#game-screen {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    position: relative; /* Allow absolute positioning of hints */
-    width: 100%;
-    height: 100vh;
-    padding: 0;
-    margin: 0;
-    overflow: hidden;
-}
-
-/* Base hint styles */
 .hint {
     position: absolute;
-    display: none; /* Hidden by default, shown via JavaScript */
+    display: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: 2.5vh; /* Slightly smaller for better fit */
+    font-size: 3.75vh; /* 2.5vh * 1.5 */
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    padding: 1vh;
+    padding: 2vh;
     box-sizing: border-box;
-    max-width: 30vw; /* Prevent overflow on smaller screens */
+    max-width: 60vw; /* Doubled from 30vw */
+    width: 40vw; /* Doubled from 20vw */
+    height: 40vw; /* Doubled from 20vw */
     word-break: break-word;
     line-height: 1.2;
-    z-index: 10; /* Ensure hints are above other elements */
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* Hint 1: Top-left (Pink Speech Bubble) */
-#hint-1 {
-    top: 10vh; /* Below header */
-    left: 5vw;
-}
+/* Hint positions */
+#hint-1 { top: 10vh; left: 5vw; } /* Top-left */
+#hint-2 { top: 10vh; right: 5vw; } /* Top-right */
+#hint-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); } /* Center */
+#hint-4 { bottom: 10vh; left: 5vw; } /* Bottom-left */
+#hint-5 { bottom: 10vh; right: 5vw; } /* Bottom-right */
 
-.hint-speech-bubble {
-    background: rgba(255, 105, 180, 0.7); /* Pink with 70% opacity */
+/* Hint shapes */
+.hint-shape-speech-bubble {
+    background: rgba(255, 105, 180, 0.7);
     border-radius: 2vh;
     position: relative;
-    padding: 1.5vh 2vh;
 }
-
-.hint-speech-bubble::after {
+.hint-shape-speech-bubble::after {
     content: '';
     position: absolute;
-    bottom: -1vh;
+    bottom: -2vh;
     left: 2vw;
     width: 0;
     height: 0;
     border: 1vh solid transparent;
-    border-top-color: rgba(255, 105, 180, 0.7);
+    border-top-color: inherit;
     border-bottom: 0;
     margin-left: -0.5vh;
 }
-
-/* Hint 2: Top-right (Yellow Star) */
-#hint-2 {
-    top: 10vh;
-    right: 5vw;
-}
-
-.hint-star {
-    background: rgba(255, 215, 0, 0.7); /* Yellow with 70% opacity */
+.hint-shape-star {
+    background: rgba(255, 215, 0, 0.7);
     clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    padding: 2vh;
 }
-
-/* Hint 3: Center (Green Circle) */
-#hint-3 {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-.hint-circle {
-    background: rgba(50, 205, 50, 0.7); /* Green with 70% opacity */
+.hint-shape-circle {
+    background: rgba(50, 205, 50, 0.7);
     border-radius: 50%;
-    padding: 2vh;
-    width: 20vw;
-    height: 20vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
-
-/* Hint 4: Bottom-left (Blue Cloud) */
-#hint-4 {
-    bottom: 20vh; /* Above game controls */
-    left: 5vw;
-}
-
-.hint-cloud {
-    background: rgba(135, 206, 235, 0.7); /* Sky blue with 70% opacity */
-    border-radius: 50%;
-    position: relative;
-    padding: 1.5vh 2vh;
-}
-
-.hint-cloud::before,
-.hint-cloud::after {
-    content: '';
-    position: absolute;
+.hint-shape-cloud {
     background: rgba(135, 206, 235, 0.7);
     border-radius: 50%;
+    position: relative;
 }
-
-.hint-cloud::before {
-    width: 5vw;
-    height: 5vw;
-    top: -2vh;
+.hint-shape-cloud::before,
+.hint-shape-cloud::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+}
+.hint-shape-cloud::before {
+    width: 10vw;
+    height: 10vw;
+    top: -4vh;
     left: 2vw;
 }
-
-.hint-cloud::after {
-    width: 3vw;
-    height: 3vw;
-    top: -1vh;
+.hint-shape-cloud::after {
+    width: 6vw;
+    height: 6vw;
+    top: -2vh;
     right: 2vw;
 }
-
-/* Hint 5: Bottom-right (Orange Hexagon) */
-#hint-5 {
-    bottom: 20vh;
-    right: 5vw;
-}
-
-.hint-hexagon {
-    background: rgba(255, 165, 0, 0.7); /* Orange with 70% opacity */
+.hint-shape-hexagon {
+    background: rgba(255, 165, 0, 0.7);
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-    padding: 1.5vh;
+}
+.hint-shape-triangle {
+    background: rgba(138, 43, 226, 0.7);
+    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
+}
+.hint-shape-pentagon {
+    background: rgba(255, 69, 0, 0.7);
+    clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+}
+.hint-shape-octagon {
+    background: rgba(75, 0, 130, 0.7);
+    clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+}
+.hint-shape-diamond {
+    background: rgba(0, 191, 255, 0.7);
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+.hint-shape-heart {
+    background: rgba(255, 20, 147, 0.7);
+    clip-path: path('M50,15 C30,0 0,30 0,50 C0,70 20,90 50,100 C80,90 100,70 100,50 C100,30 70,0 50,15 Z');
 }
 
-/* Adjust guess area to fit with new hint layout */
+/* Hint reveal animations */
+@keyframes reveal-pop {
+    0% { transform: scale(0); opacity: 0; }
+    80% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes reveal-stretch {
+    0% { transform: scaleX(0); opacity: 0; }
+    80% { transform: scaleX(1.1); opacity: 1; }
+    100% { transform: scaleX(1); opacity: 1; }
+}
+@keyframes reveal-zoom {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+@keyframes reveal-bounce {
+    0% { transform: translateY(-100vh); opacity: 0; }
+    60% { transform: translateY(20px); opacity: 1; }
+    80% { transform: translateY(-10px); }
+    100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes reveal-spin {
+    0% { transform: rotate(0deg) scale(0); opacity: 0; }
+    100% { transform: rotate(360deg) scale(1); opacity: 1; }
+}
+@keyframes reveal-slide-left {
+    0% { transform: translateX(-100vw); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes reveal-slide-right {
+    0% { transform: translateX(100vw); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes reveal-slide-up {
+    0% { transform: translateY(100vh); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes reveal-slide-down {
+    0% { transform: translateY(-100vh); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+@keyframes reveal-fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+.hint.reveal-pop { animation: reveal-pop 0.5s ease-out forwards; }
+.hint.reveal-stretch { animation: reveal-stretch 0.5s ease-out forwards; }
+.hint.reveal-zoom { animation: reveal-zoom 0.5s ease-out forwards; }
+.hint.reveal-bounce { animation: reveal-bounce 0.7s ease-out forwards; }
+.hint.reveal-spin { animation: reveal-spin 0.6s ease-out forwards; }
+.hint.reveal-slide-left { animation: reveal-slide-left 0.5s ease-out forwards; }
+.hint.reveal-slide-right { animation: reveal-slide-right 0.5s ease-out forwards; }
+.hint.reveal-slide-up { animation: reveal-slide-up 0.5s ease-out forwards; }
+.hint.reveal-slide-down { animation: reveal-slide-down 0.5s ease-out forwards; }
+
+
+/* Hint colors (with opacity) */
+.hint-color-1 { background: rgba(255, 105, 180, 0.7); } /* Pink */
+.hint-color-2 { background: rgba(255, 215, 0, 0.7); } /* Yellow */
+.hint-color-3 { background: rgba(50, 205, 50, 0.7); } /* Green */
+.hint-color-4 { background: rgba(135, 206, 235, 0.7); } /* Sky Blue */
+.hint-color-5 { background: rgba(255, 165, 0, 0.7); } /* Orange */
+.hint-color-6 { background: rgba(138, 43, 226, 0.7); } /* Purple */
+.hint-color-7 { background: rgba(255, 69, 0, 0.7); } /* Red-Orange */
+.hint-color-8 { background: rgba(75, 0, 130, 0.7); } /* Indigo */
+.hint-color-9 { background: rgba(0, 191, 255, 0.7); } /* Deep Sky Blue */
+.hint-color-10 { background: rgba(255, 20, 147, 0.7); } /* Deep Pink */
+
+/* Adjust pseudo-elements for colors */
+.hint.hint-color-1.hint-shape-speech-bubble::after { border-top-color: rgba(255, 105, 180, 0.7); }
+.hint.hint-color-2.hint-shape-speech-bubble::after { border-top-color: rgba(255, 215, 0, 0.7); }
+.hint.hint-color-3.hint-shape-speech-bubble::after { border-top-color: rgba(50, 205, 50, 0.7); }
+.hint.hint-color-4.hint-shape-speech-bubble::after { border-top-color: rgba(135, 206, 235, 0.7); }
+.hint.hint-color-5.hint-shape-speech-bubble::after { border-top-color: rgba(255, 165, 0, 0.7); }
+.hint.hint-color-6.hint-shape-speech-bubble::after { border-top-color: rgba(138, 43, 226, 0.7); }
+.hint.hint-color-7.hint-shape-speech-bubble::after { border-top-color: rgba(255, 69, 0, 0.7); }
+.hint.hint-color-8.hint-shape-speech-bubble::after { border-top-color: rgba(75, 0, 130, 0.7); }
+.hint.hint-color-9.hint-shape-speech-bubble::after { border-top-color: rgba(0, 191, 255, 0.7); }
+.hint.hint-color-10.hint-shape-speech-bubble::after { border-top-color: rgba(255, 20, 147, 0.7); }
+.hint.hint-color-1.hint-shape-cloud::before,
+.hint.hint-color-1.hint-shape-cloud::after { background: rgba(255, 105, 180, 0.7); }
+.hint.hint-color-2.hint-shape-cloud::before,
+.hint.hint-color-2.hint-shape-cloud::after { background: rgba(255, 215, 0, 0.7); }
+.hint.hint-color-3.hint-shape-cloud::before,
+.hint.hint-color-3.hint-shape-cloud::after { background: rgba(50, 205, 50, 0.7); }
+.hint.hint-color-4.hint-shape-cloud::before,
+.hint.hint-color-4.hint-shape-cloud::after { background: rgba(135, 206, 235, 0.7); }
+.hint.hint-color-5.hint-shape-cloud::before,
+.hint.hint-color-5.hint-shape-cloud::after { background: rgba(255, 165, 0, 0.7); }
+.hint.hint-color-6.hint-shape-cloud::before,
+.hint.hint-color-6.hint-shape-cloud::after { background: rgba(138, 43, 226, 0.7); }
+.hint.hint-color-7.hint-shape-cloud::before,
+.hint.hint-color-7.hint-shape-cloud::after { background: rgba(255, 69, 0, 0.7); }
+.hint.hint-color-8.hint-shape-cloud::before,
+.hint.hint-color-8.hint-shape-cloud::after { background: rgba(75, 0, 130, 0.7); }
+.hint.hint-color-9.hint-shape-cloud::before,
+.hint.hint-color-9.hint-shape-cloud::after { background: rgba(0, 191, 255, 0.7); }
+.hint.hint-color-10.hint-shape-cloud::before,
+.hint.hint-color-10.hint-shape-cloud::after { background: rgba(255, 20, 147, 0.7); }
+
 #guess-area {
-    position: relative;
-    z-index: 20; /* Ensure guess area is above hints */
-    margin: auto;
+    position: fixed;
+    top: 86vh; /* 5vh (header) + 81vh (game-screen) */
+    left: 0;
+    width: 100%;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 20;
 }
 
 #guess-input-container {
-    position: relative;
     display: flex;
     align-items: center;
     width: 85vw;
@@ -296,12 +357,11 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 5.2vh;
+    height: 5vh;
     background: transparent;
     padding: 0 2vw;
     position: fixed;
-    bottom: 4vh;
-    left: 0;
+    top: 81vh; /* Below game-screen */
     z-index: 100;
 }
 
@@ -335,17 +395,119 @@ body {
     pointer-events: none;
 }
 
-.cursor {
-    position: absolute;
-    width: 2px;
-    height: 4vh;
-    background: #000000;
-    animation: blink 1s infinite;
+#keyboard-container {
+    display: none;
+    position: fixed;
+    top: 86vh; /* Below guess-area */
+    left: 0;
+    width: 100%;
+    height: 10vh; /* Adjusted to fit within 100vh total */
+    background: #FFFFFF;
+    z-index: 100;
 }
 
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
+#keyboard-content,
+#keyboard-guesses-content,
+#keyboard-give-up-content {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    padding: 0.5vh 0;
+}
+
+#keyboard-container.show-alternate #keyboard-content {
+    display: none;
+}
+
+#keyboard-container.show-guesses #keyboard-guesses-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2vh;
+}
+
+#keyboard-container.show-give-up #keyboard-give-up-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2vh;
+}
+
+#keyboard-back-btn {
+    display: none;
+    position: absolute;
+    top: 0.5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 20vw;
+    height: 3vh;
+    font-size: 1.5vh;
+    margin: 0;
+}
+
+.keyboard-row {
+    display: flex;
+    justify-content: center;
+    gap: 0.5vw;
+    margin: 0.5vh 0;
+}
+
+.key {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 8.5vw;
+    height: 3vh; /* Adjusted for smaller keyboard height */
+    background: #D3D6DA;
+    border-radius: 0.5vh;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 1.5vh; /* Adjusted for smaller keyboard */
+    color: #000000;
+    cursor: pointer;
+}
+
+#key-enter,
+#key-backspace {
+    width: 12.75vw;
+    font-size: 1.2vh;
+}
+
+#ad-box {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4vh;
+    background: #F0F0F0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+}
+
+#ad-box span {
+    font-size: 1.5vh;
+    color: #000000;
+}
+
+.screen {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 91vh; /* Between header (5vh) and ad-box (4vh) */
+    position: fixed;
+    top: 5vh;
+    left: 0;
+    z-index: 50;
+}
+
+#game-select-content.active,
+#form-content.active,
+#game-over.active {
+    display: flex;
 }
 
 #tabs {
@@ -518,18 +680,13 @@ body {
     object-fit: contain;
 }
 
-#next-game-btn-end,
-#create-pineapple-end {
-    margin-top: 2vh;
-}
-
 .dialog {
     display: none;
     position: fixed;
-    top: 0;
+    top: 5vh;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 91vh; /* Between header and ad-box */
     background: rgba(0, 0, 0, 0.5);
     z-index: 200;
 }
@@ -585,126 +742,12 @@ body {
     gap: 2vw;
 }
 
-#keyboard-container {
-    display: none;
-    position: fixed;
-    bottom: 4vh;
-    left: 0;
-    width: 100%;
-    height: 19.3vh;
-    background: #FFFFFF;
-    z-index: 100;
-}
-
-#keyboard-content,
-#keyboard-guesses-content,
-#keyboard-give-up-content {
-    display: none;
-    flex-direction: column;
-    width: 100%;
-    height: 100%;
-    padding: 0.5vh 0;
-}
-
-#keyboard-container.show-alternate #keyboard-content {
-    display: none;
-}
-
-#keyboard-container.show-guesses #keyboard-guesses-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2vh;
-}
-
-#keyboard-container.show-give-up #keyboard-give-up-content {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2vh;
-}
-
-#keyboard-container.show-game-over #game-over {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2vh;
-}
-
-#keyboard-back-btn {
-    display: none;
-    position: absolute;
-    top: 0.5vh;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 20vw;
-    height: 3vh;
-    font-size: 1.5vh;
-    margin: 0;
-}
-
-.keyboard-row {
-    display: flex;
-    justify-content: center;
-    gap: 0.5vw;
-    margin: 0.5vh 0;
-}
-
-.key {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 8.5vw;
-    height: 5.5vh;
-    background: #D3D6DA;
-    border-radius: 0.5vh;
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 2.5vh;
-    color: #000000;
-    cursor: pointer;
-}
-
-#key-enter,
-#key-backspace {
-    width: 12.75vw;
-    font-size: 1.5vh;
-}
-
-#ad-box {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 4vh;
-    background: #F0F0F0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 100;
-}
-
-#ad-box span {
-    font-size: 1.5vh;
-    color: #000000;
-}
-
-.letter {
-    display: inline-block;
-    opacity: 0;
-    animation: fadeInLetter 0.3s forwards;
-}
-
-@keyframes fadeInLetter {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-}
-
 .pineapple-rain {
     position: fixed;
-    top: 0;
+    top: 5vh;
     left: 0;
     width: 100%;
-    height: 100%;
+    height: 91vh;
     pointer-events: none;
     z-index: 1000;
 }
@@ -721,7 +764,7 @@ body {
         opacity: 1;
     }
     100% {
-        transform: translateY(110vh) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw));
+        transform: translateY(101vh) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw));
         opacity: 0;
     }
 }
@@ -729,21 +772,10 @@ body {
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
     .hint {
-        font-size: 2vh;
-        max-width: 40vw;
-    }
-
-    #hint-1, #hint-2 {
-        top: 8vh;
-    }
-
-    #hint-4, #hint-5 {
-        bottom: 25vh;
-    }
-
-    .hint-circle {
-        width: 30vw;
-        height: 30vw;
+        font-size: 3vh; /* 2vh * 1.5 */
+        max-width: 80vw; /* Doubled from 40vw */
+        width: 60vw;
+        height: 60vw;
     }
 
     #guess-input-container {
@@ -822,17 +854,13 @@ body {
 
     .key {
         width: 9vw;
-        height: 6vh;
-        font-size: 2.8vh;
+        height: 3.3vh;
+        font-size: 1.8vh;
     }
 
     #key-enter,
     #key-backspace {
         width: 13.5vw;
-        font-size: 1.8vh;
-    }
-
-    .cursor {
-        height: 5vh;
+        font-size: 1.5vh;
     }
 }
