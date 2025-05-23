@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ];
 
     // Hint reveal order mapping: index to hint ID
-    const hintRevealOrder = ['hint-1', 'hint-2', 'hint-4', 'hint-5', 'hint-3'];
+    const hintRevealOrder = ['hint-1', 'hint-2', 'hint-3', 'hint-4', 'hint-5'];
 
     // Randomize hint styles
     function randomizeHintStyles() {
