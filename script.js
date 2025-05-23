@@ -92,7 +92,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     ];
 
     // Hint reveal order mapping: index to hint ID
-    const hintRevealOrder = ['hint-1', 'hint-2', 'hint-4', 'hint-5', 'hint-3'];
+    // CHANGE: Updated to match top-to-bottom visual order
+    const hintRevealOrder = ['hint-1', 'hint-2', 'hint-3', 'hint-4', 'hint-5'];
 
     // Randomize hint styles
     function randomizeHintStyles() {
@@ -494,7 +495,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     keyboardContent.style.display = "none";
                     keyboardGuessesContent.style.display = "none";
                     keyboardGiveUpContent.style.display = "flex";
-                    keyboardBackBtn.style.display = "none"; // Explicitly hide back button
+                    keyboardBackBtn.style.display = "none";
                     console.log("Showing give-up content in keyboard container");
                 }
             } else {
@@ -553,33 +554,40 @@ document.addEventListener("DOMContentLoaded", async () => {
         const handler = debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guesses link triggered", { isUILocked, isLoadingGame });
+            console.log("Guesses link triggered", { isUILocked, isLoadingGame, guesses, guessCount }); // CHANGE: Added debug
             if (isUILocked || isLoadingGame) {
                 console.log("Guesses link ignored: UI locked or game loading");
                 return;
             }
             isUILocked = true;
             const guessesList = document.getElementById("guesses-list");
-            console.log("Rendering guesses:", guesses);
+            if (!guessesList) {
+                console.error("guesses-list element not found in DOM"); // CHANGE: Added check
+                isUILocked = false;
+                return;
+            }
+            console.log("Rendering guesses:", guesses, "for element:", guessesList); // CHANGE: Detailed debug
+            const guessesContent = guesses.length > 0
+                ? guesses.join(' <span class="separator yellow">|</span> ')
+                : "No guesses yet!";
+            guessesList.innerHTML = guessesContent;
+            console.log("Set guessesList.innerHTML to:", guessesList.innerHTML); // CHANGE: Log rendered content
+            guessesList.offsetHeight; // Force DOM refresh
+            guessesList.style.display = "block"; // CHANGE: Ensure visibility
             if (isMobile) {
                 if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardBackBtn) {
-                    guessesList.innerHTML = guesses.length > 0
-                        ? guesses.join(' <span class="separator yellow">|</span> ')
-                        : "No guesses yet!";
                     keyboardContainer.classList.add("show-alternate", "show-guesses");
                     keyboardContent.style.display = "none";
                     keyboardGuessesContent.style.display = "flex";
                     keyboardGiveUpContent.style.display = "none";
                     keyboardBackBtn.style.display = "block";
-                    guessesList.offsetHeight; // Force DOM refresh
+                    keyboardGuessesContent.offsetHeight; // CHANGE: Force repaint
                     console.log("Showing guesses content in keyboard container, guessesList:", guessesList.innerHTML);
+                } else {
+                    console.error("Mobile guesses content elements missing"); // CHANGE: Added check
                 }
             } else {
-                guessesList.innerHTML = guesses.length > 0
-                    ? guesses.join(' <span class="separator yellow">|</span> ')
-                    : "No guesses yet!";
                 guessesScreen.style.display = "flex";
-                guessesList.offsetHeight; // Force DOM refresh
                 console.log("Showing guesses screen, guessesList:", guessesList.innerHTML);
             }
             setTimeout(() => { isUILocked = false; }, 500);
@@ -1432,16 +1440,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
         isProcessingGuess = true;
-        console.log("Handling guess:", guess);
+        console.log("Handling guess:", guess); // CHANGE: Debug guess input
 
         guessInputContainer.classList.remove("wrong-guess");
         guessInput.value = "";
         guessCount++;
         guesses.push(guess);
-        console.log("Guess added, current guesses:", guesses);
+        console.log("Guess added, current guesses:", guesses, "guessCount:", guessCount); // CHANGE: Debug guesses array
 
         if (guessesLink) {
             guessesLink.textContent = `Guesses: ${guessCount}/5`;
+            console.log("Updated guessesLink text:", guessesLink.textContent); // CHANGE: Debug guessesLink update
         }
 
         if (guess === secretWord) {
@@ -1637,7 +1646,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         firstGuessMade = false;
         guessCount = 0;
         gaveUp = false;
-        guesses = [];
+        guesses = []; // CHANGE: Ensure guesses array is cleared
+        console.log("Guesses array reset:", guesses); // CHANGE: Debug reset
         isProcessingGuess = false;
         if (guessInput) {
             guessInput.value = "";
@@ -1650,7 +1660,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (guessBtn) {
             guessBtn.disabled = false;
         }
-        if (guessesLink) guessesLink.textContent = "Guesses: 0/5";
+        if (guessesLink) {
+            guessesLink.textContent = "Guesses: 0/5";
+            console.log("Reset guessesLink text:", guessesLink.textContent); // CHANGE: Debug reset
+        }
         if (guessInputContainer) {
             guessInputContainer.classList.remove("game-ended", "wrong-guess");
             guessInputContainer.style.background = "rgba(255, 255, 255, 0.85)";
@@ -1669,10 +1682,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameControlsContainer) {
             gameControlsContainer.style.display = "flex";
         }
+        // CHANGE: Reset guesses list display
+        const guessesList = document.getElementById("guesses-list");
+        if (guessesList) {
+            guessesList.innerHTML = "No guesses yet!";
+            guessesList.style.display = "block";
+            console.log("Reset guessesList:", guessesList.innerHTML);
+        }
         console.log("Game state reset complete");
     }
 
-    // Load game
+        // Load game
     function loadGame(game) {
         if (!game) {
             console.error("No game provided to loadGame");
