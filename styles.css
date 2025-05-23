@@ -17,7 +17,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: calc(5vh + 15vh + (100vh - 5vh - 15vh - 10vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh));
+    height: calc(100vh - 10vh - 5.2vh - 19.3vh - 4vh);
     background: url('newbackground.png') no-repeat center center;
     background-size: cover;
     z-index: 1;
@@ -77,23 +77,21 @@ a {
 #hint-section {
     width: 100%;
     height: 15vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    margin-top: 5vh;
-    padding: 1vh 0;
+    position: absolute;
+    top: 5vh;
+    left: 0;
+    display: block;
     z-index: 12;
 }
 
 .hint {
     font-family: 'Luckiest Guy', cursive;
-    font-size: 3.7125vh;
+    font-size: 7.425vh;
     color: #FFFFFF;
-    text-shadow: 2.7px 2.7px 5.4px #000000;
-    -webkit-text-stroke: 0.108vh #000000;
+    text-shadow: 5.4px 5.4px 10.8px #000000;
+    -webkit-text-stroke: 0.216vh #000000;
     text-align: center;
-    max-width: 85vw;
+    max-width: 40vw;
     white-space: normal;
     line-height: 1.2;
     display: none;
@@ -101,24 +99,50 @@ a {
     justify-content: center;
     flex-wrap: wrap;
     word-break: break-word;
-    border-radius: 0.81vh;
-    padding: 0.675vh 1.35vw;
-    margin: 0.675vh 0;
-    position: relative;
+    border-radius: 1.62vh;
+    padding: 1.35vh 2.7vw;
+    margin: 0;
+    position: absolute;
     box-sizing: border-box;
 }
 
+#hint-1 {
+    top: 1vh;
+    left: 5vw;
+}
+
+#hint-2 {
+    top: 1vh;
+    right: 5vw;
+}
+
+#hint-3 {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+#hint-4 {
+    bottom: 1vh;
+    left: 5vw;
+}
+
+#hint-5 {
+    bottom: 1vh;
+    right: 5vw;
+}
+
 .hint-shape-speech-bubble {
-    border-radius: 1.35vh;
+    border-radius: 2.7vh;
     position: relative;
 }
 .hint-shape-speech-bubble::after {
     content: '';
     position: absolute;
-    bottom: calc(-1 * var(--tail-size, 0.675vh));
+    bottom: calc(-1 * var(--tail-size, 1.35vh));
     left: var(--tail-pos, 50%);
     transform: translateX(-50%);
-    border-width: var(--tail-size, 0.675vh) var(--tail-size, 0.675vh) 0;
+    border-width: var(--tail-size, 1.35vh) var(--tail-size, 1.35vh) 0;
     border-style: solid;
     border-color: inherit transparent;
 }
@@ -127,8 +151,8 @@ a {
     clip-path: polygon(
         50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%,
         50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%
-    ); /* Default 5-point star */
-    padding: 1.35vh 2.7vw; /* 35% larger than original 1vh 2vw */
+    );
+    padding: 2.7vh 5.4vw;
     box-sizing: border-box;
 }
 
@@ -137,7 +161,7 @@ a {
 }
 
 .hint-shape-cloud {
-    border-radius: 1.35vh;
+    border-radius: 2.7vh;
     position: relative;
 }
 .hint-shape-cloud::before,
@@ -148,41 +172,182 @@ a {
     border-radius: 50%;
 }
 .hint-shape-cloud::before {
-    width: var(--puff1-size, 4.05vh);
-    height: var(--puff1-size, 4.05vh);
-    top: calc(-1 * var(--puff1-size, 4.05vh) / 2);
+    width: var(--puff1-size, 8.1vh);
+    height: var(--puff1-size, 8.1vh);
+    top: calc(-1 * var(--puff1-size, 8.1vh) / 2);
     left: var(--puff1-pos, 20%);
 }
 .hint-shape-cloud::after {
-    width: var(--puff2-size, 2.7vh);
-    height: var(--puff2-size, 2.7vh);
-    top: calc(-1 * var(--puff2-size, 2.7vh) / 2);
+    width: var(--puff2-size, 5.4vh);
+    height: var(--puff2-size, 5.4vh);
+    top: calc(-1 * var(--puff2-size, 5.4vh) / 2);
     left: var(--puff2-pos, 40%);
 }
 
 .hint-shape-hexagon {
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+    padding: 2.7vh 5.4vw;
 }
 
 .hint-shape-heart {
     clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 50% 80%, 18% 100%, 0% 38%);
+    padding: 2.7vh 5.4vw;
 }
 
 .hint-shape-diamond {
     clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    padding: 2.7vh 5.4vw;
 }
 
 .hint-shape-triangle {
     clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    padding: 2.7vh 5.4vw;
 }
 
 .hint-shape-pentagon {
     clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+    padding: 2.7vh 5.4vw;
 }
 
 .hint span.letter {
     display: inline-block;
     animation: revealLetter 0.05s forwards;
+}
+
+@keyframes pop {
+    0% { transform: scale(0); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes zoomIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-1vh); }
+}
+
+@keyframes jelly {
+    0% { transform: scale(1, 1); }
+    25% { transform: scale(1.2, 0.8); }
+    50% { transform: scale(0.8, 1.2); }
+    75% { transform: scale(1.1, 0.9); }
+    100% { transform: scale(1, 1); }
+}
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@keyframes slideInLeft {
+    0% { transform: translateX(-100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+    0% { transform: translateX(100%); opacity: 0; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInTop {
+    0% { transform: translateY(-100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes slideInBottom {
+    0% { transform: translateY(100%); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes rotateIn {
+    0% { transform: rotate(-180deg); opacity: 0; }
+    100% { transform: rotate(0); opacity: 1; }
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@keyframes swing {
+    0% { transform: rotate(0deg); }
+    25% { transform: rotate(15deg); }
+    75% { transform: rotate(-15deg); }
+    100% { transform: rotate(0deg); }
+}
+
+@keyframes flip {
+    0% { transform: rotateY(180deg); opacity: 0; }
+    100% { transform: rotateY(0); opacity: 1; }
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-0.5vh); }
+    75% { transform: translateX(0.5vh); }
+}
+
+@keyframes grow {
+    0% { transform: scale(0.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes shrinkIn {
+    0% { transform: scale(1.5); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes spiral {
+    0% { transform: rotate(0deg) scale(0); opacity: 0; }
+    100% { transform: rotate(360deg) scale(1); opacity: 1; }
+}
+
+@keyframes drop {
+    0% { transform: translateY(-50vh); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes expand {
+    0% { transform: scale(0.2); opacity: 0; }
+    50% { transform: scale(1.3); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+@keyframes twist {
+    0% { transform: rotateX(360deg); opacity: 0; }
+    100% { transform: rotateX(0); opacity: 1; }
+}
+
+@keyframes glow {
+    0% { box-shadow: 0 0 0 rgba(255, 179, 0, 0); opacity: 0; }
+    50% { box-shadow: 0 0 1vh rgba(255, 179, 0, 0.7); opacity: 1; }
+    100% { box-shadow: 0 0 0 rgba(255, 179, 0, 0); opacity: 1; }
+}
+
+@keyframes wobble {
+    0% { transform: translateX(0); }
+    15% { transform: translateX(-0.5vh) rotate(-5deg); }
+    30% { transform: translateX(0.4vh) rotate(5deg); }
+    45% { transform: translateX(-0.3vh) rotate(-3deg); }
+    60% { transform: translateX(0.2vh) rotate(2deg); }
+    75% { transform: translateX(-0.1vh) rotate(-1deg); }
+    100% { transform: translateX(0); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); opacity: 0; }
+    100% { transform: rotate(360deg); opacity: 1; }
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.2); opacity: 1; }
+    70% { transform: scale(0.9); }
+    100% { transform: scale(1); opacity: 1; }
 }
 
 @keyframes revealLetter {
@@ -192,7 +357,7 @@ a {
 #game-screen {
     position: relative;
     width: 100vw;
-    height: calc(100vh - 5vh - 15vh - 10vh - 5.2vh - 19.3vh - 4vh + 3.5vh - 1.65vh - 1.65vh);
+    height: calc(100vh - 5vh - 15vh - 10vh - 5.2vh - 19.3vh - 4vh);
     background: transparent;
     z-index: 10;
 }
@@ -206,6 +371,7 @@ a {
     padding: 1vh 0;
     z-index: 100;
     position: relative;
+    top: calc(5vh + 15vh);
 }
 
 #guess-area {
@@ -999,9 +1165,15 @@ a {
         display: none !important;
     }
     .hint {
-        font-size: 3.7125vh;
-        padding: 0.675vh 1.35vw;
-        margin: 0.675vh 0;
+        font-size: 5.94vh;
+        padding: 1.08vh 2.16vw;
+        max-width: 45vw;
+    }
+    #hint-1, #hint-2, #hint-4, #hint-5 {
+        max-width: 40vw;
+    }
+    #hint-3 {
+        max-width: 60vw;
     }
 }
 
@@ -1014,7 +1186,7 @@ a {
         bottom: 4vh;
     }
     #game-screen {
-        height: calc(100vh - 5vh - 15vh - 10vh - 5.2vh - 4vh + 3.5vh - 1.65vh - 1.65vh);
+        height: calc(100vh - 5vh - 15vh - 10vh - 5.2vh - 4vh);
     }
     #game-select-content {
         position: absolute;
@@ -1034,6 +1206,6 @@ a {
         padding-bottom: 0;
     }
     #background-container {
-        height: calc(5vh + 15vh + (100vh - 5vh - 15vh - 10vh - 5.2vh - 4vh + 3.5vh - 1.65vh - 1.65vh));
+        height: calc(100vh - 10vh - 5.2vh - 4vh);
     }
 }
