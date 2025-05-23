@@ -22,7 +22,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 66vh; /* Adjusted: 5vh + 51vh + 10vh */
+    height: 66vh;
     background: url('newbackground.png') no-repeat center center;
     background-size: cover;
     z-index: -1;
@@ -72,7 +72,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 51vh; /* Reduced by 5vh */
+    height: 51vh;
     position: fixed;
     top: 5vh;
     left: 0;
@@ -84,15 +84,15 @@ body {
     position: absolute;
     display: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: min(7.8vh, 6.5vw); /* Increased by 30% */
+    font-size: min(7.8vh, 6.5vw);
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
     padding: 2vh 2vw;
     box-sizing: border-box;
-    max-width: 24vw; /* Reduced by 20% */
-    width: 24vw;
-    height: 24vw;
+    max-width: 19.2vw; /* Reduced by 20% from 24vw */
+    width: 19.2vw;
+    height: 19.2vw;
     word-break: break-word;
     line-height: 1.2;
     z-index: 15;
@@ -102,11 +102,11 @@ body {
 }
 
 /* Hint positions */
-#hint-1 { top: 15vh; left: 5vw; }
-#hint-2 { top: 15vh; right: 5vw; }
-#hint-3 { top: 30vh; left: 5vw; }
-#hint-4 { top: 30vh; right: 5vw; }
-#hint-5 { top: 50%; left: 50%; transform: translate(-50%, -50%); }
+#hint-1 { top: 7vh; left: 5vw; }
+#hint-2 { top: 7vh; right: 5vw; }
+#hint-3 { top: 20vh; left: 5vw; }
+#hint-4 { top: 20vh; right: 5vw; }
+#hint-5 { top: 35vh; left: 50%; transform: translate(-50%, 0); }
 
 /* Hint shapes */
 .hint-shape-speech-bubble {
@@ -181,8 +181,17 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 2vh 2vw;
-    line-height: 1.2;
+    padding: 1vh 1vw; /* Reduced padding for better fit */
+}
+
+.hint-shape-heart .hint-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: min(7.8vh, 6.5vw);
+    line-height: 1.1;
 }
 
 /* Hint reveal animations */
@@ -299,7 +308,7 @@ body {
 
 #guess-area {
     position: fixed;
-    top: 56vh; /* 5vh + 51vh */
+    top: 56vh;
     left: 0;
     width: 100%;
     height: 10vh;
@@ -386,7 +395,7 @@ body {
     background: #FFFFFF;
     padding: 0 2vw;
     position: fixed;
-    top: 66vh; /* Adjusted: 5vh + 51vh + 10vh */
+    top: 66vh;
     z-index: 100;
 }
 
@@ -423,7 +432,7 @@ body {
 #keyboard-container {
     display: none;
     position: fixed;
-    top: 71vh; /* Adjusted: 66vh + 5vh */
+    top: 71vh;
     left: 0;
     width: 100%;
     height: 20vh;
@@ -457,6 +466,10 @@ body {
     justify-content: center;
     align-items: center;
     padding: 2vh;
+}
+
+#keyboard-container.show-give-up #keyboard-back-btn {
+    display: none; /* Hide back button on give-up screen */
 }
 
 #keyboard-back-btn {
@@ -522,7 +535,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 80vh; /* Adjusted to fit within 80vh */
+    height: 80vh;
     position: fixed;
     top: 5vh;
     left: 0;
@@ -565,12 +578,18 @@ body {
     text-decoration: underline;
 }
 
+.tab-separator {
+    font-size: 2.5vh;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+}
+
 .tab-content {
     display: none;
     flex-direction: column;
     align-items: center;
     width: 85vw;
-    max-height: 70vh; /* Adjusted to fit within 80vh */
+    max-height: 70vh;
     border-radius: 1vh;
     padding: 2vh;
     background: rgba(0, 0, 0, 0.85);
@@ -593,7 +612,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 60vh; /* Adjusted to fit within tab-content */
+    max-height: 60vh;
     overflow-y: auto;
 }
 
@@ -829,7 +848,7 @@ body {
     top: 5vh;
     left: 0;
     width: 100%;
-    height: 51vh; /* Match game screen height */
+    height: 51vh;
     pointer-events: none;
     z-index: 1000;
 }
@@ -854,11 +873,20 @@ body {
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
     .hint {
-        font-size: min(6.5vh, 5.2vw); /* Increased by 30% */
-        max-width: 32vw; /* Reduced by 20% */
-        width: 32vw;
-        height: 32vw;
+        font-size: min(6.5vh, 5.2vw);
+        max-width: 25.6vw; /* Reduced by 20% from 32vw */
+        width: 25.6vw;
+        height: 25.6vw;
         padding: 2vh 1.5vw;
+    }
+
+    .hint-shape-heart {
+        padding: 1vh 1vw; /* Reduced padding for mobile */
+    }
+
+    .hint-shape-heart .hint-text {
+        font-size: min(6.5vh, 5.2vw);
+        line-height: 1.1;
     }
 
     .hint-shape-speech-bubble::after {
@@ -904,7 +932,7 @@ body {
 
     #game-controls-container {
         height: 6vh;
-        top: 66vh; /* Adjusted: 5vh + 51vh + 10vh */
+        top: 66vh;
     }
 
     #give-up-link,
@@ -924,6 +952,12 @@ body {
 
     .tab {
         font-size: 2.8vh;
+    }
+
+    .tab-separator {
+        font-size: 2.8vh;
+        color: #FFFFFF;
+        text-shadow: 1px 1px 2px #000000;
     }
 
     .tab-content > span {

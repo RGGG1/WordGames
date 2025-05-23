@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ];
 
     // Hint reveal order mapping: index to hint ID
-    const hintRevealOrder = ['hint-1', 'hint-2', 'hint-3', 'hint-4', 'hint-5'];
+    const hintRevealOrder = ['hint-1', 'hint-2', 'hint-4', 'hint-5', 'hint-3'];
 
     // Randomize hint styles
     function randomizeHintStyles() {
@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const backgroundContainer = document.getElementById("background-container");
         if (backgroundContainer) {
             backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
-            backgroundContainer.style.backgroundSize = "cover"; // Updated to cover for full-width background
+            backgroundContainer.style.backgroundSize = "cover";
             backgroundContainer.offsetHeight;
         }
         document.body.style.background = "#FFFFFF";
@@ -494,7 +494,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     keyboardContent.style.display = "none";
                     keyboardGuessesContent.style.display = "none";
                     keyboardGiveUpContent.style.display = "flex";
-                    keyboardBackBtn.style.display = "block";
+                    keyboardBackBtn.style.display = "none"; // Explicitly hide back button
                     console.log("Showing give-up content in keyboard container");
                 }
             } else {
@@ -560,7 +560,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             isUILocked = true;
             const guessesList = document.getElementById("guesses-list");
-            console.log("Current guesses array:", guesses);
+            console.log("Rendering guesses:", guesses);
             if (isMobile) {
                 if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardBackBtn) {
                     guessesList.innerHTML = guesses.length > 0
@@ -571,14 +571,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     keyboardGuessesContent.style.display = "flex";
                     keyboardGiveUpContent.style.display = "none";
                     keyboardBackBtn.style.display = "block";
-                    console.log("Showing guesses content in keyboard container");
+                    guessesList.offsetHeight; // Force DOM refresh
+                    console.log("Showing guesses content in keyboard container, guessesList:", guessesList.innerHTML);
                 }
             } else {
                 guessesList.innerHTML = guesses.length > 0
                     ? guesses.join(' <span class="separator yellow">|</span> ')
                     : "No guesses yet!";
                 guessesScreen.style.display = "flex";
-                console.log("Showing guesses screen");
+                guessesList.offsetHeight; // Force DOM refresh
+                console.log("Showing guesses screen, guessesList:", guessesList.innerHTML);
             }
             setTimeout(() => { isUILocked = false; }, 500);
         }, 100);
@@ -1360,7 +1362,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (hintElement) {
                 hintElement.style.display = "none";
                 hintElement.innerHTML = "";
-                hintElement.className = "hint"; // Reset classes
+                hintElement.className = "hint";
                 if (hintStyles[i - 1]) {
                     hintElement.classList.add(hintStyles[i - 1].shape, hintStyles[i - 1].color);
                 }
@@ -1371,7 +1373,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         visibleHints.forEach((hint, index) => {
             const hintElement = document.getElementById(hintRevealOrder[index]);
             if (hintElement && hintStyles[index]) {
-                hintElement.innerHTML = hint.replace(/ /g, " ");
+                const isHeartShape = hintStyles[index].shape === "hint-shape-heart";
+                const hintContent = isHeartShape ? `<span class="hint-text">${hint.replace(/ /g, " ")}</span>` : hint.replace(/ /g, " ");
+                hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[index].effect;
                 if (effect === "letter") {
@@ -1379,7 +1383,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
-                    hintElement.innerHTML = letters;
+                    hintElement.innerHTML = isHeartShape ? `<span class="hint-text">${letters}</span>` : letters;
                 } else {
                     hintElement.classList.add(`reveal-${effect}`);
                     setTimeout(() => {
@@ -1399,7 +1403,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             const hintElement = document.getElementById(hintRevealOrder[hintIndex]);
             if (hintElement && hintStyles[hintIndex]) {
                 const hint = hints[hintIndex];
-                hintElement.innerHTML = hint.replace(/ /g, " ");
+                const isHeartShape = hintStyles[hintIndex].shape === "hint-shape-heart";
+                const hintContent = isHeartShape ? `<span class="hint-text">${hint.replace(/ /g, " ")}</span>` : hint.replace(/ /g, " ");
+                hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[hintIndex].effect;
                 if (effect === "letter") {
@@ -1407,7 +1413,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
-                    hintElement.innerHTML = letters;
+                    hintElement.innerHTML = isHeartShape ? `<span class="hint-text">${letters}</span>` : letters;
                 } else {
                     hintElement.classList.add(`reveal-${effect}`);
                     setTimeout(() => {
