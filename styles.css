@@ -24,7 +24,7 @@ body {
     width: 100%;
     height: 61vh; /* Header (5vh) + Game Screen (56vh) */
     background: url('newbackground.png') no-repeat center center;
-    background-size: cover;
+    background-size: contain; /* Changed to contain */
     z-index: -1;
 }
 
@@ -63,26 +63,27 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 56vh; /* Reduced by 10vh */
+    height: 56vh;
     position: fixed;
     top: 5vh;
     left: 0;
     z-index: 10;
+    background: transparent; /* Ensure no fade */
 }
 
 .hint {
     position: absolute;
     display: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: 3.75vh;
+    font-size: min(3vh, 2.5vw); /* Scaled for better fit */
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    padding: 2vh;
+    padding: 3vh 2vw;
     box-sizing: border-box;
-    max-width: 33.6vw; /* 42vw * 0.8 */
-    width: 22.4vw; /* 28vw * 0.8 */
-    height: 22.4vw; /* 28vw * 0.8 */
+    max-width: 30vw; /* Increased */
+    width: 30vw;
+    height: 30vw;
     word-break: break-word;
     line-height: 1.2;
     z-index: 15;
@@ -92,11 +93,11 @@ body {
 }
 
 /* Hint positions */
-#hint-1 { top: 10vh; left: 5vw; } /* Top-left */
-#hint-2 { top: 10vh; right: 5vw; } /* Top-right */
+#hint-1 { top: 7vh; left: 5vw; } /* Top-left */
+#hint-2 { top: 7vh; right: 5vw; } /* Top-right */
 #hint-3 { top: 50%; left: 50%; transform: translate(-50%, -50%); } /* Center */
-#hint-4 { bottom: 10vh; left: 5vw; } /* Bottom-left */
-#hint-5 { bottom: 10vh; right: 5vw; } /* Bottom-right */
+#hint-4 { bottom: 7vh; left: 5vw; } /* Bottom-left */
+#hint-5 { bottom: 7vh; right: 5vw; } /* Bottom-right */
 
 /* Hint shapes */
 .hint-shape-speech-bubble {
@@ -107,14 +108,14 @@ body {
 .hint-shape-speech-bubble::after {
     content: '';
     position: absolute;
-    bottom: -1.12vh; /* 1.4vh * 0.8 */
-    left: 1.12vw; /* 1.4vw * 0.8 */
+    bottom: -1.5vh;
+    left: 1.5vw;
     width: 0;
     height: 0;
-    border: 0.56vh solid transparent; /* 0.7vh * 0.8 */
+    border: 0.75vh solid transparent;
     border-top-color: inherit;
     border-bottom: 0;
-    margin-left: -0.28vh; /* 0.35vh * 0.8 */
+    margin-left: -0.375vh;
 }
 .hint-shape-star {
     background: rgba(255, 215, 0, 0.7);
@@ -137,24 +138,20 @@ body {
     border-radius: 50%;
 }
 .hint-shape-cloud::before {
-    width: 5.6vw; /* 7vw * 0.8 */
-    height: 5.6vw; /* 7vw * 0.8 */
-    top: -2.24vh; /* 2.8vh * 0.8 */
-    left: 1.12vw; /* 1.4vw * 0.8 */
+    width: 7.5vw;
+    height: 7.5vw;
+    top: -3vh;
+    left: 1.5vw;
 }
 .hint-shape-cloud::after {
-    width: 3.36vw; /* 4.2vw * 0.8 */
-    height: 3.36vw; /* 4.2vw * 0.8 */
-    top: -1.12vh; /* 1.4vh * 0.8 */
-    right: 1.12vw; /* 1.4vw * 0.8 */
+    width: 4.5vw;
+    height: 4.5vw;
+    top: -1.5vh;
+    right: 1.5vw;
 }
 .hint-shape-hexagon {
     background: rgba(255, 165, 0, 0.7);
     clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
-}
-.hint-shape-triangle {
-    background: rgba(138, 43, 226, 0.7);
-    clip-path: polygon(50% 0%, 100% 100%, 0% 100%);
 }
 .hint-shape-pentagon {
     background: rgba(255, 69, 0, 0.7);
@@ -237,17 +234,11 @@ body {
     display: inline-block;
 }
 @keyframes fadeInLetter {
-    0% {
-        opacity: 0;
-        transform: translateY(10px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
 }
 
-/* Hint colors (with opacity) */
+/* Hint colors */
 .hint-color-1 { background: rgba(255, 105, 180, 0.7); }
 .hint-color-2 { background: rgba(255, 215, 0, 0.7); }
 .hint-color-3 { background: rgba(50, 205, 50, 0.7); }
@@ -293,7 +284,7 @@ body {
 
 #guess-area {
     position: fixed;
-    top: 61vh; /* 5vh (header) + 56vh (game-screen) */
+    top: 61vh;
     left: 0;
     width: 100%;
     height: 10vh;
@@ -379,7 +370,7 @@ body {
     background: transparent;
     padding: 0 2vw;
     position: fixed;
-    top: 56vh; /* Below game-screen */
+    top: 56vh;
     z-index: 100;
 }
 
@@ -416,10 +407,10 @@ body {
 #keyboard-container {
     display: none;
     position: fixed;
-    top: 71vh; /* 5vh (header) + 56vh (game-screen) + 10vh (guess-area) */
+    top: 71vh;
     left: 0;
     width: 100%;
-    height: 10vh;
+    height: 20vh; /* Increased */
     background: #FFFFFF;
     z-index: 100;
 }
@@ -431,7 +422,7 @@ body {
     flex-direction: column;
     width: 100%;
     height: 100%;
-    padding: 0.5vh 0;
+    padding: 1vh 0;
 }
 
 #keyboard-container.show-alternate #keyboard-content {
@@ -468,27 +459,27 @@ body {
     display: flex;
     justify-content: center;
     gap: 0.5vw;
-    margin: 0.5vh 0;
+    margin: 0.75vh 0; /* Increased spacing */
 }
 
 .key {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 8.5vw;
-    height: 3vh;
+    width: 10vw; /* Increased */
+    height: 4vh; /* Increased */
     background: #D3D6DA;
     border-radius: 0.5vh;
     font-family: 'Luckiest Guy', cursive;
-    font-size: 1.5vh;
+    font-size: 1.8vh;
     color: #000000;
     cursor: pointer;
 }
 
 #key-enter,
 #key-backspace {
-    width: 12.75vw;
-    font-size: 1.2vh;
+    width: 15vw; /* Adjusted */
+    font-size: 1.5vh;
 }
 
 #ad-box {
@@ -515,12 +506,22 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 88vh; /* 94vh (ad-box top at 96vh - 2vh gap) - 6vh (top at 6vh for 1vh gap from header) */
+    height: 88vh;
     position: fixed;
     top: 6vh;
     left: 0;
     z-index: 50;
-    background: rgba(0, 0, 0, 0.85); /* Moved background here to cover tabs */
+}
+
+#game-select-content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* Full-screen fade */
+    z-index: -1;
 }
 
 #game-select-content.active,
@@ -534,6 +535,7 @@ body {
     justify-content: center;
     gap: 2vw;
     margin-bottom: 2vh;
+    z-index: 1; /* Above fade */
 }
 
 .tab {
@@ -554,6 +556,8 @@ body {
     width: 85vw;
     border-radius: 1vh;
     padding: 2vh;
+    background: rgba(0, 0, 0, 0.85); /* Keep for game list */
+    z-index: 1; /* Above fade */
 }
 
 .tab-content.active {
@@ -684,7 +688,7 @@ body {
     justify-content: center;
     gap: 2vw;
     margin-top: 2vh;
-    background: rgba(0, 0, 0, 0.5); /* Faded background */
+    background: rgba(0, 0, 0, 0.5);
     padding: 1vh 2vw;
     border-radius: 1vh;
 }
@@ -715,7 +719,7 @@ body {
     left: -0.5vw;
     width: calc(100% + 1vw);
     height: calc(100% + 1vh);
-    background: rgba(0, 0, 0, 0.5); /* Faded background */
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 1.5vh;
     z-index: -1;
 }
@@ -726,7 +730,7 @@ body {
 
 #game-over-message {
     position: absolute;
-    top: 10vh; /* Above share-section */
+    top: 10vh;
     left: 50%;
     transform: translateX(-50%);
     font-family: 'Luckiest Guy', cursive;
@@ -735,7 +739,7 @@ body {
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
     padding: 2vh;
-    background: rgba(0, 0, 0, 0.5); /* Faded background */
+    background: rgba(0, 0, 0, 0.5);
     border-radius: 1vh;
     z-index: 15;
 }
@@ -807,7 +811,7 @@ body {
     top: 5vh;
     left: 0;
     width: 100%;
-    height: 56vh; /* Matches game-screen for visibility */
+    height: 56vh;
     pointer-events: none;
     z-index: 1000;
 }
@@ -832,31 +836,32 @@ body {
 /* Responsive adjustments */
 @media screen and (max-width: 768px) {
     .hint {
-        font-size: 3vh;
-        max-width: 44.8vw; /* 56vw * 0.8 */
-        width: 33.6vw; /* 42vw * 0.8 */
-        height: 33.6vw; /* 42vw * 0.8 */
+        font-size: min(2.5vh, 2vw);
+        max-width: 40vw;
+        width: 40vw;
+        height: 40vw;
+        padding: 2.5vh 1.5vw;
     }
 
     .hint-shape-speech-bubble::after {
-        bottom: -1.12vh;
-        left: 1.12vw;
-        border: 0.56vh solid transparent;
-        margin-left: -0.28vh;
+        bottom: -1.5vh;
+        left: 1.5vw;
+        border: 0.75vh solid transparent;
+        margin-left: -0.375vh;
     }
 
     .hint-shape-cloud::before {
-        width: 5.6vw;
-        height: 5.6vw;
-        top: -2.24vh;
-        left: 1.12vw;
+        width: 7.5vw;
+        height: 7.5vw;
+        top: -3vh;
+        left: 1.5vw;
     }
 
     .hint-shape-cloud::after {
-        width: 3.36vw;
-        height: 3.36vw;
-        top: -1.12vh;
-        right: 1.12vw;
+        width: 4.5vw;
+        height: 4.5vw;
+        top: -1.5vh;
+        right: 1.5vw;
     }
 
     #guess-input-container {
@@ -934,15 +939,15 @@ body {
     }
 
     .key {
-        width: 9vw;
-        height: 3.3vh;
-        font-size: 1.8vh;
+        width: 9.5vw;
+        height: 4.5vh;
+        font-size: 2vh;
     }
 
     #key-enter,
     #key-backspace {
-        width: 13.5vw;
-        font-size: 1.5vh;
+        width: 14.25vw;
+        font-size: 1.8vh;
     }
 
     #game-over-message {

@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Hint shapes, colors, and reveal effects
     const hintShapes = [
         'speech-bubble', 'star', 'circle', 'cloud', 'hexagon',
-        'triangle', 'pentagon', 'octagon', 'diamond', 'heart'
+        'pentagon', 'octagon', 'diamond', 'heart' // Removed 'triangle'
     ];
     const hintColors = [
         'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
@@ -150,7 +150,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const backgroundContainer = document.getElementById("background-container");
         if (backgroundContainer) {
             backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
-            backgroundContainer.style.backgroundSize = "cover";
+            backgroundContainer.style.backgroundSize = "contain"; // Changed to contain
             backgroundContainer.offsetHeight;
         }
         document.body.style.background = "#FFFFFF";
@@ -406,11 +406,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Keyboard guesses content
+       // Keyboard guesses content
     if (keyboardGuessesContent) {
         const handler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (e.target === keyboardGuessesContent || e.target === document.getElementById("guesses-list") || e.target === document.getElementById("guesses-title")) {
+            if (e.target === keyboardGuessesContent || e.target === document.getElementById("guesses-list")) {
                 console.log("Triggered guesses content, showing keyboard");
                 showKeyboard();
             }
@@ -925,7 +926,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Form back button
+        // Form back button
     if (formBackBtn) {
         formBackBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
             e.preventDefault();
