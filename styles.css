@@ -22,7 +22,7 @@ body {
     top: 5vh;
     left: 0;
     width: 100%;
-    height: 81vh; /* 100vh - 5vh (header) - 10vh (guess-area) - 4vh (ad-box) */
+    height: 66vh; /* Matches game-screen height */
     background: url('newbackground.png') no-repeat center center;
     background-size: cover;
     z-index: -1;
@@ -63,7 +63,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 81vh; /* 100vh - 5vh (header) - 10vh (guess-area) - 4vh (ad-box) */
+    height: 66vh;
     position: fixed;
     top: 5vh;
     left: 0;
@@ -80,9 +80,9 @@ body {
     text-shadow: 1px 1px 2px #000000;
     padding: 2vh;
     box-sizing: border-box;
-    max-width: 60vw; /* Doubled from 30vw */
-    width: 40vw; /* Doubled from 20vw */
-    height: 40vw; /* Doubled from 20vw */
+    max-width: 42vw; /* 60vw * 0.7 */
+    width: 28vw; /* 40vw * 0.7 */
+    height: 28vw; /* 40vw * 0.7 */
     word-break: break-word;
     line-height: 1.2;
     z-index: 15;
@@ -107,14 +107,14 @@ body {
 .hint-shape-speech-bubble::after {
     content: '';
     position: absolute;
-    bottom: -2vh;
-    left: 2vw;
+    bottom: -1.4vh;
+    left: 1.4vw;
     width: 0;
     height: 0;
-    border: 1vh solid transparent;
+    border: 0.7vh solid transparent;
     border-top-color: inherit;
     border-bottom: 0;
-    margin-left: -0.5vh;
+    margin-left: -0.35vh;
 }
 .hint-shape-star {
     background: rgba(255, 215, 0, 0.7);
@@ -137,16 +137,16 @@ body {
     border-radius: 50%;
 }
 .hint-shape-cloud::before {
-    width: 10vw;
-    height: 10vw;
-    top: -4vh;
-    left: 2vw;
+    width: 7vw;
+    height: 7vw;
+    top: -2.8vh;
+    left: 1.4vw;
 }
 .hint-shape-cloud::after {
-    width: 6vw;
-    height: 6vw;
-    top: -2vh;
-    right: 2vw;
+    width: 4.2vw;
+    height: 4.2vw;
+    top: -1.4vh;
+    right: 1.4vw;
 }
 .hint-shape-hexagon {
     background: rgba(255, 165, 0, 0.7);
@@ -227,7 +227,25 @@ body {
 .hint.reveal-slide-right { animation: reveal-slide-right 0.5s ease-out forwards; }
 .hint.reveal-slide-up { animation: reveal-slide-up 0.5s ease-out forwards; }
 .hint.reveal-slide-down { animation: reveal-slide-down 0.5s ease-out forwards; }
-
+.hint.reveal-letter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.hint.reveal-letter .letter {
+    opacity: 0;
+    display: inline-block;
+}
+@keyframes fadeInLetter {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
 
 /* Hint colors (with opacity) */
 .hint-color-1 { background: rgba(255, 105, 180, 0.7); } /* Pink */
@@ -275,7 +293,7 @@ body {
 
 #guess-area {
     position: fixed;
-    top: 86vh; /* 5vh (header) + 81vh (game-screen) */
+    top: 71vh; /* 5vh (header) + 66vh (game-screen) */
     left: 0;
     width: 100%;
     height: 10vh;
@@ -361,7 +379,7 @@ body {
     background: transparent;
     padding: 0 2vw;
     position: fixed;
-    top: 81vh; /* Below game-screen */
+    top: 66vh; /* Below game-screen */
     z-index: 100;
 }
 
@@ -398,10 +416,10 @@ body {
 #keyboard-container {
     display: none;
     position: fixed;
-    top: 86vh; /* Below guess-area */
+    top: 81vh; /* 5vh (header) + 66vh (game-screen) + 10vh (guess-area) */
     left: 0;
     width: 100%;
-    height: 10vh; /* Adjusted to fit within 100vh total */
+    height: 10vh;
     background: #FFFFFF;
     z-index: 100;
 }
@@ -458,11 +476,11 @@ body {
     justify-content: center;
     align-items: center;
     width: 8.5vw;
-    height: 3vh; /* Adjusted for smaller keyboard height */
+    height: 3vh;
     background: #D3D6DA;
     border-radius: 0.5vh;
     font-family: 'Luckiest Guy', cursive;
-    font-size: 1.5vh; /* Adjusted for smaller keyboard */
+    font-size: 1.5vh;
     color: #000000;
     cursor: pointer;
 }
@@ -497,9 +515,9 @@ body {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 91vh; /* Between header (5vh) and ad-box (4vh) */
+    height: 88vh; /* 94vh (ad-box top at 96vh - 2vh gap) - 6vh (top at 6vh for 1vh gap from header) */
     position: fixed;
-    top: 5vh;
+    top: 6vh; /* 5vh (header) + 1vh gap */
     left: 0;
     z-index: 50;
 }
@@ -683,10 +701,10 @@ body {
 .dialog {
     display: none;
     position: fixed;
-    top: 5vh;
+    top: 6vh; /* Matches screen top for consistency */
     left: 0;
     width: 100%;
-    height: 91vh; /* Between header and ad-box */
+    height: 88vh; /* Matches screen height */
     background: rgba(0, 0, 0, 0.5);
     z-index: 200;
 }
@@ -744,10 +762,10 @@ body {
 
 .pineapple-rain {
     position: fixed;
-    top: 5vh;
+    top: 6vh; /* Matches screen top */
     left: 0;
     width: 100%;
-    height: 91vh;
+    height: 88vh; /* Matches screen height */
     pointer-events: none;
     z-index: 1000;
 }
@@ -773,9 +791,30 @@ body {
 @media screen and (max-width: 768px) {
     .hint {
         font-size: 3vh; /* 2vh * 1.5 */
-        max-width: 80vw; /* Doubled from 40vw */
-        width: 60vw;
-        height: 60vw;
+        max-width: 56vw; /* 80vw * 0.7 */
+        width: 42vw; /* 60vw * 0.7 */
+        height: 42vw; /* 60vw * 0.7 */
+    }
+
+    .hint-shape-speech-bubble::after {
+        bottom: -1.4vh;
+        left: 1.4vw;
+        border: 0.7vh solid transparent;
+        margin-left: -0.35vh;
+    }
+
+    .hint-shape-cloud::before {
+        width: 7vw;
+        height: 7vw;
+        top: -2.8vh;
+        left: 1.4vw;
+    }
+
+    .hint-shape-cloud::after {
+        width: 4.2vw;
+        height: 4.2vw;
+        top: -1.4vh;
+        right: 1.4vw;
     }
 
     #guess-input-container {
