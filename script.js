@@ -589,6 +589,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Guesses link
     if (guessesLink && guessesScreen) {
+        // Initialize guessesLink with "/5"
+        guessesLink.textContent = "Guesses: 0/5";
+
         const handler = debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
@@ -1339,9 +1342,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                     let guessesDisplay = '-';
                     let showSecretWord = false;
 
-                    if (pastResult && pastResult.secretWord === secretWord) {
-                        guessesDisplay = pastResult.guesses;
-                        showSecretWord = true; // Show secret word only if game was played
+                    if (pastResult) {
+                        if (pastResult.guesses === "Gave Up") {
+                            guessesDisplay = "Gave Up";
+                            showSecretWord = true;
+                        } else if (pastResult.guesses === "X") {
+                            guessesDisplay = "X";
+                            showSecretWord = true;
+                        } else if (pastResult.secretWord === secretWord) {
+                            guessesDisplay = pastResult.guesses;
+                            showSecretWord = true;
+                        }
                     }
 
                     const displayWord = showSecretWord ? secretWord : "Play Now";
@@ -1491,14 +1502,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (index === hintsArray.length - 1 && index === hintIndex) {
                 // For the latest hint, animate letter by letter, preserving internal spaces
                 const letters = trimmedHint.split("").map((letter, i) => {
-                    // Use &nbsp; for spaces to ensure proper rendering
-                    const displayChar = letter === " " ? "&nbsp;" : letter;
+                    // Use   for spaces to ensure proper rendering
+                    const displayChar = letter === " " ? " " : letter;
                     return `<span class="letter" style="animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                 }).join("");
                 htmlParts.push(letters);
             } else {
                 // For previous hints, display as is, preserving internal spaces
-                htmlParts.push(trimmedHint.replace(/ /g, "&nbsp;"));
+                htmlParts.push(trimmedHint.replace(/ /g, " "));
             }
             if (index < hintsArray.length - 1) {
                 htmlParts.push(' <span class="separator yellow">|</span> ');
@@ -1581,7 +1592,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Guess added, current guesses:", guesses);
 
         if (guessesLink) {
-            guessesLink.textContent = `Guesses: ${guessCount}`;
+            guessesLink.textContent = `Guesses: ${guessCount}/5`; // Updated to show "/5"
         }
 
         if (guess === secretWord) {
@@ -1648,7 +1659,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-        // End game
+    // End game
     function endGame(won, gaveUp = false) {
         console.log("Ending game", { won, gaveUp, guessCount, secretWord });
         gameOver = true;
@@ -1789,7 +1800,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }, 13500);
     }
 
-    // Reset game
+        // Reset game
     function resetGame() {
         console.log("Resetting game state");
         gameOver = false;
@@ -1813,7 +1824,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (guessBtn) {
             guessBtn.disabled = false;
         }
-        if (guessesLink) guessesLink.textContent = "Guesses: 0";
+        if (guessesLink) guessesLink.textContent = "Guesses: 0/5"; // Updated to show "/5"
         if (guessInputContainer) {
             guessInputContainer.classList.remove("game-ended", "wrong-guess");
             guessInputContainer.style.background = "rgba(255, 255, 255, 0.85)";
@@ -1866,7 +1877,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             hintIndex = 0;
             currentGameId = game["Game Number"];
-            currentGameNumber = game["Display Name"] || (game["Game Name"] ? `Game #${game["Game Number"]} - ${game["Game Name"]}` : `Game #${game["Game Number"]}`);
+
+            // Determine if the game is private and adjust currentGameNumber accordingly
+            const isPrivate = game["Display Name"] && game["Display Name"].includes("-");
+            if (isPrivate) {
+                // For private games, use only the game number part (e.g., "Game #1")
+                currentGameNumber = game["Display Name"].split("-")[0].trim();
+            } else {
+                currentGameNumber = `Game #${game["Game Number"]}`;
+            }
             console.log("Set currentGameId:", currentGameId, "currentGameNumber:", currentGameNumber);
 
             if (gameNumberText) {
@@ -1875,9 +1894,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.error("game-number-text element not found");
             }
 
+            // Always set the header to "WORDY"
             const gameNameElements = document.querySelectorAll("#game-name, #game-name-mobile");
             gameNameElements.forEach(element => {
-                element.textContent = game["Game Name"] ? game["Game Name"].toUpperCase() : "WORDY";
+                element.textContent = "WORDY";
             });
 
             setupHints();
@@ -1895,25 +1915,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Initialize game
-    async function initializeGame() {
-        console.log("Initializing game");
-        await fetchGameData();
-        await fetchPrivateGames();
-        displayGameList();
-        initializeCursor();
-        adjustBackground();
-        setupEventListeners();
-        setupKeyboardListeners();
-
-        if (isMobile && !gameOver) {
-            showKeyboard();
-        } else if (guessInput && !isMobile) {
-            guessInput.focus();
-            activeInput = guessInput;
-        }
-    }
-
-    // Start the game
-    initializeGame();
+    // Initial fetch and load
+    await fetchPrivateGames();
+    await fetchGameData();
 });
