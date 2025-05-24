@@ -62,6 +62,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateContent = document.getElementById("private-games");
     const gameControlsContainer = document.getElementById("game-controls-container");
     const shareSection = document.getElementById("share-section");
+    const gameNameElement = document.getElementById("game-name");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -78,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const touchThreshold = 10;
 
     // Hint shapes, colors, and reveal effects
-    const hintShapes = ['heart', 'sun', 'circle', 'star', 'cloud'];
+    const hintShapes = ['cloud', 'sun', 'circle', 'star', 'heart']; // Swapped heart and cloud
     const hintColors = [
         'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
         'color-6', 'color-7', 'color-8', 'color-9', 'color-10'
@@ -151,6 +152,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     window.addEventListener("resize", adjustBackground);
+
+    // Setup game name (WORDY) to return to home screen
+    if (gameNameElement) {
+        const handler = debounce((e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Game name (WORDY) triggered", { isUILocked, isLoadingGame });
+            if (isUILocked || isLoadingGame) {
+                console.log("Game name click ignored: UI locked or game loading");
+                return;
+            }
+            isUILocked = true;
+            resetGame();
+            showGameSelectScreen();
+            setTimeout(() => { isUILocked = false; }, 500);
+        }, 100);
+        gameNameElement.addEventListener(isMobile ? "touchstart" : "click", handler);
+    }
 
     // Setup guess input
     if (guessInput) {
@@ -720,7 +739,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Update arrow states
     function updateArrowStates(currentIndex, gameList) {
         if (prevGameArrow) {
-            prevGameArrow.classList.remove("disabled");
+            prevGameArrow.classList.remove("disabled()");
             if (currentIndex >= gameList.length - 1) {
                 prevGameArrow.classList.add("disabled");
             }
@@ -826,7 +845,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Confirm button
+        // Confirm button
     if (confirmBtn) {
         const handler = async (e) => {
             e.preventDefault();
@@ -1144,7 +1163,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const officialList = document.getElementById("official-list");
         if (officialList) {
             officialList.innerHTML = "";
-            const gameNameElement = document.getElementById("game-name");
             if (gameNameElement) {
                 gameNameElement.textContent = "WORDY";
             }
@@ -1543,7 +1561,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gameOverMessage = document.createElement("span");
         gameOverMessage.id = "game-over-message";
         gameOverMessage.textContent = won ? "Well Done" : "Hard Luck";
+
+        // Add secret word message
+        const secretWordMessage = document.createElement("span");
+        secretWordMessage.id = "secret-word-message";
+        secretWordMessage.textContent = `The secret word was ${secretWord}`;
         gameOverScreen.insertBefore(gameOverMessage, shareSection);
+        gameOverScreen.insertBefore(secretWordMessage, shareSection);
 
         if (gameNumberDisplay) {
             gameNumberDisplay.style.display = "none";
@@ -1718,7 +1742,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.error("game-number-text element not found");
             }
 
-            const gameNameElement = document.getElementById("game-name");
             if (gameNameElement) {
                 gameNameElement.textContent = "WORDY";
             }
