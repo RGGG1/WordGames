@@ -78,10 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const touchThreshold = 10;
 
     // Hint shapes, colors, and reveal effects
-    const hintShapes = [
-        'speech-bubble', 'star', 'circle', 'cloud', 'hexagon',
-        'pentagon', 'octagon', 'diamond', 'heart'
-    ];
+    const hintShapes = ['heart', 'sun', 'circle', 'star', 'cloud'];
     const hintColors = [
         'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
         'color-6', 'color-7', 'color-8', 'color-9', 'color-10'
@@ -92,24 +89,20 @@ document.addEventListener("DOMContentLoaded", async () => {
     ];
 
     // Hint reveal order mapping: index to hint ID
-    // CHANGE: Updated to match top-to-bottom visual order
     const hintRevealOrder = ['hint-1', 'hint-2', 'hint-3', 'hint-4', 'hint-5'];
 
     // Randomize hint styles
     function randomizeHintStyles() {
         hintStyles = [];
-        const availableShapes = [...hintShapes];
         const availableColors = [...hintColors];
-        for (let i = 1; i <= 5; i++) {
-            const shapeIndex = Math.floor(Math.random() * availableShapes.length);
+        for (let i = 0; i < 5; i++) {
             const colorIndex = Math.floor(Math.random() * availableColors.length);
-            const effectIndex = Math.floor(Math.random() * hintRevealEffects.length);
-            const shape = availableShapes.splice(shapeIndex, 1)[0];
             const color = availableColors.splice(colorIndex, 1)[0];
+            const effectIndex = Math.floor(Math.random() * hintRevealEffects.length);
             const effect = hintRevealEffects[effectIndex];
-            hintStyles.push({ shape: `hint-shape-${shape}`, color: `hint-color-${color}`, effect });
+            hintStyles.push({ shape: `hint-shape-${hintShapes[i]}`, color: `hint-color-${color}`, effect });
         }
-        console.log("Randomized hint styles:", hintStyles);
+        console.log("Assigned hint styles:", hintStyles);
     }
 
     // Debounce utility
@@ -551,29 +544,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (guessesLink && guessesScreen) {
         guessesLink.textContent = "Guesses: 0/5";
 
-        const handler = debounce((e) => {
+        guessesLink.addEventListener(isMobile ? "touchstart" : "click", debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
-            console.log("Guesses link triggered", { isUILocked, isLoadingGame, guesses, guessCount }); // CHANGE: Added debug
+            console.log("Guesses link triggered", { isUILocked, isLoadingGame, guesses, guessCount });
             if (isUILocked || isLoadingGame) {
                 console.log("Guesses link ignored: UI locked or game loading");
                 return;
             }
             isUILocked = true;
             const guessesList = document.getElementById("guesses-list");
-            if (!guessesList) {
-                console.error("guesses-list element not found in DOM"); // CHANGE: Added check
+            const keyboardGuessesList = keyboardGuessesContent.querySelector("#guesses-list");
+            if (!guessesList || !keyboardGuessesList) {
+                console.error("guesses-list element not found in DOM");
                 isUILocked = false;
                 return;
             }
-            console.log("Rendering guesses:", guesses, "for element:", guessesList); // CHANGE: Detailed debug
             const guessesContent = guesses.length > 0
-                ? guesses.join(' <span class="separator yellow">|</span> ')
+                ? guesses.map(g => g.toUpperCase()).join(' <span class="separator yellow">|</span> ')
                 : "No guesses yet!";
             guessesList.innerHTML = guessesContent;
-            console.log("Set guessesList.innerHTML to:", guessesList.innerHTML); // CHANGE: Log rendered content
-            guessesList.offsetHeight; // Force DOM refresh
-            guessesList.style.display = "block"; // CHANGE: Ensure visibility
+            keyboardGuessesList.innerHTML = guessesContent;
+            console.log("Rendered guesses:", guessesContent);
+            guessesList.style.display = "block";
+            keyboardGuessesList.style.display = "block";
             if (isMobile) {
                 if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardBackBtn) {
                     keyboardContainer.classList.add("show-alternate", "show-guesses");
@@ -581,18 +575,15 @@ document.addEventListener("DOMContentLoaded", async () => {
                     keyboardGuessesContent.style.display = "flex";
                     keyboardGiveUpContent.style.display = "none";
                     keyboardBackBtn.style.display = "block";
-                    keyboardGuessesContent.offsetHeight; // CHANGE: Force repaint
-                    console.log("Showing guesses content in keyboard container, guessesList:", guessesList.innerHTML);
-                } else {
-                    console.error("Mobile guesses content elements missing"); // CHANGE: Added check
+                    keyboardGuessesContent.offsetHeight;
+                    console.log("Showing mobile guesses content, guessesList:", guessesList.innerHTML);
                 }
             } else {
                 guessesScreen.style.display = "flex";
-                console.log("Showing guesses screen, guessesList:", guessesList.innerHTML);
+                console.log("Showing desktop guesses screen, guessesList:", guessesList.innerHTML);
             }
             setTimeout(() => { isUILocked = false; }, 500);
-        }, 100);
-        guessesLink.addEventListener(isMobile ? "touchstart" : "click", handler);
+        }, 100));
 
         guessesScreen.addEventListener("click", (e) => {
             if (e.target === guessesScreen && !isMobile) {
@@ -1440,17 +1431,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
         isProcessingGuess = true;
-        console.log("Handling guess:", guess); // CHANGE: Debug guess input
+        console.log("Handling guess:", guess);
 
         guessInputContainer.classList.remove("wrong-guess");
         guessInput.value = "";
         guessCount++;
         guesses.push(guess);
-        console.log("Guess added, current guesses:", guesses, "guessCount:", guessCount); // CHANGE: Debug guesses array
+        console.log("Guess added, current guesses:", guesses, "guessCount:", guessCount);
 
         if (guessesLink) {
             guessesLink.textContent = `Guesses: ${guessCount}/5`;
-            console.log("Updated guessesLink text:", guessesLink.textContent); // CHANGE: Debug guessesLink update
+            console.log("Updated guessesLink text:", guessesLink.textContent);
         }
 
         if (guess === secretWord) {
@@ -1646,8 +1637,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         firstGuessMade = false;
         guessCount = 0;
         gaveUp = false;
-        guesses = []; // CHANGE: Ensure guesses array is cleared
-        console.log("Guesses array reset:", guesses); // CHANGE: Debug reset
+        guesses = [];
+        console.log("Guesses array reset:", guesses);
         isProcessingGuess = false;
         if (guessInput) {
             guessInput.value = "";
@@ -1662,7 +1653,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (guessesLink) {
             guessesLink.textContent = "Guesses: 0/5";
-            console.log("Reset guessesLink text:", guessesLink.textContent); // CHANGE: Debug reset
+            console.log("Reset guessesLink text:", guessesLink.textContent);
         }
         if (guessInputContainer) {
             guessInputContainer.classList.remove("game-ended", "wrong-guess");
@@ -1682,7 +1673,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameControlsContainer) {
             gameControlsContainer.style.display = "flex";
         }
-        // CHANGE: Reset guesses list display
         const guessesList = document.getElementById("guesses-list");
         if (guessesList) {
             guessesList.innerHTML = "No guesses yet!";
@@ -1692,7 +1682,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Game state reset complete");
     }
 
-        // Load game
+    // Load game
     function loadGame(game) {
         if (!game) {
             console.error("No game provided to loadGame");

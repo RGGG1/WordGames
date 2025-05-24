@@ -31,11 +31,14 @@
     </div>
     <div id="background-container"></div>
     <div id="game-screen" class="screen">
-        <div id="hint-1" class="hint"></div>
-        <div id="hint-2" class="hint"></div>
-        <div id="hint-3" class="hint"></div>
-        <div id="hint-4" class="hint"></div>
-        <div id="hint-5" class="hint"></div>
+        <div id="hints-container">
+            <span id="hints-heading">Hints</span>
+            <div id="hint-1" class="hint"></div>
+            <div id="hint-2" class="hint"></div>
+            <div id="hint-3" class="hint"></div>
+            <div id="hint-4" class="hint"></div>
+            <div id="hint-5" class="hint"></div>
+        </div>
     </div>
     <div id="guess-area">
         <div id="guess-input-container">
@@ -62,12 +65,12 @@
         <div id="official-games" class="tab-content active">
             <span>Official Games</span>
             <div id="official-list" class="game-list"></div>
-            <button type="button" id="create-pineapple" class="control-btn">Create a Wordy</button>
             <button type="button" id="official-back-btn" class="control-btn">Back</button>
         </div>
         <div id="private-games" class="tab-content">
             <span>Private Games</span>
             <div id="private-list" class="game-list"></div>
+            <button type="button" id="create-pineapple" class="control-btn">Create a Wordy</button>
             <button type="button" id="private-back-btn" class="control-btn">Back</button>
         </div>
     </div>
