@@ -79,14 +79,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const touchThreshold = 10;
 
     // Hint shapes, colors, and reveal effects
-    const hintShapes = ['cloud', 'sun', 'circle', 'planet', 'fluffy-cloud'];
+    const hintShapes = ['cloud', 'sun', 'circle', 'star', 'fluffy-cloud'];
     const hintColors = [
         'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
         'color-6', 'color-7', 'color-8', 'color-9', 'color-10'
     ];
     const hintRevealEffects = [
         'pop', 'stretch', 'zoom', 'bounce', 'spin',
-        'slide-left', 'slide-right', 'slide-up', 'slide-down', 'letter'
+        'slide-left', 'slide-right', 'slide-up', 'slide-down', 'letter', 'splash'
     ];
 
     // Hint reveal order mapping: index to hint ID
@@ -104,12 +104,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Randomize hint styles
     function randomizeHintStyles() {
         hintStyles = [];
-        const shuffledColors = shuffleArray([...hintColors]);
+        const availableColors = shuffleArray([...hintColors]);
+        const shuffledEffects = shuffleArray([...hintRevealEffects]);
         for (let i = 0; i < 5; i++) {
-            const color = shuffledColors[i % shuffledColors.length];
-            const effectIndex = Math.floor(Math.random() * hintRevealEffects.length);
-            const effect = hintRevealEffects[effectIndex];
+            const color = availableColors.length > 0 ? availableColors[i % availableColors.length] : hintColors[i % hintColors.length];
+            const effect = shuffledEffects[i % shuffledEffects.length];
             hintStyles.push({ shape: `hint-shape-${hintShapes[i]}`, color: `hint-color-${color}`, effect });
+            if (availableColors.length > 0) availableColors.splice(i % availableColors.length, 1);
         }
         console.log("Assigned randomized hint styles:", hintStyles);
     }
@@ -688,7 +689,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Next game arrow
+        // Next game arrow
     if (nextGameArrow) {
         nextGameArrow.addEventListener(isMobile ? "touchstart" : "click", async (e) => {
             e.preventDefault();
@@ -839,7 +840,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-        // Private back button
+    // Private back button
     if (privateBackBtn) {
         privateBackBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
             e.preventDefault();
@@ -1403,14 +1404,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const hintElement = document.getElementById(hintRevealOrder[index]);
             if (hintElement && hintStyles[index]) {
                 const isFluffyCloudShape = hintStyles[index].shape === "hint-shape-fluffy-cloud";
-                // Preserve internal spaces as they are
                 const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[index].effect;
                 if (effect === "letter") {
                     const letters = hint.split("").map((letter, i) => {
-                        const displayChar = letter === " " ? " " : letter; // Preserve spaces
+                        const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
                     hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
@@ -1434,14 +1434,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (hintElement && hintStyles[hintIndex]) {
                 const hint = hints[hintIndex];
                 const isFluffyCloudShape = hintStyles[hintIndex].shape === "hint-shape-fluffy-cloud";
-                // Preserve internal spaces as they are
                 const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
-                const effect = hintStyles[index].effect;
+                const effect = hintStyles[hintIndex].effect;
                 if (effect === "letter") {
                     const letters = hint.split("").map((letter, i) => {
-                        const displayChar = letter === " " ? " " : letter; // Preserve spaces
+                        const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
                     hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
@@ -1550,7 +1549,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         adjustBackground();
 
         if (guessInput && guessInputContainer) {
-            guessInput.value = secretWord;
+            guessInput.value = ""; // Clear the input field
             guessInputContainer.classList.add("game-ended");
         }
 
