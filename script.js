@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const touchThreshold = 10;
 
     // Hint shapes, colors, and reveal effects
-    const hintShapes = ['cloud', 'sun', 'circle', 'star', 'heart'];
+    const hintShapes = ['cloud', 'sun', 'circle', 'planet', 'fluffy-cloud'];
     const hintColors = [
         'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
         'color-6', 'color-7', 'color-8', 'color-9', 'color-10'
@@ -485,7 +485,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-        // All Games link
+    // All Games link
     if (allGamesLink) {
         const handler = debounce((e) => {
             e.preventDefault();
@@ -839,7 +839,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Private back button
+        // Private back button
     if (privateBackBtn) {
         privateBackBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
             e.preventDefault();
@@ -1140,7 +1140,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Fetch private games
     async function fetchPrivateGames() {
         try {
-            console.log("Fetching private games from:", privateUrl);
+            console.log("Fetching private-games from:", privateUrl);
             const response = await fetch(privateUrl, {
                 method: "GET",
                 mode: "cors",
@@ -1402,18 +1402,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         visibleHints.forEach((hint, index) => {
             const hintElement = document.getElementById(hintRevealOrder[index]);
             if (hintElement && hintStyles[index]) {
-                const isHeartShape = hintStyles[index].shape === "hint-shape-heart";
+                const isFluffyCloudShape = hintStyles[index].shape === "hint-shape-fluffy-cloud";
                 // Preserve internal spaces as they are
-                const hintContent = isHeartShape ? `<span class="hint-text">${hint}</span>` : hint;
+                const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[index].effect;
                 if (effect === "letter") {
                     const letters = hint.split("").map((letter, i) => {
-                        const displayChar = letter === " " ? " " : letter;
+                        const displayChar = letter === " " ? " " : letter; // Preserve spaces
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
-                    hintElement.innerHTML = isHeartShape ? `<span class="hint-text">${letters}</span>` : letters;
+                    hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
                 } else {
                     hintElement.classList.add(`reveal-${effect}`);
                     setTimeout(() => {
@@ -1433,18 +1433,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             const hintElement = document.getElementById(hintRevealOrder[hintIndex]);
             if (hintElement && hintStyles[hintIndex]) {
                 const hint = hints[hintIndex];
-                const isHeartShape = hintStyles[hintIndex].shape === "hint-shape-heart";
+                const isFluffyCloudShape = hintStyles[hintIndex].shape === "hint-shape-fluffy-cloud";
                 // Preserve internal spaces as they are
-                const hintContent = isHeartShape ? `<span class="hint-text">${hint}</span>` : hint;
+                const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
-                const effect = hintStyles[hintIndex].effect;
+                const effect = hintStyles[index].effect;
                 if (effect === "letter") {
                     const letters = hint.split("").map((letter, i) => {
-                        const displayChar = letter === " " ? " " : letter;
+                        const displayChar = letter === " " ? " " : letter; // Preserve spaces
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
-                    hintElement.innerHTML = isHeartShape ? `<span class="hint-text">${letters}</span>` : letters;
+                    hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
                 } else {
                     hintElement.classList.add(`reveal-${effect}`);
                     setTimeout(() => {
@@ -1730,7 +1730,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         resetGame();
         isLoadingGame = true;
         try {
+            // Trim only leading/trailing spaces for secret word
             secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase().trim() : "";
+            // Validate secret word (no internal spaces)
+            if (secretWord.includes(" ")) {
+                throw new Error("Secret word contains internal spaces");
+            }
             hints = [
                 game["Hint 1"]?.toUpperCase().trim() || "",
                 game["Hint 2"]?.toUpperCase().trim() || "",

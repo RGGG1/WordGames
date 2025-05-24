@@ -118,16 +118,39 @@ body {
     margin-left: 7vw; /* Centers over 20vw hint width */
 }
 
-.hint-shape-heart {
-    background: rgba(255, 20, 147, 0.7);
-    clip-path: path('M50,20 C75,0 100,20 100,50 C100,80 75,100 50,100 C25,100 0,80 0,50 C0,20 25,0 50,20 Z');
+.hint-shape-fluffy-cloud {
+    background: rgba(255, 255, 255, 0.7); /* White for fluffy cloud */
+    border-radius: 50%;
+    position: relative;
+    width: 22vw;
+    height: 9vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    text-align: center;
-    padding: 2vh 2vw;
-    width: 22vw;
-    height: 9vh;
+}
+
+.hint-shape-fluffy-cloud::before,
+.hint-shape-fluffy-cloud::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    border-radius: 50%;
+}
+
+.hint-shape-fluffy-cloud::before {
+    width: 8vw;
+    height: 8vw;
+    top: -3vh;
+    left: 1vw;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.hint-shape-fluffy-cloud::after {
+    width: 6vw;
+    height: 6vw;
+    top: -2vh;
+    right: 1vw;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
 .hint-shape-circle {
@@ -135,9 +158,22 @@ body {
     border-radius: 50%;
 }
 
-.hint-shape-star {
-    background: rgba(255, 215, 0, 0.7);
-    clip-path: polygon(50% 10%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+.hint-shape-planet {
+    background: rgba(100, 149, 237, 0.7); /* Cornflower blue for planet */
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+}
+
+.hint-shape-planet::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 10%, transparent 10%),
+                radial-gradient(circle, rgba(0, 0, 0, 0.2) 15%, transparent 15%);
+    background-size: 20% 20%;
+    opacity: 0.5;
 }
 
 .hint-shape-cloud {
@@ -203,7 +239,7 @@ body {
     display: none;
 }
 
-.hint-shape-heart .hint-text {
+.hint-shape-fluffy-cloud .hint-text {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -345,6 +381,27 @@ body {
 .hint.hint-color-9.hint-shape-sun::after { background: rgba(0, 191, 255, 0.7); }
 .hint.hint-color-10.hint-shape-sun::before,
 .hint.hint-color-10.hint-shape-sun::after { background: rgba(255, 20, 147, 0.7); }
+
+.hint.hint-color-1.hint-shape-fluffy-cloud::before,
+.hint.hint-color-1.hint-shape-fluffy-cloud::after { background: rgba(255, 105, 180, 0.7); }
+.hint.hint-color-2.hint-shape-fluffy-cloud::before,
+.hint.hint-color-2.hint-shape-fluffy-cloud::after { background: rgba(255, 215, 0, 0.7); }
+.hint.hint-color-3.hint-shape-fluffy-cloud::before,
+.hint.hint-color-3.hint-shape-fluffy-cloud::after { background: rgba(50, 205, 50, 0.7); }
+.hint.hint-color-4.hint-shape-fluffy-cloud::before,
+.hint.hint-color-4.hint-shape-fluffy-cloud::after { background: rgba(135, 206, 235, 0.7); }
+.hint.hint-color-5.hint-shape-fluffy-cloud::before,
+.hint.hint-color-5.hint-shape-fluffy-cloud::after { background: rgba(255, 165, 0, 0.7); }
+.hint.hint-color-6.hint-shape-fluffy-cloud::before,
+.hint.hint-color-6.hint-shape-fluffy-cloud::after { background: rgba(138, 43, 226, 0.7); }
+.hint.hint-color-7.hint-shape-fluffy-cloud::before,
+.hint.hint-color-7.hint-shape-fluffy-cloud::after { background: rgba(255, 69, 0, 0.7); }
+.hint.hint-color-8.hint-shape-fluffy-cloud::before,
+.hint.hint-color-8.hint-shape-fluffy-cloud::after { background: rgba(75, 0, 130, 0.7); }
+.hint.hint-color-9.hint-shape-fluffy-cloud::before,
+.hint.hint-color-9.hint-shape-fluffy-cloud::after { background: rgba(0, 191, 255, 0.7); }
+.hint.hint-color-10.hint-shape-fluffy-cloud::before,
+.hint.hint-color-10.hint-shape-fluffy-cloud::after { background: rgba(255, 20, 147, 0.7); }
 
 #guess-area {
     position: fixed;
@@ -757,10 +814,11 @@ body {
     margin: 1vh 0;
 }
 
-#official-back-btn, #private-back-btn {
-    width: 55vw;
-    height: 7vh;
-    font-size: 3.2vh;
+#official-back-btn,
+#private-back-btn {
+    width: 50vw;
+    height: 6vh;
+    font-size: 3vh;
     background: #FFB300;
     border: none;
     border-radius: 1vh;
@@ -906,8 +964,8 @@ body {
 
 #guesses-title {
     font-size: 2.5vh;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
+    color: #000000;
+    text-shadow: none;
     margin-bottom: 1vh;
 }
 
@@ -985,7 +1043,28 @@ body {
         top: 1vh;
     }
 
-    .hint-shape-heart .hint-text {
+    .hint-shape-fluffy-cloud {
+        width: 27vw;
+        height: 8vh;
+    }
+
+    .hint-shape-fluffy-cloud::before {
+        width: 8vw;
+        height: 8vw;
+        top: -2vh;
+        left: 1vw;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .hint-shape-fluffy-cloud::after {
+        width: 6vw;
+        height: 6vw;
+        top: -1.5vh;
+        right: 1vw;
+        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .hint-shape-fluffy-cloud .hint-text {
         font-size: min(4.55vh, 3.9vw); /* Increased by 30% */
     }
 
@@ -1011,6 +1090,18 @@ body {
     .hint-shape-sun::after {
         transform: scale(1.4);
         opacity: 0.2;
+    }
+
+    .hint-shape-planet {
+        background: rgba(100, 149, 237, 0.7);
+        border-radius: 50%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hint-shape-planet::before {
+        background-size: 20% 20%;
+        opacity: 0.5;
     }
 
     #guess-input-container {
@@ -1083,6 +1174,13 @@ body {
         font-size: 2.8vh;
     }
 
+    #official-back-btn,
+    #private-back-btn {
+        width: 60vw;
+        height: 7vh;
+        font-size: 3.2vh;
+    }
+
     #share-section {
         margin-bottom: 5vh;
     }
@@ -1124,6 +1222,13 @@ body {
     #game-over-message {
         font-size: 3.5vh;
         padding: 1.5vh;
+    }
+
+    #guesses-title {
+        font-size: 2.8vh;
+        color: #000000;
+        text-shadow: none;
+        margin-bottom: 1vh;
     }
 
     #guesses-list {
