@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const touchThreshold = 10;
 
     // Hint shapes, colors, and reveal effects
-    const hintShapes = ['cloud', 'sun', 'circle', 'star', 'heart']; // Swapped heart and cloud
+    const hintShapes = ['cloud', 'sun', 'circle', 'star', 'heart'];
     const hintColors = [
         'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
         'color-6', 'color-7', 'color-8', 'color-9', 'color-10'
@@ -92,18 +92,26 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Hint reveal order mapping: index to hint ID
     const hintRevealOrder = ['hint-1', 'hint-2', 'hint-3', 'hint-4', 'hint-5'];
 
+    // Shuffle array utility
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
     // Randomize hint styles
     function randomizeHintStyles() {
         hintStyles = [];
-        const availableColors = [...hintColors];
+        const shuffledColors = shuffleArray([...hintColors]);
         for (let i = 0; i < 5; i++) {
-            const colorIndex = Math.floor(Math.random() * availableColors.length);
-            const color = availableColors.splice(colorIndex, 1)[0];
+            const color = shuffledColors[i % shuffledColors.length];
             const effectIndex = Math.floor(Math.random() * hintRevealEffects.length);
             const effect = hintRevealEffects[effectIndex];
             hintStyles.push({ shape: `hint-shape-${hintShapes[i]}`, color: `hint-color-${color}`, effect });
         }
-        console.log("Assigned hint styles:", hintStyles);
+        console.log("Assigned randomized hint styles:", hintStyles);
     }
 
     // Debounce utility
@@ -153,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     window.addEventListener("resize", adjustBackground);
 
-    // Setup game name (WORDY) to return to home screen
+    // Setup game name (WORDY) to return to game screen
     if (gameNameElement) {
         const handler = debounce((e) => {
             e.preventDefault();
@@ -164,8 +172,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                 return;
             }
             isUILocked = true;
-            resetGame();
-            showGameSelectScreen();
+            resetScreenDisplays(gameScreen);
+            showKeyboard();
+            activeInput = guessInput;
+            if (activeInput && !isMobile) activeInput.focus();
+            adjustBackground();
+            setupKeyboardListeners();
             setTimeout(() => { isUILocked = false; }, 500);
         }, 100);
         gameNameElement.addEventListener(isMobile ? "touchstart" : "click", handler);
@@ -473,7 +485,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // All Games link
+        // All Games link
     if (allGamesLink) {
         const handler = debounce((e) => {
             e.preventDefault();
@@ -739,7 +751,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Update arrow states
     function updateArrowStates(currentIndex, gameList) {
         if (prevGameArrow) {
-            prevGameArrow.classList.remove("disabled()");
+            prevGameArrow.classList.remove("disabled");
             if (currentIndex >= gameList.length - 1) {
                 prevGameArrow.classList.add("disabled");
             }
@@ -845,7 +857,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-        // Confirm button
+    // Confirm button
     if (confirmBtn) {
         const handler = async (e) => {
             e.preventDefault();
@@ -1391,7 +1403,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const hintElement = document.getElementById(hintRevealOrder[index]);
             if (hintElement && hintStyles[index]) {
                 const isHeartShape = hintStyles[index].shape === "hint-shape-heart";
-                const hintContent = isHeartShape ? `<span class="hint-text">${hint.replace(/ /g, " ")}</span>` : hint.replace(/ /g, " ");
+                // Preserve internal spaces as they are
+                const hintContent = isHeartShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[index].effect;
@@ -1421,7 +1434,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (hintElement && hintStyles[hintIndex]) {
                 const hint = hints[hintIndex];
                 const isHeartShape = hintStyles[hintIndex].shape === "hint-shape-heart";
-                const hintContent = isHeartShape ? `<span class="hint-text">${hint.replace(/ /g, " ")}</span>` : hint.replace(/ /g, " ");
+                // Preserve internal spaces as they are
+                const hintContent = isHeartShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[hintIndex].effect;
@@ -1716,15 +1730,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         resetGame();
         isLoadingGame = true;
         try {
-            secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "";
+            secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase().trim() : "";
             hints = [
-                game["Hint 1"]?.toUpperCase() || "",
-                game["Hint 2"]?.toUpperCase() || "",
-                game["Hint 3"]?.toUpperCase() || "",
-                game["Hint 4"]?.toUpperCase() || "",
-                game["Hint 5"]?.toUpperCase() || ""
-            ].filter(hint => hint.trim() !== "");
-            console.log("Loaded hints:", hints);
+                game["Hint 1"]?.toUpperCase().trim() || "",
+                game["Hint 2"]?.toUpperCase().trim() || "",
+                game["Hint 3"]?.toUpperCase().trim() || "",
+                game["Hint 4"]?.toUpperCase().trim() || "",
+                game["Hint 5"]?.toUpperCase().trim() || ""
+            ].filter(hint => hint !== "");
+            console.log("Loaded hints with preserved internal spaces:", hints);
 
             hintIndex = 0;
             currentGameId = game["Game Number"];

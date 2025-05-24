@@ -48,7 +48,7 @@ body {
     -webkit-text-stroke: 1px #FFFFFF;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     cursor: pointer;
-    text-decoration: none; /* Remove hyperlink underline */
+    text-decoration: none;
 }
 
 #all-games-link {
@@ -76,7 +76,7 @@ body {
     position: static;
     display: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: min(4.5vh, 3.5vw); /* Slightly smaller font size */
+    font-size: min(5.85vh, 4.55vw); /* Increased by 30% */
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
@@ -115,16 +115,19 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     margin-bottom: 1vh;
+    margin-left: 7vw; /* Centers over 20vw hint width */
 }
 
 .hint-shape-heart {
     background: rgba(255, 20, 147, 0.7);
-    clip-path: path('M50,15 C30,0 0,30 0,50 C0,70 20,90 50,100 C80,90 100,70 100,50 C100,30 70,0 50,15 Z');
+    clip-path: path('M50,20 C75,0 100,20 100,50 C100,80 75,100 50,100 C25,100 0,80 0,50 C0,20 25,0 50,20 Z');
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 1vh 1vw;
+    padding: 2vh 2vw;
+    width: 22vw;
+    height: 9vh;
 }
 
 .hint-shape-circle {
@@ -134,7 +137,7 @@ body {
 
 .hint-shape-star {
     background: rgba(255, 215, 0, 0.7);
-    clip-path: polygon(50% 10%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); /* Adjusted star shape */
+    clip-path: polygon(50% 10%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
 }
 
 .hint-shape-cloud {
@@ -206,7 +209,7 @@ body {
     justify-content: center;
     width: 100%;
     height: 100%;
-    font-size: min(4.5vh, 3.5vw); /* Match hint font size */
+    font-size: min(5.85vh, 4.55vw); /* Increased by 30% */
     line-height: 1.1;
     text-align: center;
 }
@@ -414,7 +417,7 @@ body {
 }
 
 #guess-input-container.wrong-guess {
-    animation: shakeAndFlash 0.35s ease; /* Updated animation */
+    animation: shakeAndFlash 0.35s ease;
 }
 
 @keyframes shakeAndFlash {
@@ -424,11 +427,11 @@ body {
     }
     20%, 60% {
         transform: translateX(-5px);
-        background: rgba(255, 0, 0, 0.7); /* Flash red */
+        background: rgba(255, 0, 0, 0.7);
     }
     40%, 80% {
         transform: translateX(5px);
-        background: rgba(255, 0, 0, 0.7); /* Flash red */
+        background: rgba(255, 0, 0, 0.7);
     }
 }
 
@@ -754,11 +757,18 @@ body {
     margin: 1vh 0;
 }
 
-#official-games .control-btn,
-#private-games .control-btn {
-    width: 55vw; /* Unified size for back buttons */
+#official-back-btn, #private-back-btn {
+    width: 55vw;
     height: 7vh;
     font-size: 3.2vh;
+    background: #FFB300;
+    border: none;
+    border-radius: 1vh;
+    font-family: 'Luckiest Guy', cursive;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    cursor: pointer;
+    margin: 1vh 0;
 }
 
 .control-btn:disabled {
@@ -771,7 +781,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: 85vw;
-    margin-bottom: 4vh; /* Two lines of space before buttons */
+    margin-bottom: 4vh;
 }
 
 #share-panel {
@@ -790,7 +800,7 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
-    margin: 2vh 0; /* Two lines of space below */
+    margin: 2vh 0;
 }
 
 #share-text {
@@ -903,8 +913,8 @@ body {
 
 #guesses-list {
     font-size: 2vh;
-    color: #000000; /* Solid black for guess history */
-    text-shadow: none; /* Remove shadow for clarity */
+    color: #000000;
+    text-shadow: none;
     text-align: center;
 }
 
@@ -959,7 +969,7 @@ body {
 
 @media screen and (max-width: 768px) {
     .hint {
-        font-size: min(3.5vh, 3vw); /* Slightly smaller font size for mobile */
+        font-size: min(4.55vh, 3.9vw); /* Increased by 30% */
         width: 25vw;
         height: 7vh;
         padding: 1vh 0.5vw;
@@ -967,6 +977,7 @@ body {
 
     #hints-heading {
         font-size: 2.5vh;
+        margin-left: 9vw; /* Centers over 25vw hint width */
     }
 
     #hints-container {
@@ -975,7 +986,7 @@ body {
     }
 
     .hint-shape-heart .hint-text {
-        font-size: min(3.5vh, 3vw);
+        font-size: min(4.55vh, 3.9vw); /* Increased by 30% */
     }
 
     .hint-shape-cloud::before {
@@ -1072,15 +1083,8 @@ body {
         font-size: 2.8vh;
     }
 
-    #official-games .control-btn,
-    #private-games .control-btn {
-        width: 55vw;
-        height: 7vh;
-        font-size: 3.2vh;
-    }
-
     #share-section {
-        margin-bottom: 5vh; /* Adjusted for mobile */
+        margin-bottom: 5vh;
     }
 
     #secret-word-message {
