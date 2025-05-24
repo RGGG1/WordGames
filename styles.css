@@ -15,6 +15,9 @@ body {
     overflow: hidden;
     height: 100vh;
     width: 100vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #background-container {
@@ -32,13 +35,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 98vw;
     width: 100%;
     height: 5vh;
     padding: 0 2vw;
     background: transparent;
     position: fixed;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 100;
 }
 
@@ -63,11 +68,13 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
+    max-width: 98vw;
     width: 100%;
-    height: 51vh;
+    height: 50.5vh; /* Reduced by half space (0.5vh) */
     position: fixed;
     top: 5vh;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 10;
     background: transparent;
 }
@@ -120,7 +127,7 @@ body {
 }
 
 .hint-shape-fluffy-cloud {
-    background: rgba(255, 255, 255, 0.7); /* White for fluffy cloud */
+    background: rgba(200, 200, 200, 0.7); /* Light gray instead of white */
     position: relative;
     width: 24vw;
     height: 10vh;
@@ -182,42 +189,44 @@ body {
     text-indent: -0.5em; /* Moves text left by two character spaces */
 }
 
-.hint-shape-circle {
-    background: rgba(50, 205, 50, 0.7);
-    border-radius: 50%;
-}
-
-.hint-shape-star {
-    background: rgba(100, 149, 237, 0.7); /* Retain cornflower blue */
+.hint-shape-aviator {
+    background: rgba(50, 205, 50, 0.7); /* Default to lime green */
     position: relative;
+    width: 24vw; /* Wider at top */
+    height: 8vh;
     clip-path: polygon(
-        50% 0%, 
-        61% 35%, 
-        98% 35%, 
-        68% 57%, 
-        79% 91%, 
-        50% 70%, 
-        21% 91%, 
-        32% 57%, 
-        2% 35%, 
-        39% 35%
+        10% 0%, /* Top-left, slightly inset */
+        90% 0%, /* Top-right, slightly inset */
+        80% 100%, /* Bottom-right, narrower */
+        20% 100% /* Bottom-left, narrower */
     );
-    width: 22vw;
-    height: 9vh;
+    border-radius: 1vh; /* Smooth corners */
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.hint-shape-star::before {
+.hint-shape-speech-bubble {
+    background: rgba(135, 206, 235, 0.7); /* Default to sky blue */
+    position: relative;
+    width: 24vw;
+    height: 8vh;
+    border-radius: 1vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hint-shape-speech-bubble::after {
     content: '';
     position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgba(255, 255, 255, 0.2);
-    clip-path: inherit;
-    z-index: -1;
-    transform: scale(0.95);
+    bottom: -2vh;
+    left: 20%;
+    width: 0;
+    height: 0;
+    border: 1vh solid transparent;
+    border-top-color: inherit;
+    border-bottom: 0;
 }
 
 .hint-shape-cloud {
@@ -275,7 +284,6 @@ body {
     opacity: 0.2;
 }
 
-.hint-shape-speech-bubble, 
 .hint-shape-hexagon, 
 .hint-shape-pentagon, 
 .hint-shape-octagon, 
@@ -365,21 +373,6 @@ body {
 .hint.reveal-slide-up { animation: reveal-slide-up 0.5s ease-out forwards; }
 .hint.reveal-slide-down { animation: reveal-slide-down 0.5s ease-out forwards; }
 .hint.reveal-splash { animation: reveal-splash 0.6s ease-out forwards; }
-.hint.reveal-letter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.hint.reveal-letter .letter {
-    opacity: 0;
-    display: inline-block;
-}
-
-@keyframes fadeInLetter {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
 
 .hint-color-1 { background: rgba(255, 105, 180, 0.7); }
 .hint-color-2 { background: rgba(255, 215, 0, 0.7); }
@@ -475,21 +468,12 @@ body {
 .hint.hint-color-10.hint-shape-fluffy-cloud .puff-1,
 .hint.hint-color-10.hint-shape-fluffy-cloud .puff-2 { background: rgba(255, 20, 147, 0.7); }
 
-.hint.hint-color-1.hint-shape-star::before { background: rgba(255, 105, 180, 0.2); }
-.hint.hint-color-2.hint-shape-star::before { background: rgba(255, 215, 0, 0.2); }
-.hint.hint-color-3.hint-shape-star::before { background: rgba(50, 205, 50, 0.2); }
-.hint.hint-color-4.hint-shape-star::before { background: rgba(135, 206, 235, 0.2); }
-.hint.hint-color-5.hint-shape-star::before { background: rgba(255, 165, 0, 0.2); }
-.hint.hint-color-6.hint-shape-star::before { background: rgba(138, 43, 226, 0.2); }
-.hint.hint-color-7.hint-shape-star::before { background: rgba(255, 69, 0, 0.2); }
-.hint.hint-color-8.hint-shape-star::before { background: rgba(75, 0, 130, 0.2); }
-.hint.hint-color-9.hint-shape-star::before { background: rgba(0, 191, 255, 0.2); }
-.hint.hint-color-10.hint-shape-star::before { background: rgba(255, 20, 147, 0.2); }
-
 #guess-area {
     position: fixed;
-    top: 56vh;
-    left: 0;
+    top: 55.5vh; /* Adjusted for game-screen reduction */
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 98vw;
     width: 100%;
     height: 10vh;
     display: flex;
@@ -503,10 +487,11 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 85vw;
+    width: 65vw; /* Adjusted to fit within 98vw with button */
     height: 8vh;
     background: rgba(255, 255, 255, 0.85);
-    border-radius: 1vh;
+    border-radius: 1vh 0 0 1vh; /* Square on right side */
+    margin-right: 0; /* Remove any gap */
 }
 
 #guess-prompt {
@@ -539,12 +524,13 @@ body {
     height: 8vh;
     background: #FFB300;
     border: none;
-    border-radius: 1vh;
+    border-radius: 0 1vh 1vh 0; /* Square on left side */
     font-family: 'Luckiest Guy', cursive;
     font-size: 3.75vh;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
+    margin-left: 0; /* Ensure flush contact */
 }
 
 #guess-btn:disabled {
@@ -579,12 +565,15 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    max-width: 98vw;
     width: 100%;
     height: 5vh;
     background: #FFFFFF;
     padding: 0 2vw;
     position: fixed;
-    top: 66vh;
+    top: 65.5vh; /* Adjusted for game-screen reduction */
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 100;
 }
 
@@ -621,10 +610,12 @@ body {
 #keyboard-container {
     display: none;
     position: fixed;
-    top: 71vh;
-    left: 0;
+    top: 70.5vh; /* Adjusted for game-screen reduction */
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 98vw;
     width: 100%;
-    height: 20vh;
+    height: 20.5vh; /* Increased by half space (0.5vh) */
     background: #FFFFFF;
     z-index: 100;
 }
@@ -636,7 +627,7 @@ body {
     flex-direction: column;
     width: 100%;
     height: 100%;
-    padding: 1vh 0;
+    padding: 1vh 0 1.5vh 0; /* Added 0.5vh padding-bottom */
 }
 
 #keyboard-container.show-alternate #keyboard-content {
@@ -703,7 +694,9 @@ body {
 #ad-box {
     position: fixed;
     bottom: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 98vw;
     width: 100%;
     height: 4vh;
     background: #F0F0F0;
@@ -723,11 +716,13 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 98vw;
     width: 100%;
     height: calc(100vh - 4vh);
     position: fixed;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 50;
     background: rgba(0, 0, 0, 0.5);
 }
@@ -1023,7 +1018,9 @@ body {
     display: none;
     position: fixed;
     top: 0;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    max-width: 98vw;
     width: 100%;
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
@@ -1177,44 +1174,22 @@ body {
         opacity: 0.2;
     }
 
-    .hint-shape-star {
-        clip-path: polygon(
-            50% 0%, 
-            61% 35%, 
-            98% 35%, 
-            68% 57%, 
-            79% 91%, 
-            50% 70%, 
-            21% 91%, 
-            32% 57%, 
-            2% 35%, 
-            39% 35%
-        );
-    }
-
     #guess-input-container {
-        width: 70vw;
+        width: 50vw; /* Adjusted for mobile */
         height: 9vh;
-    }
-
-    #guess-prompt {
-        font-size: 2.5vh;
-        padding: 0.5vh 0;
-    }
-
-    #guess-input {
-        font-size: 3.5vh;
+        border-radius: 1vh 0 0 1vh;
     }
 
     #guess-btn {
         width: 35vw;
         height: 9vh;
         font-size: 3.5vh;
+        border-radius: 0 1vh 1vh 0;
     }
 
     #game-controls-container {
         height: 6vh;
-        top: 66vh;
+        top: 65.5vh;
     }
 
     #give-up-link,
