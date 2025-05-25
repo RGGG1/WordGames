@@ -632,7 +632,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Previous game arrow
+        // Previous game arrow
     if (prevGameArrow) {
         prevGameArrow.addEventListener(isMobile ? "touchstart" : "click", async (e) => {
             e.preventDefault();
@@ -1210,7 +1210,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("No official games to display");
                 officialList.innerHTML = "<div>No official games available</div>";
             } else {
-                const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
+                const results = JSON.parse(localStorage.getItem("pineappleResults") || "");
                 allGames.forEach((game, index) => {
                     const gameNumber = game["Game Number"];
                     const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
@@ -1243,7 +1243,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             touchMoved = false;
                             console.log("Touch started on game item", { x: touchStartX, y: touchStartY });
                         });
-                        gameItem.addEventListener("touchmove", (e) => {
+                        gameItem.addEventListener("touchmove样本代码", (e) => {
                             const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
                             const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
                             if (deltaX > touchThreshold || deltaY > touchThreshold) {
@@ -1309,7 +1309,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!privateGames.length) {
                 privateList.innerHTML = "<div>No private games yet</div>";
             } else {
-                const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
+                const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "");
                 console.log("Private game results from localStorage:", results);
                 privateGames.forEach(game => {
                     const gameNumber = game["Game Number"];
@@ -1429,16 +1429,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             const hintElement = document.getElementById(hintRevealOrder[index]);
             if (hintElement && hintStyles[index]) {
                 const isFluffyCloudShape = hintStyles[index].shape === "hint-shape-fluffy-cloud";
-                const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
+                const isDiamondShape = hintStyles[index].shape === "hint-shape-diamond";
+                const hintContent = isFluffyCloudShape || isDiamondShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[index].effect;
                 if (effect === "letter") {
-                    const letters = hint.split("").map((letter, i) => {
+                    const letters = hint.split("");
+                    const chars = letters.map((letter, i) => {
                         const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
-                    hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
+                    hintElement.innerHTML = isFluffyCloudShape || isDiamondShape ? `<span class="hint-text">${chars}</span>` : chars;
                 } else {
                     hintElement.classList.add(`reveal-${effect}`);
                     setTimeout(() => {
@@ -1459,16 +1461,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (hintElement && hintStyles[hintIndex]) {
                 const hint = hints[hintIndex];
                 const isFluffyCloudShape = hintStyles[hintIndex].shape === "hint-shape-fluffy-cloud";
-                const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
+                const isDiamondShape = hintStyles[hintIndex].shape === "hint-shape-diamond";
+                const hintContent = isFluffyCloudShape || isDiamondShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[hintIndex].effect;
                 if (effect === "letter") {
-                    const letters = hint.split("").map((letter, i) => {
+                    const letters = hint.split("");
+                    const chars = letters.map((letter, i) => {
                         const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
-                    hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
+                    hintElement.innerHTML = isFluffyCloudShape || isDiamondShape ? `<span class="hint-text">${chars}</span>` : chars;
                 } else {
                     hintElement.classList.add(`reveal-${effect}`);
                     setTimeout(() => {
@@ -1549,7 +1553,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             normalizedGameNumber = gameNumber.replace("Game #", "");
         }
         console.log(`Normalized game number: ${normalizedGameNumber}`);
-        const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
+        const results = JSON.parse(localStorage.getItem(resultsKey) || "");
         if (!results[normalizedGameNumber] || results[normalizedGameNumber].guesses === '-') {
             results[normalizedGameNumber] = { secretWord, guesses };
             localStorage.setItem(resultsKey, JSON.stringify(results));
@@ -1634,7 +1638,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
         }
         if (shareButtons.telegram) {
-            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&amp;text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
         }
         if (shareButtons.twitter) {
             shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
@@ -1657,12 +1661,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             startPineappleRain();
         }
 
-        setupKeyboardListeners();
-
-        if (currentGameNumber.includes("- Private")) {
-            displayGameList();
-            console.log("Private games list updated after game end");
-        }
+        setupKeyboard();
     }
 
     // Start pineapple rain

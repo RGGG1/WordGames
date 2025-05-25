@@ -35,11 +35,11 @@ body {
     width: 98vw;
     margin: 0 auto;
     height: 5vh;
-    padding: 0 2vw;
+    padding: 0 1vw;
     background: transparent;
     position: fixed;
     top: 0;
-    left: 0;
+    left: 1vw;
     z-index: 100;
 }
 
@@ -69,7 +69,7 @@ body {
     height: 50.5vh;
     position: fixed;
     top: 5vh;
-    left: 0;
+    left: 1vw;
     z-index: 10;
     background: transparent;
 }
@@ -217,10 +217,11 @@ body {
     overflow: hidden;
     box-sizing: border-box;
     margin-bottom: 1vh;
+    animation: none; /* Prevent rotation animation on load */
 }
 
 #hint-4.hint-shape-diamond .hint-text {
-    transform: rotate(-45deg);
+    transform: none; /* No rotation for text */
     font-size: min(5.85vh, 4.55vw);
     text-align: center;
     width: 80%;
@@ -527,7 +528,7 @@ body {
 #guess-area {
     position: fixed;
     top: 56vh;
-    left: 0;
+    left: 1vw;
     width: 98vw;
     margin: 0 auto;
     height: 10vh;
@@ -622,9 +623,10 @@ body {
     margin: 0 auto;
     height: 5vh;
     background: #FFFFFF;
-    padding: 0 2vw;
+    padding: 0 1vw;
     position: fixed;
     top: 66vh;
+    left: 1vw;
     z-index: 100;
 }
 
@@ -662,7 +664,7 @@ body {
     display: none;
     position: fixed;
     top: 71vh;
-    left: 0;
+    left: 1vw;
     width: 98vw;
     margin: 0 auto;
     height: 20vh;
@@ -744,7 +746,7 @@ body {
 #ad-box {
     position: fixed;
     bottom: 0;
-    left: 0;
+    left: 1vw;
     width: 98vw;
     margin: 0 auto;
     height: 4vh;
@@ -770,7 +772,7 @@ body {
     height: calc(100vh - 4vh);
     position: fixed;
     top: 0;
-    left: 0;
+    left: 1vw;
     z-index: 50;
     background: rgba(0, 0, 0, 0.5);
 }
@@ -944,7 +946,20 @@ body {
     margin: 1vh 0;
 }
 
-#official-back-btn,
+#official-back-btn {
+    width: 50vw;
+    height: 6vh;
+    font-size: 3vh;
+    background: #FFB300;
+    border: none;
+    border-radius: 1vh;
+    font-family: 'Luckiest Guy', cursive;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    cursor: pointer;
+    margin: 1vh 0;
+}
+
 #guesses-close-btn {
     width: 80vw;
     height: 10vh;
@@ -1084,7 +1099,7 @@ body {
     display: none;
     position: fixed;
     top: 0;
-    left: 0;
+    left: 1vw;
     width: 98vw;
     margin: 0 auto;
     height: calc(100vh - 4vh);
@@ -1331,7 +1346,12 @@ body {
         font-size: 2.8vh;
     }
 
-    #official-back-btn,
+    #official-back-btn {
+        width: 60vw;
+        height: 7vh;
+        font-size: 3.2vh;
+    }
+
     #guesses-close-btn {
         width: 90vw;
         height: 12vh;
@@ -1342,6 +1362,13 @@ body {
         width: 60vw;
         height: 7vh;
         font-size: 3.2vh;
+    }
+
+    #keyboard-back-btn {
+        width: 40vw;
+        height: 6vh;
+        font-size: 3vh;
+        margin-top: 1vh;
     }
 
     #share-section {
