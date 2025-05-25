@@ -394,21 +394,6 @@ body {
 .hint.reveal-slide-up { animation: reveal-slide-up 0.5s ease-out forwards; }
 .hint.reveal-slide-down { animation: reveal-slide-down 0.5s ease-out forwards; }
 .hint.reveal-splash { animation: reveal-splash 0.6s ease-out forwards; }
-.hint.reveal-letter {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.hint.reveal-letter .letter {
-    opacity: 0;
-    display: inline-block;
-}
-
-@keyframes fadeInLetter {
-    0% { opacity: 0; transform: translateY(10px); }
-    100% { opacity: 1; transform: translateY(0); }
-}
 
 .hint-color-1 { background: rgba(255, 105, 180, 0.7); }
 .hint-color-2 { background: rgba(255, 215, 0, 0.7); }
@@ -1196,7 +1181,7 @@ body {
 
     #hints-heading {
         font-size: 2.5vh;
-        margin-left: 7vw;
+        margin-left: 5vw; /* Changed from 7vw to 5vw to shift 2vw closer to left margin */
     }
 
     #hints-container {
@@ -1255,14 +1240,15 @@ body {
     }
 
     #hint-4.hint-shape-diamond {
-        width: 25vw;
-        height: 25vw;
+        width: 18.75vw; /* Reduced from 25vw by 25% */
+        height: 18.75vw; /* Reduced from 25vw by 25% */
     }
 
     #hint-4.hint-shape-diamond .hint-text {
         font-size: min(4.55vh, 3.9vw);
         width: 80%;
         height: 80%;
+        transform: rotate(-45deg); /* Rotate text -45 degrees */
     }
 
     .hint-shape-diamond:not(#hint-4) {
@@ -1272,6 +1258,7 @@ body {
 
     .hint-shape-diamond:not(#hint-4) .hint-text {
         font-size: min(4.55vh, 3.9vw);
+        transform: rotate(-45deg); /* Keep existing rotation for other diamond hints */
     }
 
     #guess-input-container {
@@ -1331,8 +1318,31 @@ body {
         font-size: 2.8vh;
     }
 
-    .game-list-row span {
+    .game-list {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        max-height: 60vh;
+        overflow-y: auto;
+        visibility: visible; /* Ensure visibility */
+    }
+
+    .game-list-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        padding: 1vh 2vw;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        visibility: visible; /* Ensure visibility */
+    }
+
+    .game-list div {
         font-size: 2.2vh;
+        color: #FFFFFF;
+        text-shadow: 1px 1px 2px #000000;
+        text-align: center;
+        width: 100%;
     }
 
     #form-container input {
