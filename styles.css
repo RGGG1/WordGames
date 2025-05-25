@@ -1244,7 +1244,7 @@ body {
 
     .hint-shape-sun::after {
         transform: scale(1.4);
-        opacity: 0.2);
+        opacity: 0.2;
     }
 
     #hint-4.hint-shape-diamond {
