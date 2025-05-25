@@ -12,17 +12,16 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    overflow-x: hidden;
+    overflow: hidden;
     height: 100vh;
-    width: 98vw;
-    margin: 0 auto;
+    width: 100vw;
 }
 
 #background-container {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    width: 100%;
     height: 66vh;
     background: url('newbackground.png') no-repeat center center;
     background-size: cover;
@@ -33,13 +32,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 98vw;
+    width: 100%;
     height: 5vh;
-    padding: 0 1vw;
+    padding: 0 2vw;
     background: transparent;
     position: fixed;
     top: 0;
-    left: 1vw;
+    left: 0;
     z-index: 100;
 }
 
@@ -64,11 +63,11 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 98vw;
-    height: 50.5vh;
+    width: 100%;
+    height: 51vh;
     position: fixed;
     top: 5vh;
-    left: 1vw;
+    left: 0;
     z-index: 10;
     background: transparent;
 }
@@ -77,7 +76,7 @@ body {
     position: static;
     display: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: min(5.85vh, 4.55vw);
+    font-size: min(5.85vh, 4.55vw); /* Increased by 30% */
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
@@ -92,7 +91,7 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 1vh;
-    text-indent: -0.5em;
+    text-indent: -0.5em; /* Moves text left by two character spaces */
 }
 
 #hint-1, #hint-2, #hint-3, #hint-4, #hint-5 {
@@ -106,7 +105,6 @@ body {
     position: absolute;
     left: 2vw;
     top: 2vh;
-    width: 94vw;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -118,11 +116,11 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     margin-bottom: 1vh;
-    margin-left: 7vw;
+    margin-left: 7vw; /* Centers over 20vw hint width */
 }
 
 .hint-shape-fluffy-cloud {
-    background: rgba(135, 206, 235, 0.7);
+    background: rgba(255, 255, 255, 0.7); /* White for fluffy cloud */
     position: relative;
     width: 24vw;
     height: 10vh;
@@ -139,7 +137,7 @@ body {
 .hint-shape-fluffy-cloud .puff-2 {
     content: '';
     position: absolute;
-    background: rgba(135, 206, 235, 0.7);
+    background: inherit;
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
@@ -178,10 +176,10 @@ body {
     justify-content: center;
     width: 100%;
     height: 100%;
-    font-size: min(5.85vh, 4.55vw);
+    font-size: min(5.85vh, 4.55vw); /* Increased by 30% */
     line-height: 1.1;
     text-align: center;
-    text-indent: -0.5em;
+    text-indent: -0.5em; /* Moves text left by two character spaces */
 }
 
 .hint-shape-circle {
@@ -189,71 +187,37 @@ body {
     border-radius: 50%;
 }
 
-.hint-shape-fluffy-ball {
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.7) 30%, transparent 70%);
+.hint-shape-star {
+    background: rgba(100, 149, 237, 0.7); /* Retain cornflower blue */
     position: relative;
-    width: 24vw;
-    height: 8vh;
-    border-radius: 50%;
+    clip-path: polygon(
+        50% 0%, 
+        61% 35%, 
+        98% 35%, 
+        68% 57%, 
+        79% 91%, 
+        50% 70%, 
+        21% 91%, 
+        32% 57%, 
+        2% 35%, 
+        39% 35%
+    );
+    width: 22vw;
+    height: 9vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
 }
 
-.hint-shape-fluffy-ball::before,
-.hint-shape-fluffy-ball::after,
-.hint-shape-fluffy-ball .ridge-1,
-.hint-shape-fluffy-ball .ridge-2 {
+.hint-shape-star::before {
     content: '';
     position: absolute;
-    background: radial-gradient(circle, rgba(255, 255, 255, 0.3) 20%, transparent 60%);
-    border-radius: 50%;
-}
-
-.hint-shape-fluffy-ball::before {
-    width: 10vw;
-    height: 10vw;
-    top: -2vh;
-    left: -2vw;
-}
-
-.hint-shape-fluffy-ball::after {
-    width: 8vw;
-    height: 8vw;
-    bottom: -2vh;
-    right: -2vw;
-}
-
-.hint-shape-fluffy-ball .ridge-1 {
-    width: 7vw;
-    height: 7vw;
-    top: 1vh;
-    left: 3vw;
-}
-
-.hint-shape-fluffy-ball .ridge-2 {
-    width: 6vw;
-    height: 6vw;
-    bottom: 1vh;
-    right: 3vw;
-}
-
-.hint-shape-aviator {
-    background: rgba(255, 255, 255, 0.7);
-    position: relative;
-    width: 24vw;
-    height: 8vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    clip-path: polygon(
-        15% 0%, 85% 0%,
-        90% 100%, 10% 100%
-    );
-    border-radius: 1.5vh;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.2);
+    clip-path: inherit;
+    z-index: -1;
+    transform: scale(0.95);
 }
 
 .hint-shape-cloud {
@@ -311,7 +275,7 @@ body {
     opacity: 0.2;
 }
 
-.hint-shape-star, 
+.hint-shape-speech-bubble, 
 .hint-shape-hexagon, 
 .hint-shape-pentagon, 
 .hint-shape-octagon, 
@@ -401,6 +365,21 @@ body {
 .hint.reveal-slide-up { animation: reveal-slide-up 0.5s ease-out forwards; }
 .hint.reveal-slide-down { animation: reveal-slide-down 0.5s ease-out forwards; }
 .hint.reveal-splash { animation: reveal-splash 0.6s ease-out forwards; }
+.hint.reveal-letter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hint.reveal-letter .letter {
+    opacity: 0;
+    display: inline-block;
+}
+
+@keyframes fadeInLetter {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
 
 .hint-color-1 { background: rgba(255, 105, 180, 0.7); }
 .hint-color-2 { background: rgba(255, 215, 0, 0.7); }
@@ -452,6 +431,7 @@ body {
 .hint.hint-color-8.hint-shape-sun::after { background: rgba(75, 0, 130, 0.7); }
 .hint.hint-color-9.hint-shape-sun::before,
 .hint.hint-color-9.hint-shape-sun::after { background: rgba(0, 191, 255, 0.7); }
+.hint.hint-color-10.hint-shape-sun::before,
 .hint.hint-color-10.hint-shape-sun::after { background: rgba(255, 20, 147, 0.7); }
 
 .hint.hint-color-1.hint-shape-fluffy-cloud::before,
@@ -495,80 +475,27 @@ body {
 .hint.hint-color-10.hint-shape-fluffy-cloud .puff-1,
 .hint.hint-color-10.hint-shape-fluffy-cloud .puff-2 { background: rgba(255, 20, 147, 0.7); }
 
-.hint.hint-color-1.hint-shape-aviator { background: rgba(255, 105, 180, 0.7); }
-.hint.hint-color-2.hint-shape-aviator { background: rgba(255, 215, 0, 0.7); }
-.hint.hint-color-3.hint-shape-aviator { background: rgba(50, 205, 50, 0.7); }
-.hint.hint-color-4.hint-shape-aviator { background: rgba(135, 206, 235, 0.7); }
-.hint.hint-color-5.hint-shape-aviator { background: rgba(255, 165, 0, 0.7); }
-.hint.hint-color-6.hint-shape-aviator { background: rgba(138, 43, 226, 0.7); }
-.hint.hint-color-7.hint-shape-aviator { background: rgba(255, 69, 0, 0.7); }
-.hint.hint-color-8.hint-shape-aviator { background: rgba(75, 0, 130, 0.7); }
-.hint.hint-color-9.hint-shape-aviator { background: rgba(0, 191, 255, 0.7); }
-.hint.hint-color-10.hint-shape-aviator { background: rgba(255, 20, 147, 0.7); }
-
-.hint.hint-color-1.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(255, 105, 180, 0.7) 30%, transparent 70%); }
-.hint.hint-color-2.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(255, 215, 0, 0.7) 30%, transparent 70%); }
-.hint.hint-color-3.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(50, 205, 50, 0.7) 30%, transparent 70%); }
-.hint.hint-color-4.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(135, 206, 235, 0.7) 30%, transparent 70%); }
-.hint.hint-color-5.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(255, 165, 0, 0.7) 30%, transparent 70%); }
-.hint.hint-color-6.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(138, 43, 226, 0.7) 30%, transparent 70%); }
-.hint.hint-color-7.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(255, 69, 0, 0.7) 30%, transparent 70%); }
-.hint.hint-color-8.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(75, 0, 130, 0.7) 30%, transparent 70%); }
-.hint.hint-color-9.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(0, 191, 255, 0.7) 30%, transparent 70%); }
-.hint.hint-color-10.hint-shape-fluffy-ball { background: radial-gradient(circle, rgba(255, 20, 147, 0.7) 30%, transparent 70%); }
-
-.hint.hint-color-1.hint-shape-fluffy-ball::before,
-.hint.hint-color-1.hint-shape-fluffy-ball::after,
-.hint.hint-color-1.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-1.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(255, 105, 180, 0.3) 20%, transparent 60%); }
-.hint.hint-color-2.hint-shape-fluffy-ball::before,
-.hint.hint-color-2.hint-shape-fluffy-ball::after,
-.hint.hint-color-2.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-2.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(255, 215, 0, 0.3) 20%, transparent 60%); }
-.hint.hint-color-3.hint-shape-fluffy-ball::before,
-.hint.hint-color-3.hint-shape-fluffy-ball::after,
-.hint.hint-color-3.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-3.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(50, 205, 50, 0.3) 20%, transparent 60%); }
-.hint.hint-color-4.hint-shape-fluffy-ball::before,
-.hint.hint-color-4.hint-shape-fluffy-ball::after,
-.hint.hint-color-4.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-4.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(135, 206, 235, 0.3) 20%, transparent 60%); }
-.hint.hint-color-5.hint-shape-fluffy-ball::before,
-.hint.hint-color-5.hint-shape-fluffy-ball::after,
-.hint.hint-color-5.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-5.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(255, 165, 0, 0.3) 20%, transparent 60%); }
-.hint.hint-color-6.hint-shape-fluffy-ball::before,
-.hint.hint-color-6.hint-shape-fluffy-ball::after,
-.hint.hint-color-6.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-6.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(138, 43, 226, 0.3) 20%, transparent 60%); }
-.hint.hint-color-7.hint-shape-fluffy-ball::before,
-.hint.hint-color-7.hint-shape-fluffy-ball::after,
-.hint.hint-color-7.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-7.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(255, 69, 0, 0.3) 20%, transparent 60%); }
-.hint.hint-color-8.hint-shape-fluffy-ball::before,
-.hint.hint-color-8.hint-shape-fluffy-ball::after,
-.hint.hint-color-8.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-8.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(75, 0, 130, 0.3) 20%, transparent 60%); }
-.hint.hint-color-9.hint-shape-fluffy-ball::before,
-.hint.hint-color-9.hint-shape-fluffy-ball::after,
-.hint.hint-color-9.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-9.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(0, 191, 255, 0.3) 20%, transparent 60%); }
-.hint.hint-color-10.hint-shape-fluffy-ball::before,
-.hint.hint-color-10.hint-shape-fluffy-ball::after,
-.hint.hint-color-10.hint-shape-fluffy-ball .ridge-1,
-.hint.hint-color-10.hint-shape-fluffy-ball .ridge-2 { background: radial-gradient(circle, rgba(255, 20, 147, 0.3) 20%, transparent 60%); }
+.hint.hint-color-1.hint-shape-star::before { background: rgba(255, 105, 180, 0.2); }
+.hint.hint-color-2.hint-shape-star::before { background: rgba(255, 215, 0, 0.2); }
+.hint.hint-color-3.hint-shape-star::before { background: rgba(50, 205, 50, 0.2); }
+.hint.hint-color-4.hint-shape-star::before { background: rgba(135, 206, 235, 0.2); }
+.hint.hint-color-5.hint-shape-star::before { background: rgba(255, 165, 0, 0.2); }
+.hint.hint-color-6.hint-shape-star::before { background: rgba(138, 43, 226, 0.2); }
+.hint.hint-color-7.hint-shape-star::before { background: rgba(255, 69, 0, 0.2); }
+.hint.hint-color-8.hint-shape-star::before { background: rgba(75, 0, 130, 0.2); }
+.hint.hint-color-9.hint-shape-star::before { background: rgba(0, 191, 255, 0.2); }
+.hint.hint-color-10.hint-shape-star::before { background: rgba(255, 20, 147, 0.2); }
 
 #guess-area {
     position: fixed;
-    top: 55.5vh;
-    left: 1vw;
-    width: 98vw;
+    top: 56vh;
+    left: 0;
+    width: 100%;
     height: 10vh;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 20;
-    gap: 0;
 }
 
 #guess-input-container {
@@ -576,11 +503,10 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 68vw;
+    width: 85vw;
     height: 8vh;
     background: rgba(255, 255, 255, 0.85);
-    border-radius: 1vh 0 0 1vh;
-    border-right: none;
+    border-radius: 1vh;
 }
 
 #guess-prompt {
@@ -613,7 +539,7 @@ body {
     height: 8vh;
     background: #FFB300;
     border: none;
-    border-radius: 0 1vh 1vh 0;
+    border-radius: 1vh;
     font-family: 'Luckiest Guy', cursive;
     font-size: 3.75vh;
     color: #FFFFFF;
@@ -653,13 +579,12 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 98vw;
+    width: 100%;
     height: 5vh;
     background: #FFFFFF;
-    padding: 0 1vw;
+    padding: 0 2vw;
     position: fixed;
-    top: 65.5vh;
-    left: 1vw;
+    top: 66vh;
     z-index: 100;
 }
 
@@ -696,29 +621,22 @@ body {
 #keyboard-container {
     display: none;
     position: fixed;
-    top: 70.5vh;
-    left: 1vw;
-    width: 98vw;
-    height: 20.5vh;
+    top: 71vh;
+    left: 0;
+    width: 100%;
+    height: 20vh;
     background: #FFFFFF;
     z-index: 100;
 }
 
-#keyboard-content {
-    display: none;
-    flex-direction: column;
-    width: 98vw;
-    height: 18vh;
-    padding: 1vh 0 2vh 0;
-}
-
+#keyboard-content,
 #keyboard-guesses-content,
 #keyboard-give-up-content {
     display: none;
     flex-direction: column;
-    width: 98vw;
-    height: 18vh;
-    padding: 2vh;
+    width: 100%;
+    height: 100%;
+    padding: 1vh 0;
 }
 
 #keyboard-container.show-alternate #keyboard-content {
@@ -785,8 +703,8 @@ body {
 #ad-box {
     position: fixed;
     bottom: 0;
-    left: 1vw;
-    width: 98vw;
+    left: 0;
+    width: 100%;
     height: 4vh;
     background: #F0F0F0;
     display: flex;
@@ -805,11 +723,11 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 98vw;
+    width: 100%;
     height: calc(100vh - 4vh);
     position: fixed;
     top: 0;
-    left: 1vw;
+    left: 0;
     z-index: 50;
     background: rgba(0, 0, 0, 0.5);
 }
@@ -1105,8 +1023,8 @@ body {
     display: none;
     position: fixed;
     top: 0;
-    left: 1vw;
-    width: 98vw;
+    left: 0;
+    width: 100%;
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
     z-index: 200;
@@ -1151,8 +1069,8 @@ body {
 
 .dialog-message {
     font-size: 2vh;
-    color: #000000;
-    text-shadow: none;
+    color: #000000; /* Solid black */
+    text-shadow: none; /* Remove shadow */
     text-align: center;
     margin-bottom: 2vh;
 }
@@ -1167,7 +1085,7 @@ body {
     position: fixed;
     top: 5vh;
     left: 0;
-    width: 98vw;
+    width: 100%;
     height: 51vh;
     pointer-events: none;
     z-index: 1000;
@@ -1191,49 +1109,25 @@ body {
 }
 
 @media screen and (max-width: 768px) {
-    body {
-        width: 98vw;
-        margin: 0 auto;
-    }
-
-    #background-container {
-        left: 0;
-        width: 100vw;
-    }
-
-    #header {
-        width: 98vw;
-        left: 1vw;
-        padding: 0 1vw;
-    }
-
-    #game-screen {
-        width: 98vw;
-        height: 50.5vh;
-        left: 1vw;
-    }
-
     .hint {
-        font-size: min(4.55vh, 3.9vw);
+        font-size: min(4.55vh, 3.9vw); /* Increased by 30% */
         width: 25vw;
         height: 7vh;
         padding: 1vh 0.5vw;
-        text-indent: -0.5em;
+        text-indent: -0.5em; /* Maintain left shift */
     }
 
     #hints-heading {
         font-size: 2.5vh;
-        margin-left: 9vw;
+        margin-left: 9vw; /* Centers over 25vw hint width */
     }
 
     #hints-container {
         left: 1vw;
         top: 1vh;
-        width: 94vw;
     }
 
     .hint-shape-fluffy-cloud {
-        background: rgba(135, 206, 235, 0.7);
         width: 27vw;
         height: 8vh;
     }
@@ -1255,51 +1149,8 @@ body {
     }
 
     .hint-shape-fluffy-cloud .hint-text {
-        font-size: min(4.55vh, 3.9vw);
-        text-indent: -0.5em;
-    }
-
-    .hint-shape-fluffy-ball {
-        width: 27vw;
-        height: 7vh;
-    }
-
-    .hint-shape-fluffy-ball::before {
-        width: 8vw;
-        height: 8vw;
-        top: -1.5vh;
-        left: -1.5vw;
-    }
-
-    .hint-shape-fluffy-ball::after {
-        width: 6vw;
-        height: 6vw;
-        bottom: -1.5vh;
-        right: -1.5vw;
-    }
-
-    .hint-shape-fluffy-ball .ridge-1 {
-        width: 5vw;
-        height: 5vw;
-        top: 0.5vh;
-        left: 2vw;
-    }
-
-    .hint-shape-fluffy-ball .ridge-2 {
-        width: 4vw;
-        height: 4vw;
-        bottom: 0.5vh;
-        right: 2vw;
-    }
-
-    .hint-shape-aviator {
-        width: 27vw;
-        height: 7vh;
-        clip-path: polygon(
-            15% 0%, 85% 0%,
-            90% 100%, 10% 100%
-        );
-        border-radius: 1.2vh;
+        font-size: min(4.55vh, 3.9vw); /* Increased by 30% */
+        text-indent: -0.5em; /* Maintain left shift */
     }
 
     .hint-shape-cloud::before {
@@ -1326,17 +1177,24 @@ body {
         opacity: 0.2;
     }
 
-    #guess-area {
-        top: 55.5vh;
-        left: 1vw;
-        width: 98vw;
+    .hint-shape-star {
+        clip-path: polygon(
+            50% 0%, 
+            61% 35%, 
+            98% 35%, 
+            68% 57%, 
+            79% 91%, 
+            50% 70%, 
+            21% 91%, 
+            32% 57%, 
+            2% 35%, 
+            39% 35%
+        );
     }
 
     #guess-input-container {
-        width: 63vw;
+        width: 70vw;
         height: 9vh;
-        border-radius: 0.8vh 0 0 0.8vh;
-        border-right: none;
     }
 
     #guess-prompt {
@@ -1352,15 +1210,11 @@ body {
         width: 35vw;
         height: 9vh;
         font-size: 3.5vh;
-        border-radius: 0 0.8vh 0.8vh 0;
     }
 
     #game-controls-container {
-        width: 98vw;
         height: 6vh;
-        top: 65.5vh;
-        left: 1vw;
-        padding: 0 1vw;
+        top: 66vh;
     }
 
     #give-up-link,
@@ -1376,26 +1230,6 @@ body {
         font-size: 2.8vh;
         color: #000000;
         text-shadow: 1px 1px 2px #FFFFFF;
-    }
-
-    #keyboard-container {
-        top: 70.5vh;
-        left: 1vw;
-        width: 98vw;
-        height: 20.5vh;
-    }
-
-    #keyboard-content {
-        width: 98vw;
-        height: 18vh;
-        padding: 1vh 0 2vh 0;
-    }
-
-    #keyboard-guesses-content,
-    #keyboard-give-up-content {
-        width: 98vw;
-        height: 18vh;
-        padding: 2vh;
     }
 
     .tab {
@@ -1459,8 +1293,8 @@ body {
 
     .dialog-message {
         font-size: 2.2vh;
-        color: #000000;
-        text-shadow: none;
+        color: #000000; /* Solid black */
+        text-shadow: none; /* Remove shadow */
     }
 
     .key {
