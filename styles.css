@@ -35,11 +35,11 @@ body {
     width: 98vw;
     margin: 0 auto;
     height: 5vh;
-    padding: 0 1vw;
+    padding: 0 2vw;
     background: transparent;
     position: fixed;
     top: 0;
-    left: 1vw;
+    left: 0;
     z-index: 100;
 }
 
@@ -69,7 +69,7 @@ body {
     height: 50.5vh;
     position: fixed;
     top: 5vh;
-    left: 1vw;
+    left: 0;
     z-index: 10;
     background: transparent;
 }
@@ -217,11 +217,10 @@ body {
     overflow: hidden;
     box-sizing: border-box;
     margin-bottom: 1vh;
-    animation: none; /* Prevent rotation animation on load */
 }
 
 #hint-4.hint-shape-diamond .hint-text {
-    transform: none; /* No rotation for text */
+    transform: rotate(-45deg);
     font-size: min(5.85vh, 4.55vw);
     text-align: center;
     width: 80%;
@@ -394,6 +393,21 @@ body {
 .hint.reveal-slide-up { animation: reveal-slide-up 0.5s ease-out forwards; }
 .hint.reveal-slide-down { animation: reveal-slide-down 0.5s ease-out forwards; }
 .hint.reveal-splash { animation: reveal-splash 0.6s ease-out forwards; }
+.hint.reveal-letter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.hint.reveal-letter .letter {
+    opacity: 0;
+    display: inline-block;
+}
+
+@keyframes fadeInLetter {
+    0% { opacity: 0; transform: translateY(10px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
 
 .hint-color-1 { background: rgba(255, 105, 180, 0.7); }
 .hint-color-2 { background: rgba(255, 215, 0, 0.7); }
@@ -513,7 +527,7 @@ body {
 #guess-area {
     position: fixed;
     top: 56vh;
-    left: 1vw;
+    left: 0;
     width: 98vw;
     margin: 0 auto;
     height: 10vh;
@@ -608,10 +622,9 @@ body {
     margin: 0 auto;
     height: 5vh;
     background: #FFFFFF;
-    padding: 0 1vw;
+    padding: 0 2vw;
     position: fixed;
     top: 66vh;
-    left: 1vw;
     z-index: 100;
 }
 
@@ -649,7 +662,7 @@ body {
     display: none;
     position: fixed;
     top: 71vh;
-    left: 1vw;
+    left: 0;
     width: 98vw;
     margin: 0 auto;
     height: 20vh;
@@ -731,7 +744,7 @@ body {
 #ad-box {
     position: fixed;
     bottom: 0;
-    left: 1vw;
+    left: 0;
     width: 98vw;
     margin: 0 auto;
     height: 4vh;
@@ -757,7 +770,7 @@ body {
     height: calc(100vh - 4vh);
     position: fixed;
     top: 0;
-    left: 1vw;
+    left: 0;
     z-index: 50;
     background: rgba(0, 0, 0, 0.5);
 }
@@ -931,20 +944,7 @@ body {
     margin: 1vh 0;
 }
 
-#official-back-btn {
-    width: 50vw;
-    height: 6vh;
-    font-size: 3vh;
-    background: #FFB300;
-    border: none;
-    border-radius: 1vh;
-    font-family: 'Luckiest Guy', cursive;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
-    cursor: pointer;
-    margin: 1vh 0;
-}
-
+#official-back-btn,
 #guesses-close-btn {
     width: 80vw;
     height: 10vh;
@@ -1084,7 +1084,7 @@ body {
     display: none;
     position: fixed;
     top: 0;
-    left: 1vw;
+    left: 0;
     width: 98vw;
     margin: 0 auto;
     height: calc(100vh - 4vh);
@@ -1181,7 +1181,7 @@ body {
 
     #hints-heading {
         font-size: 2.5vh;
-        margin-left: 5vw; /* Changed from 7vw to 5vw to shift 2vw closer to left margin */
+        margin-left: 7vw;
     }
 
     #hints-container {
@@ -1240,15 +1240,14 @@ body {
     }
 
     #hint-4.hint-shape-diamond {
-        width: 18.75vw; /* Reduced from 25vw by 25% */
-        height: 18.75vw; /* Reduced from 25vw by 25% */
+        width: 25vw;
+        height: 25vw;
     }
 
     #hint-4.hint-shape-diamond .hint-text {
         font-size: min(4.55vh, 3.9vw);
         width: 80%;
         height: 80%;
-        transform: rotate(-45deg); /* Rotate text -45 degrees */
     }
 
     .hint-shape-diamond:not(#hint-4) {
@@ -1258,7 +1257,6 @@ body {
 
     .hint-shape-diamond:not(#hint-4) .hint-text {
         font-size: min(4.55vh, 3.9vw);
-        transform: rotate(-45deg); /* Keep existing rotation for other diamond hints */
     }
 
     #guess-input-container {
@@ -1318,31 +1316,8 @@ body {
         font-size: 2.8vh;
     }
 
-    .game-list {
-        display: flex;
-        flex-direction: column;
-        width: 100%;
-        max-height: 60vh;
-        overflow-y: auto;
-        visibility: visible; /* Ensure visibility */
-    }
-
-    .game-list-row {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        width: 100%;
-        padding: 1vh 2vw;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        visibility: visible; /* Ensure visibility */
-    }
-
-    .game-list div {
+    .game-list-row span {
         font-size: 2.2vh;
-        color: #FFFFFF;
-        text-shadow: 1px 1px 2px #000000;
-        text-align: center;
-        width: 100%;
     }
 
     #form-container input {
@@ -1356,12 +1331,7 @@ body {
         font-size: 2.8vh;
     }
 
-    #official-back-btn {
-        width: 60vw;
-        height: 7vh;
-        font-size: 3.2vh;
-    }
-
+    #official-back-btn,
     #guesses-close-btn {
         width: 90vw;
         height: 12vh;
@@ -1372,13 +1342,6 @@ body {
         width: 60vw;
         height: 7vh;
         font-size: 3.2vh;
-    }
-
-    #keyboard-back-btn {
-        width: 40vw;
-        height: 6vh;
-        font-size: 3vh;
-        margin-top: 1vh;
     }
 
     #share-section {
