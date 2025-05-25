@@ -79,7 +79,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const touchThreshold = 10;
 
     // Hint shapes, colors, and reveal effects
-    const hintShapes = ['cloud', 'sun', 'circle', 'star', 'fluffy-cloud'];
+    const hintShapes = ['cloud', 'sun', 'aviator', 'diamond', 'fluffy-cloud'];
     const hintColors = [
         'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
         'color-6', 'color-7', 'color-8', 'color-9', 'color-10'
@@ -473,7 +473,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             setupKeyboardListeners();
         });
 
-        privateTab.addEventListener("click", () => {
+        privateTab.addEventListener("click", async () => {
             console.log("Private tab clicked");
             privateTab.classList.add("active");
             officialTab.classList.remove("active");
@@ -481,6 +481,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             privateContent.style.display = "flex";
             officialContent.classList.remove("active");
             officialContent.style.display = "none";
+            if (privateGames.length === 0) {
+                await fetchPrivateGames();
+            }
             displayGameList();
             setupKeyboardListeners();
         });
@@ -689,7 +692,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-        // Next game arrow
+    // Next game arrow
     if (nextGameArrow) {
         nextGameArrow.addEventListener(isMobile ? "touchstart" : "click", async (e) => {
             e.preventDefault();
@@ -1075,6 +1078,27 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Fetch game data
     async function fetchGameData() {
         try {
+            // Check for cached data
+            const cachedData = localStorage.getItem("officialGamesCache");
+            const cacheTime = localStorage.getItem("officialGamesCacheTime");
+            const now = Date.now();
+            const cacheTTL = 60 * 60 * 1000; // 1 hour TTL
+
+            if (cachedData && cacheTime && now - parseInt(cacheTime) < cacheTTL) {
+                console.log("Using cached official games");
+                allGames = JSON.parse(cachedData);
+                const latestGame = allGames[0];
+                currentBackground = latestGame["Background"] && latestGame["Background"].trim() !== "" ? latestGame["Background"] : defaultBackground;
+                await preloadBackground(currentBackground);
+                loadGame(latestGame);
+                resetScreenDisplays(gameScreen);
+                showKeyboard();
+                setupKeyboardListeners();
+                updateArrowStates(0, allGames);
+                adjustBackground();
+                return;
+            }
+
             console.log("Fetching official games from:", officialUrl);
             const response = await fetch(officialUrl, {
                 method: "GET",
@@ -1094,17 +1118,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
             if (allGames.length === 0) throw new Error("No valid games in CSV");
 
+            // Store games in cache
+            localStorage.setItem("officialGamesCache", JSON.stringify(allGames));
+            localStorage.setItem("officialGamesCacheTime", now.toString());
+
             const latestGame = allGames[0];
             currentBackground = latestGame["Background"] && latestGame["Background"].trim() !== "" ? latestGame["Background"] : defaultBackground;
-            console.log("Selected background:", currentBackground);
-
             await preloadBackground(currentBackground);
-            adjustBackground();
             loadGame(latestGame);
             resetScreenDisplays(gameScreen);
             showKeyboard();
             setupKeyboardListeners();
             updateArrowStates(0, allGames);
+            adjustBackground();
         } catch (error) {
             console.error("Error in fetchGameData:", error.message);
             allGames = [
@@ -1120,14 +1146,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             ];
             currentBackground = defaultBackground;
-            console.log("Using fallback game with default background:", currentBackground);
             await preloadBackground(currentBackground);
-            adjustBackground();
             loadGame(allGames[0]);
             resetScreenDisplays(gameScreen);
             showKeyboard();
             setupKeyboardListeners();
             updateArrowStates(0, allGames);
+            adjustBackground();
             if (formErrorDialog && formErrorMessage) {
                 formErrorMessage.textContent = "Failed to load official games. Using default game.";
                 formErrorDialog.style.display = "flex";
@@ -1549,7 +1574,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         adjustBackground();
 
         if (guessInput && guessInputContainer) {
-            guessInput.value = ""; // Clear the input field
+            guessInput.value = "";
             guessInputContainer.classList.add("game-ended");
         }
 
@@ -1780,6 +1805,5 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Initial fetch and load
-    await fetchPrivateGames();
     await fetchGameData();
 });

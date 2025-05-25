@@ -20,9 +20,7 @@
     <title>WORDY by Big Brain Games</title>
     <link rel="icon" type="image/png" href="wordy_favicon.png">
     <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'">
 </head>
 <body>
     <div id="header">
@@ -166,6 +164,7 @@
         <div id="keyboard-guesses-content">
             <span id="guesses-title">Your Guesses</span>
             <div id="guesses-list"></div>
+            <button type="button" id="keyboard-back-btn" class="control-btn">Back</button>
         </div>
         <div id="keyboard-give-up-content">
             <span class="dialog-message">Are you sure you want to give up?</span>
@@ -174,7 +173,6 @@
                 <button type="button" id="keyboard-give-up-no-btn" class="control-btn">No</button>
             </div>
         </div>
-        <button type="button" id="keyboard-back-btn" class="control-btn">Back</button>
     </div>
     <div id="ad-box">
         <span>Big Brain Games</span>
