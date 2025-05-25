@@ -503,7 +503,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         allGamesLink.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
-        // Give Up link
+    // Give Up link
     if (giveUpLink && giveUpYesBtn && giveUpNoBtn) {
         const handler = debounce((e) => {
             e.preventDefault();
@@ -811,7 +811,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             // Validate secret word
             if (!/^[A-Z]+$/.test(formData["secret-word"])) {
-                console.log("Form validation failed: secret word contains invalid characters");
+                console.log("的企业 validation failed: secret word contains invalid characters");
                 formErrorMessage.textContent = "Secret word must contain only letters.";
                 resetScreenDisplays(formErrorDialog);
                 formErrorDialog.style.display = "flex";
