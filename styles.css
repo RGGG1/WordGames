@@ -293,7 +293,6 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    transform: rotate(45deg);
 }
 
 .hint-shape-sun::before {
@@ -664,11 +663,11 @@ body {
     flex-direction: column;
     width: 100%;
     height: 100%; /* Use full height of container */
-    padding: 0.5vh 0 2vh 0;
+    padding: 0.25vh 0 1.75vh 0; /* Adjusted padding to shift keyboard up */
 }
 
 #keyboard-content {
-    padding-bottom: 1.5vh;
+    padding: 0.25vh 0 1.75vh 0; /* Adjusted padding */
 }
 
 #keyboard-container.show-alternate #keyboard-content {
@@ -779,7 +778,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 100vw; /* Changed to 100vw */
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
@@ -936,8 +935,7 @@ body {
     margin: 1vh 0;
 }
 
-#official-back-btn,
-#guesses-close-btn {
+#official-back-btn {
     width: 50vw;
     height: 6vh;
     font-size: 3vh;
@@ -949,6 +947,7 @@ body {
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
     margin: 1vh 0;
+    text-align: center; /* Ensure text is centered */
 }
 
 #private-back-btn {
@@ -1162,6 +1161,103 @@ body {
     }
 }
 
+/* New styles for streak, bank, and score containers */
+.info-circle,
+.info-sun {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: min(3.5vh, 2.7vw);
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    padding: 1vh 1vw;
+    box-sizing: border-box;
+    z-index: 15;
+}
+
+.info-circle {
+    width: 20vw;
+    height: 20vw;
+    border-radius: 50%;
+}
+
+.info-sun {
+    width: 20vw;
+    height: 20vw;
+    border-radius: 50%;
+    position: relative;
+}
+
+.info-sun::before,
+.info-sun::after {
+    content: '';
+    position: absolute;
+    background: inherit;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+.info-sun::before {
+    transform: scale(1.2);
+    opacity: 0.3;
+}
+
+.info-sun::after {
+    transform: scale(1.4);
+    opacity: 0.2;
+}
+
+#score-container {
+    background: rgba(0, 0, 0, 0.7); /* Black background */
+    top: 2vh;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+#score-container .info-text {
+    color: #FFB300; /* Yellow text */
+}
+
+#streak-container {
+    background: rgba(75, 0, 130, 0.7); /* Deep color (hint-color-8) */
+    top: 2vh;
+    right: 2vw;
+}
+
+#bank-container {
+    background: rgba(50, 205, 50, 0.7); /* Green background */
+    top: 12vh; /* Positioned below streak-container */
+    right: 2vw;
+}
+
+.info-text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    line-height: 1.2;
+}
+
+/* Animation for new info elements */
+@keyframes reveal-info {
+    0% { transform: scale(0); opacity: 0; }
+    80% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+#score-container,
+#streak-container,
+#bank-container {
+    animation: reveal-info 0.5s ease-out forwards;
+}
+
+/* Mobile-specific adjustments */
 @media screen and (max-width: 768px) {
     body {
         margin: 0 1vw; /* Centered with 1vw margin */
@@ -1256,8 +1352,7 @@ body {
         width: 25vw;
         height: 25vw;
         clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Non-rotated diamond */
-        transform: rotate(0deg);
- /* No rotation */
+        transform: rotate(0deg); /* No rotation */
     }
 
     #hint-4.hint-shape-diamond .hint-text {
@@ -1320,9 +1415,11 @@ body {
 
     #keyboard-container {
         height: 21vh;
- /* Increased from 20vh by half a line (1vh) */
-        top: 72vh;
- /* Adjusted to account for game screen reduction */
+        top: 72vh; /* Adjusted to account for game screen reduction */
+    }
+
+    #keyboard-content {
+        padding: 0.25vh 0 1.75vh 0; /* Adjusted padding for mobile */
     }
 
     .tab {
@@ -1356,25 +1453,22 @@ body {
     }
 
     #official-back-btn {
-        width: 60vw;
- /* Matches private-back-btn */
-        height: 7vh;
- /* Matches private-back-btn */
-        font-size: 3.2vh;
-    }
-
-    #guesses-close-btn {
-        width: 90vw;
-        height: 24vh;
- /* Doubled from 12vh */
-        font-size: 11.2vh;
- /* Doubled from 5.6vh */
+        width: 60vw; /* Matches private-back-btn */
+        height: 7vh; /* Matches private-back-btn */
+        font-size: 3.2vh; /* Matches private-back-btn */
+        text-align: center; /* Ensure text is centered */
     }
 
     #private-back-btn {
         width: 60vw;
         height: 7vh;
         font-size: 3.2vh;
+    }
+
+    #guesses-close-btn {
+        width: 180vw; /* Doubled from 90vw */
+        height: 48vh; /* Doubled from 24vh */
+        font-size: 22.4vh; /* Doubled from 11.2vh */
     }
 
     #share-section {
@@ -1433,5 +1527,28 @@ body {
         font-size: 2.2vh;
         color: #000000;
         text-shadow: none;
+    }
+
+    .info-circle,
+    .info-sun {
+        font-size: min(3vh, 2.3vw);
+        width: 25vw;
+        height: 25vw;
+    }
+
+    #score-container {
+        top: 1vh;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    #streak-container {
+        top: 1vh;
+        right: 1vw;
+    }
+
+    #bank-container {
+        top: 10vh; /* Adjusted for mobile spacing */
+        right: 1vw;
     }
 }

@@ -37,6 +37,15 @@
             <div id="hint-4" class="hint"></div>
             <div id="hint-5" class="hint"></div>
         </div>
+        <div id="score-container" class="info-circle">
+            <span class="info-text">Score:<br>500</span>
+        </div>
+        <div id="streak-container" class="info-circle">
+            <span class="info-text">Streak multiple:<br>5</span>
+        </div>
+        <div id="bank-container" class="info-sun">
+            <span class="info-text">Bank:<br>2500</span>
+        </div>
     </div>
     <div id="guess-area">
         <div id="guess-input-container">
@@ -48,16 +57,16 @@
     <div id="game-controls-container">
         <a href="#" id="give-up-link">Give Up</a>
         <div id="game-number-container">
-            <a href="#" id="prev-game-arrow">◀</a>
+            <a href="#" id="prev-game-arrow">◄</a>
             <span id="game-number-text"></span>
             <a href="#" id="next-game-arrow">▶</a>
         </div>
-        <a href="#" id="guesses-link">Guesses: 0/5</a>
+        <a href="#" id="guesses">Click Here</a>
     </div>
     <div id="game-select-content" class="screen">
         <div id="tabs">
             <span id="official-tab" class="tab active">Official</span>
-            <span class="tab-separator">     |     </span>
+            <span class="tab-seperator">     |     </span>
             <span id="private-tab" class="tab">Private</span>
         </div>
         <div id="official-games" class="tab-content active">
@@ -69,7 +78,7 @@
             <span>Private Games</span>
             <div id="private-list" class="game-list"></div>
             <button type="button" id="create-pineapple" class="control-btn">Create a Wordy</button>
-            <button type="button" id="private-back-btn" class="control-btn">Back</button>
+            <button type="private-back-btn" id="btn" class="control-btn">Back</button>
         </div>
     </div>
     <div id="form-content" class="screen">
@@ -80,11 +89,11 @@
             <input type="text" id="hint-1" placeholder="Hint 1..." maxlength="15" autocomplete="off" spellcheck="false">
             <input type="text" id="hint-2" placeholder="Hint 2..." maxlength="15" autocomplete="off" spellcheck="false">
             <input type="text" id="hint-3" placeholder="Hint 3..." maxlength="15" autocomplete="off" spellcheck="false">
-            <input type="text" id="hint-4" placeholder="Hint 4..." maxlength="15" autocomplete="off" spellcheck="false">
-            <input type="text" id="hint-5" placeholder="Hint 5..." maxlength="15" autocomplete="off" spellcheck="false">
+            <input type="hint-4" id="hint4" placeholder="hint4..." maxlength="15" autocomplete="off" spellcheck="false">
+            <input type="text" id="hint-5" placeholder="hint5..." maxlength="15" autocomplete="off" spellcheck="false">
         </div>
-        <button type="button" id="confirm-btn" class="control-btn">Confirm</button>
-        <button type="button" id="form-back-btn" class="control-btn">Back</button>
+        <button type="submit" id="confirm-btn" class="control-btn">Confirm</button>
+        <button type="form-back-btn" id="form-btn" class="control-btn">Back</button>
     </div>
     <div id="game-over" class="screen">
         <div id="share-section">
@@ -93,9 +102,9 @@
                 <span id="game-number-display"></span>
             </div>
             <div id="share-buttons">
-                <a id="share-whatsapp" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Share on WhatsApp"></a>
-                <a id="share-telegram" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Share on Telegram"></a>
-                <a id="share-twitter" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/sco/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png" alt="Share on Twitter"></a>
+                <a id="share-whatsapp" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.png" alt="Share on WhatsApp"></a>
+                <a id="share-telegram" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.png" alt="Share on Telegram"></a>
+                <a id="share-twitter" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/sco/thumb/9/9f/Twitter_bird_logo_2012.png/1200px-Twitter_bird_logo_2012.png" alt="Share on Twitter"></a>
                 <a id="share-instagram" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Share on Instagram"></a>
             </div>
         </div>
