@@ -1409,7 +1409,7 @@ body {
     #key-enter,
     #key-backspace {
         width: 14.25vw;
-        font-size: 5vh;
+        font-size: 1.5vh;
     }
 
     #game-over-message {
