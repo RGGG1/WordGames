@@ -691,6 +691,11 @@ body {
 
 #keyboard-container.show-give-up #keyboard-back-btn {
     display: none;
+    position: static;
+    width: 20vw;
+    height: 3vh;
+    font-size: 1.5vh;
+    margin-top: 1vh;
 }
 
 #keyboard-back-btn {
@@ -933,9 +938,9 @@ body {
 
 #official-back-btn,
 #guesses-close-btn {
-    width: 80vw;
-    height: 10vh;
-    font-size: 5vh;
+    width: 50vw;
+    height: 6vh;
+    font-size: 3vh;
     background: #FFB300;
     border: none;
     border-radius: 1vh;
@@ -1355,7 +1360,7 @@ body {
  /* Matches private-back-btn */
         height: 7vh;
  /* Matches private-back-btn */
-        font-size: 5vh;
+        font-size: 3.2vh;
     }
 
     #guesses-close-btn {
