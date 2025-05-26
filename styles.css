@@ -61,18 +61,37 @@ body {
 }
 
 #game-screen {
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto auto auto auto;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
-    height: 50vh; /* Reduced from 50.5vh by half a line (1vh) */
+    margin: 0 1vw;
+    height: 50vh;
     position: fixed;
     top: 5vh;
     left: 0;
     z-index: 10;
     background: transparent;
+}
+
+#hints-container {
+    grid-column: 1;
+    grid-row: 1 / 6;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    left: 2vw;
+    top: 2vh;
+}
+
+#hints-heading {
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 3vh;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    margin-bottom: 1vh;
+    margin-left: 5vw;
 }
 
 .hint {
@@ -102,24 +121,6 @@ body {
     left: auto;
     right: auto;
     transform: none;
-}
-
-#hints-container {
-    position: absolute;
-    left: 2vw;
-    top: 2vh;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-
-#hints-heading {
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 3vh;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
-    margin-bottom: 1vh;
-    margin-left: 5vw;
 }
 
 .hint-shape-fluffy-cloud {
@@ -211,8 +212,8 @@ body {
     position: relative;
     width: 20vw;
     height: 20vw;
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Non-rotated diamond */
-    transform: rotate(0deg); /* No rotation */
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    transform: rotate(0deg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -222,7 +223,7 @@ body {
 }
 
 #hint-4.hint-shape-diamond .hint-text {
-    transform: rotate(0deg); /* No text rotation */
+    transform: rotate(0deg);
     font-size: min(5.85vh, 4.55vw);
     text-align: center;
     width: 80%;
@@ -417,7 +418,7 @@ body {
 .hint.hint-color-5.hint-shape-cloud::before,
 .hint.hint-color-5.hint-shape-cloud::after { background: rgba(255, 165, 0, 0.7); }
 .hint.hint-color-6.hint-shape-cloud::before,
-.hint.hint-color-6.hint-shape-cloud::after { background: rgba(138, 43, 226, 0.7); }
+.hint.hint-color challah scores.hint-shape-cloud::after { background: rgba(138, 43, 226, 0.7); }
 .hint.hint-color-7.hint-shape-cloud::before,
 .hint.hint-color-7.hint-shape-cloud::after { background: rgba(255, 69, 0, 0.7); }
 .hint.hint-color-8.hint-shape-cloud::before,
@@ -515,7 +516,7 @@ body {
     top: 56vh;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 10vh;
     display: flex;
     justify-content: center;
@@ -605,7 +606,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 5vh;
     background: #FFFFFF;
     padding: 0 2vw;
@@ -647,11 +648,11 @@ body {
 #keyboard-container {
     display: none;
     position: fixed;
-    top: 71vh;
+    top: 70.5vh; /* Shifted up by 0.5vh */
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
-    height: 21vh; /* Increased from 20vh by half a line (1vh) */
+    margin: 0 1vw;
+    height: 21vh;
     background: #FFFFFF;
     z-index: 100;
 }
@@ -662,12 +663,12 @@ body {
     display: none;
     flex-direction: column;
     width: 100%;
-    height: 100%; /* Use full height of container */
-    padding: 0.25vh 0 1.75vh 0; /* Adjusted padding to shift keyboard up */
+    height: 100%;
+    padding: 0 0 0.5vh 0; /* Half line space below */
 }
 
 #keyboard-content {
-    padding: 0.25vh 0 1.75vh 0; /* Adjusted padding */
+    padding: 0 0 0.5vh 0;
 }
 
 #keyboard-container.show-alternate #keyboard-content {
@@ -737,7 +738,7 @@ body {
     bottom: 0;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 4vh;
     background: #F0F0F0;
     display: flex;
@@ -757,7 +758,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: calc(100vh - 4vh);
     position: fixed;
     top: 0;
@@ -770,7 +771,7 @@ body {
     top: 0;
     height: calc(100vh - 4vh);
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
 }
 
 #game-select-content::before {
@@ -778,7 +779,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw; /* Changed to 100vw */
+    width: 100vw;
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
@@ -795,7 +796,7 @@ body {
 #game-over {
     background: rgba(0, 0, 0, 0.5);
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
 }
 
 #game-over::before {
@@ -935,7 +936,8 @@ body {
     margin: 1vh 0;
 }
 
-#official-back-btn {
+#official-back-btn,
+#guesses-close-btn {
     width: 50vw;
     height: 6vh;
     font-size: 3vh;
@@ -947,7 +949,6 @@ body {
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
     margin: 1vh 0;
-    text-align: center; /* Ensure text is centered */
 }
 
 #private-back-btn {
@@ -1077,7 +1078,7 @@ body {
     top: 0;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
     z-index: 200;
@@ -1164,7 +1165,6 @@ body {
 /* New styles for streak, bank, and score containers */
 .info-circle,
 .info-sun {
-    position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1212,26 +1212,30 @@ body {
 }
 
 #score-container {
-    background: rgba(0, 0, 0, 0.7); /* Black background */
-    top: 2vh;
-    left: 50%;
-    transform: translateX(-50%);
+    background: rgba(0, 0, 0, 0.7);
+    grid-column: 2;
+    grid-row: 1;
+    justify-self: center;
 }
 
 #score-container .info-text {
-    color: #FFB300; /* Yellow text */
+    color: #FFB300;
 }
 
 #streak-container {
-    background: rgba(75, 0, 130, 0.7); /* Deep color (hint-color-8) */
-    top: 2vh;
-    right: 2vw;
+    background: rgba(75, 0, 130, 0.7);
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    margin-right: 2vw;
 }
 
 #bank-container {
-    background: rgba(50, 205, 50, 0.7); /* Green background */
-    top: 12vh; /* Positioned below streak-container */
-    right: 2vw;
+    background: rgba(50, 205, 50, 0.7);
+    grid-column: 3;
+    grid-row: 2;
+    justify-self: end;
+    margin-right: 2vw;
 }
 
 .info-text {
@@ -1244,7 +1248,6 @@ body {
     line-height: 1.2;
 }
 
-/* Animation for new info elements */
 @keyframes reveal-info {
     0% { transform: scale(0); opacity: 0; }
     80% { transform: scale(1.1); opacity: 1; }
@@ -1260,7 +1263,7 @@ body {
 /* Mobile-specific adjustments */
 @media screen and (max-width: 768px) {
     body {
-        margin: 0 1vw; /* Centered with 1vw margin */
+        margin: 0 1vw;
     }
 
     #header,
@@ -1273,19 +1276,18 @@ body {
     #ad-box,
     .dialog {
         width: 98vw;
-        margin: 0 1vw; /* Centered with 1vw margin */
+        margin: 0 1vw;
     }
 
     #game-screen {
-        height: 50vh; /* Reduced from 50.5vh by half a line (1vh) */
+        height: 50vh;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: auto;
     }
 
-    .hint {
-        font-size: min(4.55vh, 3.9vw);
-        width: 25vw;
-        height: 7vh;
-        padding: 1vh 0.5vw;
-        text-indent: 0; /* Adjusted for mobile */
+    #hints-container {
+        left: 1vw;
+        top: 1vh;
     }
 
     #hints-heading {
@@ -1293,9 +1295,12 @@ body {
         margin-left: 7vw;
     }
 
-    #hints-container {
-        left: 1vw;
-        top: 1vh;
+    .hint {
+        font-size: min(4.55vh, 3.9vw);
+        width: 25vw;
+        height: 7vh;
+        padding: 1vh 0.5vw;
+        text-indent: 0;
     }
 
     .hint-shape-fluffy {
@@ -1315,13 +1320,13 @@ body {
         width: 6vw;
         height: 6vw;
         top: -1.5vh;
-        right: 1vw;
+        right: 0.5vw;
         box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
     }
 
     .hint-shape-fluffy-cloud .hint-text {
         font-size: min(4.55vh, 3.9vw);
-        text-indent: -0.5em;
+        text-indent: -0.5vh;
     }
 
     .hint-shape-cloud::before {
@@ -1351,15 +1356,15 @@ body {
     #hint-4.hint-shape-diamond {
         width: 25vw;
         height: 25vw;
-        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Non-rotated diamond */
-        transform: rotate(0deg); /* No rotation */
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        transform: rotate(0deg);
     }
 
     #hint-4.hint-shape-diamond .hint-text {
         font-size: min(4.55vh, 3.55vw);
         width: 80%;
         height: 80%;
-        transform: rotate(0deg); /* No text rotation */
+        transform: rotate(0deg);
     }
 
     .hint-shape-diamond:not(#hint-4) {
@@ -1415,11 +1420,11 @@ body {
 
     #keyboard-container {
         height: 21vh;
-        top: 72vh; /* Adjusted to account for game screen reduction */
+        top: 71.5vh; /* Shifted up by 0.5vh */
     }
 
     #keyboard-content {
-        padding: 0.25vh 0 1.75vh 0; /* Adjusted padding for mobile */
+        padding: 0 0 0.5vh 0; /* Half line space below */
     }
 
     .tab {
@@ -1453,10 +1458,9 @@ body {
     }
 
     #official-back-btn {
-        width: 60vw; /* Matches private-back-btn */
-        height: 7vh; /* Matches private-back-btn */
-        font-size: 3.2vh; /* Matches private-back-btn */
-        text-align: center; /* Ensure text is centered */
+        width: 60vw;
+        height: 7vh;
+        font-size: 3.2vh;
     }
 
     #private-back-btn {
@@ -1466,9 +1470,9 @@ body {
     }
 
     #guesses-close-btn {
-        width: 180vw; /* Doubled from 90vw */
-        height: 48vh; /* Doubled from 24vh */
-        font-size: 22.4vh; /* Doubled from 11.2vh */
+        width: 90vw;
+        height: 24vh;
+        font-size: 11.2vh;
     }
 
     #share-section {
@@ -1537,18 +1541,22 @@ body {
     }
 
     #score-container {
-        top: 1vh;
-        left: 50%;
-        transform: translateX(-50%);
+        grid-column: 2;
+        grid-row: 1;
+        justify-self: center;
     }
 
     #streak-container {
-        top: 1vh;
-        right: 1vw;
+        grid-column: 3;
+        grid-row: 1;
+        justify-self: end;
+        margin-right: 1vw;
     }
 
     #bank-container {
-        top: 10vh; /* Adjusted for mobile spacing */
-        right: 1vw;
+        grid-column: 3;
+        grid-row: 2;
+        justify-self: end;
+        margin-right: 1vw;
     }
 }
