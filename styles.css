@@ -14,7 +14,7 @@ body {
     overflow: hidden;
     height: 100vh;
     width: 100vw;
-    margin: 0 1vw; /* Centered with 1vw margin on both sides */
+    margin: 0;
 }
 
 #background-container {
@@ -33,7 +33,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 5vh;
     padding: 0 2vw;
     background: transparent;
@@ -65,8 +65,8 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
-    height: 50vh; /* Reduced from 50.5vh by half a line (1vh) */
+    margin: 0 1vw;
+    height: 50vh;
     position: fixed;
     top: 5vh;
     left: 0;
@@ -121,8 +121,80 @@ body {
     margin-left: 5vw;
 }
 
+#info-container {
+    position: absolute;
+    right: 2vw;
+    top: 2vh;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+.info-text {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: min(5.85vh, 4.55vw);
+    color: #FFFFFF;
+    text-align: center;
+    text-shadow: 1px 1px 2px #000000;
+    width: 20vw;
+    height: 8vh;
+    border-radius: 50%;
+    z-index: 15;
+    margin-bottom: 1vh;
+}
+
+#score-text {
+    top: 2vh;
+    background: rgb(50, 205, 50);
+}
+
+#boost-text {
+    top: 11vh;
+    background: rgb(255, 215, 0);
+}
+
+#bank-text {
+    top: 20vh;
+    background: rgb(255, 69, 0);
+}
+
+.info-text::before,
+.info-text::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+#score-text::before, #score-text::after {
+    background: rgb(50, 205, 50);
+}
+
+#boost-text::before, #boost-text::after {
+    background: rgb(255, 215, 0);
+}
+
+#bank-text::before, #bank-text::after {
+    background: rgb(255, 69, 0);
+}
+
+.info-text::before {
+    transform: scale(1.2);
+    opacity: 0.3;
+}
+
+.info-text::after {
+    transform: scale(1.4);
+    opacity: 0.2;
+}
+
 .hint-shape-fluffy-cloud {
-    background: rgb(255, 255, 255); /* Solid white */
+    background: rgb(255, 255, 255);
     position: relative;
     width: 24vw;
     height: 10vh;
@@ -139,7 +211,7 @@ body {
 .hint-shape-fluffy-cloud .puff-2 {
     content: '';
     position: absolute;
-    background: rgb(255, 255, 255); /* Solid white */
+    background: rgb(255, 255, 255);
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
@@ -185,12 +257,12 @@ body {
 }
 
 .hint-shape-circle {
-    background: rgb(50, 205, 50); /* Solid green */
+    background: rgb(50, 205, 50);
     border-radius: 50%;
 }
 
 .hint-shape-aviator {
-    background: rgb(50, 205, 50); /* Solid green */
+    background: rgb(50, 205, 50);
     position: relative;
     clip-path: polygon(
         10% 0%, 90% 0%,
@@ -206,12 +278,12 @@ body {
 }
 
 #hint-4.hint-shape-diamond {
-    background: rgb(100, 149, 237); /* Solid blue */
+    background: rgb(100, 149, 237);
     position: relative;
     width: 20vw;
     height: 20vw;
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Non-rotated diamond */
-    transform: rotate(0deg); /* No rotation */
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    transform: rotate(0deg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -221,7 +293,7 @@ body {
 }
 
 #hint-4.hint-shape-diamond .hint-text {
-    transform: rotate(0deg); /* No text rotation */
+    transform: rotate(0deg);
     font-size: min(5.85vh, 4.55vw);
     text-align: center;
     width: 80%;
@@ -232,7 +304,7 @@ body {
 }
 
 .hint-shape-diamond:not(#hint-4) {
-    background: rgb(100, 149, 237); /* Solid blue */
+    background: rgb(100, 149, 237);
     position: relative;
     width: 20vw;
     height: 20vw;
@@ -251,7 +323,7 @@ body {
 }
 
 .hint-shape-cloud {
-    background: rgb(135, 206, 235); /* Solid sky blue */
+    background: rgb(135, 206, 235);
     border-radius: 50%;
     position: relative;
 }
@@ -260,7 +332,7 @@ body {
 .hint-shape-cloud::after {
     content: '';
     position: absolute;
-    background: rgb(135, 206, 235); /* Solid sky blue */
+    background: rgb(135, 206, 235);
     border-radius: 50%;
 }
 
@@ -279,7 +351,7 @@ body {
 }
 
 .hint-shape-sun {
-    background: rgb(255, 165, 0); /* Solid orange */
+    background: rgb(255, 165, 0);
     border-radius: 50%;
     position: relative;
 }
@@ -288,7 +360,7 @@ body {
 .hint-shape-sun::after {
     content: '';
     position: absolute;
-    background: rgb(255, 165, 0); /* Solid orange */
+    background: rgb(255, 165, 0);
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -387,16 +459,16 @@ body {
 .hint.reveal-slide-down { animation: reveal-slide-down 0.5s ease-out forwards; }
 .hint.reveal-splash { animation: reveal-splash 0.6s ease-out forwards; }
 
-.hint-color-1 { background: rgb(255, 105, 180); } /* Solid pink */
-.hint-color-2 { background: rgb(255, 215, 0); } /* Solid yellow */
-.hint-color-3 { background: rgb(50, 205, 50); } /* Solid green */
-.hint-color-4 { background: rgb(135, 206, 235); } /* Solid sky blue */
-.hint-color-5 { background: rgb(255, 165, 0); } /* Solid orange */
-.hint-color-6 { background: rgb(138, 43, 226); } /* Solid purple */
-.hint-color-7 { background: rgb(255, 69, 0); } /* Solid red */
-.hint-color-8 { background: rgb(75, 0, 130); } /* Solid deep purple */
-.hint-color-9 { background: rgb(0, 191, 255); } /* Solid cyan */
-.hint-color-10 { background: rgb(255, 20, 147); } /* Solid deep pink */
+.hint-color-1 { background: rgb(255, 105, 180); }
+.hint-color-2 { background: rgb(255, 215, 0); }
+.hint-color-3 { background: rgb(50, 205, 50); }
+.hint-color-4 { background: rgb(135, 206, 235); }
+.hint-color-5 { background: rgb(255, 165, 0); }
+.hint-color-6 { background: rgb(138, 43, 226); }
+.hint-color-7 { background: rgb(255, 69, 0); }
+.hint-color-8 { background: rgb(75, 0, 130); }
+.hint-color-9 { background: rgb(0, 191, 255); }
+.hint-color-10 { background: rgb(255, 20, 147); }
 
 .hint.hint-color-1.hint-shape-cloud::before,
 .hint.hint-color-1.hint-shape-cloud::after { background: rgb(255, 105, 180); }
@@ -485,8 +557,8 @@ body {
 .hint.hint-color-3.hint-shape-aviator { background: rgb(50, 205, 50); }
 .hint.hint-color-4.hint-shape-aviator { background: rgb(135, 206, 235); }
 .hint.hint-color-5.hint-shape-aviator { background: rgb(255, 165, 0); }
-.hint.hint-color-6.hint-shape-aviator { background: rgb(50, 50); }
-.hint.hintceo-7.hint-shape-aviator { background: rgb(255, 69, 0); }
+.hint.hint-color-6.hint-shape-aviator { background: rgb(138, 43, 226); }
+.hint.hint-color-7.hint-shape-aviator { background: rgb(255, 69, 0); }
 .hint.hint-color-8.hint-shape-aviator { background: rgb(75, 0, 130); }
 .hint.hint-color-9.hint-shape-aviator { background: rgb(0, 191, 255); }
 .hint.hint-color-10.hint-shape-aviator { background: rgb(255, 20, 147); }
@@ -507,7 +579,7 @@ body {
     top: 56vh;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: auto;
     display: flex;
     justify-content: center;
@@ -516,9 +588,9 @@ body {
 }
 
 #guess-input-container {
-    display: 70vw;
+    display: flex;
     flex-direction: column;
-    width: flex;
+    width: 70vw;
     justify-content: center;
     height: 8vh;
     align-items: center;
@@ -532,6 +604,8 @@ body {
     color: #000000;
     padding: 0.5vh 0;
     white-space: nowrap;
+    margin-top: 0.5vh;
+    margin-left: 2vw;
 }
 
 #guess-input {
@@ -579,7 +653,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 5vh;
     background: #FFFFFF;
     padding: 0 2vw;
@@ -624,8 +698,8 @@ body {
     top: 71vh;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
-    height: 21vh; /* Increased from 20vh by half a line (1vh) */
+    margin: 0 1vw;
+    height: 21vh;
     background: #FFFFFF;
     z-index: 100;
 }
@@ -636,12 +710,12 @@ body {
     display: none;
     flex-direction: column;
     width: 100%;
-    height: 100%; /* Use full height of container */
-    padding: 0.25vh 0 1.75vh 0; /* Adjusted padding to shift keyboard up */
+    height: 100%;
+    padding: 0.25vh 0 1.75vh 0;
 }
 
 #keyboard-content {
-    padding: 0.25vh 0 1.75vh 0; /* Adjusted padding */
+    padding: 0.25vh 0 1.75vh 0;
 }
 
 #keyboard-container.show-alternate #keyboard-content {
@@ -665,17 +739,17 @@ body {
 #keyboard-container.show-give-up #keyboard-back-btn {
     display: none;
     position: static;
-    width: 40vw; /* Doubled from 20vw */
-    height: 6vh; /* Doubled from 3vh */
-    font-size: 3vh; /* Doubled from 1.5vh */
+    width: 40vw;
+    height: 6vh;
+    font-size: 3vh;
     margin-top: 1vh;
 }
 
 #keyboard-back-btn {
     position: static;
-    width: 40vw; /* Doubled from 20vw */
-    height: 6vh; /* Doubled from 3vh */
-    font-size: 3vh; /* Doubled from 1.5vh */
+    width: 40vw;
+    height: 6vh;
+    font-size: 3vh;
     margin-top: 1vh;
 }
 
@@ -719,7 +793,7 @@ body {
     bottom: 0;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 4vh;
     background: #F0F0F0;
     display: flex;
@@ -738,8 +812,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    width: 100vw;
     height: calc(100vh - 4vh);
     position: fixed;
     top: 0;
@@ -777,7 +850,7 @@ body {
 #game-over {
     background: rgba(0, 0, 0, 0.5);
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
 }
 
 #game-over::before {
@@ -960,7 +1033,7 @@ body {
 
 #official-back-btn {
     width: 50vw;
-    height: 10.8vh; /* Increased from 9vh by 20% */
+    height: 10.8vh;
     font-size: 3vh;
     background: #FFB300;
     border: none;
@@ -1113,7 +1186,7 @@ body {
     top: 0;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
     z-index: 200;
@@ -1200,7 +1273,7 @@ body {
 /* Mobile-specific adjustments */
 @media screen and (max-width: 768px) {
     body {
-        margin: 0 1vw; /* Centered with 1vw margin */
+        margin: 0;
     }
 
     #header,
@@ -1212,7 +1285,7 @@ body {
     #ad-box,
     .dialog {
         width: 98vw;
-        margin: 0 1vw; /* Centered with 1vw margin */
+        margin: 0 1vw;
     }
 
     #game-select-content {
@@ -1228,7 +1301,7 @@ body {
     }
 
     #game-screen {
-        height: 50vh; /* Reduced from 50.5vh by half a line (1vh) */
+        height: 50vh;
     }
 
     .hint {
@@ -1236,7 +1309,7 @@ body {
         width: 25vw;
         height: 7vh;
         padding: 1vh 0.5vw;
-        text-indent: 0; /* Adjusted for mobile */
+        text-indent: 0;
     }
 
     #hints-heading {
@@ -1247,6 +1320,24 @@ body {
     #hints-container {
         left: 1vw;
         top: 1vh;
+    }
+
+    .info-text {
+        font-size: min(4.55vh, 3.9vw);
+        width: 25vw;
+        height: 7vh;
+    }
+
+    #score-text {
+        top: 1vh;
+    }
+
+    #boost-text {
+        top: 9vh;
+    }
+
+    #bank-text {
+        top: 17vh;
     }
 
     .hint-shape-fluffy-cloud::before {
@@ -1297,15 +1388,15 @@ body {
     #hint-4.hint-shape-diamond {
         width: 25vw;
         height: 25vw;
-        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Non-rotated diamond */
-        transform: rotate(0deg); /* No rotation */
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        transform: rotate(0deg);
     }
 
     #hint-4.hint-shape-diamond .hint-text {
         font-size: min(4.55vh, 3.55vw);
         width: 80%;
         height: 80%;
-        transform: rotate(0deg); /* No text rotation */
+        transform: rotate(0deg);
     }
 
     .hint-shape-diamond:not(#hint-4) {
@@ -1326,6 +1417,8 @@ body {
     #guess-prompt {
         font-size: 2.5vh;
         padding: 0.5vh 0;
+        margin-top: 0.5vh;
+        margin-left: 2vw;
     }
 
     #guess-input {
@@ -1369,11 +1462,11 @@ body {
 
     #keyboard-container {
         height: 21vh;
-        top: 72vh; /* Adjusted to account for game screen reduction */
+        top: 72vh;
     }
 
     #keyboard-content {
-        padding: 0.25vh 0 1.75vh 0; /* Adjusted padding for mobile */
+        padding: 0.25vh 0 1.75vh 0;
     }
 
     .tab {
@@ -1416,7 +1509,7 @@ body {
 
     #official-back-btn {
         width: 60vw;
-        height: 12.6vh; /* Increased from 10.5vh by 20% */
+        height: 12.6vh;
         font-size: 3.2vh;
         display: flex;
         align-items: center;
@@ -1469,8 +1562,9 @@ body {
     }
 
     #share-buttons a {
-        width: 7vh;
+        width: block;
         height: 7vh;
+        width: 7vh;
     }
 
     .dialog-message {
@@ -1479,16 +1573,18 @@ body {
 
     .key {
         width: 9.5vw;
+        height: auto;
+        width: 9.5vw;
         height: 4.5vh;
         font-size: 2vh;
         transition: transform 0.1s ease, background 0.1s ease;
-        -webkit-tap-highlight-color: rgba(211, 214, 218, 0.5);
+        -webkit-tap-highlight-color: rgba(255, 179, 0, 0.5);
         touch-action: manipulation;
     }
 
     .key:active {
         transform: scale(0.95);
-        background: #B0B3B8;
+        background: #B0B0B3B8;
     }
 
     #key-enter,
@@ -1508,7 +1604,6 @@ body {
         text-shadow: none;
         margin-bottom: 2vh;
     }
-
     #guesses-list {
         font-size: 2.2vh;
         color: #000000;
