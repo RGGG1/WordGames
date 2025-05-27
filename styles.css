@@ -15,7 +15,7 @@ body {
     overflow: hidden;
     height: 100vh;
     width: 100vw;
-    margin: 0 1vw; /* Centered with 1vw margin on both sides */
+    margin: 0 1vw;
 }
 
 #background-container {
@@ -34,7 +34,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 5vh;
     padding: 0 2vw;
     background: transparent;
@@ -66,8 +66,8 @@ body {
     justify-content: flex-start;
     align-items: flex-start;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
-    height: 50vh; /* Reduced from 50.5vh by half a line (1vh) */
+    margin: 0 1vw;
+    height: 50vh;
     position: fixed;
     top: 5vh;
     left: 0;
@@ -123,7 +123,7 @@ body {
 }
 
 .hint-shape-fluffy-cloud {
-    background: rgb(255, 255, 255); /* Solid white */
+    background: rgb(255, 255, 255);
     position: relative;
     width: 24vw;
     height: 10vh;
@@ -140,7 +140,7 @@ body {
 .hint-shape-fluffy-cloud .puff-2 {
     content: '';
     position: absolute;
-    background: rgb(255, 255, 255); /* Solid white */
+    background: rgb(255, 255, 255);
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
@@ -186,12 +186,12 @@ body {
 }
 
 .hint-shape-circle {
-    background: rgb(50, 205, 50); /* Solid green */
+    background: rgb(50, 205, 50);
     border-radius: 50%;
 }
 
 .hint-shape-aviator {
-    background: rgb(50, 205, 50); /* Solid green */
+    background: rgb(50, 205, 50);
     position: relative;
     clip-path: polygon(
         10% 0%, 90% 0%,
@@ -207,12 +207,12 @@ body {
 }
 
 #hint-4.hint-shape-diamond {
-    background: rgb(100, 149, 237); /* Solid blue */
+    background: rgb(100, 149, 237);
     position: relative;
     width: 20vw;
     height: 20vw;
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Non-rotated diamond */
-    transform: rotate(0deg); /* No rotation */
+    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    transform: rotate(0deg);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -222,7 +222,7 @@ body {
 }
 
 #hint-4.hint-shape-diamond .hint-text {
-    transform: rotate(0deg); /* No text rotation */
+    transform: rotate(0deg);
     font-size: min(5.85vh, 4.55vw);
     text-align: center;
     width: 80%;
@@ -233,7 +233,7 @@ body {
 }
 
 .hint-shape-diamond:not(#hint-4) {
-    background: rgb(100, 149, 237); /* Solid blue */
+    background: rgb(100, 149, 237);
     position: relative;
     width: 20vw;
     height: 20vw;
@@ -252,7 +252,7 @@ body {
 }
 
 .hint-shape-cloud {
-    background: rgb(135, 206, 235); /* Solid sky blue */
+    background: rgb(135, 206, 235);
     border-radius: 50%;
     position: relative;
 }
@@ -261,7 +261,7 @@ body {
 .hint-shape-cloud::after {
     content: '';
     position: absolute;
-    background: rgb(135, 206, 235); /* Solid sky blue */
+    background: rgb(135, 206, 235);
     border-radius: 50%;
 }
 
@@ -280,7 +280,7 @@ body {
 }
 
 .hint-shape-sun {
-    background: rgb(255, 165, 0); /* Solid orange */
+    background: rgb(255, 165, 0);
     border-radius: 50%;
     position: relative;
 }
@@ -289,7 +289,7 @@ body {
 .hint-shape-sun::after {
     content: '';
     position: absolute;
-    background: rgb(255, 165, 0); /* Solid orange */
+    background: rgb(255, 165, 0);
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -395,16 +395,16 @@ body {
 .hint.reveal-slide-down { animation: reveal-slide-down 0.5s ease-out forwards; }
 .hint.reveal-splash { animation: reveal-splash 0.6s ease-out forwards; }
 
-.hint-color-1 { background: rgb(255, 105, 180); } /* Solid pink */
-.hint-color-2 { background: rgb(255, 215, 0); } /* Solid yellow */
-.hint-color-3 { background: rgb(50, 205, 50); } /* Solid green */
-.hint-color-4 { background: rgb(135, 206, 235); } /* Solid sky blue */
-.hint-color-5 { background: rgb(255, 165, 0); } /* Solid orange */
-.hint-color-6 { background: rgb(138, 43, 226); } /* Solid purple */
-.hint-color-7 { background: rgb(255, 69, 0); } /* Solid red */
-.hint-color-8 { background: rgb(75, 0, 130); } /* Solid deep purple */
-.hint-color-9 { background: rgb(0, 191, 255); } /* Solid cyan */
-.hint-color-10 { background: rgb(255, 20, 147); } /* Solid deep pink */
+.hint-color-1 { background: rgb(255, 105, 180); }
+.hint-color-2 { background: rgb(255, 215, 0); }
+.hint-color-3 { background: rgb(50, 205, 50); }
+.hint-color-4 { background: rgb(135, 206, 235); }
+.hint-color-5 { background: rgb(255, 165, 0); }
+.hint-color-6 { background: rgb(138, 43, 226); }
+.hint-color-7 { background: rgb(255, 69, 0); }
+.hint-color-8 { background: rgb(75, 0, 130); }
+.hint-color-9 { background: rgb(0, 191, 255); }
+.hint-color-10 { background: rgb(255, 20, 147); }
 
 .hint.hint-color-1.hint-shape-cloud::before,
 .hint.hint-color-1.hint-shape-cloud::after { background: rgb(255, 105, 180); }
@@ -515,7 +515,7 @@ body {
     top: 56vh;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 10vh;
     display: flex;
     justify-content: center;
@@ -605,7 +605,7 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 5vh;
     background: #FFFFFF;
     padding: 0 2vw;
@@ -650,8 +650,8 @@ body {
     top: 71vh;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
-    height: 21vh; /* Increased from 20vh by half a line (1vh) */
+    margin: 0 1vw;
+    height: 21vh;
     background: #FFFFFF;
     z-index: 100;
 }
@@ -662,12 +662,12 @@ body {
     display: none;
     flex-direction: column;
     width: 100%;
-    height: 100%; /* Use full height of container */
-    padding: 0.25vh 0 1.75vh 0; /* Adjusted padding to shift keyboard up */
+    height: 100%;
+    padding: 0.25vh 0 1.75vh 0;
 }
 
 #keyboard-content {
-    padding: 0.25vh 0 1.75vh 0; /* Adjusted padding */
+    padding: 0.25vh 0 1.75vh 0;
 }
 
 #keyboard-container.show-alternate #keyboard-content {
@@ -691,17 +691,17 @@ body {
 #keyboard-container.show-give-up #keyboard-back-btn {
     display: none;
     position: static;
-    width: 40vw; /* Doubled from 20vw */
-    height: 6vh; /* Doubled from 3vh */
-    font-size: 3vh; /* Doubled from 1.5vh */
+    width: 40vw;
+    height: 6vh;
+    font-size: 3vh;
     margin-top: 1vh;
 }
 
 #keyboard-back-btn {
     position: static;
-    width: 40vw; /* Doubled from 20vw */
-    height: 6vh; /* Doubled from 3vh */
-    font-size: 3vh; /* Doubled from 1.5vh */
+    width: 40vw;
+    height: 6vh;
+    font-size: 3vh;
     margin-top: 1vh;
 }
 
@@ -737,7 +737,7 @@ body {
     bottom: 0;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: 4vh;
     background: #F0F0F0;
     display: flex;
@@ -757,7 +757,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: calc(100vh - 4vh);
     position: fixed;
     top: 0;
@@ -768,9 +768,10 @@ body {
 
 #game-select-content {
     top: 0;
+    left: 0;
+    width: 100vw;
+    margin: 0;
     height: calc(100vh - 4vh);
-    width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
 }
 
 #game-select-content::before {
@@ -778,7 +779,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw; /* Extended to full viewport width */
+    width: 100vw;
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
@@ -795,7 +796,7 @@ body {
 #game-over {
     background: rgba(0, 0, 0, 0.5);
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
 }
 
 #game-over::before {
@@ -805,7 +806,7 @@ body {
     left: 0;
     width: 100%;
     height: calc(100vh - 4vh);
-    background: rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0);
     z-index: -1;
 }
 
@@ -834,7 +835,7 @@ body {
     text-decoration: underline;
 }
 
-.tab-separator {
+.tab-seperator {
     font-size: 2.5vh;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
@@ -937,7 +938,7 @@ body {
 
 #official-back-btn {
     width: 50vw;
-    height: 9vh; /* Increased by 50% from 6vh */
+    height: 9vh;
     font-size: 3vh;
     background: #FFB300;
     border: none;
@@ -947,7 +948,7 @@ body {
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
     margin: 1vh 0;
-    display: flex; /* Center text */
+    display: flex;
     align-items: center;
     justify-content: center;
 }
@@ -1036,6 +1037,7 @@ body {
     width: 100%;
     height: 100%;
     object-fit: contain;
+    display: block;
 }
 
 #next-game-btn-end,
@@ -1079,7 +1081,7 @@ body {
     top: 0;
     left: 0;
     width: 98vw;
-    margin: 0 1vw; /* Centered with 1vw margin */
+    margin: 0 1vw;
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
     z-index: 200;
@@ -1102,14 +1104,14 @@ body {
 
 #guesses-title {
     font-size: 2.5vh;
-    color: #000000;
-    text-shadow: none;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
     margin-bottom: 1vh;
 }
 
 #guesses-list {
     font-size: 2vh;
-    color: #000000;
+    color: #FFFFFF;
     text-shadow: none;
     text-align: center;
 }
@@ -1124,7 +1126,7 @@ body {
 
 .dialog-message {
     font-size: 2vh;
-    color: #000000;
+    color: #FFFFFF;
     text-shadow: none;
     text-align: center;
     margin-bottom: 2vh;
@@ -1163,7 +1165,6 @@ body {
     }
 }
 
-/* Styles for score, boost, and bank containers */
 .info-circle,
 .info-sun {
     position: absolute;
@@ -1183,13 +1184,11 @@ body {
 .info-circle {
     width: 20vw;
     height: 20vw;
-    /* Removed border-radius to make square */
 }
 
 .info-sun {
     width: 20vw;
     height: 20vw;
-    /* Removed border-radius to make square */
     position: relative;
 }
 
@@ -1200,7 +1199,6 @@ body {
     background: inherit;
     width: 100%;
     height: 100%;
-    /* Removed border-radius to make square */
 }
 
 .info-sun::before {
@@ -1214,26 +1212,21 @@ body {
 }
 
 #score-container {
-    background: rgb(0, 0, 0); /* Solid black */
+    background: rgb(0, 0, 0);
+    right: 2vw;
     top: 2vh;
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-#score-container .info-text {
-    color: #FFB300; /* Yellow text */
 }
 
 #boost-container {
-    background: rgb(255, 69, 0); /* Solid red */
-    top: 2vh;
+    background: rgb(255, 69, 0);
     right: 2vw;
+    top: 12vh;
 }
 
 #bank-container {
-    background: rgb(50, 205, 50); /* Solid green */
-    top: 12vh;
-    right: 2vw; /* Moved to right */
+    background: rgb(50, 205, 50);
+    right: 2vw;
+    top: 22vh;
 }
 
 .info-text {
@@ -1246,23 +1239,44 @@ body {
     line-height: 1.2;
 }
 
-/* Animation for info elements */
-@keyframes reveal-info {
-    0% { transform: scale(0); opacity: 0; }
-    80% { transform: scale(1.1); opacity: 1; }
-    100% { transform: scale(1); opacity: 1; }
+#score-container .info-text {
+    color: #FFFFFF;
+}
+
+@keyframes reveal {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    80% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
 #score-container,
 #boost-container,
 #bank-container {
-    animation: reveal-info 0.5s ease-out forwards;
+    animation: reveal 0.5s ease-out forwards;
 }
 
-/* Mobile-specific adjustments */
-@media screen and (max-width: 768px) {
+.control-btn, #all-games-link, #give-up-link, #guesses-link, #prev-game-arrow, #next-game-arrow, .tab, .key, .game-list-row span.play-now {
+    transition: transform 0.1s ease-out, background-color 0.1s ease-out, opacity 0.1s ease-out;
+}
+
+.control-btn:active, #all-games-link:active, #give-up-link:active, #guesses-link:active, #prev-game-arrow:active, #next-game-arrow:active, .tab:active, .key:active, .game-list-row span.play-now:active {
+    transform: scale(0.95);
+    opacity: 0.8;
+}
+
+@media screen and (max-width: 768px)
+ {
     body {
-        margin: 0 1vw; /* Centered with 1vw margin */
+        margin: 0 1vw;
     }
 
     #header,
@@ -1275,11 +1289,11 @@ body {
     #ad-box,
     .dialog {
         width: 98vw;
-        margin: 0 1vw; /* Centered with 1vw margin */
+        margin: 0 1vw;
     }
 
     #game-screen {
-        height: 50vh; /* Reduced from 50.5vh by half a line (1vh) */
+        height: 50vh;
     }
 
     .hint {
@@ -1287,7 +1301,7 @@ body {
         width: 25vw;
         height: 7vh;
         padding: 1vh 0.5vw;
-        text-indent: 0; /* Adjusted for mobile */
+        text-indent: 0;
     }
 
     #hints-heading {
@@ -1300,7 +1314,7 @@ body {
         top: 1vh;
     }
 
-    .hint-shape-fluffy {
+    .hint-shape-fluffy-cloud {
         width: 27vw;
         height: 8vh;
     }
@@ -1318,7 +1332,7 @@ body {
         height: 6vw;
         top: -1.5vh;
         right: 1vw;
-        box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 0 8px rgba(0,0,0,0.2);
     }
 
     .hint-shape-fluffy-cloud .hint-text {
@@ -1353,15 +1367,15 @@ body {
     #hint-4.hint-shape-diamond {
         width: 25vw;
         height: 25vw;
-        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); /* Non-rotated diamond */
-        transform: rotate(0deg); /* No rotation */
+        clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+        transform: rotate(0deg);
     }
 
     #hint-4.hint-shape-diamond .hint-text {
         font-size: min(4.55vh, 3.55vw);
         width: 80%;
         height: 80%;
-        transform: rotate(0deg); /* No text rotation */
+        transform: rotate(0deg);
     }
 
     .hint-shape-diamond:not(#hint-4) {
@@ -1391,7 +1405,7 @@ body {
     #guess-btn {
         width: 33vw;
         height: 9vh;
-        font-size: 5vh;
+        font-size: 3.5vh;
         border-radius: 0 1vh 1vh 0;
     }
 
@@ -1417,11 +1431,11 @@ body {
 
     #keyboard-container {
         height: 21vh;
-        top: 72vh; /* Adjusted to account for game screen reduction */
+        top: 72vh;
     }
 
     #keyboard-content {
-        padding: 0.25vh 0 1.75vh 0; /* Adjusted padding for mobile */
+        padding: 0.25vh 0 1.75vh 0;
     }
 
     .tab {
@@ -1429,7 +1443,7 @@ body {
         padding: 0.6vh 1.2vw;
     }
 
-    .tab-separator {
+    .tab-seperator {
         font-size: 2.8vh;
         color: #FFFFFF;
         text-shadow: 1px 1px 2px #000000;
@@ -1437,6 +1451,10 @@ body {
 
     .tab-content > span {
         font-size: 2.8vh;
+    }
+
+    .game-list-row span {
+        font-size: 2.2vh;
     }
 
     .game-list-row span {
@@ -1455,10 +1473,10 @@ body {
     }
 
     #official-back-btn {
-        width: 60vw; /* Matches private-back-btn */
-        height: 10.5vh; /* Increased by 50% from 7vh */
-        font-size: 3.2vh; /* Matches private-back-btn */
-        display: flex; /* Center text */
+        width: 60vw;
+        height: 10.5vh;
+        font-size: 3.2vh;
+        display: flex;
         align-items: center;
         justify-content: center;
     }
@@ -1470,9 +1488,9 @@ body {
     }
 
     #guesses-close-btn {
-        width: 180vw; /* Doubled from 90vw */
-        height: 48vh; /* Doubled from 24vh */
-        font-size: 22.4vh; /* Doubled from 11.2vh */
+        width: 45vw;
+        height: 6vh;
+        font-size: 2.8vh;
     }
 
     #share-section {
@@ -1481,7 +1499,7 @@ body {
 
     #secret-word-message {
         font-size: 2.8vh;
-        margin: 2.5vh;
+        margin: 2.5vh 0;
     }
 
     #share-text {
@@ -1498,7 +1516,7 @@ body {
     }
 
     .dialog-message {
-        font-size: 2vh;
+        font-size: 2.2vh;
     }
 
     .key {
@@ -1520,16 +1538,15 @@ body {
 
     #guesses-title {
         font-size: 2.8vh;
-        color: #000000;
-        text-shadow: none;
+        color: #FFFFFF;
+        text-shadow: 1px 1px 2px #000000;
         margin-bottom: 2vh;
     }
 
     #guesses-list {
         font-size: 2.2vh;
-        color: #000000;
-        text-shadow: none;
-
+        color: #FFFFFF;
+        text-shadow: 1px 1px 2px #000000;
     }
 
     .info-circle,
@@ -1537,25 +1554,23 @@ body {
         font-size: min(3vh, 2.3vw);
         width: 22vw;
         height: 22vw;
-        /* Removed border-radius to maintain square shape */
     }
 
     #score-container {
-        background: rgb(0, 0, 0); /* Solid black */
+        background: rgb(0, 0, 0);
+        right: 1vw;
         top: 1vh;
-        left: 50%;
-        transform: translateX(-50%);
     }
 
     #boost-container {
-        background: rgb(255, 69, 0); /* Red */
-        top: 1vh;
+        background: rgb(255, 69, 0);
         right: 1vw;
+        top: 10vh;
     }
 
     #bank-container {
-        background: rgb(50, 205, 50); /* Solid green */
-        top: 10vh; /* Adjusted for mobile */
-        right: 1vw; /* Moved to right */
+        background: rgb(50, 205, 50);
+        right: 1vw;
+        top: 19vh;
     }
 }
