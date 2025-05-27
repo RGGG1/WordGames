@@ -63,9 +63,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gameControlsContainer = document.getElementById("game-controls-container");
     const shareSection = document.getElementById("share-section");
     const gameNameElement = document.getElementById("game-name");
-    const scoreContainer = document.getElementById("score-container");
-    const boostContainer = document.getElementById("boost-container");
-    const bankContainer = document.getElementById("bank-container");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -389,8 +386,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 key.removeEventListener("click", key._clickHandler);
                 key.removeEventListener("touchstart", key._touchHandler);
             }
-            const clickHandler = debounce(() => {
-                console.log("Key clicked:", key.textContent, { gameOver, isProcessingGuess, activeInput: activeInput?.id });
+            const clickHandler = debounce((e) => {
+                if (e.type === "touchstart") {
+                    e.preventDefault();
+                }
+                console.log("Key triggered:", key.textContent, { gameOver, isProcessingGuess, activeInput: activeInput?.id });
                 if (gameOver || isProcessingGuess || !activeInput || activeInput.disabled) {
                     console.log("Key click ignored due to state");
                     return;
@@ -413,12 +413,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }, 100);
             key._clickHandler = clickHandler;
-            key._touchHandler = (e) => {
-                e.preventDefault();
-                clickHandler();
-            };
+            key._touchHandler = clickHandler;
             key.addEventListener("click", clickHandler);
-            key.addEventListener("touchstart", key._touchHandler);
+            key.addEventListener("touchstart", clickHandler);
         });
     }
 
@@ -458,8 +455,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 showKeyboard();
             }
         };
-        keyboardGiveUpContent.addEventListener("click", handler);
-        keyboardGiveUpContent.addEventListener("touchstart", handler);
+        keyboardGuessesContent.addEventListener("click", handler);
+        keyboardGuessesContent.addEventListener("touchstart", handler);
     }
 
     // Tab navigation
@@ -1563,28 +1560,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log(`Current ${resultsKey} in localStorage:`, results);
     }
 
-    // Update score and boost
-    function updateScoreAndBoost() {
-        let score = 500 - (guessCount * 100);
-        let boost = Math.max(1, 5 - guessCount);
-        if (guessCount === 0) {
-            score = 500;
-            boost = 5;
-        }
-        if (gaveUp) {
-            score = 0;
-            boost = 0;
-        }
-        scoreContainer.innerHTML = `<span class="info-text">Score:<br>${score}</span>`;
-        boostContainer.innerHTML = `<span class="info-text">Boost:<br>${boost}</span>`;
-    }
-
-    // Update bank
-    function updateBank() {
-        let bank = localStorage.getItem("bank") ? parseInt(localStorage.getItem("bank")) : 2500;
-        bankContainer.innerHTML = `<span class="info-text">Bank:<br>${bank}</span>`;
-    }
-
     // End game
     function endGame(won, gaveUp = false) {
         console.log("Ending game", { won, gaveUp, guessCount, secretWord });
@@ -1635,18 +1610,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameNumberDisplay) {
             gameNumberDisplay.style.display = "none";
         }
-
-        let score = 500 - (guessCount * 100);
-        let boost = Math.max(1, 5 - guessCount);
-        let bank = localStorage.getItem("bank") ? parseInt(localStorage.getItem("bank")) : 2500;
-        if (gaveUp || !won) {
-            score = 0;
-            boost = 0;
-        }
-        bank += score * boost;
-        localStorage.setItem("bank", bank);
-        updateScoreAndBoost();
-        updateBank();
 
         let shareMessage;
         if (gaveUp || !won) {
@@ -1781,7 +1744,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Game state reset complete");
     }
 
-       // Load game
+    // Load game
     function loadGame(game) {
         if (!game) {
             console.error("No game provided to loadGame");
@@ -1828,8 +1791,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
             randomizeHintStyles();
             setupHints();
-            updateScoreAndBoost();
-            updateBank();
 
             console.log("Game loaded successfully:", { secretWord, currentGameId, currentGameNumber, hintIndex });
         } catch (error) {
