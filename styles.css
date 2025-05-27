@@ -136,61 +136,32 @@ body {
     align-items: center;
     justify-content: center;
     font-family: 'Luckiest Guy', cursive;
-    font-size: min(5.85vh, 4.55vw);
+    font-size: min(11.7vh, 9.1vw);
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    width: 20vw;
+    width: 22vw;
     height: 8vh;
     border-radius: 50%;
     z-index: 15;
     margin-bottom: 1vh;
+    background: rgba(0, 0, 0, 0.3);
 }
 
 #score-text {
     top: 2vh;
-    background: rgb(50, 205, 50);
 }
 
 #boost-text {
     top: 11vh;
-    background: rgb(255, 215, 0);
+}
+
+#boost-text .bw-emoji {
+    filter: grayscale(100%);
 }
 
 #bank-text {
     top: 20vh;
-    background: rgb(255, 69, 0);
-}
-
-.info-text::before,
-.info-text::after {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    border-radius: 50%;
-}
-
-#score-text::before, #score-text::after {
-    background: rgb(50, 205, 50);
-}
-
-#boost-text::before, #boost-text::after {
-    background: rgb(255, 215, 0);
-}
-
-#bank-text::before, #bank-text::after {
-    background: rgb(255, 69, 0);
-}
-
-.info-text::before {
-    transform: scale(1.2);
-    opacity: 0.3;
-}
-
-.info-text::after {
-    transform: scale(1.4);
-    opacity: 0.2;
 }
 
 .hint-shape-fluffy-cloud {
@@ -1046,6 +1017,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    line-height: normal;
     transition: transform 0.1s ease, background 0.1s ease;
     -webkit-tap-highlight-color: rgba(255, 179, 0, 0.5);
     touch-action: manipulation;
@@ -1208,10 +1180,11 @@ body {
 }
 
 #guesses-title {
-    font-size: 2.5vh;
+    font-size: 2.25vh;
     color: #000000;
     text-shadow: none;
     margin-bottom: 1vh;
+    margin-top: -0.5vh;
 }
 
 #guesses-list {
@@ -1323,8 +1296,8 @@ body {
     }
 
     .info-text {
-        font-size: min(4.55vh, 3.9vw);
-        width: 25vw;
+        font-size: min(9.1vh, 7.8vw);
+        width: 27vw;
         height: 7vh;
     }
 
@@ -1514,6 +1487,7 @@ body {
         display: flex;
         align-items: center;
         justify-content: center;
+        line-height: normal;
         transition: transform 0.1s ease, background 0.1s ease;
         -webkit-tap-highlight-color: rgba(255, 179, 0, 0.5);
         touch-action: manipulation;
@@ -1562,9 +1536,8 @@ body {
     }
 
     #share-buttons a {
-        width: block;
-        height: 7vh;
         width: 7vh;
+        height: 7vh;
     }
 
     .dialog-message {
@@ -1572,8 +1545,6 @@ body {
     }
 
     .key {
-        width: 9.5vw;
-        height: auto;
         width: 9.5vw;
         height: 4.5vh;
         font-size: 2vh;
@@ -1584,7 +1555,7 @@ body {
 
     .key:active {
         transform: scale(0.95);
-        background: #B0B0B3B8;
+        background: #B0B3B8;
     }
 
     #key-enter,
@@ -1599,11 +1570,13 @@ body {
     }
 
     #guesses-title {
-        font-size: 2.8vh;
+        font-size: 2.55vh;
         color: #000000;
         text-shadow: none;
         margin-bottom: 2vh;
+        margin-top: -0.5vh;
     }
+
     #guesses-list {
         font-size: 2.2vh;
         color: #000000;
