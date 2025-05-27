@@ -123,7 +123,7 @@ body {
 }
 
 .hint-shape-fluffy-cloud {
-    background: rgba(255, 255, 255, 0.7);
+    background: rgb(255, 255, 255); /* Solid white */
     position: relative;
     width: 24vw;
     height: 10vh;
@@ -140,7 +140,7 @@ body {
 .hint-shape-fluffy-cloud .puff-2 {
     content: '';
     position: absolute;
-    background: inherit;
+    background: rgb(255, 255, 255); /* Solid white */
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
@@ -186,12 +186,12 @@ body {
 }
 
 .hint-shape-circle {
-    background: rgba(50, 205, 50, 0.7);
+    background: rgb(50, 205, 50); /* Solid green */
     border-radius: 50%;
 }
 
 .hint-shape-aviator {
-    background: rgba(50, 205, 50, 0.7);
+    background: rgb(50, 205, 50); /* Solid green */
     position: relative;
     clip-path: polygon(
         10% 0%, 90% 0%,
@@ -207,7 +207,7 @@ body {
 }
 
 #hint-4.hint-shape-diamond {
-    background: rgba(100, 149, 237, 0.7);
+    background: rgb(100, 149, 237); /* Solid blue */
     position: relative;
     width: 20vw;
     height: 20vw;
@@ -233,7 +233,7 @@ body {
 }
 
 .hint-shape-diamond:not(#hint-4) {
-    background: rgba(100, 149, 237, 0.7);
+    background: rgb(100, 149, 237); /* Solid blue */
     position: relative;
     width: 20vw;
     height: 20vw;
@@ -252,7 +252,7 @@ body {
 }
 
 .hint-shape-cloud {
-    background: rgba(135, 206, 235, 0.7);
+    background: rgb(135, 206, 235); /* Solid sky blue */
     border-radius: 50%;
     position: relative;
 }
@@ -261,7 +261,7 @@ body {
 .hint-shape-cloud::after {
     content: '';
     position: absolute;
-    background: inherit;
+    background: rgb(135, 206, 235); /* Solid sky blue */
     border-radius: 50%;
 }
 
@@ -280,7 +280,7 @@ body {
 }
 
 .hint-shape-sun {
-    background: rgba(255, 165, 0, 0.7);
+    background: rgb(255, 165, 0); /* Solid orange */
     border-radius: 50%;
     position: relative;
 }
@@ -289,7 +289,7 @@ body {
 .hint-shape-sun::after {
     content: '';
     position: absolute;
-    background: inherit;
+    background: rgb(255, 165, 0); /* Solid orange */
     width: 100%;
     height: 100%;
     border-radius: 50%;
@@ -395,120 +395,120 @@ body {
 .hint.reveal-slide-down { animation: reveal-slide-down 0.5s ease-out forwards; }
 .hint.reveal-splash { animation: reveal-splash 0.6s ease-out forwards; }
 
-.hint-color-1 { background: rgba(255, 105, 180, 0.7); }
-.hint-color-2 { background: rgba(255, 215, 0, 0.7); }
-.hint-color-3 { background: rgba(50, 205, 50, 0.7); }
-.hint-color-4 { background: rgba(135, 206, 235, 0.7); }
-.hint-color-5 { background: rgba(255, 165, 0, 0.7); }
-.hint-color-6 { background: rgba(138, 43, 226, 0.7); }
-.hint-color-7 { background: rgba(255, 69, 0, 0.7); }
-.hint-color-8 { background: rgba(75, 0, 130, 0.7); }
-.hint-color-9 { background: rgba(0, 191, 255, 0.7); }
-.hint-color-10 { background: rgba(255, 20, 147, 0.7); }
+.hint-color-1 { background: rgb(255, 105, 180); } /* Solid pink */
+.hint-color-2 { background: rgb(255, 215, 0); } /* Solid yellow */
+.hint-color-3 { background: rgb(50, 205, 50); } /* Solid green */
+.hint-color-4 { background: rgb(135, 206, 235); } /* Solid sky blue */
+.hint-color-5 { background: rgb(255, 165, 0); } /* Solid orange */
+.hint-color-6 { background: rgb(138, 43, 226); } /* Solid purple */
+.hint-color-7 { background: rgb(255, 69, 0); } /* Solid red */
+.hint-color-8 { background: rgb(75, 0, 130); } /* Solid deep purple */
+.hint-color-9 { background: rgb(0, 191, 255); } /* Solid cyan */
+.hint-color-10 { background: rgb(255, 20, 147); } /* Solid deep pink */
 
 .hint.hint-color-1.hint-shape-cloud::before,
-.hint.hint-color-1.hint-shape-cloud::after { background: rgba(255, 105, 180, 0.7); }
+.hint.hint-color-1.hint-shape-cloud::after { background: rgb(255, 105, 180); }
 .hint.hint-color-2.hint-shape-cloud::before,
-.hint.hint-color-2.hint-shape-cloud::after { background: rgba(255, 215, 0, 0.7); }
+.hint.hint-color-2.hint-shape-cloud::after { background: rgb(255, 215, 0); }
 .hint.hint-color-3.hint-shape-cloud::before,
-.hint.hint-color-3.hint-shape-cloud::after { background: rgba(50, 205, 50, 0.7); }
+.hint.hint-color-3.hint-shape-cloud::after { background: rgb(50, 205, 50); }
 .hint.hint-color-4.hint-shape-cloud::before,
-.hint.hint-color-4.hint-shape-cloud::after { background: rgba(135, 206, 235, 0.7); }
+.hint.hint-color-4.hint-shape-cloud::after { background: rgb(135, 206, 235); }
 .hint.hint-color-5.hint-shape-cloud::before,
-.hint.hint-color-5.hint-shape-cloud::after { background: rgba(255, 165, 0, 0.7); }
+.hint.hint-color-5.hint-shape-cloud::after { background: rgb(255, 165, 0); }
 .hint.hint-color-6.hint-shape-cloud::before,
-.hint.hint-color-6.hint-shape-cloud::after { background: rgba(138, 43, 226, 0.7); }
+.hint.hint-color-6.hint-shape-cloud::after { background: rgb(138, 43, 226); }
 .hint.hint-color-7.hint-shape-cloud::before,
-.hint.hint-color-7.hint-shape-cloud::after { background: rgba(255, 69, 0, 0.7); }
+.hint.hint-color-7.hint-shape-cloud::after { background: rgb(255, 69, 0); }
 .hint.hint-color-8.hint-shape-cloud::before,
-.hint.hint-color-8.hint-shape-cloud::after { background: rgba(75, 0, 130, 0.7); }
+.hint.hint-color-8.hint-shape-cloud::after { background: rgb(75, 0, 130); }
 .hint.hint-color-9.hint-shape-cloud::before,
-.hint.hint-color-9.hint-shape-cloud::after { background: rgba(0, 191, 255, 0.7); }
+.hint.hint-color-9.hint-shape-cloud::after { background: rgb(0, 191, 255); }
 .hint.hint-color-10.hint-shape-cloud::before,
-.hint.hint-color-10.hint-shape-cloud::after { background: rgba(255, 20, 147, 0.7); }
+.hint.hint-color-10.hint-shape-cloud::after { background: rgb(255, 20, 147); }
 
 .hint.hint-color-1.hint-shape-sun::before,
-.hint.hint-color-1.hint-shape-sun::after { background: rgba(255, 105, 180, 0.7); }
+.hint.hint-color-1.hint-shape-sun::after { background: rgb(255, 105, 180); }
 .hint.hint-color-2.hint-shape-sun::before,
-.hint.hint-color-2.hint-shape-sun::after { background: rgba(255, 215, 0, 0.7); }
+.hint.hint-color-2.hint-shape-sun::after { background: rgb(255, 215, 0); }
 .hint.hint-color-3.hint-shape-sun::before,
-.hint.hint-color-3.hint-shape-sun::after { background: rgba(50, 205, 50, 0.7); }
+.hint.hint-color-3.hint-shape-sun::after { background: rgb(50, 205, 50); }
 .hint.hint-color-4.hint-shape-sun::before,
-.hint.hint-color-4.hint-shape-sun::after { background: rgba(135, 206, 235, 0.7); }
+.hint.hint-color-4.hint-shape-sun::after { background: rgb(135, 206, 235); }
 .hint.hint-color-5.hint-shape-sun::before,
-.hint.hint-color-5.hint-shape-sun::after { background: rgba(255, 165, 0, 0.7); }
+.hint.hint-color-5.hint-shape-sun::after { background: rgb(255, 165, 0); }
 .hint.hint-color-6.hint-shape-sun::before,
-.hint.hint-color-6.hint-shape-sun::after { background: rgba(138, 43, 226, 0.7); }
+.hint.hint-color-6.hint-shape-sun::after { background: rgb(138, 43, 226); }
 .hint.hint-color-7.hint-shape-sun::before,
-.hint.hint-color-7.hint-shape-sun::after { background: rgba(255, 69, 0, 0.7); }
+.hint.hint-color-7.hint-shape-sun::after { background: rgb(255, 69, 0); }
 .hint.hint-color-8.hint-shape-sun::before,
-.hint.hint-color-8.hint-shape-sun::after { background: rgba(75, 0, 130, 0.7); }
+.hint.hint-color-8.hint-shape-sun::after { background: rgb(75, 0, 130); }
 .hint.hint-color-9.hint-shape-sun::before,
-.hint.hint-color-9.hint-shape-sun::after { background: rgba(0, 191, 255, 0.7); }
-.hint.hint-color-10.hint-shape-sun::after { background: rgba(255, 20, 147, 0.7); }
+.hint.hint-color-9.hint-shape-sun::after { background: rgb(0, 191, 255); }
+.hint.hint-color-10.hint-shape-sun::after { background: rgb(255, 20, 147); }
 
 .hint.hint-color-1.hint-shape-fluffy-cloud::before,
 .hint.hint-color-1.hint-shape-fluffy-cloud::after,
 .hint.hint-color-1.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-1.hint-shape-fluffy-cloud .puff-2 { background: rgba(255, 105, 180, 0.7); }
+.hint.hint-color-1.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 105, 180); }
 .hint.hint-color-2.hint-shape-fluffy-cloud::before,
 .hint.hint-color-2.hint-shape-fluffy-cloud::after,
 .hint.hint-color-2.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-2.hint-shape-fluffy-cloud .puff-2 { background: rgba(255, 215, 0, 0.7); }
+.hint.hint-color-2.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 215, 0); }
 .hint.hint-color-3.hint-shape-fluffy-cloud::before,
 .hint.hint-color-3.hint-shape-fluffy-cloud::after,
 .hint.hint-color-3.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-3.hint-shape-fluffy-cloud .puff-2 { background: rgba(50, 205, 50, 0.7); }
+.hint.hint-color-3.hint-shape-fluffy-cloud .puff-2 { background: rgb(50, 205, 50); }
 .hint.hint-color-4.hint-shape-fluffy-cloud::before,
 .hint.hint-color-4.hint-shape-fluffy-cloud::after,
 .hint.hint-color-4.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-4.hint-shape-fluffy-cloud .puff-2 { background: rgba(135, 206, 235, 0.7); }
+.hint.hint-color-4.hint-shape-fluffy-cloud .puff-2 { background: rgb(135, 206, 235); }
 .hint.hint-color-5.hint-shape-fluffy-cloud::before,
 .hint.hint-color-5.hint-shape-fluffy-cloud::after,
 .hint.hint-color-5.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-5.hint-shape-fluffy-cloud .puff-2 { background: rgba(255, 165, 0, 0.7); }
+.hint.hint-color-5.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 165, 0); }
 .hint.hint-color-6.hint-shape-fluffy-cloud::before,
 .hint.hint-color-6.hint-shape-fluffy-cloud::after,
 .hint.hint-color-6.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-6.hint-shape-fluffy-cloud .puff-2 { background: rgba(138, 43, 226, 0.7); }
+.hint.hint-color-6.hint-shape-fluffy-cloud .puff-2 { background: rgb(138, 43, 226); }
 .hint.hint-color-7.hint-shape-fluffy-cloud::before,
 .hint.hint-color-7.hint-shape-fluffy-cloud::after,
 .hint.hint-color-7.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-7.hint-shape-fluffy-cloud .puff-2 { background: rgba(255, 69, 0, 0.7); }
+.hint.hint-color-7.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 69, 0); }
 .hint.hint-color-8.hint-shape-fluffy-cloud::before,
 .hint.hint-color-8.hint-shape-fluffy-cloud::after,
 .hint.hint-color-8.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-8.hint-shape-fluffy-cloud .puff-2 { background: rgba(75, 0, 130, 0.7); }
+.hint.hint-color-8.hint-shape-fluffy-cloud .puff-2 { background: rgb(75, 0, 130); }
 .hint.hint-color-9.hint-shape-fluffy-cloud::before,
 .hint.hint-color-9.hint-shape-fluffy-cloud::after,
 .hint.hint-color-9.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-9.hint-shape-fluffy-cloud .puff-2 { background: rgba(0, 191, 255, 0.7); }
+.hint.hint-color-9.hint-shape-fluffy-cloud .puff-2 { background: rgb(0, 191, 255); }
 .hint.hint-color-10.hint-shape-fluffy-cloud::before,
 .hint.hint-color-10.hint-shape-fluffy-cloud::after,
 .hint.hint-color-10.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-10.hint-shape-fluffy-cloud .puff-2 { background: rgba(255, 20, 147, 0.7); }
+.hint.hint-color-10.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 20, 147); }
 
-.hint.hint-color-1.hint-shape-aviator { background: rgba(255, 105, 180, 0.7); }
-.hint.hint-color-2.hint-shape-aviator { background: rgba(255, 215, 0, 0.7); }
-.hint.hint-color-3.hint-shape-aviator { background: rgba(50, 205, 50, 0.7); }
-.hint.hint-color-4.hint-shape-aviator { background: rgba(135, 206, 235, 0.7); }
-.hint.hint-color-5.hint-shape-aviator { background: rgba(255, 165, 0, 0.7); }
-.hint.hint-color-6.hint-shape-aviator { background: rgba(138, 43, 226, 0.7); }
-.hint.hint-color-7.hint-shape-aviator { background: rgba(255, 69, 0, 0.7); }
-.hint.hint-color-8.hint-shape-aviator { background: rgba(75, 0, 130, 0.7); }
-.hint.hint-color-9.hint-shape-aviator { background: rgba(0, 191, 255, 0.7); }
-.hint.hint-color-10.hint-shape-aviator { background: rgba(255, 20, 147, 0.7); }
+.hint.hint-color-1.hint-shape-aviator { background: rgb(255, 105, 180); }
+.hint.hint-color-2.hint-shape-aviator { background: rgb(255, 215, 0); }
+.hint.hint-color-3.hint-shape-aviator { background: rgb(50, 205, 50); }
+.hint.hint-color-4.hint-shape-aviator { background: rgb(135, 206, 235); }
+.hint.hint-color-5.hint-shape-aviator { background: rgb(255, 165, 0); }
+.hint.hint-color-6.hint-shape-aviator { background: rgb(138, 43, 226); }
+.hint.hint-color-7.hint-shape-aviator { background: rgb(255, 69, 0); }
+.hint.hint-color-8.hint-shape-aviator { background: rgb(75, 0, 130); }
+.hint.hint-color-9.hint-shape-aviator { background: rgb(0, 191, 255); }
+.hint.hint-color-10.hint-shape-aviator { background: rgb(255, 20, 147); }
 
-.hint.hint-color-1.hint-shape-diamond { background: rgba(255, 105, 180, 0.7); }
-.hint.hint-color-2.hint-shape-diamond { background: rgba(255, 215, 0, 0.7); }
-.hint.hint-color-3.hint-shape-diamond { background: rgba(50, 205, 50, 0.7); }
-.hint.hint-color-4.hint-shape-diamond { background: rgba(135, 206, 235, 0.7); }
-.hint.hint-color-5.hint-shape-diamond { background: rgba(255, 165, 0, 0.7); }
-.hint.hint-color-6.hint-shape-diamond { background: rgba(138, 43, 226, 0.7); }
-.hint.hint-color-7.hint-shape-diamond { background: rgba(255, 69, 0, 0.7); }
-.hint.hint-color-8.hint-shape-diamond { background: rgba(75, 0, 130, 0.7); }
-.hint.hint-color-9.hint-shape-diamond { background: rgba(0, 191, 255, 0.7); }
-.hint.hint-color-10.hint-shape-diamond { background: rgba(255, 20, 147, 0.7); }
+.hint.hint-color-1.hint-shape-diamond { background: rgb(255, 105, 180); }
+.hint.hint-color-2.hint-shape-diamond { background: rgb(255, 215, 0); }
+.hint.hint-color-3.hint-shape-diamond { background: rgb(50, 205, 50); }
+.hint.hint-color-4.hint-shape-diamond { background: rgb(135, 206, 235); }
+.hint.hint-color-5.hint-shape-diamond { background: rgb(255, 165, 0); }
+.hint.hint-color-6.hint-shape-diamond { background: rgb(138, 43, 226); }
+.hint.hint-color-7.hint-shape-diamond { background: rgb(255, 69, 0); }
+.hint.hint-color-8.hint-shape-diamond { background: rgb(75, 0, 130); }
+.hint.hint-color-9.hint-shape-diamond { background: rgb(0, 191, 255); }
+.hint.hint-color-10.hint-shape-diamond { background: rgb(255, 20, 147); }
 
 #guess-area {
     position: fixed;
@@ -691,17 +691,17 @@ body {
 #keyboard-container.show-give-up #keyboard-back-btn {
     display: none;
     position: static;
-    width: 20vw;
-    height: 3vh;
-    font-size: 1.5vh;
+    width: 40vw; /* Doubled from 20vw */
+    height: 6vh; /* Doubled from 3vh */
+    font-size: 3vh; /* Doubled from 1.5vh */
     margin-top: 1vh;
 }
 
 #keyboard-back-btn {
     position: static;
-    width: 20vw;
-    height: 3vh;
-    font-size: 1.5vh;
+    width: 40vw; /* Doubled from 20vw */
+    height: 6vh; /* Doubled from 3vh */
+    font-size: 3vh; /* Doubled from 1.5vh */
     margin-top: 1vh;
 }
 
@@ -778,7 +778,7 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 100vw; /* Changed to 100vw */
+    width: 100vw; /* Extended to full viewport width */
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
@@ -937,7 +937,7 @@ body {
 
 #official-back-btn {
     width: 50vw;
-    height: 6vh;
+    height: 9vh; /* Increased by 50% from 6vh */
     font-size: 3vh;
     background: #FFB300;
     border: none;
@@ -947,7 +947,9 @@ body {
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
     margin: 1vh 0;
-    text-align: center; /* Ensure text is centered */
+    display: flex; /* Center text */
+    align-items: center;
+    justify-content: center;
 }
 
 #private-back-btn {
@@ -1161,7 +1163,7 @@ body {
     }
 }
 
-/* New styles for streak, bank, and score containers */
+/* Styles for score, boost, and bank containers */
 .info-circle,
 .info-sun {
     position: absolute;
@@ -1181,13 +1183,13 @@ body {
 .info-circle {
     width: 20vw;
     height: 20vw;
-    border-radius: 50%;
+    /* Removed border-radius to make square */
 }
 
 .info-sun {
     width: 20vw;
     height: 20vw;
-    border-radius: 50%;
+    /* Removed border-radius to make square */
     position: relative;
 }
 
@@ -1198,7 +1200,7 @@ body {
     background: inherit;
     width: 100%;
     height: 100%;
-    border-radius: 50%;
+    /* Removed border-radius to make square */
 }
 
 .info-sun::before {
@@ -1212,7 +1214,7 @@ body {
 }
 
 #score-container {
-    background: rgba(0, 0, 0, 0.7); /* Black background */
+    background: rgb(0, 0, 0); /* Solid black */
     top: 2vh;
     left: 50%;
     transform: translateX(-50%);
@@ -1222,16 +1224,16 @@ body {
     color: #FFB300; /* Yellow text */
 }
 
-#streak-container {
-    background: rgba(75, 0, 130, 0.7); /* Deep color (hint-color-8) */
+#boost-container {
+    background: rgb(255, 69, 0); /* Solid red */
     top: 2vh;
     right: 2vw;
 }
 
 #bank-container {
-    background: rgba(50, 205, 50, 0.7); /* Green background */
-    top: 12vh; /* Positioned below streak-container */
-    right: 2vw;
+    background: rgb(50, 205, 50); /* Solid green */
+    top: 12vh;
+    right: 2vw; /* Moved to right */
 }
 
 .info-text {
@@ -1244,7 +1246,7 @@ body {
     line-height: 1.2;
 }
 
-/* Animation for new info elements */
+/* Animation for info elements */
 @keyframes reveal-info {
     0% { transform: scale(0); opacity: 0; }
     80% { transform: scale(1.1); opacity: 1; }
@@ -1252,7 +1254,7 @@ body {
 }
 
 #score-container,
-#streak-container,
+#boost-container,
 #bank-container {
     animation: reveal-info 0.5s ease-out forwards;
 }
@@ -1454,9 +1456,11 @@ body {
 
     #official-back-btn {
         width: 60vw; /* Matches private-back-btn */
-        height: 7vh; /* Matches private-back-btn */
+        height: 10.5vh; /* Increased by 50% from 7vh */
         font-size: 3.2vh; /* Matches private-back-btn */
-        text-align: center; /* Ensure text is centered */
+        display: flex; /* Center text */
+        align-items: center;
+        justify-content: center;
     }
 
     #private-back-btn {
@@ -1477,7 +1481,7 @@ body {
 
     #secret-word-message {
         font-size: 2.8vh;
-        margin: 2.5vh 0;
+        margin: 2.5vh;
     }
 
     #share-text {
@@ -1495,8 +1499,6 @@ body {
 
     .dialog-message {
         font-size: 2vh;
-        color: #000000;
-        text-shadow: none;
     }
 
     .key {
@@ -1527,28 +1529,33 @@ body {
         font-size: 2.2vh;
         color: #000000;
         text-shadow: none;
+
     }
 
     .info-circle,
     .info-sun {
         font-size: min(3vh, 2.3vw);
-        width: 25vw;
-        height: 25vw;
+        width: 22vw;
+        height: 22vw;
+        /* Removed border-radius to maintain square shape */
     }
 
     #score-container {
+        background: rgb(0, 0, 0); /* Solid black */
         top: 1vh;
         left: 50%;
         transform: translateX(-50%);
     }
 
-    #streak-container {
+    #boost-container {
+        background: rgb(255, 69, 0); /* Red */
         top: 1vh;
         right: 1vw;
     }
 
     #bank-container {
-        top: 10vh; /* Adjusted for mobile spacing */
-        right: 1vw;
+        background: rgb(50, 205, 50); /* Solid green */
+        top: 10vh; /* Adjusted for mobile */
+        right: 1vw; /* Moved to right */
     }
 }
