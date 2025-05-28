@@ -1571,126 +1571,127 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // End game
-    function endGame(won, gaveUp = false) {
-        console.log("Ending game", { won, gaveUp, guessCount, secretWord, guesses });
-        gameOver = true;
-        guessInput.disabled = true;
-        guessBtn.disabled = true;
+function endGame(won, gaveUp = false) {
+    console.log("Ending game", { won, gaveUp, guessCount, secretWord, guesses });
+    gameOver = true;
+    guessInput.disabled = true;
+    guessBtn.disabled = true;
 
-        // Clear previous game-over messages to prevent overlap
-        const existingGameOverMessage = document.getElementById("game-over-message");
-        if (existingGameOverMessage) existingGameOverMessage.remove();
-        const existingSecretWordMessage = document.getElementById("secret-word-message");
-        if (existingSecretWordMessage) existingSecretWordMessage.remove();
+    // Clear previous game-over messages to prevent overlap
+    const existingGameOverMessage = document.getElementById("game-over-message");
+    if (existingGameOverMessage) existingGameOverMessage.remove();
+    const existingSecretWordMessage = document.getElementById("secret-word-message");
+    if (existingSecretWordMessage) existingSecretWordMessage.remove();
 
-        resetScreenDisplays(gameScreen);
-        gameScreen.style.display = "flex";
-        gameScreen.classList.add("game-ended");
-        guessArea.style.display = "flex";
-        adjustBackground();
+    resetScreenDisplays(gameScreen);
+    gameScreen.style.display = "flex";
+    gameScreen.classList.add("game-ended");
+    guessArea.style.display = "flex";
+    adjustBackground();
 
-        if (guessInput && guessInputContainer) {
-            guessInput.value = "";
-            guessInputContainer.classList.add("game-ended");
-        }
+    if (guessInput && guessInputContainer) {
+        guessInput.value = "";
+        guessInputContainer.classList.add("game-ended");
+    }
 
-        // Hide all hints
-        for (let i = 1; i <= 5; i++) {
-            const hintElement = document.getElementById(`hint-${i}`);
-            if (hintElement) {
-                hintElement.style.display = "none";
-            }
-        }
-
-        gameControlsContainer.style.display = "none";
-        if (isMobile && keyboardContainer) {
-            keyboardContainer.style.display = "none";
-        }
-
-        const gameOverScreen = document.getElementById("game-over");
-        gameOverScreen.style.display = "flex";
-        gameOverScreen.classList.add("active");
-
-        const shareText = document.getElementById("share-text");
-        const gameNumberDisplay = document.getElementById("game-number-display");
-        const gameOverMessage = document.createElement("span");
-        gameOverMessage.id = "game-over-message";
-        gameOverMessage.textContent = won ? "Well Done" : "Hard Luck";
-
-        // Add secret word message for UI display
-        const secretWordMessage = document.createElement("span");
-        secretWordMessage.id = "secret-word-message";
-        secretWordMessage.textContent = `The secret word was ${secretWord}`;
-        gameOverScreen.insertBefore(gameOverMessage, shareSection);
-        gameOverScreen.insertBefore(secretWordMessage, shareSection);
-
-        if (gameNumberDisplay) {
-            gameNumberDisplay.style.display = "none";
-        }
-
-        // Construct share message based on win/loss
-        let shareMessage;
-        if (won) {
-            // Normalize game number: extract numeric/ID part
-            let normalizedGameNumber = currentGameNumber.includes("- Private")
-                ? currentGameId
-                : currentGameNumber.replace("Game #", "");
-            shareMessage = `I solved wordy game #${normalizedGameNumber} in ${guessCount} ${guessCount === 1 ? 'guess' : 'guesses'}\nhttps://wordy.bigbraingames.net`;
-        } else {
-            shareMessage = `Play Wordy. The big brain word game.\nhttps://wordy.bigbraingames.net`;
-        }
-
-        if (shareText) {
-            // Display share message in UI, replacing newlines with <br> and highlighting guess count
-            const displayMessage = won
-                ? `I solved wordy game #${currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", "")} in <span class="guess-count">${guessCount}</span> ${guessCount === 1 ? 'guess' : 'guesses'}<br><a href="https://wordy.bigbraingames.net">https://wordy.bigbraingames.net</a>`
-                : `Play Wordy. The big brain word game.<br><a href="https://wordy.bigbraingames.net">https://wordy.bigbraingames.net</a>`;
-            shareText.innerHTML = displayMessage;
-            console.log("Share text set to:", shareText.innerHTML);
-        }
-
-        // Setup share buttons
-        const shareButtons = {
-            whatsapp: document.getElementById("share-whatsapp"),
-            telegram: document.getElementById("share-telegram"),
-            twitter: document.getElementById("share-twitter"),
-            instagram: document.getElementById("share-instagram")
-        };
-
-        if (shareButtons.whatsapp) {
-            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
-        }
-        if (shareButtons.telegram) {
-            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage)}`;
-        }
-        if (shareButtons.twitter) {
-            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
-        }
-        if (shareButtons.instagram) {
-            shareButtons.instagram.addEventListener("click", (e) => {
-                e.preventDefault();
-                navigator.clipboard.writeText(shareMessage).then(() => {
-                    alert("Score copied to clipboard! Paste it into your Instagram post.");
-                    window.open("https://www.instagram.com/", "_blank");
-                }).catch(err => {
-                    console.error("Failed to copy to clipboard:", err);
-                    alert("Please copy your score manually and share it on Instagram.");
-                    window.open("https://www.instagram.com/", "_blank");
-                });
-            });
-        }
-
-        if (won) {
-            startPineappleRain();
-        }
-
-        setupKeyboardListeners();
-
-        if (currentGameNumber.includes("- Private")) {
-            displayGameList();
-            console.log("Private games list updated after game end");
+    // Hide all hints
+    for (let i = 1; i <= 5; i++) {
+        const hintElement = document.getElementById(`hint-${i}`);
+        if (hintElement) {
+            hintElement.style.display = "none";
         }
     }
+
+    gameControlsContainer.style.display = "none";
+    if (isMobile && keyboardContainer) {
+        keyboardContainer.style.display = "none";
+    }
+
+    const gameOverScreen = document.getElementById("game-over");
+    gameOverScreen.style.display = "flex";
+    gameOverScreen.classList.add("active");
+
+    const shareText = document.getElementById("share-text");
+    const gameNumberDisplay = document.getElementById("game-number-display");
+    const gameOverMessage = document.createElement("span");
+    gameOverMessage.id = "game-over-message";
+    gameOverMessage.textContent = won ? "Well Done" : "Hard Luck";
+
+    // Add secret word message for UI display
+    const secretWordMessage = document.createElement("span");
+    secretWordMessage.id = "secret-word-message";
+    secretWordMessage.textContent = `The secret word was ${secretWord}`;
+    gameOverScreen.insertBefore(gameOverMessage, shareSection);
+    gameOverScreen.insertBefore(secretWordMessage, shareSection);
+
+    if (gameNumberDisplay) {
+        gameNumberDisplay.style.display = "none";
+    }
+
+    // Construct share message based on win/loss
+    let shareMessage;
+    if (won) {
+        // Normalize game number: extract numeric/ID part
+        let normalizedGameNumber = currentGameNumber.includes("- Private")
+            ? currentGameId
+            : currentGameNumber.replace("Game #", "");
+        shareMessage = `I solved wordy game #${normalizedGameNumber} in ${guessCount} ${guessCount === 1 ? 'guess' : 'guesses'}\nhttps://wordy.bigbraingames.net`;
+    } else {
+        // Split into two lines using \n
+        shareMessage = `Play Wordy.\nThe big brain word game.\nhttps://wordy.bigbraingames.net`;
+    }
+
+    if (shareText) {
+        // Display share message in UI, replacing newlines with <br> and highlighting guess count
+        const displayMessage = won
+            ? `I solved wordy game #${currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", "")} in <span class="guess-count">${guessCount}</span> ${guessCount === 1 ? 'guess' : 'guesses'}<br><a href="https://wordy.bigbraingames.net">https://wordy.bigbraingames.net</a>`
+            : `Play Wordy.<br>The big brain word game.<br><a href="https://wordy.bigbraingames.net">https://wordy.bigbraingames.net</a>`;
+        shareText.innerHTML = displayMessage;
+        console.log("Share text set to:", shareText.innerHTML);
+    }
+
+    // Setup share buttons
+    const shareButtons = {
+        whatsapp: document.getElementById("share-whatsapp"),
+        telegram: document.getElementById("share-telegram"),
+        twitter: document.getElementById("share-twitter"),
+        instagram: document.getElementById("share-instagram")
+    };
+
+    if (shareButtons.whatsapp) {
+        shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+    }
+    if (shareButtons.telegram) {
+        shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage)}`;
+    }
+    if (shareButtons.twitter) {
+        shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
+    }
+    if (shareButtons.instagram) {
+        shareButtons.instagram.addEventListener("click", (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(shareMessage).then(() => {
+                alert("Score copied to clipboard! Paste it into your Instagram post.");
+                window.open("https://www.instagram.com/", "_blank");
+            }).catch(err => {
+                console.error("Failed to copy to clipboard:", err);
+                alert("Please copy your score manually and share it on Instagram.");
+                window.open("https://www.instagram.com/", "_blank");
+            });
+        });
+    }
+
+    if (won) {
+        startPineappleRain();
+    }
+
+    setupKeyboardListeners();
+
+    if (currentGameNumber.includes("- Private")) {
+        displayGameList();
+        console.log("Private games list updated after game end");
+    }
+}
 
     // Start pineapple rain
     function startPineappleRain() {
