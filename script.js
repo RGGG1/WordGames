@@ -1629,26 +1629,25 @@ function endGame(won, gaveUp = false) {
     }
 
     // Construct share message based on win/loss
-    let shareMessage;
-    if (won) {
-        // Normalize game number: extract numeric/ID part
-        let normalizedGameNumber = currentGameNumber.includes("- Private")
-            ? currentGameId
-            : currentGameNumber.replace("Game #", "");
-        shareMessage = `I solved wordy game #${normalizedGameNumber} in ${guessCount} ${guessCount === 1 ? 'guess' : 'guesses'}\nhttps://wordy.bigbraingames.net`;
-    } else {
-        // Split into two lines using \n
-        shareMessage = `Play Wordy.\nThe big brain word game.\nhttps://wordy.bigbraingames.net`;
-    }
+let shareMessage;
+if (won) {
+    // Normalize game number: extract numeric/ID part
+    let normalizedGameNumber = currentGameNumber.includes("- Private")
+        ? currentGameId
+        : currentGameNumber.replace("Game #", "");
+    shareMessage = `I solved Wordy #${normalizedGameNumber} in\n${guessCount}\n${guessCount === 1 ? 'Guess' : 'Guesses'}`;
+} else {
+    shareMessage = `Play Wordy\nThe Big Brain Word Game`;
+}
 
-    if (shareText) {
-        // Display share message in UI, replacing newlines with <br> and highlighting guess count
-        const displayMessage = won
-            ? `I solved wordy game #${currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", "")} in <span class="guess-count">${guessCount}</span> ${guessCount === 1 ? 'guess' : 'guesses'}<br><a href="https://wordy.bigbraingames.net">https://wordy.bigbraingames.net</a>`
-            : `Play Wordy.<br>The big brain word game.<br><a href="https://wordy.bigbraingames.net">https://wordy.bigbraingames.net</a>`;
-        shareText.innerHTML = displayMessage;
-        console.log("Share text set to:", shareText.innerHTML);
-    }
+if (shareText) {
+    // Display share message in UI, replacing newlines with <br> and highlighting guess count
+    const displayMessage = won
+        ? `I solved Wordy #${currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", "")} in<br><span class="guess-count">${guessCount}</span><br>${guessCount === 1 ? 'Guess' : 'Guesses'}`
+        : `Play Wordy<br>The Big Brain Word Game`;
+    shareText.innerHTML = displayMessage;
+    console.log("Share text set to:", shareText.innerHTML);
+}
 
     // Setup share buttons
     const shareButtons = {
