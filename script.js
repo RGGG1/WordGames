@@ -465,7 +465,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         };
         keyboardGiveUpContent.addEventListener("click", handler);
-        keyboardGiveUpContent.addEventListener("touchstart", handler);
+        keyboardGuessesContent.addEventListener("touchstart", handler);
     }
 
     // Tab navigation
@@ -1617,7 +1617,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameOverMessage.id = "game-over-message";
         gameOverMessage.textContent = won ? "Well Done" : "Hard Luck";
 
-        // Add secret word message
+        // Add secret word message for UI display
         const secretWordMessage = document.createElement("span");
         secretWordMessage.id = "secret-word-message";
         secretWordMessage.textContent = `The secret word was ${secretWord}`;
@@ -1628,17 +1628,24 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameNumberDisplay.style.display = "none";
         }
 
-        // Construct share message for current game only
+        // Construct share message based on win/loss
         let shareMessage;
-        if (gaveUp || !won) {
-            shareMessage = `Play WORDY\nThe secret word was ${secretWord}`;
+        if (won) {
+            // Normalize game number: extract numeric/ID part
+            let normalizedGameNumber = currentGameNumber.includes("- Private")
+                ? currentGameId
+                : currentGameNumber.replace("Game #", "");
+            shareMessage = `I solved wordy game #${normalizedGameNumber} in ${guessCount} ${guessCount === 1 ? 'guess' : 'guesses'}\nhttps://wordy.bigbraingames.net`;
         } else {
-            shareMessage = `${currentGameNumber}\nI solved WORDY in\n<span class="guess-count">${guessCount}</span>\n${guessCount === 1 ? 'guess' : 'guesses'}`;
+            shareMessage = `Play Wordy. The big brain word game.\nhttps://wordy.bigbraingames.net`;
         }
 
         if (shareText) {
-            shareMessage = shareMessage.replace(currentGameNumber + "\n", "");
-            shareText.innerHTML = shareMessage.replace(/\n/g, "<br>");
+            // Display share message in UI, replacing newlines with <br> and highlighting guess count
+            const displayMessage = won
+                ? `I solved wordy game #${currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", "")} in <span class="guess-count">${guessCount}</span> ${guessCount === 1 ? 'guess' : 'guesses'}<br><a href="https://wordy.bigbraingames.net">https://wordy.bigbraingames.net</a>`
+                : `Play Wordy. The big brain word game.<br><a href="https://wordy.bigbraingames.net">https://wordy.bigbraingames.net</a>`;
+            shareText.innerHTML = displayMessage;
             console.log("Share text set to:", shareText.innerHTML);
         }
 
@@ -1651,18 +1658,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
 
         if (shareButtons.whatsapp) {
-            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+            shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
         }
         if (shareButtons.telegram) {
-            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+            shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage)}`;
         }
         if (shareButtons.twitter) {
-            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage.replace(/<[^>]+>/g, ''))}`;
+            shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
         }
         if (shareButtons.instagram) {
             shareButtons.instagram.addEventListener("click", (e) => {
                 e.preventDefault();
-                navigator.clipboard.writeText(shareMessage.replace(/<[^>]+>/g, '')).then(() => {
+                navigator.clipboard.writeText(shareMessage).then(() => {
                     alert("Score copied to clipboard! Paste it into your Instagram post.");
                     window.open("https://www.instagram.com/", "_blank");
                 }).catch(err => {
@@ -1769,7 +1776,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Game state reset complete");
     }
 
-       // Load game
+        // Load game
     function loadGame(game) {
         if (!game) {
             console.error("No game provided to loadGame");
@@ -1840,11 +1847,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                     gaveUp = true;
                     hintIndex = hints.length - 1;
                     setupHints();
-                    endGame(false, true);
+                    endGame();
                 } else if (pastResult.guesses === "X") {
                     hintIndex = hints.length - 1;
                     setupHints();
-                    endGame(false, false);
+                    endGame();
                 }
             } else {
                 console.log("No past result found, starting fresh game");
