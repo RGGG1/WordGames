@@ -415,7 +415,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     activeInput.value += keyValue;
                     console.log("Key added, new value:", activeInput.value);
                 }
-            }, 300);
+            }, 150);
             const touchEndHandler = (e) => {
                 e.preventDefault();
                 e.stopPropagation();
