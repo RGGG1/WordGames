@@ -806,6 +806,7 @@ body {
     height: calc(100vh - 4vh);
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
+    margin: 0; /* Ensure no margins interfere */
 }
 
 #game-select-content.active ~ #header,
