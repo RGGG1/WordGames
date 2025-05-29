@@ -451,7 +451,7 @@ body {
 .hint-color-2 { background: rgb(255, 215, 0); }
 .hint-color-3 { background: rgb(50, 205, 50); }
 .hint-color-4 { background: rgb(135, 206, 235); }
-.hint-color-5 { background: rgb(255, 165, 0); }
+.hint-color-5 { background: rgb(199, 21, 133); }
 .hint-color-6 { background: rgb(138, 43, 226); }
 .hint-color-7 { background: rgb(255, 69, 0); }
 .hint-color-8 { background: rgb(75, 0, 130); }
@@ -467,7 +467,7 @@ body {
 .hint.hint-color-4.hint-shape-cloud::before,
 .hint.hint-color-4.hint-shape-cloud::after { background: rgb(135, 206, 235); }
 .hint.hint-color-5.hint-shape-cloud::before,
-.hint.hint-color-5.hint-shape-cloud::after { background: rgb(255, 165, 0); }
+.hint.hint-color-5.hint-shape-cloud::after { background: rgb(199, 21, 133); }
 .hint.hint-color-6.hint-shape-cloud::before,
 .hint.hint-color-6.hint-shape-cloud::after { background: rgb(138, 43, 226); }
 .hint.hint-color-7.hint-shape-cloud::before,
@@ -488,7 +488,7 @@ body {
 .hint.hint-color-4.hint-shape-sun::before,
 .hint.hint-color-4.hint-shape-sun::after { background: rgb(135, 206, 235); }
 .hint.hint-color-5.hint-shape-sun::before,
-.hint.hint-color-5.hint-shape-sun::after { background: rgb(255, 165, 0); }
+.hint.hint-color-5.hint-shape-sun::after { background: rgb(199, 21, 133); }
 .hint.hint-color-6.hint-shape-sun::before,
 .hint.hint-color-6.hint-shape-sun::after { background: rgb(138, 43, 226); }
 .hint.hint-color-7.hint-shape-sun::before,
@@ -518,7 +518,7 @@ body {
 .hint.hint-color-5.hint-shape-fluffy-cloud::before,
 .hint.hint-color-5.hint-shape-fluffy-cloud::after,
 .hint.hint-color-5.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-5.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 165, 0); }
+.hint.hint-color-5.hint-shape-fluffy-cloud .puff-2 { background: rgb(199, 21, 133); }
 .hint.hint-color-6.hint-shape-fluffy-cloud::before,
 .hint.hint-color-6.hint-shape-fluffy-cloud::after,
 .hint.hint-color-6.hint-shape-fluffy-cloud .puff-1,
@@ -544,7 +544,7 @@ body {
 .hint.hint-color-2.hint-shape-aviator { background: rgb(255, 215, 0); }
 .hint.hint-color-3.hint-shape-aviator { background: rgb(50, 205, 50); }
 .hint.hint-color-4.hint-shape-aviator { background: rgb(135, 206, 235); }
-.hint.hint-color-5.hint-shape-aviator { background: rgb(255, 165, 0); }
+.hint.hint-color-5.hint-shape-aviator { background: rgb(199, 21, 133); }
 .hint.hint-color-6.hint-shape-aviator { background: rgb(138, 43, 226); }
 .hint.hint-color-7.hint-shape-aviator { background: rgb(255, 69, 0); }
 .hint.hint-color-8.hint-shape-aviator { background: rgb(75, 0, 130); }
@@ -555,7 +555,7 @@ body {
 .hint.hint-color-2.hint-shape-diamond { background: rgb(255, 215, 0); }
 .hint.hint-color-3.hint-shape-diamond { background: rgb(50, 205, 50); }
 .hint.hint-color-4.hint-shape-diamond { background: rgb(135, 206, 235); }
-.hint.hint-color-5.hint-shape-diamond { background: rgb(255, 165, 0); }
+.hint.hint-color-5.hint-shape-diamond { background: rgb(199, 21, 133); }
 .hint.hint-color-6.hint-shape-diamond { background: rgb(138, 43, 226); }
 .hint.hint-color-7.hint-shape-diamond { background: rgb(255, 69, 0); }
 .hint.hint-color-8.hint-shape-diamond { background: rgb(75, 0, 130); }
