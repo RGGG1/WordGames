@@ -1499,7 +1499,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     console.log("Handling guess:", guess);
 
     guessInputContainer.classList.remove("wrong-guess");
-    keyboardContainer.classList.remove("wrong-guess"); // Add this line to reset keyboard
+    keyboardContainer.classList.remove("wrong-guess");
+    gameControlsContainer.classList.remove("wrong-guess"); // Add this line to reset game controls
     guessInput.value = "";
     guessCount++;
     guesses.push(guess);
@@ -1526,10 +1527,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     } else {
         console.log("Incorrect guess, animating...");
         guessInputContainer.classList.add("wrong-guess");
-        keyboardContainer.classList.add("wrong-guess"); // Add this line to trigger keyboard animation
+        keyboardContainer.classList.add("wrong-guess");
+        gameControlsContainer.classList.add("wrong-guess"); // Add this line to trigger game controls animation
         animationTimeout = setTimeout(() => {
             guessInputContainer.classList.remove("wrong-guess");
-            keyboardContainer.classList.remove("wrong-guess"); // Add this line to reset keyboard
+            keyboardContainer.classList.remove("wrong-guess");
+            gameControlsContainer.classList.remove("wrong-guess"); // Add this line to reset game controls
             isProcessingGuess = false;
             console.log("Animation completed, input reset");
             if (guessInput && !isMobile) {
