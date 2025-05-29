@@ -1500,7 +1500,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     guessInputContainer.classList.remove("wrong-guess");
     keyboardContainer.classList.remove("wrong-guess");
-    gameControlsContainer.classList.remove("wrong-guess"); // Add this line to reset game controls
+    gameControlsContainer.classList.remove("wrong-guess");
     guessInput.value = "";
     guessCount++;
     guesses.push(guess);
@@ -1524,34 +1524,36 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         saveGameResult(gameType, normalizedGameNumber, secretWord, guessCount);
         endGame(true);
+        isProcessingGuess = false; // Reset immediately for correct guess
     } else {
         console.log("Incorrect guess, animating...");
         guessInputContainer.classList.add("wrong-guess");
         keyboardContainer.classList.add("wrong-guess");
-        gameControlsContainer.classList.add("wrong-guess"); // Add this line to trigger game controls animation
+        gameControlsContainer.classList.add("wrong-guess");
         animationTimeout = setTimeout(() => {
             guessInputContainer.classList.remove("wrong-guess");
             keyboardContainer.classList.remove("wrong-guess");
-            gameControlsContainer.classList.remove("wrong-guess"); // Add this line to reset game controls
+            gameControlsContainer.classList.remove("wrong-guess");
             isProcessingGuess = false;
             console.log("Animation completed, input reset");
             if (guessInput && !isMobile) {
                 guessInput.focus();
                 activeInput = guessInput;
             }
-        }, 350);
 
-        if (hintIndex < hints.length - 1) {
-            revealHint();
-        } else {
-            saveGameResult(
-                currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple",
-                currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", ""),
-                secretWord,
-                "X"
-            );
-            endGame(false, false);
-        }
+            // Reveal hint or end game after animation
+            if (hintIndex < hints.length - 1) {
+                revealHint();
+            } else {
+                saveGameResult(
+                    currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple",
+                    currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", ""),
+                    secretWord,
+                    "X"
+                );
+                endGame(false, false);
+            }
+        }, 350); // Wait for shakeAndFlash animation (350ms)
     }
 }
 
