@@ -163,7 +163,7 @@ body {
 }
 
 .hint-shape-fluffy-cloud {
-    background: rgb(255, 255, 255);
+    background: rgb(199, 21, 133);
     position: relative;
     width: 24vw;
     height: 10vh;
@@ -180,7 +180,7 @@ body {
 .hint-shape-fluffy-cloud .puff-2 {
     content: '';
     position: absolute;
-    background: rgb(255, 255, 255);
+    background: rgb(199, 21, 133);
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
 }
