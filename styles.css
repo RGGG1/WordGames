@@ -547,8 +547,8 @@ body {
     position: fixed;
     top: 56vh;
     left: 0;
-    width: 94vw; /* Reduced from 98vw */
-    margin: 0 3vw; /* Center with equal margins */
+    width: 98vw;
+    margin: 0 1vw;
     height: auto;
     display: flex;
     justify-content: center;
@@ -559,7 +559,7 @@ body {
 #guess-input-container {
     display: flex;
     flex-direction: column;
-    width: 61vw; /* Adjusted to fit within 94vw */
+    width: 70vw;
     justify-content: center;
     height: 8vh;
     align-items: center;
@@ -588,26 +588,6 @@ body {
     padding: 0;
     text-transform: uppercase;
     text-align: center;
-    position: relative; /* Positioning context for cursor */
-}
-
-#guess-input:empty::after {
-    content: "|"; /* Flashing cursor */
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    color: #000000;
-    font-size: 3.75vh;
-    animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
-}
-
-#guess-input:not(:empty)::after {
-    display: none; /* Hide cursor when text is present */
 }
 
 #guess-input:disabled {
@@ -651,10 +631,6 @@ body {
     z-index: 100;
 }
 
-#game-controls-container.wrong-guess {
-    animation: shakeAndFlash 0.35s ease; /* Flash red on incorrect guess */
-}
-
 #give-up-link,
 #guesses-link {
     font-size: 1.6vh;
@@ -695,10 +671,6 @@ body {
     height: 21vh;
     background: #FFFFFF;
     z-index: 100;
-}
-
-#keyboard-container.wrong-guess {
-    animation: shakeAndFlash 0.35s ease; /* Flash red on incorrect guess */
 }
 
 #keyboard-content,
@@ -777,16 +749,6 @@ body {
 .key:active {
     transform: scale(0.95);
     background: #B0B3B8;
-}
-
-.key.pressed {
-    background: #FFB300 !important; /* Yellow flash for key press */
-    transform: scale(0.95);
-}
-
-@keyframes keyFlash {
-    0% { background: #FFB300; }
-    100% { background: #D3D6DA; } /* Return to default */
 }
 
 #key-enter,
@@ -1013,7 +975,7 @@ body {
 }
 
 #guess-btn {
-    width: 33vw; /* Adjusted to fit within 94vw */
+    width: 35vw;
     height: 8vh;
     background: #FFB300;
     border: none;
@@ -1311,105 +1273,7 @@ body {
     }
 
     #game-screen {
-        height: 49vh; /* Reduced from 50vh to compensate for keyboard gap */
-    }
-
-    #guess-area {
-        width: 94vw; /* Consistent on mobile */
-        margin: 0 3vw;
-    }
-
-    #guess-input-container {
-        width: 61vw; /* Adjusted for mobile */
-        height: 9vh;
-        border-radius: 1vh 0 0 1vh;
-    }
-
-    #guess-prompt {
-        font-size: 2.5vh;
-        padding: 0.5vh 0;
-        margin-top: 0.5vh;
-        margin-left: 2vw;
-    }
-
-    #guess-input {
-        font-size: 3.5vh;
-    }
-
-    #guess-btn {
-        width: 33vw; /* Takes remaining space */
-        height: 9vh;
-        font-size: 5vh;
-        border-radius: 0 1vh 1vh 0;
-        transition: transform 0.1s ease, background 0.1s ease;
-        -webkit-tap-highlight-color: rgba(255, 179, 0, 0.5);
-        touch-action: manipulation;
-    }
-
-    #guess-btn:active {
-        transform: scale(0.95);
-        background: #E0A000;
-    }
-
-    #game-controls-container {
-        height: 6vh;
-        top: 65vh; /* Adjusted from 66vh */
-    }
-
-    #keyboard-container {
-        height: 21vh;
-        top: 72vh;
-        margin-bottom: 1vh; /* 1vh space below keyboard */
-    }
-
-    #ad-box {
-        bottom: 1vh; /* Shift up to account for keyboard gap */
-    }
-
-    #game-over {
-        height: 50vh; /* Match game screen height */
-        justify-content: flex-start;
-        overflow-y: auto;
-        padding-top: 2vh;
-    }
-
-    #game-over-message,
-    #secret-word-message {
-        font-size: 3vh;
-        margin: 1vh 0;
-        padding: 1vh;
-    }
-
-    #share-section {
-        margin-bottom: 2vh;
-        width: 90vw;
-    }
-
-    #share-panel {
-        padding: 1.5vh;
-    }
-
-    #share-text {
-        font-size: 2.2vh;
-        line-height: 1.2;
-    }
-
-    #share-buttons {
-        gap: 1.5vw;
-        padding: 0.5vh 1vw;
-    }
-
-    #share-buttons a {
-        width: 5vh;
-        height: 5vh;
-    }
-
-    #next-game-btn-end,
-    #create-pineapple-end {
-        width: 40vw;
-        height: 5vh;
-        font-size: 2.2vh;
-        margin: 0.5vh 0;
+        height: 50vh;
     }
 
     .hint {
@@ -1516,6 +1380,43 @@ body {
         font-size: min(4.55vh, 3.9vw);
     }
 
+    #guess-input-container {
+        width: 65vw;
+        height: 9vh;
+        border-radius: 1vh 0 0 1vh;
+    }
+
+    #guess-prompt {
+        font-size: 2.5vh;
+        padding: 0.5vh 0;
+        margin-top: 0.5vh;
+        margin-left: 2vw;
+    }
+
+    #guess-input {
+        font-size: 3.5vh;
+    }
+
+    #guess-btn {
+        width: 33vw;
+        height: 9vh;
+        font-size: 5vh;
+        border-radius: 0 1vh 1vh 0;
+        transition: transform 0.1s ease, background 0.1s ease;
+        -webkit-tap-highlight-color: rgba(255, 179, 0, 0.5);
+        touch-action: manipulation;
+    }
+
+    #guess-btn:active {
+        transform: scale(0.95);
+        background: #E0A000;
+    }
+
+    #game-controls-container {
+        height: 6vh;
+        top: 66vh;
+    }
+
     #give-up-link,
     #guesses-link {
         font-size: 1.8vh;
@@ -1529,6 +1430,11 @@ body {
         font-size: 2.8vh;
         color: #000000;
         text-shadow: 1px 1px 2px #FFFFFF;
+    }
+
+    #keyboard-container {
+        height: 21vh;
+        top: 72vh;
     }
 
     #keyboard-content {
@@ -1607,6 +1513,28 @@ body {
         font-size: 2.8vh;
     }
 
+    #share-section {
+        margin-bottom: 5vh;
+    }
+
+    #secret-word-message {
+        font-size: 2.8vh;
+        margin: 2.5vh;
+    }
+
+    #share-text {
+        font-size: 2.8vh;
+    }
+
+    #game-number-display {
+        font-size: 2.2vh;
+    }
+
+    #share-buttons a {
+        width: 7vh;
+        height: 7vh;
+    }
+
     .dialog-message {
         font-size: 2vh;
     }
@@ -1629,6 +1557,11 @@ body {
     #key-backspace {
         width: 14.25vw;
         font-size: 1.5vh;
+    }
+
+    #game-over-message {
+        font-size: 5vh;
+        padding: 1.5vh;
     }
 
     #guesses-title {
