@@ -345,6 +345,25 @@ body {
     opacity: 0.2;
 }
 
+@keyframes keyPressFeedback {
+    0% {
+        transform: scale(1);
+        background: #D3D6DA; /* Original key background */
+    }
+    50% {
+        transform: scale(0.95);
+        background: #B0B3B8; /* Darker shade for feedback */
+    }
+    100% {
+        transform: scale(1);
+        background: #D3D6DA; /* Revert to original */
+    }
+}
+
+.key.key-pressed {
+    animation: keyPressFeedback 0.1s ease; /* 100ms animation */
+}
+
 @keyframes reveal-pop {
     0% { transform: scale(0); opacity: 0; }
     80% { transform: scale(1.2); opacity: 1; }
@@ -1566,6 +1585,10 @@ body {
     #key-backspace {
         width: 14.25vw;
         font-size: 1.5vh;
+    }
+
+    .key.key-pressed {
+        animation: keyPressFeedback 0.1s ease; /* Consistent on mobile */
     }
 
     #game-over-message {

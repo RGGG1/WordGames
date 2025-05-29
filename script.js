@@ -1555,6 +1555,53 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 }
 
+function handleKeyInput(event) {
+    if (gameOver || isProcessingGuess) {
+        console.log("Key input ignored:", { gameOver, isProcessingGuess });
+        return;
+    }
+
+    const key = event.key.toLowerCase();
+    console.log("Key pressed:", key);
+
+    // Find the corresponding on-screen key
+    let keyElement = null;
+    if (key === 'enter') {
+        keyElement = document.querySelector('#key-enter');
+    } else if (key === 'backspace') {
+        keyElement = document.querySelector('#key-backspace');
+    } else if (/^[a-z]$/.test(key)) {
+        keyElement = document.querySelector(`.key[data-key="${key}"]`);
+    }
+
+    // Apply key-pressed class if keyElement exists
+    if (keyElement) {
+        keyElement.classList.add('key-pressed');
+        setTimeout(() => {
+            keyElement.classList.remove('key-pressed');
+        }, 100); // Remove after 100ms
+    }
+
+    if (key === 'enter') {
+        const guess = guessInput.value.trim().toLowerCase();
+        if (guess.length === 5) {
+            handleGuess(guess);
+        } else {
+            console.log("Invalid guess length:", guess.length);
+            guessInputContainer.classList.add('wrong-guess');
+            setTimeout(() => {
+                guessInputContainer.classList.remove('wrong-guess');
+            }, 350);
+        }
+    } else if (key === 'backspace') {
+        guessInput.value = guessInput.value.slice(0, -1);
+    } else if (/^[a-z]$/.test(key)) {
+        if (guessInput.value.length < 5) {
+            guessInput.value += key.toUpperCase();
+        }
+    }
+}
+
     // Save game result
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
         console.log("Attempting to save game result", { gameType, gameNumber, secretWord, guesses });
