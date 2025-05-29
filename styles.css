@@ -1129,7 +1129,7 @@ body {
     top: -0.5vh;
     left: -0.5vw;
     width: calc(100% + 0.5vw);
-    height: calc(calc(100% + 0.5vh);
+    height: calc(100% + 0.5vh);
     background-color: rgba(0, 179, 0, 0.5);
     border-radius: none;
     margin: z;
