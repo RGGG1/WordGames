@@ -399,11 +399,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     console.log("Key click ignored due to state");
                     return;
                 }
-                // Add flash effect
-                key.classList.add("pressed");
-                setTimeout(() => {
-                    key.classList.remove("pressed");
-                }, 100); // Flash lasts 100ms
                 const keyValue = key.textContent;
                 if (key.id === "key-enter") {
                     if (activeInput === guessInput) {
@@ -445,34 +440,1053 @@ document.addEventListener("DOMContentLoaded", async () => {
         keyboardBackBtn.addEventListener("touchstart", handler);
     }
 
-        // Keyboard guesses content
+    // Keyboard guesses content
     if (keyboardGuessesContent) {
         const handler = (e) => {
             e.preventDefault();
             e.stopPropagation();
             if (e.target === keyboardGuessesContent || e.target === document.getElementById("guesses-list")) {
-                console.log("Triggered guesses content, showing guesses screen");
+                console.log("Triggered guesses content, showing keyboard");
                 showKeyboard();
-                guessesScreen.style.display = "flex";
             }
         };
         keyboardGuessesContent.addEventListener("click", handler);
         keyboardGuessesContent.addEventListener("touchstart", handler);
     }
 
-    // Keyboard give up content
+    // Keyboard give-up content
     if (keyboardGiveUpContent) {
         const handler = (e) => {
             e.preventDefault();
             e.stopPropagation();
-            if (e.target === keyboardGiveUpContent) {
-                console.log("Triggered give up content, showing give up dialog");
+            if (e.target === keyboardGiveUpContent || e.target.classList.contains("dialog-message")) {
+                console.log("Triggered give-up content, showing keyboard");
                 showKeyboard();
-                giveUpDialog.style.display = "flex";
             }
         };
         keyboardGiveUpContent.addEventListener("click", handler);
-        keyboardGiveUpContent.addEventListener("touchstart", handler);
+        keyboardGuessesContent.addEventListener("touchstart", handler);
+    }
+
+    // Tab navigation
+    if (officialTab && privateTab && officialContent && privateContent) {
+        officialTab.addEventListener("click", () => {
+            console.log("Official tab clicked");
+            officialTab.classList.add("active");
+            privateTab.classList.remove("active");
+            officialContent.classList.add("active");
+            officialContent.style.display = "flex";
+            privateContent.classList.remove("active");
+            privateContent.style.display = "none";
+            displayGameList();
+            setupKeyboardListeners();
+        });
+
+        privateTab.addEventListener("click", async () => {
+            console.log("Private tab clicked");
+            privateTab.classList.add("active");
+            officialTab.classList.remove("active");
+            privateContent.classList.add("active");
+            privateContent.style.display = "flex";
+            officialContent.classList.remove("active");
+            officialContent.style.display = "none";
+            if (privateGames.length === 0) {
+                await fetchPrivateGames();
+            }
+            displayGameList();
+            setupKeyboardListeners();
+        });
+    }
+
+    // All Games link
+    if (allGamesLink) {
+        const handler = debounce((e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("All Games link triggered", { isUILocked, isLoadingGame });
+            if (isUILocked || isLoadingGame) {
+                console.log("All Games link ignored: UI locked or game loading");
+                return;
+            }
+            isUILocked = true;
+            showGameSelectScreen();
+            setTimeout(() => { isUILocked = false; }, 500);
+        }, 100);
+        allGamesLink.addEventListener(isMobile ? "touchstart" : "click", handler);
+    }
+
+    // Give Up link
+    if (giveUpLink && giveUpYesBtn && giveUpNoBtn) {
+        const handler = debounce((e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Give Up link triggered", { isUILocked, isLoadingGame });
+            if (isUILocked || isLoadingGame) {
+                console.log("Give Up link ignored: UI locked or game loading");
+                return;
+            }
+            isUILocked = true;
+            if (isMobile) {
+                if (keyboardContainer && keyboardContent && keyboardGiveUpContent && keyboardBackBtn) {
+                    keyboardContainer.classList.add("show-alternate", "show-give-up");
+                    keyboardContent.style.display = "none";
+                    keyboardGuessesContent.style.display = "none";
+                    keyboardGiveUpContent.style.display = "flex";
+                    keyboardBackBtn.style.display = "none";
+                    console.log("Showing give-up content in keyboard container");
+                }
+            } else {
+                if (giveUpDialog) {
+                    giveUpDialog.style.display = "flex";
+                    console.log("Showing give-up dialog");
+                }
+            }
+            setTimeout(() => { isUILocked = false; }, 500);
+        }, 100);
+        giveUpLink.addEventListener(isMobile ? "touchstart" : "click", handler);
+
+        giveUpYesBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Give Up Yes button clicked");
+            gaveUp = true;
+            let normalizedGameNumber;
+            let gameType;
+            if (currentGameNumber.includes("- Private")) {
+                normalizedGameNumber = currentGameId;
+                gameType = "privatePineapple";
+            } else {
+                normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                gameType = "pineapple";
+            }
+            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
+            if (isMobile) {
+                showKeyboard();
+            } else {
+                if (giveUpDialog) giveUpDialog.style.display = "none";
+            }
+            endGame(false, true);
+        });
+
+        giveUpNoBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Give Up No button clicked");
+            if (isMobile) {
+                showKeyboard();
+            } else {
+                if (giveUpDialog) giveUpDialog.style.display = "none";
+            }
+            if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
+        });
+    }
+
+    // Guesses link
+    if (guessesLink && guessesScreen) {
+        guessesLink.textContent = "Guesses: 0/5";
+
+        guessesLink.addEventListener(isMobile ? "touchstart" : "click", debounce((e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guesses link triggered", { isUILocked, isLoadingGame, guesses, guessCount });
+            if (isUILocked || isLoadingGame) {
+                console.log("Guesses link ignored: UI locked or game loading");
+                return;
+            }
+            isUILocked = true;
+            const guessesList = document.getElementById("guesses-list");
+            const keyboardGuessesList = keyboardGuessesContent.querySelector("#guesses-list");
+            if (!guessesList || !keyboardGuessesList) {
+                console.error("guesses-list element not found in DOM");
+                isUILocked = false;
+                return;
+            }
+            const guessesContent = guesses.length > 0
+                ? guesses.map(g => g.toUpperCase()).join(' <span class="separator yellow">|</span> ')
+                : "No guesses yet!";
+            guessesList.innerHTML = guessesContent;
+            keyboardGuessesList.innerHTML = guessesContent;
+            console.log("Rendered guesses:", guessesContent);
+            guessesList.style.display = "block";
+            keyboardGuessesList.style.display = "block";
+            if (isMobile) {
+                if (keyboardContainer && keyboardContent && keyboardGuessesContent && keyboardBackBtn) {
+                    keyboardContainer.classList.add("show-alternate", "show-guesses");
+                    keyboardContent.style.display = "none";
+                    keyboardGuessesContent.style.display = "flex";
+                    keyboardGiveUpContent.style.display = "none";
+                    keyboardBackBtn.style.display = "block";
+                    keyboardGuessesContent.offsetHeight;
+                    console.log("Showing mobile guesses content, guessesList:", guessesList.innerHTML);
+                }
+            } else {
+                guessesScreen.style.display = "flex";
+                console.log("Showing desktop guesses screen, guessesList:", guessesList.innerHTML);
+            }
+            setTimeout(() => { isUILocked = false; }, 500);
+        }, 100));
+
+        guessesScreen.addEventListener("click", (e) => {
+            if (e.target === guessesScreen && !isMobile) {
+                console.log("Clicked outside guesses screen");
+                guessesScreen.style.display = "none";
+                if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }
+        });
+    }
+
+    // Previous game arrow
+    if (prevGameArrow) {
+        prevGameArrow.addEventListener(isMobile ? "touchstart" : "click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Previous game arrow triggered", { isUILocked, isLoadingGame });
+            if (isUILocked || isLoadingGame) {
+                console.log("Previous game arrow ignored: UI locked or game loading");
+                return;
+            }
+            isUILocked = true;
+            isLoadingGame = true;
+            prevGameArrow.style.opacity = "0.7";
+            try {
+                if (!currentGameNumber || !currentGameId) {
+                    throw new Error("No current game number or ID set");
+                }
+                let currentIndex;
+                let gameList;
+                let isPrivate = currentGameNumber.includes("- Private");
+                if (isPrivate) {
+                    currentIndex = privateGames.findIndex(game => game["Game Number"] === currentGameId);
+                    gameList = privateGames;
+                } else {
+                    currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
+                    gameList = allGames;
+                }
+                console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length });
+                if (currentIndex === -1) {
+                    throw new Error(`Current game not found in game list: ${currentGameNumber}, ID: ${currentGameId}`);
+                }
+                if (currentIndex < gameList.length - 1) {
+                    const targetGame = gameList[currentIndex + 1];
+                    console.log("Loading previous game", { currentIndex, targetIndex: currentIndex + 1, targetGame });
+                    currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
+                    await preloadBackground(currentBackground);
+                    loadGame(targetGame);
+                    resetScreenDisplays(gameScreen);
+                    gameScreen.style.display = "flex";
+                    adjustBackground();
+                    if (isMobile && !gameOver) showKeyboard();
+                    updateArrowStates(currentIndex + 1, gameList);
+                } else {
+                    console.log("At the oldest game, cannot go to previous");
+                    prevGameArrow.classList.add("disabled");
+                }
+            } catch (error) {
+                console.error("Error navigating to previous game:", error.message);
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Failed to load previous game.";
+                    formErrorDialog.style.display = "flex";
+                }
+            } finally {
+                isUILocked = false;
+                isLoadingGame = false;
+                prevGameArrow.style.opacity = "1";
+            }
+        });
+    }
+
+    // Next game arrow
+    if (nextGameArrow) {
+        nextGameArrow.addEventListener(isMobile ? "touchstart" : "click", async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Next game arrow triggered", { isUILocked, isLoadingGame });
+            if (isUILocked || isLoadingGame) {
+                console.log("Next game arrow ignored: UI locked or game loading");
+                return;
+            }
+            isUILocked = true;
+            isLoadingGame = true;
+            nextGameArrow.style.opacity = "0.7";
+            try {
+                if (!currentGameNumber || !currentGameId) {
+                    throw new Error("No current game number or ID set");
+                }
+                let currentIndex;
+                let gameList;
+                let isPrivate = currentGameNumber.includes("- Private");
+                if (isPrivate) {
+                    currentIndex = privateGames.findIndex(game => game["Game Number"] === currentGameId);
+                    gameList = privateGames;
+                } else {
+                    currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
+                    gameList = allGames;
+                }
+                console.log("Navigation details", { isPrivate, currentIndex, gameListLength: gameList.length });
+                if (currentIndex === -1) {
+                    throw new Error(`Current game not found in game list: ${currentGameNumber}, ID: ${currentGameId}`);
+                }
+                if (currentIndex > 0) {
+                    const targetGame = gameList[currentIndex - 1];
+                    console.log("Loading next game", { currentIndex, targetIndex: currentIndex - 1, targetGame });
+                    currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
+                    await preloadBackground(currentBackground);
+                    loadGame(targetGame);
+                    resetScreenDisplays(gameScreen);
+                    gameScreen.style.display = "flex";
+                    adjustBackground();
+                    if (isMobile && !gameOver) showKeyboard();
+                    updateArrowStates(currentIndex - 1, gameList);
+                } else {
+                    console.log("At the newest game, cannot go to next");
+                    nextGameArrow.classList.add("disabled");
+                }
+            } catch (error) {
+                console.error("Error navigating to next game:", error.message);
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Failed to load next game.";
+                    formErrorDialog.style.display = "flex";
+                }
+            } finally {
+                isUILocked = false;
+                isLoadingGame = false;
+                nextGameArrow.style.opacity = "1";
+            }
+        });
+    }
+
+    // Update arrow states
+    function updateArrowStates(currentIndex, gameList) {
+        if (prevGameArrow) {
+            prevGameArrow.classList.remove("disabled");
+            if (currentIndex >= gameList.length - 1) {
+                prevGameArrow.classList.add("disabled");
+            }
+        }
+        if (nextGameArrow) {
+            nextGameArrow.classList.remove("disabled");
+            if (currentIndex <= 0) {
+                nextGameArrow.classList.add("disabled");
+            }
+        }
+        console.log("Arrow states updated", { currentIndex, gameListLength: gameList.length, prevDisabled: currentIndex >= gameList.length - 1, nextDisabled: currentIndex <= 0 });
+    }
+
+    // Create a Wordy button
+    if (createPineappleBtn && formContent) {
+        createPineappleBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Create a Wordy triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            resetScreenDisplays(formContent);
+            activeInput = document.getElementById("game-name-input");
+            if (activeInput && !isMobile) activeInput.focus();
+            adjustBackground();
+            setupKeyboardListeners();
+            if (isMobile) showKeyboard();
+            setTimeout(() => { isUILocked = false; }, 500);
+        });
+    }
+
+    // Create Wordy end button
+    if (createPineappleLink) {
+        createPineappleLink.addEventListener(isMobile ? "touchstart" : "click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Create Wordy end button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            resetScreenDisplays(gameSelectContent);
+            privateTab.classList.add("active");
+            officialTab.classList.remove("active");
+            privateContent.classList.add("active");
+            privateContent.style.display = "flex";
+            officialContent.classList.remove("active");
+            officialContent.style.display = "none";
+            displayGameList();
+            adjustBackground();
+            setupKeyboardListeners();
+            setTimeout(() => { isUILocked = false; }, 500);
+        });
+    }
+
+    // Next game button on end screen
+    if (nextGameBtnEnd) {
+        nextGameBtnEnd.addEventListener(isMobile ? "touchstart" : "click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Next Game button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            resetGame();
+            showGameSelectScreen();
+            adjustBackground();
+            setupKeyboardListeners();
+            setTimeout(() => { isUILocked = false; }, 500);
+        });
+    }
+
+    // Official back button
+    if (officialBackBtn) {
+        officialBackBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Official Back button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            resetScreenDisplays(gameScreen);
+            showKeyboard();
+            activeInput = guessInput;
+            if (activeInput && !isMobile) activeInput.focus();
+            adjustBackground();
+            setupKeyboardListeners();
+            setTimeout(() => { isUILocked = false; }, 500);
+        });
+    }
+
+    // Private back button
+    if (privateBackBtn) {
+        privateBackBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Private Back button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            resetScreenDisplays(gameScreen);
+            showKeyboard();
+            activeInput = guessInput;
+            if (activeInput && !isMobile) activeInput.focus();
+            adjustBackground();
+            setupKeyboardListeners();
+            setTimeout(() => { isUILocked = false; }, 500);
+        });
+    }
+
+    // Confirm button
+    if (confirmBtn) {
+        const handler = async (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Confirm button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            const secretWordInput = document.getElementById("secret-word").value.trim();
+            if (secretWordInput.includes(" ") || secretWordInput === "") {
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Secret Word must be one word (no spaces) and cannot be empty.";
+                    formErrorDialog.style.display = "flex";
+                    activeInput = document.getElementById("secret-word");
+                }
+                isUILocked = false;
+                return;
+            }
+
+            const formData = {
+                gameName: document.getElementById("game-name-input").value.trim(),
+                secretWord: secretWordInput.toUpperCase(),
+                hint1: document.getElementById("hint-1").value.trim().toUpperCase(),
+                hint2: document.getElementById("hint-2").value.trim().toUpperCase(),
+                hint3: document.getElementById("hint-3").value.trim().toUpperCase(),
+                hint4: document.getElementById("hint-4").value.trim().toUpperCase(),
+                hint5: document.getElementById("hint-5").value.trim().toUpperCase()
+            };
+
+            if (!formData.gameName || !formData.secretWord || !formData.hint1 || !formData.hint2 || !formData.hint3 || !formData.hint4 || !formData.hint5) {
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Please fill in Game Name, Secret Word, and all Hints (1–5).";
+                    formErrorDialog.style.display = "flex";
+                    activeInput = formData.gameName ? (formData.secretWord ? null : document.getElementById("secret-word")) : document.getElementById("game-name-input");
+                }
+                isUILocked = false;
+                return;
+            }
+
+            try {
+                const response = await fetch(webAppUrl, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                    body: "data=" + encodeURIComponent(JSON.stringify(formData))
+                });
+                const result = await response.text();
+                console.log("Web App response:", result);
+
+                if (result !== "Success") {
+                    throw new Error(result || "Unknown error from Web App");
+                }
+
+                console.log("Game created successfully");
+                formInputs.forEach(input => (input.value = ""));
+                resetScreenDisplays(gameSelectContent);
+                privateTab.classList.add("active");
+                officialTab.classList.remove("active");
+                privateContent.classList.add("active");
+                privateContent.style.display = "flex";
+                officialContent.classList.remove("active");
+                officialContent.style.display = "none";
+                await fetchPrivateGames();
+                displayGameList();
+                adjustBackground();
+                setupKeyboardListeners();
+                if (isMobile) showKeyboard();
+            } catch (error) {
+                console.error("Error submitting form:", error);
+                if (formErrorDialog && formErrorMessage) {
+                    formErrorMessage.textContent = "Failed to create game: " + error.message;
+                    formErrorDialog.style.display = "flex";
+                }
+            } finally {
+                isUILocked = false;
+            }
+        };
+        confirmBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
+    }
+
+    // Form error dialog
+    if (formErrorDialog && formErrorOkBtn && formErrorMessage) {
+        formErrorOkBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Form Error OK button triggered");
+            formErrorDialog.style.display = "none";
+            if (activeInput) activeInput.focus();
+            setupKeyboardListeners();
+        });
+
+        formErrorDialog.addEventListener("click", (e) => {
+            if (e.target === formErrorDialog) {
+                console.log("Clicked outside form error dialog");
+                formErrorDialog.style.display = "none";
+                if (activeInput) activeInput.focus();
+                setupKeyboardListeners();
+            }
+        });
+    }
+
+    // Form back button
+    if (formBackBtn) {
+        formBackBtn.addEventListener(isMobile ? "touchstart" : "click", (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Form Back button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            resetScreenDisplays(gameScreen);
+            showKeyboard();
+            activeInput = guessInput;
+            if (activeInput && !isMobile) activeInput.focus();
+            adjustBackground();
+            setupKeyboardListeners();
+            setTimeout(() => { isUILocked = false; }, 500);
+        });
+    }
+
+    // Guesses close button
+    if (guessesCloseBtn) {
+        const handler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guesses close button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            if (isMobile) {
+                showKeyboard();
+            } else {
+                guessesScreen.style.display = "none";
+                if (guessInput && !gameOver && !isProcessingGuess) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }
+            setTimeout(() => { isUILocked = false; }, 500);
+        };
+        guessesCloseBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
+    }
+
+    // Mobile give-up buttons
+    const keyboardGiveUpYesBtn = document.getElementById("keyboard-give-up-yes-btn");
+    const keyboardGiveUpNoBtn = document.getElementById("keyboard-give-up-no-btn");
+
+    if (keyboardGiveUpYesBtn) {
+        const handler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Mobile Give Up Yes button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            gaveUp = true;
+            let normalizedGameNumber;
+            let gameType;
+            if (currentGameNumber.includes("- Private")) {
+                normalizedGameNumber = currentGameId;
+                gameType = "privatePineapple";
+            } else {
+                normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                gameType = "pineapple";
+            }
+            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
+            endGame(false, true);
+            setTimeout(() => { isUILocked = false; }, 500);
+        };
+        keyboardGiveUpYesBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
+    }
+
+    if (keyboardGiveUpNoBtn) {
+        const handler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Mobile Give Up No button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            showKeyboard();
+            if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
+            setTimeout(() => { isUILocked = false; }, 500);
+        };
+        keyboardGiveUpNoBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
+    }
+
+    // Give-up dialog
+    if (giveUpDialog) {
+        giveUpDialog.addEventListener("click", (e) => {
+            if (e.target === giveUpDialog && !isMobile) {
+                console.log("Clicked outside give-up dialog");
+                giveUpDialog.style.display = "none";
+                if (guessInput && !gameOver && !isProcessingGuess && !isMobile) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }
+        });
+    }
+
+    // Show game select screen
+    function showGameSelectScreen() {
+        console.log("Showing game select overlay", { isUILocked });
+        resetScreenDisplays(gameSelectContent);
+        officialTab.classList.add("active");
+        privateTab.classList.remove("active");
+        officialContent.classList.add("active");
+        officialContent.style.display = "flex";
+        privateContent.classList.remove("active");
+        privateContent.style.display = "none";
+        displayGameList();
+        adjustBackground();
+        setupKeyboardListeners();
+    }
+
+    // Fetch game data
+    async function fetchGameData() {
+        try {
+            // Check for cached data
+            const cachedData = localStorage.getItem("officialGamesCache");
+            const cacheTime = localStorage.getItem("officialGamesCacheTime");
+            const now = Date.now();
+            const cacheTTL = 60 * 60 * 1000; // 1 hour TTL
+
+            if (cachedData && cacheTime && now - parseInt(cacheTime) < cacheTTL) {
+                console.log("Using cached official games");
+                allGames = JSON.parse(cachedData);
+                const latestGame = allGames[0];
+                currentBackground = latestGame["Background"] && latestGame["Background"].trim() !== "" ? latestGame["Background"] : defaultBackground;
+                await preloadBackground(currentBackground);
+                loadGame(latestGame);
+                resetScreenDisplays(gameScreen);
+                showKeyboard();
+                setupKeyboardListeners();
+                updateArrowStates(0, allGames);
+                adjustBackground();
+                return;
+            }
+
+            console.log("Fetching official games from:", officialUrl);
+            const response = await fetch(officialUrl, {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                headers: { "Accept": "text/csv" }
+            });
+            if (!response.ok) {
+                throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
+            }
+            const text = await response.text();
+            if (!text.trim()) throw new Error("Empty CSV response");
+
+            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
+            allGames = parsed.data
+                .filter(game => game["Game Number"] && game["Secret Word"])
+                .sort((a, b) => Number(b["Game Number"]) - Number(a["Game Number"]));
+            if (allGames.length === 0) throw new Error("No valid games in CSV");
+
+            // Store games in cache
+            localStorage.setItem("officialGamesCache", JSON.stringify(allGames));
+            localStorage.setItem("officialGamesCacheTime", now.toString());
+
+            const latestGame = allGames[0];
+            currentBackground = latestGame["Background"] && latestGame["Background"].trim() !== "" ? latestGame["Background"] : defaultBackground;
+            await preloadBackground(currentBackground);
+            loadGame(latestGame);
+            resetScreenDisplays(gameScreen);
+            showKeyboard();
+            setupKeyboardListeners();
+            updateArrowStates(0, allGames);
+            adjustBackground();
+        } catch (error) {
+            console.error("Error in fetchGameData:", error.message);
+            allGames = [
+                {
+                    "Game Number": "1",
+                    "Secret Word": "TEST",
+                    "Hint 1": "SAMPLE",
+                    "Hint 2": "WORD",
+                    "Hint 3": "GAME",
+                    "Hint 4": "PLAY",
+                    "Hint 5": "FUN",
+                    "Background": defaultBackground
+                }
+            ];
+            currentBackground = defaultBackground;
+            await preloadBackground(currentBackground);
+            loadGame(allGames[0]);
+            resetScreenDisplays(gameScreen);
+            showKeyboard();
+            setupKeyboardListeners();
+            updateArrowStates(0, allGames);
+            adjustBackground();
+            if (formErrorDialog && formErrorMessage) {
+                formErrorMessage.textContent = "Failed to load official games. Using default game.";
+                formErrorDialog.style.display = "flex";
+            }
+        } finally {
+            isUILocked = false;
+            isLoadingGame = false;
+        }
+    }
+
+    // Fetch private games
+    async function fetchPrivateGames() {
+        try {
+            console.log("Fetching private-games from:", privateUrl);
+            const response = await fetch(privateUrl, {
+                method: "GET",
+                mode: "cors",
+                cache: "no-cache",
+                headers: { "Accept": "text/csv" }
+            });
+            if (!response.ok) throw new Error(`Fetch failed: ${response.status} ${response.statusText}`);
+            const text = await response.text();
+
+            const parsed = Papa.parse(text, { header: true, skipEmptyLines: true, quoteChar: '"', dynamicTyping: false });
+            privateGames = parsed.data
+                .filter(game => game["Game Name"] && game["Secret Word"])
+                .map((game, index) => ({
+                    ...game,
+                    "Game Number": `P${Date.now()}-${index}`,
+                    "Display Name": `Game #${index + 1} - ${game["Game Name"]}`
+                }))
+                .sort((a, b) => {
+                    const aTime = parseInt(a["Game Number"].split('-')[0].substring(1));
+                    const bTime = parseInt(b["Game Number"].split('-')[0].substring(1));
+                    return bTime - aTime;
+                });
+            console.log("Parsed private games:", privateGames);
+        } catch (error) {
+            console.error("Error in fetchPrivateGames:", error.message);
+            privateGames = [];
+        }
+    }
+
+    // Display game list
+    function displayGameList() {
+        const officialList = document.getElementById("official-list");
+        if (officialList) {
+            officialList.innerHTML = "";
+            if (gameNameElement) {
+                gameNameElement.textContent = "WORDY";
+            }
+            console.log("Populating official games list with:", allGames);
+
+            if (!allGames || allGames.length === 0) {
+                console.log("No official games to display");
+                officialList.innerHTML = "<div>No official games available</div>";
+            } else {
+                const results = JSON.parse(localStorage.getItem("pineappleResults") || "{}");
+                allGames.forEach((game, index) => {
+                    const gameNumber = game["Game Number"];
+                    const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
+                    const pastResult = results[gameNumber];
+                    let guessesDisplay = '-';
+                    if (pastResult) {
+                        if (pastResult.guesses === "Gave Up") {
+                            guessesDisplay = "Gave Up";
+                        } else if (pastResult.guesses === "X") {
+                            guessesDisplay = "X";
+                        } else if (pastResult.secretWord === secretWord) {
+                            guessesDisplay = pastResult.guesses;
+                        }
+                    }
+
+                    const showSecretWord = pastResult && (pastResult.guesses === "Gave Up" || pastResult.guesses === "X" || pastResult.secretWord === secretWord);
+                    const displayWord = showSecretWord ? secretWord : "Play Now";
+
+                    const gameItem = document.createElement("div");
+                    gameItem.className = "game-list-row";
+                    gameItem.innerHTML = `
+                        <span>${gameNumber}</span>
+                        <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
+                        <span>${guessesDisplay}</span>
+                    `;
+                    if (isMobile) {
+                        gameItem.addEventListener("touchstart", (e) => {
+                            touchStartX = e.touches[0].clientX;
+                            touchStartY = e.touches[0].clientY;
+                            touchMoved = false;
+                            console.log("Touch started on game item", { x: touchStartX, y: touchStartY });
+                        });
+                        gameItem.addEventListener("touchmove", (e) => {
+                            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+                            const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+                            if (deltaX > touchThreshold || deltaY > touchThreshold) {
+                                touchMoved = true;
+                                console.log("Touch moved, marking as scroll", { deltaX, deltaY });
+                            }
+                        });
+                        gameItem.addEventListener("touchend", async (e) => {
+                            e.preventDefault();
+                            if (!touchMoved && !isUILocked) {
+                                console.log("Touch ended without movement, selecting game:", game);
+                                isUILocked = true;
+                                currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                                await preloadBackground(currentBackground);
+                                loadGame(game);
+                                resetScreenDisplays(gameScreen);
+                                showKeyboard();
+                                activeInput = guessInput;
+                                if (activeInput && !isMobile) activeInput.focus();
+                                adjustBackground();
+                                setupKeyboardListeners();
+                                const currentIndex = allGames.findIndex(g => g["Game Number"] === game["Game Number"]);
+                                updateArrowStates(currentIndex, allGames);
+                                setTimeout(() => { isUILocked = false; }, 500);
+                            }
+                        });
+                    } else {
+                        gameItem.addEventListener("click", async () => {
+                            console.log("Clicked official game:", game, { isUILocked });
+                            if (isUILocked) return;
+                            isUILocked = true;
+                            currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                            await preloadBackground(currentBackground);
+                            loadGame(game);
+                            resetScreenDisplays(gameScreen);
+                            showKeyboard();
+                            activeInput = guessInput;
+                            if (activeInput && !isMobile) activeInput.focus();
+                            adjustBackground();
+                            setupKeyboardListeners();
+                            const currentIndex = allGames.findIndex(g => g["Game Number"] === game["Game Number"]);
+                            updateArrowStates(currentIndex, allGames);
+                            setTimeout(() => { isUILocked = false; }, 500);
+                        });
+                    }
+                    officialList.appendChild(gameItem);
+                    console.log(`Rendered official game ${gameNumber}: Secret Word: ${secretWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
+                });
+                setTimeout(() => {
+                    officialList.style.display = "none";
+                    officialList.offsetHeight;
+                    officialList.style.display = "flex";
+                    console.log("Forced repaint on official-list");
+                }, 0);
+            }
+        }
+
+        const privateList = document.getElementById("private-list");
+        if (privateList) {
+            privateList.innerHTML = "";
+            console.log("Populating private games list", privateGames);
+
+            if (!privateGames.length) {
+                privateList.innerHTML = "<div>No private games yet</div>";
+            } else {
+                const results = JSON.parse(localStorage.getItem("privatePineappleResults") || "{}");
+                console.log("Private game results from localStorage:", results);
+                privateGames.forEach(game => {
+                    const gameNumber = game["Game Number"];
+                    const gameName = game["Game Name"].toUpperCase();
+                    const secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase() : "N/A";
+                    const pastResult = results[gameNumber];
+                    let guessesDisplay = '-';
+                    let showSecretWord = false;
+
+                    console.log(`Checking result for game ${gameNumber}:`, pastResult);
+
+                    if (pastResult) {
+                        if (pastResult.guesses === "Gave Up") {
+                            guessesDisplay = "Gave Up";
+                            showSecretWord = true;
+                        } else if (pastResult.guesses === "X") {
+                            guessesDisplay = "X";
+                            showSecretWord = true;
+                        } else if (pastResult.secretWord === secretWord) {
+                            guessesDisplay = pastResult.guesses.toString();
+                            showSecretWord = true;
+                        }
+                    }
+
+                    const displayWord = showSecretWord ? secretWord : "Play Now";
+
+                    const gameItem = document.createElement("div");
+                    gameItem.className = "game-list-row";
+                    gameItem.innerHTML = `
+                        <span>${gameName}</span>
+                        <span class="${displayWord === 'Play Now' ? 'play-now' : ''}">${displayWord}</span>
+                        <span>${guessesDisplay}</span>
+                    `;
+                    if (isMobile) {
+                        gameItem.addEventListener("touchstart", (e) => {
+                            touchStartX = e.touches[0].clientX;
+                            touchStartY = e.touches[0].clientY;
+                            touchMoved = false;
+                            console.log("Touch started on private game item", { x: touchStartX, y: touchStartY });
+                        });
+                        gameItem.addEventListener("touchmove", (e) => {
+                            const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+                            const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+                            if (deltaX > touchThreshold || deltaY > touchThreshold) {
+                                touchMoved = true;
+                                console.log("Touch moved on private game, marking as scroll", { deltaX, deltaY });
+                            }
+                        });
+                        gameItem.addEventListener("touchend", async (e) => {
+                            e.preventDefault();
+                            if (!touchMoved && !isUILocked) {
+                                console.log("Touch ended without movement, selecting private game:", game);
+                                isUILocked = true;
+                                currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                                await preloadBackground(currentBackground);
+                                loadGame(game);
+                                resetScreenDisplays(gameScreen);
+                                showKeyboard();
+                                activeInput = guessInput;
+                                if (activeInput && !isMobile) activeInput.focus();
+                                adjustBackground();
+                                setupKeyboardListeners();
+                                const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
+                                updateArrowStates(currentIndex, privateGames);
+                                setTimeout(() => { isUILocked = false; }, 500);
+                            }
+                        });
+                    } else {
+                        gameItem.addEventListener("click", async () => {
+                            console.log("Clicked private game:", game, { isUILocked });
+                            if (isUILocked) return;
+                            isUILocked = true;
+                            currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                            await preloadBackground(currentBackground);
+                            loadGame(game);
+                            resetScreenDisplays(gameScreen);
+                            showKeyboard();
+                            activeInput = guessInput;
+                            if (activeInput && !isMobile) activeInput.focus();
+                            adjustBackground();
+                            setupKeyboardListeners();
+                            const currentIndex = privateGames.findIndex(g => g["Game Number"] === game["Game Number"]);
+                            updateArrowStates(currentIndex, privateGames);
+                            setTimeout(() => { isUILocked = false; }, 500);
+                        });
+                    }
+                    privateList.appendChild(gameItem);
+                    console.log(`Rendered private game ${gameNumber}: Name: ${gameName}, Secret Word: ${displayWord}, Guesses: ${guessesDisplay}, Stored Result:`, pastResult);
+                });
+                setTimeout(() => {
+                    privateList.style.display = "none";
+                    privateList.offsetHeight;
+                    privateList.style.display = "flex";
+                    console.log("Forced repaint on private-list");
+                }, 0);
+            }
+        }
+    }
+
+    // Setup hints
+    function setupHints() {
+        console.log("Setting up hints:", hints, "hintIndex:", hintIndex, "hintStyles:", hintStyles);
+        for (let i = 1; i <= 5; i++) {
+            const hintElement = document.getElementById(`hint-${i}`);
+            if (hintElement) {
+                hintElement.style.display = "none";
+                hintElement.innerHTML = "";
+                hintElement.className = "hint";
+                if (hintStyles[i - 1]) {
+                    hintElement.classList.add(hintStyles[i - 1].shape, hintStyles[i - 1].color);
+                }
+            }
+        }
+
+        const visibleHints = hints.slice(0, hintIndex + 1);
+        visibleHints.forEach((hint, index) => {
+            const hintElement = document.getElementById(hintRevealOrder[index]);
+            if (hintElement && hintStyles[index]) {
+                const isFluffyCloudShape = hintStyles[index].shape === "hint-shape-fluffy-cloud";
+                const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
+                hintElement.innerHTML = hintContent;
+                hintElement.style.display = "flex";
+                const effect = hintStyles[index].effect;
+                if (effect === "letter") {
+                    const letters = hint.split("").map((letter, i) => {
+                        const displayChar = letter === " " ? " " : letter;
+                        return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
+                    }).join("");
+                    hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
+                } else {
+                    hintElement.classList.add(`reveal-${effect}`);
+                    setTimeout(() => {
+                        hintElement.classList.remove(`reveal-${effect}`);
+                    }, 1000);
+                }
+            }
+        });
+        console.log("Hints displayed:", visibleHints);
+    }
+
+    // Reveal hint
+    function revealHint() {
+        hintIndex++;
+        console.log("Revealing hint, new hintIndex:", hintIndex, "total hints:", hints.length);
+        if (hintIndex < hints.length) {
+            const hintElement = document.getElementById(hintRevealOrder[hintIndex]);
+            if (hintElement && hintStyles[hintIndex]) {
+                const hint = hints[hintIndex];
+                const isFluffyCloudShape = hintStyles[hintIndex].shape === "hint-shape-fluffy-cloud";
+                const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
+                hintElement.innerHTML = hintContent;
+                hintElement.style.display = "flex";
+                const effect = hintStyles[hintIndex].effect;
+                if (effect === "letter") {
+                    const letters = hint.split("").map((letter, i) => {
+                        const displayChar = letter === " " ? " " : letter;
+                        return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
+                    }).join("");
+                    hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
+                } else {
+                    hintElement.classList.add(`reveal-${effect}`);
+                    setTimeout(() => {
+                        hintElement.classList.remove(`reveal-${effect}`);
+                    }, 1000);
+                }
+                console.log("Revealed hint:", hint, "with effect:", effect);
+            }
+        }
     }
 
     // Handle guess
@@ -485,8 +1499,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Handling guess:", guess);
 
         guessInputContainer.classList.remove("wrong-guess");
-        if (keyboardContainer) keyboardContainer.classList.remove("wrong-guess");
-        if (gameControlsContainer) gameControlsContainer.classList.remove("wrong-guess");
         guessInput.value = "";
         guessCount++;
         guesses.push(guess);
@@ -513,12 +1525,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             console.log("Incorrect guess, animating...");
             guessInputContainer.classList.add("wrong-guess");
-            if (keyboardContainer) keyboardContainer.classList.add("wrong-guess");
-            if (gameControlsContainer) gameControlsContainer.classList.add("wrong-guess");
             animationTimeout = setTimeout(() => {
                 guessInputContainer.classList.remove("wrong-guess");
-                if (keyboardContainer) keyboardContainer.classList.remove("wrong-guess");
-                if (gameControlsContainer) gameControlsContainer.classList.remove("wrong-guess");
                 isProcessingGuess = false;
                 console.log("Animation completed, input reset");
                 if (guessInput && !isMobile) {
@@ -541,53 +1549,186 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Reveal hint
-    function revealHint() {
-        if (hintIndex >= hints.length) {
-            console.log("No more hints to reveal");
-            return;
+    // Save game result
+    function saveGameResult(gameType, gameNumber, secretWord, guesses) {
+        console.log("Attempting to save game result", { gameType, gameNumber, secretWord, guesses });
+        const resultsKey = gameType === "pineapple" ? "pineappleResults" : "privatePineappleResults";
+        let normalizedGameNumber = String(gameNumber);
+        if (gameType === "pineapple") {
+            normalizedGameNumber = gameNumber.replace("Game #", "");
         }
-        const hintId = hintRevealOrder[hintIndex];
-        const hintElement = document.getElementById(hintId);
+        console.log(`Normalized game number: ${normalizedGameNumber}`);
+        const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
+        // Only save if no existing result or current result is default ('-')
+        if (!results[normalizedGameNumber] || results[normalizedGameNumber].guesses === '-') {
+            results[normalizedGameNumber] = { secretWord, guesses };
+            localStorage.setItem(resultsKey, JSON.stringify(results));
+            console.log(`Game result saved for ${resultsKey}[${normalizedGameNumber}]:`, results[normalizedGameNumber]);
+        } else {
+            console.log(`Game result not saved for ${resultsKey}[${normalizedGameNumber}]: existing score '${results[normalizedGameNumber].guesses}' preserved`);
+        }
+        console.log(`Current ${resultsKey} in localStorage:`, results);
+    }
+
+    // End game
+function endGame(won, gaveUp = false) {
+    console.log("Ending game", { won, gaveUp, guessCount, secretWord, guesses });
+    gameOver = true;
+    guessInput.disabled = true;
+    guessBtn.disabled = true;
+
+    // Clear previous game-over messages to prevent overlap
+    const existingGameOverMessage = document.getElementById("game-over-message");
+    if (existingGameOverMessage) existingGameOverMessage.remove();
+    const existingSecretWordMessage = document.getElementById("secret-word-message");
+    if (existingSecretWordMessage) existingSecretWordMessage.remove();
+
+    resetScreenDisplays(gameScreen);
+    gameScreen.style.display = "flex";
+    gameScreen.classList.add("game-ended");
+    guessArea.style.display = "flex";
+    adjustBackground();
+
+    if (guessInput && guessInputContainer) {
+        guessInput.value = "";
+        guessInputContainer.classList.add("game-ended");
+    }
+
+    // Hide all hints
+    for (let i = 1; i <= 5; i++) {
+        const hintElement = document.getElementById(`hint-${i}`);
         if (hintElement) {
-            const hintTextElement = hintElement.querySelector(".hint-text");
-            if (hintTextElement) {
-                hintTextElement.textContent = hints[hintIndex];
-            }
-            const styles = hintStyles[hintIndex];
-            hintElement.className = `hint ${styles.shape} ${styles.color} reveal-${styles.effect}`;
-            hintElement.style.display = "flex";
-            console.log(`Revealed hint ${hintIndex + 1}:`, hints[hintIndex], "with styles:", styles);
-            hintIndex++;
+            hintElement.style.display = "none";
         }
     }
 
-    // Reset hints
-    function resetHints() {
-        console.log("Resetting hints");
-        hintIndex = 0;
-        const hintElements = document.querySelectorAll(".hint");
-        hintElements.forEach(element => {
-            element.style.display = "none";
-            element.className = "hint";
+    gameControlsContainer.style.display = "none";
+    if (isMobile && keyboardContainer) {
+        keyboardContainer.style.display = "none";
+    }
+
+    const gameOverScreen = document.getElementById("game-over");
+    gameOverScreen.style.display = "flex";
+    gameOverScreen.classList.add("active");
+
+    const shareText = document.getElementById("share-text");
+    const gameNumberDisplay = document.getElementById("game-number-display");
+    const gameOverMessage = document.createElement("span");
+    gameOverMessage.id = "game-over-message";
+    gameOverMessage.textContent = won ? "Well Done" : "Hard Luck";
+
+    // Add secret word message for UI display
+    const secretWordMessage = document.createElement("span");
+    secretWordMessage.id = "secret-word-message";
+    secretWordMessage.textContent = `The secret word was ${secretWord}`;
+    gameOverScreen.insertBefore(gameOverMessage, shareSection);
+    gameOverScreen.insertBefore(secretWordMessage, shareSection);
+
+    if (gameNumberDisplay) {
+        gameNumberDisplay.style.display = "none";
+    }
+
+    // Construct share message based on win/loss
+let shareMessage;
+if (won) {
+    // Normalize game number: extract numeric/ID part
+    let normalizedGameNumber = currentGameNumber.includes("- Private")
+        ? currentGameId
+        : currentGameNumber.replace("Game #", "");
+    shareMessage = `I solved Wordy #${normalizedGameNumber} in\n${guessCount}\n${guessCount === 1 ? 'Guess' : 'Guesses'}`;
+} else {
+    shareMessage = `Play Wordy\nThe Big Brain Word Game`;
+}
+
+if (shareText) {
+    // Display share message in UI, replacing newlines with <br> and highlighting guess count
+    const displayMessage = won
+        ? `I solved Wordy #${currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", "")} in<br><span class="guess-count">${guessCount}</span><br>${guessCount === 1 ? 'Guess' : 'Guesses'}`
+        : `Play Wordy<br>The Big Brain Word Game`;
+    shareText.innerHTML = displayMessage;
+    console.log("Share text set to:", shareText.innerHTML);
+}
+
+    // Setup share buttons
+    const shareButtons = {
+        whatsapp: document.getElementById("share-whatsapp"),
+        telegram: document.getElementById("share-telegram"),
+        twitter: document.getElementById("share-twitter"),
+        instagram: document.getElementById("share-instagram")
+    };
+
+    if (shareButtons.whatsapp) {
+        shareButtons.whatsapp.href = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}`;
+    }
+    if (shareButtons.telegram) {
+        shareButtons.telegram.href = `https://t.me/share/url?url=${encodeURIComponent("https://wordy.bigbraingames.net")}&text=${encodeURIComponent(shareMessage)}`;
+    }
+    if (shareButtons.twitter) {
+        shareButtons.twitter.href = `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}`;
+    }
+    if (shareButtons.instagram) {
+        shareButtons.instagram.addEventListener("click", (e) => {
+            e.preventDefault();
+            navigator.clipboard.writeText(shareMessage).then(() => {
+                alert("Score copied to clipboard! Paste it into your Instagram post.");
+                window.open("https://www.instagram.com/", "_blank");
+            }).catch(err => {
+                console.error("Failed to copy to clipboard:", err);
+                alert("Please copy your score manually and share it on Instagram.");
+                window.open("https://www.instagram.com/", "_blank");
+            });
         });
-        randomizeHintStyles();
+    }
+
+    if (won) {
+        startPineappleRain();
+    }
+
+    setupKeyboardListeners();
+
+    if (currentGameNumber.includes("- Private")) {
+        displayGameList();
+        console.log("Private games list updated after game end");
+    }
+}
+
+    // Start pineapple rain
+    function startPineappleRain() {
+        console.log("Starting pineapple rain animation");
+        const rainContainer = document.createElement("div");
+        rainContainer.className = "pineapple-rain";
+        document.body.appendChild(rainContainer);
+
+        for (let i = 0; i < 20; i++) {
+            const piece = document.createElement("div");
+            piece.className = "pineapple-piece";
+            piece.textContent = "🍍";
+            piece.style.left = `${Math.random() * 100}%`;
+            piece.style.animationDuration = `${2 + Math.random() * 3}s`;
+            piece.style.setProperty('--drift', Math.random() * 2 - 1);
+            piece.style.setProperty('--rotation', `${Math.random() * 720}deg`);
+            rainContainer.appendChild(piece);
+        }
+
+        setTimeout(() => {
+            rainContainer.remove();
+            console.log("Pineapple rain animation ended");
+        }, 5000);
     }
 
     // Reset game
     function resetGame() {
         console.log("Resetting game state");
         gameOver = false;
-        guessCount = 0;
-        guesses = [];
-        gaveUp = false;
-        isProcessingGuess = false;
+        secretWord = "";
+        hints = [];
+        hintIndex = 0;
         firstGuessMade = false;
-        if (animationTimeout) {
-            clearTimeout(animationTimeout);
-            animationTimeout = null;
-        }
-        resetHints();
+        guessCount = 0;
+        gaveUp = false;
+        guesses = [];
+        console.log("Guesses array reset:", guesses);
+        isProcessingGuess = false;
         if (guessInput) {
             guessInput.value = "";
             guessInput.disabled = false;
@@ -599,591 +1740,169 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (guessBtn) {
             guessBtn.disabled = false;
         }
-        if (guessInputContainer) {
-            guessInputContainer.classList.remove("wrong-guess");
-        }
-        if (keyboardContainer) {
-            keyboardContainer.classList.remove("wrong-guess");
-        }
-        if (gameControlsContainer) {
-            gameControlsContainer.classList.remove("wrong-guess");
-        }
         if (guessesLink) {
             guessesLink.textContent = "Guesses: 0/5";
+            console.log("Reset guessesLink text:", guessesLink.textContent);
         }
-        gameScreen.classList.remove("game-ended");
-        document.querySelectorAll(".pineapple-piece").forEach(piece => piece.remove());
-        showKeyboard();
-        adjustBackground();
+        if (guessInputContainer) {
+            guessInputContainer.classList.remove("game-ended", "wrong-guess");
+            guessInputContainer.style.background = "rgba(255, 255, 255, 0.85)";
+        }
+        if (gameScreen) {
+            gameScreen.classList.remove("game-ended");
+        }
+        if (animationTimeout) {
+            clearTimeout(animationTimeout);
+            animationTimeout = null;
+        }
+        const pineappleRain = document.querySelector(".pineapple-rain");
+        if (pineappleRain) {
+            pineappleRain.remove();
+        }
+        if (gameControlsContainer) {
+            gameControlsContainer.style.display = "flex";
+        }
+        const guessesList = document.getElementById("guesses-list");
+        if (guessesList) {
+            guessesList.innerHTML = "No guesses yet!";
+            guessesList.style.display = "block";
+            console.log("Reset guessesList:", guessesList.innerHTML);
+        }
+        // Clear previous game-over messages
+        const existingGameOverMessage = document.getElementById("game-over-message");
+        if (existingGameOverMessage) existingGameOverMessage.remove();
+        const existingSecretWordMessage = document.getElementById("secret-word-message");
+        if (existingSecretWordMessage) existingSecretWordMessage.remove();
+        console.log("Game state reset complete");
     }
 
-    // Save game result
-    function saveGameResult(gameType, gameNumber, secretWord, guessCount) {
-        console.log("Saving game result:", { gameType, gameNumber, secretWord, guessCount });
-        // Placeholder for saving game result (e.g., to localStorage or server)
-    }
-
-    // End game
-    function endGame(won, showPineappleRain = true) {
-        console.log("Ending game:", { won, showPineappleRain });
-        gameOver = true;
-        if (guessInput) {
-            guessInput.disabled = true;
+        // Load game
+    function loadGame(game) {
+        if (!game) {
+            console.error("No game provided to loadGame");
+            return;
         }
-        if (guessBtn) {
-            guessBtn.disabled = true;
-        }
-        gameScreen.classList.add("game-ended");
-        const gameOverScreen = document.getElementById("game-over");
-        const gameOverMessage = document.getElementById("game-over-message");
-        const secretWordMessage = document.getElementById("secret-word-message");
-        const shareText = document.getElementById("share-text");
-        const gameNumberDisplay = document.getElementById("game-number-display");
-
-        if (gameOverScreen) {
-            resetScreenDisplays(gameOverScreen);
-            gameOverScreen.style.display = "flex";
-            gameOverScreen.classList.add("active");
-        }
-
-        if (gameOverMessage) {
-            gameOverMessage.textContent = won ? "You won! Great job!" : gaveUp ? "You gave up!" : "Game Over!";
-        }
-
-        if (secretWordMessage) {
-            secretWordMessage.textContent = `The word was: ${secretWord}`;
-        }
-
-        if (shareText) {
-            const guessDisplay = guessCount === 0 || gaveUp ? "X" : guessCount;
-            shareText.innerHTML = `I got <span class="guess-count">${guessDisplay}/5</span> on this Pineapple!`;
-        }
-
-        if (gameNumberDisplay) {
-            gameNumberDisplay.textContent = currentGameNumber;
-        }
-
-        if (won && showPineappleRain) {
-            startPineappleRain();
-        }
-
-        if (isMobile) {
-            keyboardContainer.style.display = "none";
-        }
-    }
-
-    // Start pineapple rain
-    function startPineappleRain() {
-        console.log("Starting pineapple rain");
-        const container = document.createElement("div");
-        container.className = "pineapple-rain";
-        document.body.appendChild(container);
-
-        const emojis = ["🍍", "🥳", "🎉"];
-        const count = 20;
-
-        for (let i = 0; i < count; i++) {
-            const piece = document.createElement("div");
-            piece.className = "pineapple-piece";
-            piece.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-            piece.style.left = `${Math.random() * 100}vw`;
-            piece.style.animationDuration = `${Math.random() * 2 + 2}s`;
-            piece.style.animationDelay = `${Math.random() * 0.5}s`;
-            piece.style.setProperty("--rotation", `${Math.random() * 360}deg`);
-            piece.style.setProperty("--drift", Math.random() * 2 - 1);
-            container.appendChild(piece);
-
-            setTimeout(() => {
-                piece.remove();
-                if (i === count - 1) {
-                    container.remove();
-                }
-            }, 2500 + parseFloat(piece.style.animationDelay) * 1000);
-        }
-    }
-
-    // Load game data
-    async function loadGameData(gameNumber, isPrivate = false, gameId = null) {
-        console.log("Loading game data:", { gameNumber, isPrivate, gameId });
+        console.log("Loading game:", game);
+        resetGame();
         isLoadingGame = true;
         try {
-            let data;
-            if (isPrivate && gameId) {
-                const response = await fetch(`${webAppUrl}?action=getGame&gameId=${gameId}`);
-                const result = await response.json();
-                data = result.data ? [result.data] : [];
+            // Trim only leading/trailing spaces for secret word
+            secretWord = game["Secret Word"] ? game["Secret Word"].toUpperCase().trim() : "";
+            // Validate secret word (no internal spaces)
+            if (secretWord.includes(" ")) {
+                throw new Error("Secret word contains internal spaces");
+            }
+            hints = [
+                game["Hint 1"]?.toUpperCase().trim() || "",
+                game["Hint 2"]?.toUpperCase().trim() || "",
+                game["Hint 3"]?.toUpperCase().trim() || "",
+                game["Hint 4"]?.toUpperCase().trim() || "",
+                game["Hint 5"]?.toUpperCase().trim() || ""
+            ].filter(hint => hint !== "");
+            console.log("Loaded hints with preserved internal spaces:", hints);
+
+            hintIndex = 0;
+            currentGameId = game["Game Number"];
+            const isPrivate = game["Display Name"] && game["Display Name"].includes("-");
+            if (isPrivate) {
+                currentGameNumber = game["Display Name"].split("-")[0].trim() + " - Private";
             } else {
-                const url = isPrivate ? privateUrl : officialUrl;
-                const response = await fetch(url);
-                const csvText = await response.text();
-                data = csvText.split("\n").slice(1).map(row => {
-                    const cols = row.split(",");
-                    return {
-                        gameNumber: cols[0],
-                        secretWord: cols[1],
-                        hints: cols.slice(2, 7),
-                        background: cols[7] || defaultBackground
-                    };
-                });
+                currentGameNumber = `Game #${game["Game Number"]}`;
+            }
+            console.log("Set currentGameId:", currentGameId, "currentGameNumber:", currentGameNumber, "isPrivate:", isPrivate);
+
+            if (gameNumberText) {
+                gameNumberText.textContent = currentGameNumber.split(" -")[0];
+            } else {
+                console.error("game-number-text element not found");
             }
 
-            const game = data.find(g => (isPrivate ? g.gameId === gameId : g.gameNumber === gameNumber));
-            if (!game) {
-                console.error("Game not found");
-                return null;
+            if (gameNameElement) {
+                gameNameElement.textContent = "WORDY";
             }
 
-            return {
-                secretWord: game.secretWord?.trim().toUpperCase() || "",
-                hints: game.hints?.map(h => h?.trim().toUpperCase() || "") || [],
-                background: game.background?.trim() || defaultBackground,
-                gameId: game.gameId || null
-            };
+            randomizeHintStyles();
+            setupHints();
+
+            // Check if game has been played
+            const resultsKey = isPrivate ? "privatePineappleResults" : "pineappleResults";
+            const results = JSON.parse(localStorage.getItem(resultsKey) || "{}");
+            const pastResult = results[currentGameId];
+            console.log(`Checking past result for ${resultsKey}[${currentGameId}]:`, pastResult);
+
+            if (pastResult && pastResult.secretWord === secretWord) {
+                gameOver = true;
+                guessInput.disabled = true;
+                guessBtn.disabled = true;
+                if (pastResult.guesses !== "Gave Up" && pastResult.guesses !== "X") {
+                    guessCount = parseInt(pastResult.guesses, 10) || 0;
+                    guesses = Array(guessCount).fill("PREVIOUS");
+                    if (guessesLink) {
+                        guessesLink.textContent = `Guesses: ${guessCount}/5`;
+                    }
+                    hintIndex = guessCount - 1;
+                    if (hintIndex >= hints.length) hintIndex = hints.length - 1;
+                    setupHints();
+                } else if (pastResult.guesses === "Gave Up") {
+                    gaveUp = true;
+                    hintIndex = hints.length - 1;
+                    setupHints();
+                    endGame();
+                } else if (pastResult.guesses === "X") {
+                    hintIndex = hints.length - 1;
+                    setupHints();
+                    endGame();
+                }
+            } else {
+                console.log("No past result found, starting fresh game");
+                gameOver = false;
+                guessInput.disabled = false;
+                guessBtn.disabled = false;
+                if (guessInput && !isMobile) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+                setupHints();
+            }
+
+            adjustBackground();
+            if (isMobile && !gameOver) showKeyboard();
+            console.log("Game loaded successfully:", { secretWord, hints, hintIndex, gameOver, guessCount });
         } catch (error) {
-            console.error("Error loading game data:", error);
-            return null;
+            console.error("Error loading game:", error.message);
+            if (formErrorDialog && formErrorMessage) {
+                formErrorMessage.textContent = "Failed to load game: " + error.message;
+                formErrorDialog.style.display = "flex";
+            }
         } finally {
             isLoadingGame = false;
         }
     }
 
     // Initialize game
-    async function initializeGame(gameNumber, isPrivate = false, gameId = null) {
-        console.log("Initializing game:", { gameNumber, isPrivate, gameId });
-        resetGame();
-        currentGameNumber = isPrivate ? `Game - Private` : `Game #${gameNumber}`;
-        currentGameId = gameId;
-        if (gameNumberText) {
-            gameNumberText.textContent = currentGameNumber;
-        }
-
-        const gameData = await loadGameData(gameNumber, isPrivate, gameId);
-        if (!gameData) {
-            console.error("Failed to load game data");
-            return;
-        }
-
-        secretWord = gameData.secretWord;
-        hints = gameData.hints;
-        currentBackground = await preloadBackground(gameData.background);
-        adjustBackground();
-        console.log("Game initialized with:", { secretWord, hints, currentBackground });
-    }
-
-    // Load game lists
-    async function loadGameLists() {
-        console.log("Loading game lists");
-        try {
-            const [officialResponse, privateResponse] = await Promise.all([
-                fetch(officialUrl),
-                fetch(privateUrl)
-            ]);
-            const officialText = await officialResponse.text();
-            const privateText = await privateResponse.text();
-
-            allGames = officialText.split("\n").slice(1).map(row => {
-                const cols = row.split(",");
-                return { gameNumber: cols[0], secretWord: cols[1] };
-            });
-            privateGames = privateText.split("\n").slice(1).map(row => {
-                const cols = row.split(",");
-                return { gameId: cols[0], secretWord: cols[1] };
-            });
-
-            console.log("Loaded games:", { allGames, privateGames });
-        } catch (error) {
-            console.error("Error loading game lists:", error);
+    try {
+        await fetchGameData();
+        if (isMobile) showKeyboard();
+        setupKeyboardListeners();
+    } catch (error) {
+        console.error("Initialization error:", error);
+        if (formErrorDialog && formErrorMessage) {
+            formErrorMessage.textContent = "Failed to initialize game.";
+            formErrorDialog.style.display = "flex";
         }
     }
 
-    // Populate game lists
-    function populateGameLists() {
-        console.log("Populating game lists");
-        if (officialContent) {
-            officialContent.innerHTML = "";
-            allGames.forEach(game => {
-                const row = document.createElement("div");
-                row.className = "game-list-row";
-                row.innerHTML = `
-                    <span>Game #${game.gameNumber}</span>
-                    <span class="play-now">Play Now</span>
-                    <span>${game.secretWord}</span>
-                `;
-                row.querySelector(".play-now").addEventListener("click", () => {
-                    resetScreenDisplays(gameScreen);
-                    initializeGame(game.gameNumber);
-                });
-                row.querySelector(".play-now").addEventListener("touchstart", (e) => {
-                    e.preventDefault();
-                    if (!touchMoved) {
-                        resetScreenDisplays(gameScreen);
-                        initializeGame(game.gameNumber);
-                    }
-                });
-                officialContent.appendChild(row);
-            });
+    // Setup CSS for letter reveal animation
+    const style = document.createElement("style");
+    style.textContent = `
+        .letter {
+            display: inline-block;
+            opacity: 0;
         }
-
-        if (privateContent) {
-            privateContent.innerHTML = "";
-            privateGames.forEach(game => {
-                const row = document.createElement("div");
-                row.className = "game-list-row";
-                row.innerHTML = `
-                    <span>Game - Private</span>
-                    <span class="play-now">Play Now</span>
-                    <span>${game.secretWord}</span>
-                `;
-                row.querySelector(".play-now").addEventListener("click", () => {
-                    resetScreenDisplays(gameScreen);
-                    initializeGame(null, true, game.gameId);
-                });
-                row.querySelector(".play-now").addEventListener("touchstart", (e) => {
-                    e.preventDefault();
-                    if (!touchMoved) {
-                        resetScreenDisplays(gameScreen);
-                        initializeGame(null, true, game.gameId);
-                    }
-                });
-                privateContent.appendChild(row);
-            });
+        @keyframes fadeInLetter {
+            0% { opacity: 0; transform: translateY(10px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
-    }
-
-    // Setup tabs
-    if (officialTab && privateTab && officialContent && privateContent) {
-        officialTab.addEventListener("click", () => {
-            officialTab.classList.add("active");
-            privateTab.classList.remove("active");
-            officialContent.classList.add("active");
-            privateContent.classList.remove("active");
-        });
-        privateTab.addEventListener("click", () => {
-            privateTab.classList.add("active");
-            officialTab.classList.remove("active");
-            privateContent.classList.add("active");
-            officialContent.classList.remove("active");
-        });
-        officialTab.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            officialTab.classList.add("active");
-            privateTab.classList.remove("active");
-            officialContent.classList.add("active");
-            privateContent.classList.remove("active");
-        });
-        privateTab.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            privateTab.classList.add("active");
-            officialTab.classList.remove("active");
-            privateContent.classList.add("active");
-            officialContent.classList.remove("active");
-        });
-    }
-
-    // All games link
-    if (allGamesLink) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("All games link triggered");
-            if (isUILocked || isLoadingGame) {
-                console.log("All games link ignored: UI locked or game loading");
-                return;
-            }
-            isUILocked = true;
-            resetScreenDisplays(gameSelectContent);
-            populateGameLists();
-            setTimeout(() => { isUILocked = false; }, 500);
-        };
-        allGamesLink.addEventListener("click", handler);
-        allGamesLink.addEventListener("touchstart", handler);
-    }
-
-    // Official back button
-    if (officialBackBtn) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Official back button triggered");
-            officialTab.classList.add("active");
-            privateTab.classList.remove("active");
-            officialContent.classList.add("active");
-            privateContent.classList.remove("active");
-        };
-        officialBackBtn.addEventListener("click", handler);
-        officialBackBtn.addEventListener("touchstart", handler);
-    }
-
-    // Private back button
-    if (privateBackBtn) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Private back button triggered");
-            privateTab.classList.add("active");
-            officialTab.classList.remove("active");
-            privateContent.classList.add("active");
-            officialContent.classList.remove("active");
-        };
-        privateBackBtn.addEventListener("click", handler);
-        privateBackBtn.addEventListener("touchstart", handler);
-    }
-
-    // Create pineapple button
-    if (createPineappleBtn) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Create pineapple button triggered");
-            resetScreenDisplays(formContent);
-            if (isMobile) {
-                showKeyboard();
-            }
-            activeInput = formInputs[0];
-            if (activeInput && !isMobile) activeInput.focus();
-        };
-        createPineappleBtn.addEventListener("click", handler);
-        createPineappleBtn.addEventListener("touchstart", handler);
-    }
-
-    // Create pineapple end link
-    if (createPineappleLink) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Create pineapple end link triggered");
-            resetScreenDisplays(formContent);
-            if (isMobile) {
-                showKeyboard();
-            }
-            activeInput = formInputs[0];
-            if (activeInput && !isMobile) activeInput.focus();
-        };
-        createPineappleLink.addEventListener("click", handler);
-        createPineappleLink.addEventListener("touchstart", handler);
-    }
-
-    // Form back button
-    if (formBackBtn) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Form back button triggered");
-            resetScreenDisplays(gameSelectContent);
-            populateGameLists();
-        };
-        formBackBtn.addEventListener("click", handler);
-        formBackBtn.addEventListener("touchstart", handler);
-    }
-
-    // Confirm button
-    if (confirmBtn) {
-        const handler = async (e) => {
-            e.preventDefault();
-            console.log("Confirm button triggered");
-            const formData = {
-                gameName: formInputs[0].value.trim().toUpperCase(),
-                secretWord: formInputs[1].value.trim().toUpperCase(),
-                hints: formInputs.slice(2).map(input => input.value.trim().toUpperCase())
-            };
-            console.log("Form data:", formData);
-
-            if (!formData.secretWord || formData.hints.some(hint => !hint)) {
-                formErrorMessage.textContent = "Please fill in all fields.";
-                formErrorDialog.style.display = "flex";
-                return;
-            }
-
-            try {
-                const response = await fetch(webAppUrl, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: "createGame", ...formData })
-                });
-                const result = await response.json();
-                if (result.success) {
-                    resetScreenDisplays(gameScreen);
-                    await initializeGame(null, true, result.gameId);
-                } else {
-                    formErrorMessage.textContent = result.message || "Error creating game.";
-                    formErrorDialog.style.display = "flex";
-                }
-            } catch (error) {
-                console.error("Error submitting form:", error);
-                formErrorMessage.textContent = "Network error. Please try again.";
-                formErrorDialog.style.display = "flex";
-            }
-        };
-        confirmBtn.addEventListener("click", handler);
-        confirmBtn.addEventListener("touchstart", handler);
-    }
-
-    // Form error OK button
-    if (formErrorOkBtn) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Form error OK button triggered");
-            formErrorDialog.style.display = "none";
-        };
-        formErrorOkBtn.addEventListener("click", handler);
-        formErrorOkBtn.addEventListener("touchstart", handler);
-    }
-
-    // Guesses link
-    if (guessesLink) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Guesses link triggered");
-            if (isMobile) {
-                keyboardContainer.classList.add("show-guesses");
-                keyboardContent.style.display = "none";
-                keyboardGuessesContent.style.display = "flex";
-                keyboardGiveUpContent.style.display = "none";
-                keyboardBackBtn.style.display = "block";
-            } else {
-                guessesScreen.style.display = "flex";
-            }
-            const guessesList = document.getElementById("guesses-list");
-            if (guessesList) {
-                guessesList.innerHTML = guesses.length ? guesses.join(" • ") : "No guesses yet.";
-            }
-        };
-        guessesLink.addEventListener("click", handler);
-        guessesLink.addEventListener("touchstart", handler);
-    }
-
-    // Guesses close button
-    if (guessesCloseBtn) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Guesses close button triggered");
-            guessesScreen.style.display = "none";
-        };
-        guessesCloseBtn.addEventListener("click", handler);
-        guessesCloseBtn.addEventListener("touchstart", handler);
-    }
-
-    // Give up link
-    if (giveUpLink) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Give up link triggered");
-            if (isMobile) {
-                keyboardContainer.classList.add("show-give-up");
-                keyboardContent.style.display = "none";
-                keyboardGuessesContent.style.display = "none";
-                keyboardGiveUpContent.style.display = "flex";
-                keyboardBackBtn.style.display = "block";
-            } else {
-                giveUpDialog.style.display = "flex";
-            }
-        };
-        giveUpLink.addEventListener("click", handler);
-        giveUpLink.addEventListener("touchstart", handler);
-    }
-
-    // Give up yes button
-    if (giveUpYesBtn) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Give up yes button triggered");
-            gaveUp = true;
-            saveGameResult(
-                currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple",
-                currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", ""),
-                secretWord,
-                "X"
-            );
-            endGame(false, false);
-            giveUpDialog.style.display = "none";
-            showKeyboard();
-        };
-        giveUpYesBtn.addEventListener("click", handler);
-        giveUpYesBtn.addEventListener("touchstart", handler);
-    }
-
-    // Give up no button
-    if (giveUpNoBtn) {
-        const handler = (e) => {
-            e.preventDefault();
-            console.log("Give up no button triggered");
-            giveUpDialog.style.display = "none";
-            showKeyboard();
-        };
-        giveUpNoBtn.addEventListener("click", handler);
-        giveUpNoBtn.addEventListener("touchstart", handler);
-    }
-
-    // Next game button (end screen)
-    if (nextGameBtnEnd) {
-        const handler = async (e) => {
-            e.preventDefault();
-            console.log("Next game button (end) triggered");
-            const currentNum = parseInt(currentGameNumber.replace("Game #", ""));
-            const nextGameNumber = currentNum + 1;
-            if (allGames.some(game => game.gameNumber === nextGameNumber.toString())) {
-                resetScreenDisplays(gameScreen);
-                await initializeGame(nextGameNumber.toString());
-            } else {
-                console.log("No next game available");
-            }
-        };
-        nextGameBtnEnd.addEventListener("click", handler);
-        nextGameBtnEnd.addEventListener("touchstart", handler);
-    }
-
-    // Previous game arrow
-    if (prevGameArrow) {
-        const handler = async (e) => {
-            e.preventDefault();
-            console.log("Previous game arrow triggered");
-            const currentNum = parseInt(currentGameNumber.replace("Game #", ""));
-            const prevGameNumber = currentNum - 1;
-            if (prevGameNumber > 0 && allGames.some(game => game.gameNumber === prevGameNumber.toString())) {
-                resetScreenDisplays(gameScreen);
-                await initializeGame(prevGameNumber.toString());
-            } else {
-                console.log("No previous game available");
-                prevGameArrow.classList.add("disabled");
-            }
-        };
-        prevGameArrow.addEventListener("click", handler);
-        prevGameArrow.addEventListener("touchstart", handler);
-    }
-
-    // Next game arrow
-    if (nextGameArrow) {
-        const handler = async (e) => {
-            e.preventDefault();
-            console.log("Next game arrow triggered");
-            const currentNum = parseInt(currentGameNumber.replace("Game #", ""));
-            const nextGameNumber = currentNum + 1;
-            if (allGames.some(game => game.gameNumber === nextGameNumber.toString())) {
-                resetScreenDisplays(gameScreen);
-                await initializeGame(nextGameNumber.toString());
-            } else {
-                console.log("No next game available");
-                nextGameArrow.classList.add("disabled");
-            }
-        };
-        nextGameArrow.addEventListener("click", handler);
-        nextGameArrow.addEventListener("touchstart", handler);
-    }
-
-    // Touch handling for game lists
-    const gameLists = [officialContent, privateContent].filter(Boolean);
-    gameLists.forEach(list => {
-        list.addEventListener("touchstart", (e) => {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
-            touchMoved = false;
-        });
-        list.addEventListener("touchmove", (e) => {
-            const deltaX = e.touches[0].clientX - touchStartX;
-            const deltaY = e.touches[0].clientY - touchStartY;
-            if (Math.abs(deltaX) > touchThreshold || Math.abs(deltaY) > touchThreshold) {
-                touchMoved = true;
-            }
-        });
-    });
-
-    // Initialize
-    console.log("Starting initialization");
-    await loadGameLists();
-    await initializeGame("1");
-    console.log("Initialization complete");
+    `;
+    document.head.appendChild(style);
 });
