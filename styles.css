@@ -1,7 +1,7 @@
 * {
     margin: 0;
     padding: 0;
-    box-sizing: flex; /* Changed from border-box to flex as per your instruction */
+    box-sizing: border-box;
 }
 
 body {
@@ -1012,7 +1012,7 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
-    margin: 2vh 0;
+    margin: 1vh 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1039,7 +1039,7 @@ body {
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
     margin: 1vh 0;
-    transition: transform 0.1s ease, background 0.1s ease;
+    transition: transform, background 0.1s ease;
     -webkit-tap-highlight-color: rgba(255, 179, 0, 0.5);
     touch-action: manipulation;
 }
@@ -1118,37 +1118,36 @@ body {
 
 #next-game-btn-end,
 #create-pineapple-end {
-    background: none;
+    background: #FFB300;
     position: relative;
 }
 
 #next-game-btn-end::before,
-#next-game-btn-end::before {
+#create-pineapple-end::before {
     content: '';
     position: absolute;
     top: -0.5vh;
     left: -0.5vw;
-    width: calc(100% + 0.5vw);
-    height: calc(100% + 0.5vh);
-    background-color: rgba(0, 179, 0, 0.5);
-    border-radius: none;
-    margin: z;
+    width: calc(100% + 1vw);
+    height: calc(100% + 1vh);
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 1.5vh;
     z-index: -1;
 }
 
 #game-over-message {
-    position: fixed;
+    position: absolute;
     top: 10vh;
-    left: 50;
+    left: 50%;
     transform: translateX(-50%);
     font-family: 'Luckiest Guy', cursive;
     font-size: 3.75vh;
     color: #FFFFFF;
-    text-align: 1px;
-    text-shadow: 2px #000000;
-    padding: 2vh 0;
-    background-color: rgba(0,0,0,0);
-    border-radius: 5;
+    text-align: center;
+    text-shadow: 1px 1px 2px #000000;
+    padding: 2vh;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 1vh;
     z-index: 15;
 }
 
@@ -1433,32 +1432,13 @@ body {
         text-shadow: 1px 1px 2px #FFFFFF;
     }
 
-    /* Snippet changes applied here */
     #keyboard-container {
-        height: 24vh; /* Increased height to accommodate extra space */
-        top: 69vh; /* Shifted upward by 3vh to maintain overall layout */
-        padding-bottom: 2vh; /* Adds space below the keyboard */
+        height: 21vh;
+        top: 72vh;
     }
 
     #keyboard-content {
-        padding: 0.125vh 0 0.125vh 0; /* Adjusted padding to reduce bottom padding */
-        height: calc(100% - 2vh); /* Ensure content fits within container with new padding */
-    }
-
-    .keyboard-row {
-        margin: 0.5vh 0; /* Reduced margin to help fit content */
-    }
-
-    .key {
-        width: 9.5vw;
-        height: 4vh; /* Slightly reduced height to fit within adjusted container */
-        font-size: 2vh;
-    }
-
-    #key-enter,
-    #key-backspace {
-        width: 14.25vw;
-        font-size: 1.5vh;
+        padding: 0.125vh 0 1.875vh 0;
     }
 
     .tab {
@@ -1557,6 +1537,26 @@ body {
 
     .dialog-message {
         font-size: 2vh;
+    }
+
+    .key {
+        width: 9.5vw;
+        height: 4.5vh;
+        font-size: 2vh;
+        transition: transform 0.1s ease, background 0.1s ease;
+        -webkit-tap-highlight-color: rgba(255, 179, 0, 0.5);
+        touch-action: manipulation;
+    }
+
+    .key:active {
+        transform: scale(0.95);
+        background: #B0B3B8;
+    }
+
+    #key-enter,
+    #key-backspace {
+        width: 14.25vw;
+        font-size: 1.5vh;
     }
 
     #game-over-message {
