@@ -1491,72 +1491,63 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Handle guess
     function handleGuess(guess) {
-    if (isProcessingGuess || gameOver) {
-        console.log("Guess ignored:", { isProcessingGuess, gameOver });
-        return;
-    }
-    isProcessingGuess = true;
-    console.log("Handling guess:", guess);
-
-    guessInputContainer.classList.remove("wrong-guess");
-    if (isMobile && keyboardContainer) {
-        keyboardContainer.classList.remove("wrong-guess");
-    }
-    guessInput.value = "";
-    guessCount++;
-    guesses.push(guess);
-    console.log("Guess added, current guesses:", guesses, "guessCount:", guessCount);
-
-    if (guessesLink) {
-        guessesLink.textContent = `Guesses: ${guessCount}/5`;
-        console.log("Updated guessesLink text:", guessesLink.textContent);
-    }
-
-    if (guess === secretWord) {
-        console.log("Correct guess!");
-        let normalizedGameNumber;
-        let gameType;
-        if (currentGameNumber.includes("- Private")) {
-            normalizedGameNumber = currentGameId;
-            gameType = "privatePineapple";
-        } else {
-            normalizedGameNumber = currentGameNumber.replace("Game #", "");
-            gameType = "pineapple";
+        if (isProcessingGuess || gameOver) {
+            console.log("Guess ignored:", { isProcessingGuess, gameOver });
+            return;
         }
-        saveGameResult(gameType, normalizedGameNumber, secretWord, guessCount);
-        endGame(true);
-    } else {
-        console.log("Incorrect guess, animating...");
-        guessInputContainer.classList.add("wrong-guess");
-        if (isMobile && keyboardContainer) {
-            keyboardContainer.classList.add("wrong-guess");
+        isProcessingGuess = true;
+        console.log("Handling guess:", guess);
+
+        guessInputContainer.classList.remove("wrong-guess");
+        guessInput.value = "";
+        guessCount++;
+        guesses.push(guess);
+        console.log("Guess added, current guesses:", guesses, "guessCount:", guessCount);
+
+        if (guessesLink) {
+            guessesLink.textContent = `Guesses: ${guessCount}/5`;
+            console.log("Updated guessesLink text:", guessesLink.textContent);
         }
-        animationTimeout = setTimeout(() => {
-            guessInputContainer.classList.remove("wrong-guess");
-            if (isMobile && keyboardContainer) {
-                keyboardContainer.classList.remove("wrong-guess");
+
+        if (guess === secretWord) {
+            console.log("Correct guess!");
+            let normalizedGameNumber;
+            let gameType;
+            if (currentGameNumber.includes("- Private")) {
+                normalizedGameNumber = currentGameId;
+                gameType = "privatePineapple";
+            } else {
+                normalizedGameNumber = currentGameNumber.replace("Game #", "");
+                gameType = "pineapple";
             }
-            isProcessingGuess = false;
-            console.log("Animation completed, input reset");
-            if (guessInput && !isMobile) {
-                guessInput.focus();
-                activeInput = guessInput;
-            }
-        }, 350);
-
-        if (hintIndex < hints.length - 1) {
-            revealHint();
+            saveGameResult(gameType, normalizedGameNumber, secretWord, guessCount);
+            endGame(true);
         } else {
-            saveGameResult(
-                currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple",
-                currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", ""),
-                secretWord,
-                "X"
-            );
-            endGame(false, false);
+            console.log("Incorrect guess, animating...");
+            guessInputContainer.classList.add("wrong-guess");
+            animationTimeout = setTimeout(() => {
+                guessInputContainer.classList.remove("wrong-guess");
+                isProcessingGuess = false;
+                console.log("Animation completed, input reset");
+                if (guessInput && !isMobile) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }
+            }, 350);
+
+            if (hintIndex < hints.length - 1) {
+                revealHint();
+            } else {
+                saveGameResult(
+                    currentGameNumber.includes("- Private") ? "privatePineapple" : "pineapple",
+                    currentGameNumber.includes("- Private") ? currentGameId : currentGameNumber.replace("Game #", ""),
+                    secretWord,
+                    "X"
+                );
+                endGame(false, false);
+            }
         }
     }
-}
 
     // Save game result
     function saveGameResult(gameType, gameNumber, secretWord, guesses) {
