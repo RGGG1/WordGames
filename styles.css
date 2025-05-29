@@ -1437,8 +1437,12 @@ body {
         top: 72vh;
     }
 
-    #keyboard-content {
-        padding: 0.125vh 0 1.875vh 0;
+   #keyboard-content {
+        margin-top: -2.25vh; /* Shift keyboard up by half a line (half of key height 4.5vh) */
+    }
+
+    #keyboard-container.wrong-guess {
+        animation: shakeAndFlash 0.35s ease;
     }
 
     .tab {
