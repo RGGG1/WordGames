@@ -1,3 +1,4 @@
+// script.js
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("DOM fully loaded");
 
@@ -55,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateTab = document.getElementById("private-tab");
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
-    const gameControlsContainer = document.getElementById("game-controls-container");
+    const gameControls = document.getElementById("game-controls");
     const shareSection = document.getElementById("share-section");
     const gameNameElement = document.getElementById("game-name");
 
@@ -190,6 +191,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 clearTimeout(animationTimeout);
                 animationTimeout = null;
                 guessInputContainer.classList.remove("wrong-guess");
+                gameControls.classList.remove("wrong-guess");
                 isProcessingGuess = false;
                 console.log("Animation cancelled and state reset due to typing");
             }
@@ -305,12 +307,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         gameScreen.style.display = "none";
         guessArea.style.display = "none";
-        gameControlsContainer.style.display = "none";
 
         if (activeScreen === gameScreen) {
             gameScreen.style.display = "flex";
             guessArea.style.display = "flex";
-            gameControlsContainer.style.display = "flex";
             if (guessInput && !gameOver && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
@@ -1241,7 +1241,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Handling guess:", guess);
 
         guessInputContainer.classList.remove("wrong-guess");
-        gameControlsContainer.classList.remove("wrong-guess");
+        gameControls.classList.remove("wrong-guess");
         guessInput.value = "";
         guessCount++;
         guesses.push(guess);
@@ -1269,10 +1269,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             console.log("Incorrect guess, animating...");
             guessInputContainer.classList.add("wrong-guess");
-            gameControlsContainer.classList.add("wrong-guess");
+            gameControls.classList.add("wrong-guess");
             animationTimeout = setTimeout(() => {
                 guessInputContainer.classList.remove("wrong-guess");
-                gameControlsContainer.classList.remove("wrong-guess");
+                gameControls.classList.remove("wrong-guess");
                 isProcessingGuess = false;
                 console.log("Animation completed, input reset");
                 if (guessInput) {
@@ -1344,8 +1344,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 hintElement.style.display = "none";
             }
         }
-
-        gameControlsContainer.style.display = "none";
 
         const gameOverScreen = document.getElementById("game-over");
         gameOverScreen.style.display = "flex";
@@ -1484,9 +1482,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const pineappleRain = document.querySelector(".pineapple-rain");
         if (pineappleRain) {
             pineappleRain.remove();
-        }
-        if (gameControlsContainer) {
-            gameControlsContainer.style.display = "flex";
         }
         const guessesList = document.getElementById("guesses-list");
         if (guessesList) {
