@@ -15,6 +15,7 @@ body {
     height: 100vh;
     width: 100vw;
     margin: 0;
+    position: relative;
 }
 
 #background-container {
@@ -22,7 +23,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh; /* Full height to cover viewport */
+    height: calc(100vh - 8vh);
     background: url('newbackground.png') no-repeat center center;
     background-size: cover;
     z-index: -1;
@@ -97,13 +98,13 @@ body {
     align-items: flex-start;
     width: 98vw;
     margin: 0 1vw;
-    height: calc(100vh - 10vh - 4vh); /* Adjust for header and ad-box */
+    height: calc(100vh - 10vh - 8vh - 4vh);
     position: fixed;
-    top: 10vh; /* Below header */
+    top: 10vh;
     left: 0;
     z-index: 10;
     background: transparent;
-    overflow: hidden; /* No scrolling */
+    overflow: hidden;
 }
 
 #hints-container {
@@ -155,16 +156,17 @@ body {
 
 #guess-area {
     position: fixed;
-    bottom: 4vh; /* Above ad-box */
+    bottom: 4vh;
     left: 50%;
     transform: translateX(-50%);
     width: 94vw;
-    height: auto;
+    height: 8vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     z-index: 20;
+    background: transparent;
 }
 
 #guess-input-container {
@@ -199,6 +201,11 @@ body {
     padding: 0;
     text-transform: uppercase;
     text-align: center;
+    caret-color: #000000;
+}
+
+#guess-input:focus {
+    outline: none;
 }
 
 #guess-input:disabled {
@@ -267,7 +274,7 @@ body {
     left: 0;
     z-index: 50;
     background: rgba(0, 0, 0, 0.5);
-    overflow-y: auto; /* Allow scrolling only for game-select-content */
+    overflow: hidden;
 }
 
 #game-select-content {
@@ -275,7 +282,7 @@ body {
     left: 0;
     width: 100vw;
     height: calc(100vh - 4vh);
-    overflow-y: auto;
+    overflow: hidden;
 }
 
 #game-select-content::before {
@@ -356,7 +363,7 @@ body {
     padding: 2vh;
     background: rgba(0, 0, 0, 0.85);
     z-index: 1;
-    overflow-y: auto;
+    overflow: hidden;
 }
 
 .tab-content.active {
@@ -569,6 +576,7 @@ body {
     z-index: 200;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 }
 
 .dialog-content {
@@ -667,7 +675,7 @@ body {
     }
 }
 
-/* Hint Shapes and Colors (unchanged) */
+/* Hint Shapes and Colors */
 .hint-shape-fluffy-cloud {
     background: rgb(199, 21, 133);
     position: relative;
@@ -1062,8 +1070,12 @@ body {
         font-size: 2vh;
     }
 
+    #background-container {
+        height: calc(100vh - 7vh);
+    }
+
     #game-screen {
-        height: calc(100vh - 12vh - 4vh); /* Adjust for taller header */
+        height: calc(100vh - 12vh - 7vh - 4vh);
         top: 12vh;
     }
 
@@ -1152,6 +1164,7 @@ body {
     #guess-area {
         bottom: 4vh;
         width: 94vw;
+        height: 7vh;
     }
 
     #guess-input-container {

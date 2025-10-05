@@ -1,4 +1,3 @@
-// script.js
 document.addEventListener("DOMContentLoaded", async () => {
     console.log("DOM fully loaded");
 
@@ -152,7 +151,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (backgroundContainer) {
             backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
             backgroundContainer.style.backgroundSize = "cover";
-            backgroundContainer.offsetHeight;
+            backgroundContainer.style.height = isMobile ? `calc(100vh - 7vh)` : `calc(100vh - 8vh)`;
+            backgroundContainer.offsetHeight; // Force repaint
         }
         document.body.style.background = "#FFFFFF";
     }
@@ -200,6 +200,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 if (guess) {
                     console.log("Guess submitted via Enter key:", guess);
                     handleGuess(guess);
+                    guessInput.focus();
                 }
             }
         });
@@ -207,14 +208,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Guess input focused");
             activeInput = guessInput;
         });
+        guessInput.addEventListener("blur", () => {
+            if (gameScreen.style.display === "flex" && !gameOver && !isProcessingGuess && !isUILocked) {
+                console.log("Guess input blurred, re-focusing");
+                setTimeout(() => {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }, 0);
+            }
+        });
         guessInput.addEventListener("touchstart", (e) => {
             e.preventDefault();
             console.log("Guess input touched");
             guessInput.focus();
             activeInput = guessInput;
         });
-        guessInput.focus(); // Auto-focus to trigger native keyboard
-        activeInput = guessInput;
+        setTimeout(() => {
+            guessInput.focus();
+            activeInput = guessInput;
+        }, 0);
     } else {
         console.error("guess-input not found in DOM");
     }
@@ -320,15 +332,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameScreen.style.display = "flex";
             guessArea.style.display = "flex";
             if (guessInput && !gameOver && !isProcessingGuess) {
-                guessInput.focus();
-                activeInput = guessInput;
+                setTimeout(() => {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                }, 0);
             }
         } else if (activeScreen === gameSelectContent || activeScreen === formContent || activeScreen.id === "game-over") {
             activeScreen.style.display = "flex";
             activeScreen.classList.add("active");
             if (activeScreen === formContent) {
                 activeInput = document.getElementById("game-name-input");
-                if (activeInput) activeInput.focus();
+                if (activeInput) setTimeout(() => activeInput.focus(), 0);
             }
         }
 
