@@ -148,16 +148,45 @@ document.addEventListener("DOMContentLoaded", async () => {
     function adjustBackground() {
         console.log("Adjusting background to:", currentBackground);
         const backgroundContainer = document.getElementById("background-container");
-        if (backgroundContainer) {
+        const guessArea = document.getElementById("guess-area");
+        
+        if (backgroundContainer && guessArea) {
             backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
             backgroundContainer.style.backgroundSize = "cover";
-            backgroundContainer.style.height = isMobile ? `calc(100vh - 7vh)` : `calc(100vh - 8vh)`;
-            backgroundContainer.offsetHeight; // Force repaint
+
+            // Calculate the height based on the guess area's top position
+            const guessAreaRect = guessArea.getBoundingClientRect();
+            const backgroundHeight = guessAreaRect.top; // Distance from top of viewport to top of guess area
+
+            // Use visualViewport if available to handle keyboard presence
+            if (window.visualViewport) {
+                const viewportHeight = window.visualViewport.height;
+                // Use the smaller of the viewport height and guess area top to account for keyboard
+                backgroundContainer.style.height = `${Math.min(viewportHeight, backgroundHeight)}px`;
+                console.log("Using visualViewport height:", viewportHeight, "Guess area top:", backgroundHeight);
+            } else {
+                // Fallback: Use guess area top position or a percentage-based height
+                backgroundContainer.style.height = backgroundHeight > 0 ? `${backgroundHeight}px` : isMobile ? `calc(100vh - 10vh)` : `calc(100vh - 8vh)`;
+                console.log("Using fallback height, guess area top:", backgroundHeight);
+            }
+
+            // Force repaint
+            backgroundContainer.offsetHeight;
+        } else {
+            console.warn("background-container or guess-area not found, using default background height");
+            backgroundContainer.style.height = isMobile ? `calc(100vh - 10vh)` : `calc(100vh - 8vh)`;
         }
+        
         document.body.style.background = "#FFFFFF";
     }
 
     window.addEventListener("resize", adjustBackground);
+    if (window.visualViewport) {
+        window.visualViewport.addEventListener("resize", () => {
+            console.log("Visual viewport resized, adjusting background");
+            adjustBackground();
+        });
+    }
 
     // Setup game name (WORDY) to return to game screen
     if (gameNameElement) {
@@ -207,6 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.addEventListener("focus", () => {
             console.log("Guess input focused");
             activeInput = guessInput;
+            adjustBackground(); // Adjust background when input is focused
         });
         guessInput.addEventListener("blur", () => {
             if (gameScreen.style.display === "flex" && !gameOver && !isProcessingGuess && !isUILocked) {
@@ -214,6 +244,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 setTimeout(() => {
                     guessInput.focus();
                     activeInput = guessInput;
+                    adjustBackground();
                 }, 0);
             }
         });
@@ -222,6 +253,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Guess input touched");
             guessInput.focus();
             activeInput = guessInput;
+            adjustBackground();
         });
         setTimeout(() => {
             guessInput.focus();
@@ -240,6 +272,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
+                adjustBackground();
             }
         };
         guessInputContainer.addEventListener("click", handler);
@@ -255,6 +288,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
+                adjustBackground();
             }
         };
         guessArea.addEventListener("click", handler);
