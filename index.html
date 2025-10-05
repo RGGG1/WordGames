@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="WORDY is a fun and challenging word guessing game by Big Brain Games. Guess the secret word using hints and share your results!">
     <meta name="keywords" content="word game, guessing game, puzzle, Big Brain Games, WORDY">
     <meta name="author" content="Big Brain Games">
@@ -36,24 +36,25 @@
             <div id="hint-3" class="hint"></div>
             <div id="hint-4" class="hint"></div>
             <div id="hint-5" class="hint"></div>
-        </div>
-            </div>
+        </div>        
+    </div>
     <div id="guess-area">
         <div id="guess-input-container">
             <span id="guess-prompt">The Secret Word is...</span>
             <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false">
         </div>
         <button type="button" id="guess-btn">GUESS</button>
-        <div id="game-controls">
-            <a href="#" id="give-up-link">Give Up</a>
-            <div id="game-number-container">
-                <a href="#" id="prev-game-arrow">◄</a>
-                <span id="game-number-text"></span>
-                <a href="#" id="next-game-arrow">▶</a>
-            </div>
-            <a href="#" id="guesses-link">Guesses: 0/5</a>
+        <div id="game-controls-container">
+        <a href="#" id="give-up-link">Give Up</a>
+        <div id="game-number-container">
+            <a href="#" id="prev-game-arrow">◄</a>
+            <span id="game-number-text"></span>
+            <a href="#" id="next-game-arrow">▶</a>
+        </div>
+        <a href="#" id="guesses-link">Guesses: X/5</a>
         </div>
     </div>
+    
     <div id="game-select-content" class="screen">
         <div id="tabs">
             <span id="official-tab" class="tab active">Official</span>
