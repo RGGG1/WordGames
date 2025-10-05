@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="description" content="WORDY is a fun and challenging word guessing game by Big Brain Games. Guess the secret word using hints and share your results!">
     <meta name="keywords" content="word game, guessing game, puzzle, Big Brain Games, WORDY">
     <meta name="author" content="Big Brain Games">
@@ -25,16 +25,16 @@
 <body>
     <div id="header">
         <span id="game-name">WORDY</span>
-        <a href="#" id="all-games-link">All Games</a>
-        <div id="game-controls-container">
-        <a href="#" id="give-up-link">Give Up</a>
-        <div id="game-number-container">
-            <a href="#" id="prev-game-arrow">◄</a>
-            <span id="game-number-text"></span>
-            <a href="#" id="next-game-arrow">▶</a>
+        <div id="header-controls">
+            <a href="#" id="all-games-link">All Games</a>
+            <a href="#" id="give-up-link">Give Up</a>
+            <div id="game-number-container">
+                <a href="#" id="prev-game-arrow">◄</a>
+                <span id="game-number-text"></span>
+                <a href="#" id="next-game-arrow">▶</a>
+            </div>
+            <a href="#" id="guesses-link">Guesses: 0/5</a>
         </div>
-        <a href="#" id="guesses-link">Guesses: X/5</a>
-    </div>
     </div>
     <div id="background-container"></div>
     <div id="game-screen" class="screen">
@@ -54,7 +54,6 @@
         </div>
         <button type="button" id="guess-btn">GUESS</button>
     </div>
-    
     <div id="game-select-content" class="screen">
         <div id="tabs">
             <span id="official-tab" class="tab active">Official</span>
@@ -123,56 +122,6 @@
         <div class="dialog-content">
             <span class="dialog-message"></span>
             <button type="button" id="form-error-ok-btn" class="control-btn">OK</button>
-        </div>
-    </div>
-    <div id="keyboard-container">
-        <div id="keyboard-content">
-            <div class="keyboard-row">
-                <div class="key">Q</div>
-                <div class="key">W</div>
-                <div class="key">E</div>
-                <div class="key">R</div>
-                <div class="key">T</div>
-                <div class="key">Y</div>
-                <div class="key">U</div>
-                <div class="key">I</div>
-                <div class="key">O</div>
-                <div class="key">P</div>
-            </div>
-            <div class="keyboard-row">
-                <div class="key">A</div>
-                <div class="key">S</div>
-                <div class="key">D</div>
-                <div class="key">F</div>
-                <div class="key">G</div>
-                <div class="key">H</div>
-                <div class="key">J</div>
-                <div class="key">K</div>
-                <div class="key">L</div>
-            </div>
-            <div class="keyboard-row">
-                <div class="key" id="key-enter">Enter</div>
-                <div class="key">Z</div>
-                <div class="key">X</div>
-                <div class="key">C</div>
-                <div class="key">V</div>
-                <div class="key">B</div>
-                <div class="key">N</div>
-                <div class="key">M</div>
-                <div class="key" id="key-backspace">⌫</div>
-            </div>
-        </div>
-        <div id="keyboard-guesses-content">
-            <span id="guesses-title">Your Guesses</span>
-            <div id="guesses-list"></div>
-            <button type="button" id="keyboard-back-btn" class="control-btn">Back</button>
-        </div>
-        <div id="keyboard-give-up-content">
-            <span class="dialog-message">Are you sure you want to give up?</span>
-            <div id="give-up-buttons">
-                <button type="button" id="keyboard-give-up-yes-btn" class="control-btn">Yes</button>
-                <button type="button" id="keyboard-give-up-no-btn" class="control-btn">No</button>
-            </div>
         </div>
     </div>
     <div id="ad-box">

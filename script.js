@@ -56,7 +56,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateTab = document.getElementById("private-tab");
     const officialContent = document.getElementById("official-games");
     const privateContent = document.getElementById("private-games");
-    const gameControls = document.getElementById("game-controls");
     const shareSection = document.getElementById("share-section");
     const gameNameElement = document.getElementById("game-name");
 
@@ -183,7 +182,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Setup guess input
     if (guessInput) {
         guessInput.disabled = false;
-        guessInput.readOnly = false; // Ensure native keyboard can be used
+        guessInput.readOnly = false;
         guessInput.addEventListener("input", (e) => {
             console.log("Guess input value changed:", guessInput.value);
             guessInput.value = guessInput.value.toUpperCase();
@@ -191,7 +190,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 clearTimeout(animationTimeout);
                 animationTimeout = null;
                 guessInputContainer.classList.remove("wrong-guess");
-                gameControls.classList.remove("wrong-guess");
                 isProcessingGuess = false;
                 console.log("Animation cancelled and state reset due to typing");
             }
@@ -204,6 +202,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                     handleGuess(guess);
                 }
             }
+        });
+        guessInput.addEventListener("focus", () => {
+            console.log("Guess input focused");
+            activeInput = guessInput;
+        });
+        guessInput.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            console.log("Guess input touched");
+            guessInput.focus();
+            activeInput = guessInput;
         });
         guessInput.focus(); // Auto-focus to trigger native keyboard
         activeInput = guessInput;
@@ -275,7 +283,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     ].filter(input => input);
 
     formInputs.forEach(input => {
-        input.readOnly = false; // Ensure native keyboard can be used
+        input.readOnly = false;
         input.disabled = false;
         input.addEventListener("click", () => {
             activeInput = input;
@@ -424,7 +432,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (guessesLink && guessesScreen) {
         guessesLink.textContent = "Guesses: 0/5";
 
-        guessesLink.addEventListener(isMobile ? "touchstart" : "click", debounce((e) => {
+        const handler = debounce((e) => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Guesses link triggered", { isUILocked, isLoadingGame, guesses, guessCount });
@@ -444,11 +452,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 : "No guesses yet!";
             guessesList.innerHTML = guessesContent;
             console.log("Rendered guesses:", guessesContent);
-            guessesList.style.display = "block";
             guessesScreen.style.display = "flex";
             console.log("Showing guesses screen, guessesList:", guessesList.innerHTML);
             setTimeout(() => { isUILocked = false; }, 500);
-        }, 100));
+        }, 100);
+        guessesLink.addEventListener(isMobile ? "touchstart" : "click", handler);
 
         guessesScreen.addEventListener("click", (e) => {
             if (e.target === guessesScreen) {
@@ -460,6 +468,24 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             }
         });
+    }
+
+    // Guesses close button
+    if (guessesCloseBtn) {
+        const handler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guesses close button triggered", { isUILocked });
+            if (isUILocked) return;
+            isUILocked = true;
+            guessesScreen.style.display = "none";
+            if (guessInput && !gameOver && !isProcessingGuess) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
+            setTimeout(() => { isUILocked = false; }, 500);
+        };
+        guessesCloseBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
     // Previous game arrow
@@ -792,24 +818,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             adjustBackground();
             setTimeout(() => { isUILocked = false; }, 500);
         });
-    }
-
-    // Guesses close button
-    if (guessesCloseBtn) {
-        const handler = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Guesses close button triggered", { isUILocked });
-            if (isUILocked) return;
-            isUILocked = true;
-            guessesScreen.style.display = "none";
-            if (guessInput && !gameOver && !isProcessingGuess) {
-                guessInput.focus();
-                activeInput = guessInput;
-            }
-            setTimeout(() => { isUILocked = false; }, 500);
-        };
-        guessesCloseBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
     // Give-up dialog
@@ -1241,7 +1249,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Handling guess:", guess);
 
         guessInputContainer.classList.remove("wrong-guess");
-        gameControls.classList.remove("wrong-guess");
         guessInput.value = "";
         guessCount++;
         guesses.push(guess);
@@ -1269,10 +1276,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else {
             console.log("Incorrect guess, animating...");
             guessInputContainer.classList.add("wrong-guess");
-            gameControls.classList.add("wrong-guess");
             animationTimeout = setTimeout(() => {
                 guessInputContainer.classList.remove("wrong-guess");
-                gameControls.classList.remove("wrong-guess");
                 isProcessingGuess = false;
                 console.log("Animation completed, input reset");
                 if (guessInput) {
@@ -1486,7 +1491,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const guessesList = document.getElementById("guesses-list");
         if (guessesList) {
             guessesList.innerHTML = "No guesses yet!";
-            guessesList.style.display = "block";
             console.log("Reset guessesList:", guessesList.innerHTML);
         }
         const existingGameOverMessage = document.getElementById("game-over-message");
