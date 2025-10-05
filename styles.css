@@ -31,16 +31,15 @@ body {
 
 #header {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 60vw;
-    margin: 0 auto;
+    justify-content: space-between;
+    align-items: flex-start;
+    width: 98vw;
+    margin: 0 1vw;
     padding: 1vh 2vw;
     background: transparent;
     position: fixed;
     top: 0;
     left: 0;
-    right: 0;
     z-index: 100;
 }
 
@@ -53,27 +52,11 @@ body {
     text-decoration: none;
 }
 
-#controls-area {
-    position: fixed;
-    bottom: 8vh;
-    left: 0;
-    right: 0;
-    width: 60vw;
-    margin: 0 auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 20;
-    background: transparent;
-}
-
 #header-controls {
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    gap: 2vw;
-    width: 100%;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.5vh;
 }
 
 #all-games-link,
@@ -83,12 +66,12 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
-    text-align: center;
+    text-align: right;
 }
 
 #game-number-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     gap: 0.5vw;
 }
@@ -113,21 +96,21 @@ body {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
-    width: 60vw;
-    margin: 0 auto;
-    height: calc(100vh - 10vh - 8vh - 4vh - 4vh);
+    width: 98vw;
+    margin: 0 1vw;
+    height: calc(100vh - 10vh - 8vh - 4vh);
     position: fixed;
     top: 10vh;
     left: 0;
-    right: 0;
     z-index: 5;
     background: transparent;
     overflow: hidden;
 }
 
 #hints-container {
-    position: relative;
-    width: 100%;
+    position: absolute;
+    left: 1vw;
+    top: 1vh;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -139,20 +122,20 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     margin-bottom: 0.5vh;
-    margin-left: 10%;
+    margin-left: 5vw;
 }
 
 .hint {
     position: static;
     display: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: min(4vh, 5.8vw);
+    font-size: min(4vh, 3.5vw);
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
     padding: 0.5vh 0.5vw;
     box-sizing: border-box;
-    width: 80%;
+    width: 25vw;
     height: 5vh;
     word-break: break-word;
     line-height: 1.2;
@@ -161,7 +144,6 @@ body {
     align-items: center;
     justify-content: center;
     margin-bottom: 0.5vh;
-    margin-left: 10%;
     text-indent: -0.5em;
 }
 
@@ -177,8 +159,7 @@ body {
     bottom: 0;
     left: 0;
     right: 0;
-    width: 60vw;
-    margin: 0 auto;
+    width: 100%;
     height: 8vh;
     display: flex;
     flex-direction: row;
@@ -698,7 +679,7 @@ body {
 .hint-shape-fluffy-cloud {
     background: rgb(199, 21, 133);
     position: relative;
-    width: 80%;
+    width: 25vw;
     height: 5vh;
     border-radius: 30%;
     display: flex;
@@ -752,7 +733,7 @@ body {
     justify-content: center;
     width: 100%;
     height: 100%;
-    font-size: min(4vh, 5.8vw);
+    font-size: min(4vh, 3.5vw);
     line-height: 1.1;
     text-align: center;
     text-indent: -0.5em;
@@ -772,7 +753,7 @@ body {
         80% 100%, 20% 100%,
         0% 70%, 0% 20%
     );
-    width: 80%;
+    width: 25vw;
     height: 5vh;
     display: flex;
     align-items: center;
@@ -782,7 +763,7 @@ body {
 #hint-4.hint-shape-diamond {
     background: rgb(100, 149, 237);
     position: relative;
-    width: 80%;
+    width: 25vw;
     height: 5vh;
     clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     transform: rotate(0deg);
@@ -796,7 +777,7 @@ body {
 
 #hint-4.hint-shape-diamond .hint-text {
     transform: rotate(0deg);
-    font-size: min(4vh, 5.8vw);
+    font-size: min(4vh, 3.5vw);
     text-align: center;
     width: 80%;
     height: 80%;
@@ -808,7 +789,7 @@ body {
 .hint-shape-diamond:not(#hint-4) {
     background: rgb(100, 149, 237);
     position: relative;
-    width: 80%;
+    width: 25vw;
     height: 5vh;
     transform: rotate(45deg);
     display: flex;
@@ -818,7 +799,7 @@ body {
 
 .hint-shape-diamond:not(#hint-4) .hint-text {
     transform: rotate(-45deg);
-    font-size: min(4vh, 5.8vw);
+    font-size: min(4vh, 3.5vw);
     text-align: center;
     width: 100%;
     height: 100%;
@@ -1066,7 +1047,6 @@ body {
 
 @media screen and (max-width: 768px) {
     #header {
-        width: 60vw;
         padding: 1vh 2vw;
     }
 
@@ -1074,13 +1054,8 @@ body {
         font-size: 2.8vh;
     }
 
-    #controls-area {
-        width: 60vw;
-        bottom: 7vh;
-    }
-
     #header-controls {
-        gap: 1.5vw;
+        gap: 0.6vh;
     }
 
     #all-games-link,
@@ -1096,27 +1071,24 @@ body {
     }
 
     #game-screen {
-        width: 60vw;
-        height: calc(100vh - 12vh - 7vh - 4vh - 4vh);
+        height: calc(100vh - 12vh - 7vh - 4vh);
         top: 12vh;
-        margin: 0 auto;
     }
 
     #hints-heading {
         font-size: 2.3vh;
-        margin-left: 10%;
+        margin-left: 7vw;
     }
 
     .hint {
-        font-size: min(3.8vh, 6vw);
-        width: 80%;
+        font-size: min(3.8vh, 3.8vw);
+        width: 28vw;
         height: 4.5vh;
         margin-bottom: 0.4vh;
-        margin-left: 10%;
     }
 
     .hint-shape-fluffy-cloud {
-        width: 80%;
+        width: 28vw;
         height: 4.5vh;
     }
 
@@ -1149,26 +1121,26 @@ body {
     }
 
     .hint-shape-fluffy-cloud .hint-text {
-        font-size: min(3.8vh, 6vw);
+        font-size: min(3.8vh, 3.8vw);
     }
 
     .hint-shape-aviator {
-        width: 80%;
+        width: 28vw;
         height: 4.5vh;
     }
 
     #hint-4.hint-shape-diamond {
-        width: 80%;
+        width: 28vw;
         height: 4.5vh;
     }
 
     .hint-shape-diamond:not(#hint-4) {
-        width: 80%;
+        width: 28vw;
         height: 4.5vh;
     }
 
     .hint-shape-diamond:not(#hint-4) .hint-text {
-        font-size: min(3.8vh, 6vw);
+        font-size: min(3.8vh, 3.8vw);
     }
 
     .hint-shape-cloud::before {
@@ -1186,9 +1158,9 @@ body {
     }
 
     #guess-area {
-        width: 60vw;
+        bottom: 0;
+        width: 100%;
         height: 7vh;
-        margin: 0 auto;
     }
 
     #guess-input-container {
