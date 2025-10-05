@@ -72,10 +72,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     let touchMoved = false;
     const touchThreshold = 10;
 
-    // Game screen dimensions (60% of 1080 x 2400)
-    const gameScreenWidth = 648; // 1080 * 0.6
-    const gameScreenHeight = 1440; // 2400 * 0.6
-
     // Hint shapes, colors, and reveal effects
     const hintShapes = ['cloud', 'sun', 'aviator', 'diamond', 'fluffy-cloud'];
     const hintColors = [
@@ -153,44 +149,34 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Adjusting background to:", currentBackground);
         const backgroundContainer = document.getElementById("background-container");
         const guessArea = document.getElementById("guess-area");
-
-        if (backgroundContainer) {
+        
+        if (backgroundContainer && guessArea) {
             backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
             backgroundContainer.style.backgroundSize = "cover";
 
-            if (gameScreen.style.display === "flex" && gameScreen.classList.contains("active")) {
-                // For game screen, use fixed dimensions
-                backgroundContainer.style.width = `${gameScreenWidth}px`;
-                backgroundContainer.style.height = `${gameScreenHeight}px`;
-                console.log(`Set game-screen background dimensions to ${gameScreenWidth}px x ${gameScreenHeight}px`);
-            } else {
-                // For other screens, use dynamic sizing based on guess-area or viewport
-                if (guessArea) {
-                    const guessAreaRect = guessArea.getBoundingClientRect();
-                    const backgroundHeight = guessAreaRect.top;
+            // Calculate the height based on the guess area's top position
+            const guessAreaRect = guessArea.getBoundingClientRect();
+            const backgroundHeight = guessAreaRect.top; // Distance from top of viewport to top of guess area
 
-                    if (window.visualViewport) {
-                        const viewportHeight = window.visualViewport.height;
-                        backgroundContainer.style.height = `${Math.min(viewportHeight, backgroundHeight)}px`;
-                        console.log("Using visualViewport height for non-game screen:", viewportHeight, "Guess area top:", backgroundHeight);
-                    } else {
-                        backgroundContainer.style.height = backgroundHeight > 0 ? `${backgroundHeight}px` : isMobile ? `calc(100vh - 10vh)` : `calc(100vh - 8vh)`;
-                        console.log("Using fallback height for non-game screen, guess area top:", backgroundHeight);
-                    }
-                } else {
-                    backgroundContainer.style.height = isMobile ? `calc(100vh - 10vh)` : `calc(100vh - 8vh)`;
-                    console.log("No guess-area, using default height for non-game screen");
-                }
-                // Ensure width matches viewport for non-game screens
-                backgroundContainer.style.width = "100%";
+            // Use visualViewport if available to handle keyboard presence
+            if (window.visualViewport) {
+                const viewportHeight = window.visualViewport.height;
+                // Use the smaller of the viewport height and guess area top to account for keyboard
+                backgroundContainer.style.height = `${Math.min(viewportHeight, backgroundHeight)}px`;
+                console.log("Using visualViewport height:", viewportHeight, "Guess area top:", backgroundHeight);
+            } else {
+                // Fallback: Use guess area top position or a percentage-based height
+                backgroundContainer.style.height = backgroundHeight > 0 ? `${backgroundHeight}px` : isMobile ? `calc(100vh - 10vh)` : `calc(100vh - 8vh)`;
+                console.log("Using fallback height, guess area top:", backgroundHeight);
             }
 
             // Force repaint
             backgroundContainer.offsetHeight;
         } else {
-            console.warn("background-container not found, skipping background adjustment");
+            console.warn("background-container or guess-area not found, using default background height");
+            backgroundContainer.style.height = isMobile ? `calc(100vh - 10vh)` : `calc(100vh - 8vh)`;
         }
-
+        
         document.body.style.background = "#FFFFFF";
     }
 
@@ -250,7 +236,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.addEventListener("focus", () => {
             console.log("Guess input focused");
             activeInput = guessInput;
-            adjustBackground();
+            adjustBackground(); // Adjust background when input is focused
         });
         guessInput.addEventListener("blur", () => {
             if (gameScreen.style.display === "flex" && !gameOver && !isProcessingGuess && !isUILocked) {
@@ -370,11 +356,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (screen && screen !== activeScreen) {
                 screen.style.display = "none";
                 screen.classList.remove("active");
-                // Reset dimensions for non-game screens
-                if (screen.style.width || screen.style.height) {
-                    screen.style.width = "";
-                    screen.style.height = "";
-                }
             }
         });
 
@@ -383,9 +364,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (activeScreen === gameScreen) {
             gameScreen.style.display = "flex";
-            gameScreen.style.width = `${gameScreenWidth}px`;
-            gameScreen.style.height = `${gameScreenHeight}px`;
-            gameScreen.classList.add("active");
             guessArea.style.display = "flex";
             if (guessInput && !gameOver && !isProcessingGuess) {
                 setTimeout(() => {
