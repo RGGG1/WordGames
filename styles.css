@@ -95,22 +95,29 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
-    align-items: flex-start;
-    width: 98vw;
-    margin: 0 1vw;
-    height: calc(100vh - 10vh - 8vh - 4vh);
+    align-items: center;
+    width: 648px; /* Fixed width: 60% of 1080px */
+    height: 1440px; /* Fixed height: 60% of 2400px */
+    max-width: 98vw; /* Prevent overflow on narrow screens */
+    max-height: calc(100vh - 4vh); /* Ensure it fits within viewport height minus ad-box */
+    margin: 0 auto; /* Center horizontally */
     position: fixed;
-    top: 10vh;
-    left: 0;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 5;
     background: transparent;
-    overflow: hidden;
+    overflow-y: auto; /* Allow scrolling if content exceeds height */
+}
+
+#game-screen.active {
+    display: flex;
 }
 
 #hints-container {
-    position: absolute;
-    left: 1vw;
-    top: 1vh;
+    position: relative;
+    width: 90%;
+    margin-top: 2vh;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -122,20 +129,20 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     margin-bottom: 0.5vh;
-    margin-left: 5vw;
+    margin-left: 5%;
 }
 
 .hint {
     position: static;
     display: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: min(4vh, 3.5vw);
+    font-size: min(4vh, 6vw); /* Adjusted for smaller game screen */
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
     padding: 0.5vh 0.5vw;
     box-sizing: border-box;
-    width: 25vw;
+    width: 50%; /* Relative to game-screen width */
     height: 5vh;
     word-break: break-word;
     line-height: 1.2;
@@ -274,7 +281,7 @@ body {
     left: 0;
     z-index: 50;
     background: rgba(0, 0, 0, 0.5);
-    overflow: hidden;
+    overflow: auto; /* Allow scrolling for other screens */
 }
 
 #game-select-content {
@@ -282,7 +289,7 @@ body {
     left: 0;
     width: 100vw;
     height: calc(100vh - 4vh);
-    overflow: hidden;
+    overflow: auto; /* Maintain scrolling for game list */
 }
 
 #game-select-content::before {
@@ -309,6 +316,7 @@ body {
     background: rgba(0, 0, 0, 0.5);
     width: 98vw;
     margin: 0 1vw;
+    overflow: auto; /* Maintain scrolling for end screen */
 }
 
 #game-over::before {
@@ -363,7 +371,7 @@ body {
     padding: 2vh;
     background: rgba(0, 0, 0, 0.85);
     z-index: 1;
-    overflow: hidden;
+    overflow: auto; /* Maintain scrolling for game list */
 }
 
 .tab-content.active {
@@ -576,7 +584,7 @@ body {
     z-index: 200;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: auto; /* Allow scrolling for dialogs */
 }
 
 .dialog-content {
@@ -650,10 +658,10 @@ body {
 
 .pineapple-rain {
     position: fixed;
-    top: 5vh;
+    top: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - 5vh - 4vh);
+    height: calc(100vh - 4vh);
     pointer-events: none;
     z-index: 1000;
 }
@@ -679,7 +687,7 @@ body {
 .hint-shape-fluffy-cloud {
     background: rgb(199, 21, 133);
     position: relative;
-    width: 25vw;
+    width: 50%; /* Relative to game-screen width */
     height: 5vh;
     border-radius: 30%;
     display: flex;
@@ -700,31 +708,31 @@ body {
 }
 
 .hint-shape-fluffy-cloud::before {
-    width: 8vw;
-    height: 8vw;
+    width: 16%; /* Relative to hint width */
+    height: 8vh;
     top: -2vh;
-    left: -1vw;
+    left: -1.5%;
 }
 
 .hint-shape-fluffy-cloud::after {
-    width: 6vw;
-    height: 6vw;
+    width: 12%; /* Relative to hint width */
+    height: 6vh;
     bottom: -1.5vh;
-    right: -1vw;
+    right: -1.5%;
 }
 
 .hint-shape-fluffy-cloud .puff-1 {
-    width: 7vw;
-    height: 7vw;
+    width: 14%; /* Relative to hint width */
+    height: 7vh;
     top: 0;
-    left: 4vw;
+    left: 8%;
 }
 
 .hint-shape-fluffy-cloud .puff-2 {
-    width: 6vw;
-    height: 6vw;
+    width: 12%; /* Relative to hint width */
+    height: 6vh;
     bottom: 0;
-    right: 4vw;
+    right: 8%;
 }
 
 .hint-shape-fluffy-cloud .hint-text {
@@ -733,7 +741,7 @@ body {
     justify-content: center;
     width: 100%;
     height: 100%;
-    font-size: min(4vh, 3.5vw);
+    font-size: min(4vh, 6vw); /* Adjusted for smaller game screen */
     line-height: 1.1;
     text-align: center;
     text-indent: -0.5em;
@@ -742,6 +750,8 @@ body {
 .hint-shape-circle {
     background: rgb(50, 205, 50);
     border-radius: 50%;
+    width: 50%; /* Relative to game-screen width */
+    height: 5vh;
 }
 
 .hint-shape-aviator {
@@ -753,7 +763,7 @@ body {
         80% 100%, 20% 100%,
         0% 70%, 0% 20%
     );
-    width: 25vw;
+    width: 50%; /* Relative to game-screen width */
     height: 5vh;
     display: flex;
     align-items: center;
@@ -763,7 +773,7 @@ body {
 #hint-4.hint-shape-diamond {
     background: rgb(100, 149, 237);
     position: relative;
-    width: 25vw;
+    width: 50%; /* Relative to game-screen width */
     height: 5vh;
     clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     transform: rotate(0deg);
@@ -777,7 +787,7 @@ body {
 
 #hint-4.hint-shape-diamond .hint-text {
     transform: rotate(0deg);
-    font-size: min(4vh, 3.5vw);
+    font-size: min(4vh, 6vw); /* Adjusted for smaller game screen */
     text-align: center;
     width: 80%;
     height: 80%;
@@ -789,7 +799,7 @@ body {
 .hint-shape-diamond:not(#hint-4) {
     background: rgb(100, 149, 237);
     position: relative;
-    width: 25vw;
+    width: 50%; /* Relative to game-screen width */
     height: 5vh;
     transform: rotate(45deg);
     display: flex;
@@ -799,7 +809,7 @@ body {
 
 .hint-shape-diamond:not(#hint-4) .hint-text {
     transform: rotate(-45deg);
-    font-size: min(4vh, 3.5vw);
+    font-size: min(4vh, 6vw); /* Adjusted for smaller game screen */
     text-align: center;
     width: 100%;
     height: 100%;
@@ -809,6 +819,8 @@ body {
     background: rgb(135, 206, 235);
     border-radius: 50%;
     position: relative;
+    width: 50%; /* Relative to game-screen width */
+    height: 5vh;
 }
 
 .hint-shape-cloud::before,
@@ -820,23 +832,25 @@ body {
 }
 
 .hint-shape-cloud::before {
-    width: 7.5vw;
-    height: 7.5vw;
+    width: 15%; /* Relative to hint width */
+    height: 7.5vh;
     top: -1.5vh;
-    left: 1vw;
+    left: 2%;
 }
 
 .hint-shape-cloud::after {
-    width: 4.5vw;
-    height: 4.5vw;
+    width: 9%; /* Relative to hint width */
+    height: 4.5vh;
     top: -0.75vh;
-    right: 1vw;
+    right: 2%;
 }
 
 .hint-shape-sun {
     background: rgb(255, 165, 0);
     border-radius: 50%;
     position: relative;
+    width: 50%; /* Relative to game-screen width */
+    height: 5vh;
 }
 
 .hint-shape-sun::before,
@@ -1071,90 +1085,96 @@ body {
     }
 
     #game-screen {
-        height: calc(100vh - 12vh - 7vh - 4vh);
-        top: 12vh;
+        width: 648px; /* Fixed width */
+        height: 1440px; /* Fixed height */
+        max-width: 98vw;
+        max-height: calc(100vh - 4vh);
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        overflow-y: auto;
     }
 
     #hints-heading {
         font-size: 2.3vh;
-        margin-left: 7vw;
+        margin-left: 5%;
     }
 
     .hint {
-        font-size: min(3.8vh, 3.8vw);
-        width: 28vw;
+        font-size: min(3.8vh, 6vw);
+        width: 50%; /* Relative to game-screen width */
         height: 4.5vh;
         margin-bottom: 0.4vh;
     }
 
     .hint-shape-fluffy-cloud {
-        width: 28vw;
+        width: 50%; /* Relative to game-screen width */
         height: 4.5vh;
     }
 
     .hint-shape-fluffy-cloud::before {
-        width: 8vw;
-        height: 8vw;
+        width: 16%; /* Relative to hint width */
+        height: 8vh;
         top: -1.5vh;
-        left: 0.5vw;
+        left: -1.5%;
     }
 
     .hint-shape-fluffy-cloud::after {
-        width: 6vw;
-        height: 6vw;
+        width: 12%; /* Relative to hint width */
+        height: 6vh;
         bottom: -1vh;
-        right: 0.5vw;
+        right: -1.5%;
     }
 
     .hint-shape-fluffy-cloud .puff-1 {
-        width: 7vw;
-        height: 7vw;
+        width: 14%; /* Relative to hint width */
+        height: 7vh;
         top: 0;
-        left: 3vw;
+        left: 8%;
     }
 
     .hint-shape-fluffy-cloud .puff-2 {
-        width: 6vw;
-        height: 6vw;
+        width: 12%; /* Relative to hint width */
+        height: 6vh;
         bottom: 0;
-        right: 3vw;
+        right: 8%;
     }
 
     .hint-shape-fluffy-cloud .hint-text {
-        font-size: min(3.8vh, 3.8vw);
+        font-size: min(3.8vh, 6vw);
     }
 
     .hint-shape-aviator {
-        width: 28vw;
+        width: 50%; /* Relative to game-screen width */
         height: 4.5vh;
     }
 
     #hint-4.hint-shape-diamond {
-        width: 28vw;
+        width: 50%; /* Relative to game-screen width */
         height: 4.5vh;
     }
 
     .hint-shape-diamond:not(#hint-4) {
-        width: 28vw;
+        width: 50%; /* Relative to game-screen width */
         height: 4.5vh;
     }
 
     .hint-shape-diamond:not(#hint-4) .hint-text {
-        font-size: min(3.8vh, 3.8vw);
+        font-size: min(3.8vh, 6vw);
     }
 
     .hint-shape-cloud::before {
-        width: 7vw;
-        height: 7vw;
+        width: 15%; /* Relative to hint width */
+        height: 7vh;
         top: -1.2vh;
-        left: 0.8vw;
+        left: 2%;
     }
 
     .hint-shape-cloud::after {
-        width: 4vw;
-        height: 4vw;
+        width: 9%; /* Relative to hint width */
+        height: 4vh;
         top: -0.6vh;
-        right: 0.8vw;
+        right: 2%;
     }
 
     #guess-area {
