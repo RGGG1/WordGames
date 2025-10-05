@@ -44,15 +44,15 @@
             <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false">
         </div>
         <button type="button" id="guess-btn">GUESS</button>
-    </div>
-    <div id="game-controls-container">
-        <a href="#" id="give-up-link">Give Up</a>
-        <div id="game-number-container">
-            <a href="#" id="prev-game-arrow">◄</a>
-            <span id="game-number-text"></span>
-            <a href="#" id="next-game-arrow">▶</a>
+        <div id="game-controls">
+            <a href="#" id="give-up-link">Give Up</a>
+            <div id="game-number-container">
+                <a href="#" id="prev-game-arrow">◄</a>
+                <span id="game-number-text"></span>
+                <a href="#" id="next-game-arrow">▶</a>
+            </div>
+            <a href="#" id="guesses-link">Guesses: X/5</a>
         </div>
-        <a href="#" id="guesses-link">Guesses: X/5</a>
     </div>
     <div id="game-select-content" class="screen">
         <div id="tabs">
@@ -69,7 +69,7 @@
             <span>Private Games</span>
             <div id="private-list" class="game-list"></div>
             <button type="button" id="create-pineapple" class="control-btn">Create a Wordy</button>
-            <button type="private-back-btn" id="btn" class="control-btn">Back</button>
+            <button type="button" id="private-back-btn" class="control-btn">Back</button>
         </div>
     </div>
     <div id="form-content" class="screen">
@@ -84,7 +84,7 @@
             <input type="text" id="hint-5" placeholder="Hint 5..." maxlength="15" autocomplete="off" spellcheck="false">
         </div>
         <button type="submit" id="confirm-btn" class="control-btn">Confirm</button>
-        <button type="form-back-btn" id="form-btn" class="control-btn">Back</button>
+        <button type="button" id="form-back-btn" class="control-btn">Back</button>
     </div>
     <div id="game-over" class="screen">
         <div id="share-section">

@@ -503,13 +503,13 @@ body {
 
 #guess-area {
     position: fixed;
-    top: 50vh; /* Moved up to fit above keyboard */
+    top: 48vh; /* Moved up from 50vh to 48vh for a couple of lines adjustment */
     left: 50%;
     transform: translateX(-50%);
     width: 94vw;
-    height: 8vh;
+    height: auto; /* Changed to auto to accommodate new content */
     display: flex;
-    justify-content: center;
+    flex-direction: column; /* Stack input and controls vertically */
     align-items: center;
     z-index: 20;
 }
@@ -556,7 +556,8 @@ body {
     background: #FFB300;
 }
 
-#guess-input-container.wrong-guess {
+#guess-area.wrong-guess #guess-input-container,
+#guess-area.wrong-guess #game-controls {
     animation: shakeAndFlash 0.35s ease;
 }
 
@@ -575,22 +576,14 @@ body {
     }
 }
 
-#game-controls-container {
+#game-controls {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 98vw;
-    margin: 0 1vw;
+    width: 94vw;
     height: 5vh;
-    background: #FFFFFF;
     padding: 0 2vw;
-    position: fixed;
-    top: 58vh; /* Moved up to fit above keyboard */
-    z-index: 100;
-}
-
-#game-controls-container.wrong-guess {
-    animation: shakeAndFlash 0.35s ease;
+    margin-top: 0.5vh; /* Small gap between guess button and controls */
 }
 
 #give-up-link,
@@ -1117,7 +1110,6 @@ body {
     #header,
     #game-screen,
     #guess-area,
-    #game-controls-container,
     #game-over,
     #ad-box,
     .dialog {
@@ -1130,8 +1122,8 @@ body {
         left: 50%;
         transform: translateX(-50%);
         margin: 0;
-        top: 50vh; /* Adjusted */
-        height: 9vh; /* Slightly increased for visibility */
+        top: 47vh; /* Moved up slightly from 48vh for mobile */
+        height: auto; /* Allow height to adjust for content */
     }
 
     #game-select-content {
@@ -1270,9 +1262,11 @@ body {
         background: #E0A000;
     }
 
-    #game-controls-container {
+    #game-controls {
+        width: 94vw;
         height: 6vh;
-        top: 59vh; /* Adjusted to fit above keyboard */
+        padding: 0 2vw;
+        margin-top: 0.5vh;
     }
 
     #give-up-link,
