@@ -1,133 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <meta name="description" content="WORDY is a fun and challenging word guessing game by Big Brain Games. Guess the secret word using hints and share your results!">
-    <meta name="keywords" content="word game, guessing game, puzzle, Big Brain Games, WORDY">
-    <meta name="author" content="Big Brain Games">
-    <meta name="robots" content="index, follow">
-    <meta name="theme-color" content="#FFB300">
-    <meta property="og:title" content="WORDY by Big Brain Games">
-    <meta property="og:description" content="Can you guess the secret word? Play WORDY and challenge your friends!">
-    <meta property="og:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
-    <meta property="og:url" content="https://wordy.bigbraingames.net">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="WORDY by Big Brain Games">
-    <meta name="twitter:description" content="Can you guess the secret word? Play WORDY and challenge your friends!">
-    <meta name="twitter:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
-    <title>WORDY by Big Brain Games</title>
-    <link rel="icon" type="image/png" href="wordy_favicon.png">
-    <link rel="stylesheet" href="styles.css">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="WORDY is a fun and challenging word guessing game by Big Brain Games. Guess the secret word using hints and share your results!">
+<title>WORDY by Big Brain Games</title>
+<link rel="icon" type="image/png" href="wordy_favicon.png">
+<link rel="stylesheet" href="styles.css">
+<link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'">
 </head>
 <body>
-    <div id="header">
-        <span id="game-name">WORDY</span>
-        <a href="#" id="all-games-link">All Games</a>
+<div id="header">
+    <span id="game-name">WORDY</span>
+    <a href="#" id="all-games-link">All Games</a>
+</div>
+
+<div id="background-container"></div>
+
+<div id="game-screen" class="screen">
+    <div id="hints-container">
+        <span id="hints-heading">Hints</span>
+        <div id="hint-1" class="hint"></div>
+        <div id="hint-2" class="hint"></div>
+        <div id="hint-3" class="hint"></div>
+        <div id="hint-4" class="hint"></div>
+        <div id="hint-5" class="hint"></div>
     </div>
-    <div id="background-container"></div>
-    <div id="game-screen" class="screen">
-        <div id="hints-container">
-            <span id="hints-heading">Hints</span>
-            <div id="hint-1" class="hint"></div>
-            <div id="hint-2" class="hint"></div>
-            <div id="hint-3" class="hint"></div>
-            <div id="hint-4" class="hint"></div>
-            <div id="hint-5" class="hint"></div>
-        </div>
+</div>
+
+<div id="guess-area">
+    <div id="guess-input-container">
+        <span id="guess-prompt">The Secret Word is...</span>
+        <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false">
     </div>
-    <div id="guess-area">
-        <div id="guess-input-container">
-            <span id="guess-prompt">The Secret Word is...</span>
-            <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false">
-        </div>
-        <button type="button" id="guess-btn">GUESS</button>
-        <div id="game-controls">
-            <a href="#" id="give-up-link">Give Up</a>
-            <div id="game-number-container">
-                <a href="#" id="prev-game-arrow">◄</a>
-                <span id="game-number-text"></span>
-                <a href="#" id="next-game-arrow">▶</a>
-            </div>
-            <a href="#" id="guesses-link">Guesses: X/5</a>
-        </div>
+    <button type="button" id="guess-btn">GUESS</button>
+</div>
+
+<div id="game-controls-inline">
+    <a href="#" id="give-up-link">Give Up</a>
+    <div id="game-number-container">
+        <a href="#" id="prev-game-arrow">◄</a>
+        <span id="game-number-text"></span>
+        <a href="#" id="next-game-arrow">▶</a>
     </div>
-    <div id="game-select-content" class="screen">
-        <div id="tabs">
-            <span id="official-tab" class="tab active">Official</span>
-            <span class="tab-seperator">     |     </span>
-            <span id="private-tab" class="tab">Private</span>
-        </div>
-        <div id="official-games" class="tab-content active">
-            <span>Official Games</span>
-            <div id="official-list" class="game-list"></div>
-            <button type="button" id="official-back-btn" class="control-btn">Back</button>
-        </div>
-        <div id="private-games" class="tab-content">
-            <span>Private Games</span>
-            <div id="private-list" class="game-list"></div>
-            <button type="button" id="create-pineapple" class="control-btn">Create a Wordy</button>
-            <button type="button" id="private-back-btn" class="control-btn">Back</button>
-        </div>
+    <a href="#" id="guesses-link">Guesses: X/5</a>
+</div>
+
+<div id="game-select-content" class="screen">
+    <div id="tabs">
+        <span id="official-tab" class="tab active">Official</span>
+        <span class="tab-seperator">|</span>
+        <span id="private-tab" class="tab">Private</span>
     </div>
-    <div id="form-content" class="screen">
-        <span>Create a Wordy</span>
-        <div id="form-container">
-            <input type="text" id="game-name-input" placeholder="Game Name..." maxlength="15" autocomplete="off" spellcheck="false">
-            <input type="text" id="secret-word" placeholder="Secret Word..." maxlength="15" autocomplete="off" spellcheck="false">
-            <input type="text" id="hint-1" placeholder="Hint 1..." maxlength="15" autocomplete="off" spellcheck="false">
-            <input type="text" id="hint-2" placeholder="Hint 2..." maxlength="15" autocomplete="off" spellcheck="false">
-            <input type="text" id="hint-3" placeholder="Hint 3..." maxlength="15" autocomplete="off" spellcheck="false">
-            <input type="text" id="hint-4" placeholder="Hint 4..." maxlength="15" autocomplete="off" spellcheck="false">
-            <input type="text" id="hint-5" placeholder="Hint 5..." maxlength="15" autocomplete="off" spellcheck="false">
-        </div>
-        <button type="submit" id="confirm-btn" class="control-btn">Confirm</button>
-        <button type="button" id="form-back-btn" class="control-btn">Back</button>
+    <div id="official-games" class="tab-content active">
+        <span>Official Games</span>
+        <div id="official-list" class="game-list"></div>
+        <button type="button" id="official-back-btn" class="control-btn">Back</button>
     </div>
-    <div id="game-over" class="screen">
-        <div id="share-section">
-            <div id="share-panel">
-                <span id="share-text"></span>
-                <span id="game-number-display"></span>
-            </div>
-            <div id="share-buttons">
-                <a id="share-whatsapp" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Share on WhatsApp"></a>
-                <a id="share-telegram" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Share on Telegram"></a>
-                <a id="share-twitter" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/sco/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png" alt="Share on Twitter"></a>
-                <a id="share-instagram" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Share on Instagram"></a>
-            </div>
-        </div>
-        <button type="button" id="next-game-btn-end" class="control-btn">Next Game</button>
-        <button type="button" id="create-pineapple-end" class="control-btn">Create a Wordy</button>
+    <div id="private-games" class="tab-content">
+        <span>Private Games</span>
+        <div id="private-list" class="game-list"></div>
+        <button type="button" id="create-pineapple" class="control-btn">Create a Wordy</button>
+        <button type="button" id="private-back-btn" class="control-btn">Back</button>
     </div>
-    <div id="guesses-screen" class="dialog">
-        <div class="dialog-content">
-            <span id="guesses-title">Your Guesses</span>
-            <div id="guesses-list"></div>
-            <button type="button" id="guesses-close-btn" class="control-btn">Close</button>
+</div>
+
+<div id="form-content" class="screen">
+    <span>Create a Wordy</span>
+    <div id="form-container">
+        <input type="text" id="game-name-input" placeholder="Game Name..." maxlength="15" autocomplete="off" spellcheck="false">
+        <input type="text" id="secret-word" placeholder="Secret Word..." maxlength="15" autocomplete="off" spellcheck="false">
+        <input type="text" id="hint-1-input" placeholder="Hint 1..." maxlength="15" autocomplete="off" spellcheck="false">
+        <input type="text" id="hint-2-input" placeholder="Hint 2..." maxlength="15" autocomplete="off" spellcheck="false">
+        <input type="text" id="hint-3-input" placeholder="Hint 3..." maxlength="15" autocomplete="off" spellcheck="false">
+        <input type="text" id="hint-4-input" placeholder="Hint 4..." maxlength="15" autocomplete="off" spellcheck="false">
+        <input type="text" id="hint-5-input" placeholder="Hint 5..." maxlength="15" autocomplete="off" spellcheck="false">
+    </div>
+    <button type="submit" id="confirm-btn" class="control-btn">Confirm</button>
+    <button type="button" id="form-back-btn" class="control-btn">Back</button>
+</div>
+
+<div id="game-over" class="screen">
+    <div id="share-section">
+        <div id="share-panel">
+            <span id="share-text"></span>
+            <span id="game-number-display"></span>
+        </div>
+        <div id="share-buttons">
+            <a id="share-whatsapp" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="Share on WhatsApp"></a>
+            <a id="share-telegram" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Share on Telegram"></a>
+            <a id="share-twitter" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/sco/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png" alt="Share on Twitter"></a>
+            <a id="share-instagram" href="#" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Share on Instagram"></a>
         </div>
     </div>
-    <div id="give-up-dialog" class="dialog">
-        <div class="dialog-content">
-            <span class="dialog-message">Are you sure you want to give up?</span>
-            <div id="give-up-buttons">
-                <button type="button" id="give-up-yes-btn" class="control-btn">Yes</button>
-                <button type="button" id="give-up-no-btn" class="control-btn">No</button>
-            </div>
+    <button type="button" id="next-game-btn-end" class="control-btn">Next Game</button>
+    <button type="button" id="create-pineapple-end" class="control-btn">Create a Wordy</button>
+</div>
+
+<div id="guesses-screen" class="dialog">
+    <div class="dialog-content">
+        <span id="guesses-title">Your Guesses</span>
+        <div id="guesses-list">No guesses yet!</div>
+        <button type="button" id="guesses-close-btn" class="control-btn">Close</button>
+    </div>
+</div>
+
+<div id="give-up-dialog" class="dialog">
+    <div class="dialog-content">
+        <span class="dialog-message">Are you sure you want to give up?</span>
+        <div id="give-up-buttons">
+            <button type="button" id="give-up-yes-btn" class="control-btn">Yes</button>
+            <button type="button" id="give-up-no-btn" class="control-btn">No</button>
         </div>
     </div>
-    <div id="form-error-dialog" class="dialog">
-        <div class="dialog-content">
-            <span class="dialog-message"></span>
-            <button type="button" id="form-error-ok-btn" class="control-btn">OK</button>
-        </div>
+</div>
+
+<div id="form-error-dialog" class="dialog">
+    <div class="dialog-content">
+        <span class="dialog-message"></span>
+        <button type="button" id="form-error-ok-btn" class="control-btn">OK</button>
     </div>
-    <div id="ad-box">
-        <span>Big Brain Games</span>
-    </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
-    <script src="script.js"></script>
+</div>
+
+<div id="ad-box">
+    <span>Big Brain Games</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
