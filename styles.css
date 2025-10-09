@@ -38,14 +38,15 @@ body {
 
 #header {
     display: flex;
-    flex-direction: column;
-    align-items: center;
+    justify-content: space-between;
+    align-items: center; /* Changed to center for aligning controls */
     width: 98vw;
+    height: 10vh;
     margin: 0 1vw;
     padding: 0.5vh 2vw;
     background: transparent;
     position: fixed;
-    top: 0.15vh;
+    top: 0.15vh; /* Added 0.15vh to existing top: 0 */
     left: 0;
     z-index: 100;
 }
@@ -61,8 +62,9 @@ body {
 
 #header-controls {
     display: flex;
-    justify-content: flex-end;
-    width: 100%;
+    flex-direction: row; /* Changed to row for inline controls */
+    align-items: center; /* Align items vertically centered */
+    gap: 0.5vh;
 }
 
 #all-games-link {
@@ -70,22 +72,15 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
-}
-
-#game-controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 2vw;
-    width: 100%;
-    margin-top: 0.5vh;
+    text-align: right;
 }
 
 #game-number-container {
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Center the game controls */
     align-items: center;
     gap: 0.5vw;
+    flex-grow: 1; /* Allow it to take available space */
 }
 
 #prev-game-arrow,
@@ -106,12 +101,21 @@ body {
 /* Explicit styling for give-up-link and guesses-link to prevent unstyled appearance */
 #give-up-link,
 #guesses-link {
-    font-family: 'Luckiest Guy', cursive;
+    font-family: 'Luckiest Guy', cursive; /* Ensure font consistency */
     font-size: 1.6vh;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
-    cursor: pointer;
+    cursor: pointer; /* Ensure clickable appearance */
+}
+
+#give-up-link {
+    margin-right: auto; /* Push to the left */
+}
+
+#guesses-link {
+    margin-left: 2vw; /* Space from game controls */
+    text-align: right;
 }
 
 #game-screen {
@@ -156,7 +160,7 @@ body {
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    padding: 0.5vh 0.75vw; /* Updated to include additional 0.25vw padding-left */
+    padding: 0.5vh 0.75vw; /* Updated padding-left: 0.5vw + 0.25vw */
     box-sizing: border-box;
     width: 25vw;
     height: 3.5vh;
@@ -171,7 +175,7 @@ body {
 }
 
 .hint-text {
-    z-index: 20;
+    z-index: 20; /* Ensure hint text is above all hint shapes */
     position: relative;
     display: flex;
     align-items: center;
@@ -182,7 +186,7 @@ body {
     line-height: 1.1;
     text-align: center;
     text-indent: -0.5em;
-    color: #FFFFFF;
+    color: #FFFFFF; /* Explicitly set to ensure visibility */
     text-shadow: 1px 1px 2px #000000;
 }
 
@@ -201,10 +205,10 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 20;
-    background: #000000;
+    background: #000000; /* Added black background */
     position: relative;
-    margin-bottom: 0.6vh;
-    padding-top: 0.6vh;
+    margin-bottom: 0.6vh; /* Added half a line space */
+    padding-top: 0.6vh; /* Added half a line padding-top */
 }
 
 #guess-input-container {
@@ -214,7 +218,7 @@ body {
     height: 7.5vh;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.85); /* Semi-transparent container */
     border-radius: 1vh 0 0 1vh;
 }
 
@@ -234,7 +238,7 @@ body {
     font-family: 'Luckiest Guy', cursive;
     font-size: 3.5vh;
     color: #000000;
-    background: #FFFFFF;
+    background: #FFFFFF; /* Solid white background */
     width: 100%;
     padding: 0;
     text-transform: uppercase;
@@ -671,7 +675,7 @@ body {
     width: 98vw;
     margin: 0 1vw;
     height: 2.5vh;
-    background: #000000; /* Already black, no change needed */
+    background: #000000; /* Changed to black background */
     display: flex;
     justify-content: center;
     align-items: center;
