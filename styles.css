@@ -5,7 +5,7 @@
 }
 
 body {
-    background: #FFFFFF;
+    background: #000000; /* Changed from #FFFFFF to #000000 */
     font-family: 'Luckiest Guy', cursive;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -13,12 +13,12 @@ body {
     user-select: none;
     margin: 0;
     position: relative;
-    min-height: 100vh; /* Allow body to grow beyond viewport if needed */
+    min-height: 100vh;
 }
 
 #game-container {
     width: 100%;
-    max-height: 60vh; /* Restrict total height to ~60vh */
+    max-height: 60vh;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -29,9 +29,9 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 45vh; /* Kept at 45vh as background */
+    height: 52.5vh; /* Expanded to cover guess area (45vh game-screen + 7.5vh guess-area) */
     background: url('newbackground.png') no-repeat center center;
-    background-size: cover;
+    background-size: 100% auto; /* Fit vertically, stretch horizontally */
     z-index: 1;
 }
 
@@ -42,7 +42,7 @@ body {
     width: 98vw;
     height: 10vh;
     margin: 0 1vw;
-    padding: 0.5vh 2vw;
+    padding: 0.75vh 2vw; /* Increased padding-top from 0.5vh to 0.75vh */
     background: transparent;
     position: fixed;
     top: 0;
@@ -51,7 +51,7 @@ body {
 }
 
 #game-name {
-    font-size: 2vh;
+    font-size: 12vh; /* Increased from 2vh to 12vh */
     color: #000000;
     -webkit-text-stroke: 1px #FFFFFF;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -66,14 +66,34 @@ body {
     gap: 0.5vh;
 }
 
-#all-games-link,
-#give-up-link,
-#guesses-link {
+#all-games-link {
     font-size: 1.6vh;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
     text-align: right;
+}
+
+#give-up-link {
+    font-size: 1.6vh;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    text-decoration: underline;
+    position: absolute;
+    top: 37.5vh; /* Positioned one line above guess area (45vh - 7.5vh) */
+    left: 20vw; /* Aligned with left edge of guess-input-container (1vw margin + 19vw offset) */
+    z-index: 20;
+}
+
+#guesses-link {
+    font-size: 1.6vh;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    text-decoration: underline;
+    position: absolute;
+    top: 37.5vh; /* Positioned one line above guess area (45vh - 7.5vh) */
+    right: 1vw; /* Aligned with right edge of guess-btn */
+    z-index: 20;
 }
 
 #game-number-container {
@@ -105,9 +125,9 @@ body {
     align-items: flex-start;
     width: 98vw;
     margin: 0 1vw;
-    height: 40vh; /* Kept at 40vh to fit within 60vh total */
-    position: relative; /* Changed to relative to flow in container */
-    top: 10vh; /* Still offset to align below header */
+    height: 45vh; /* Increased from 40vh to 45vh */
+    position: relative;
+    top: 10vh;
     left: 0;
     z-index: 5;
     background: transparent;
@@ -154,6 +174,11 @@ body {
     text-indent: -0.5em;
 }
 
+.hint-text {
+    z-index: 20; /* Ensure hint text is above pseudo-elements */
+    position: relative;
+}
+
 #hint-1, #hint-2, #hint-3, #hint-4, #hint-5 {
     top: auto;
     left: auto;
@@ -169,8 +194,8 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 20;
-    background: transparent;
-    position: relative; /* Changed to relative to flow in container */
+    background: transparent; /* Made transparent to show background */
+    position: relative;
 }
 
 #guess-input-container {
@@ -180,7 +205,7 @@ body {
     height: 7.5vh;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.85);
+    background: transparent; /* Made transparent to show background */
     border-radius: 1vh 0 0 1vh;
 }
 
@@ -200,7 +225,7 @@ body {
     font-family: 'Luckiest Guy', cursive;
     font-size: 3.5vh;
     color: #000000;
-    background: transparent;
+    background: #FFFFFF; /* Non-transparent white background */
     width: 100%;
     padding: 0;
     text-transform: uppercase;
@@ -244,7 +269,11 @@ body {
 }
 
 #game-screen.game-ended #guess-input-container {
-    background: #FFB300;
+    background: transparent; /* Keep transparent in game-ended state */
+}
+
+#game-screen.game-ended #guess-input {
+    background: #FFB300; /* Match button color for consistency in game-ended state */
 }
 
 #guess-input-container.wrong-guess {
@@ -254,7 +283,7 @@ body {
 @keyframes shakeAndFlash {
     0%, 100% {
         transform: translateX(0);
-        background: rgba(255, 255, 255, 0.85);
+        background: transparent; /* Keep transparent during animation */
     }
     20%, 60% {
         transform: translateX(-5px);
@@ -272,7 +301,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     position: fixed;
     top: 0;
     left: 0;
@@ -285,7 +314,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     overflow: hidden;
 }
 
@@ -295,7 +324,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
     margin: 0;
@@ -321,7 +350,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
 }
@@ -362,7 +391,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: 85vw;
-    max-height: 50vh; /* Reduced to fit within 60vh */
+    max-height: 50vh;
     border-radius: 1vh;
     padding: 2vh;
     background: rgba(0, 0, 0, 0.85);
@@ -385,7 +414,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 40vh; /* Reduced to fit within tab-content */
+    max-height: 40vh;
     overflow-y: auto;
 }
 
@@ -575,7 +604,7 @@ body {
     left: 0;
     width: 98vw;
     margin: 0 1vw;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     background: rgba(0, 0, 0, 0.5);
     z-index: 200;
     align-items: center;
@@ -642,7 +671,7 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 100;
-    position: relative; /* Changed to relative to flow in container */
+    position: relative;
 }
 
 #ad-box span {
@@ -655,7 +684,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     pointer-events: none;
     z-index: 1000;
 }
@@ -672,7 +701,7 @@ body {
         opacity: 1;
     }
     100% {
-        transform: translateY(60vh) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw)); /* Adjusted to match game container height */
+        transform: translateY(60vh) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw));
         opacity: 0;
     }
 }
@@ -699,6 +728,7 @@ body {
     background: rgb(199, 21, 133);
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    z-index: 10; /* Lower than hint-text */
 }
 
 .hint-shape-fluffy-cloud::before {
@@ -739,6 +769,7 @@ body {
     line-height: 1.1;
     text-align: center;
     text-indent: -0.5em;
+    z-index: 20; /* Ensure text is above pseudo-elements */
 }
 
 .hint-shape-circle {
@@ -786,6 +817,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 20; /* Ensure text is above shape */
 }
 
 .hint-shape-diamond:not(#hint-4) {
@@ -805,6 +837,7 @@ body {
     text-align: center;
     width: 100%;
     height: 100%;
+    z-index: 20; /* Ensure text is above shape */
 }
 
 .hint-shape-cloud {
@@ -819,6 +852,7 @@ body {
     position: absolute;
     background: rgb(135, 206, 235);
     border-radius: 50%;
+    z-index: 10; /* Lower than hint-text */
 }
 
 .hint-shape-cloud::before {
@@ -849,6 +883,7 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    z-index: 10; /* Lower than hint-text */
 }
 
 .hint-shape-sun::before {
