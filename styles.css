@@ -39,14 +39,14 @@ body {
 #header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center; /* Changed to center for aligning controls */
     width: 98vw;
     height: 10vh;
     margin: 0 1vw;
     padding: 0.5vh 2vw;
     background: transparent;
     position: fixed;
-    top: 0;
+    top: 0.15vh; /* Added 0.15vh to existing top: 0 */
     left: 0;
     z-index: 100;
 }
@@ -62,8 +62,8 @@ body {
 
 #header-controls {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    flex-direction: row; /* Changed to row for inline controls */
+    align-items: center; /* Align items vertically centered */
     gap: 0.5vh;
 }
 
@@ -77,9 +77,10 @@ body {
 
 #game-number-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center; /* Center the game controls */
     align-items: center;
     gap: 0.5vw;
+    flex-grow: 1; /* Allow it to take available space */
 }
 
 #prev-game-arrow,
@@ -105,18 +106,15 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
-    position: absolute; /* Position relative to game-screen */
-    top: 39vh; /* One quarter line above guess box */
-    z-index: 10;
     cursor: pointer; /* Ensure clickable appearance */
 }
 
 #give-up-link {
-    left: 1vw; /* Align with left edge of guess box */
+    margin-right: auto; /* Push to the left */
 }
 
 #guesses-link {
-    right: 1vw; /* Align with right edge */
+    margin-left: 2vw; /* Space from game controls */
     text-align: right;
 }
 
@@ -162,7 +160,7 @@ body {
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    padding: 0.5vh 0.5vw;
+    padding: 0.5vh 0.75vw; /* Updated padding-left: 0.5vw + 0.25vw */
     box-sizing: border-box;
     width: 25vw;
     height: 3.5vh;
@@ -207,8 +205,10 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 20;
-    background: transparent; /* Ensure no background conflict */
+    background: #000000; /* Added black background */
     position: relative;
+    margin-bottom: 0.6vh; /* Added half a line space */
+    padding-top: 0.6vh; /* Added half a line padding-top */
 }
 
 #guess-input-container {
@@ -675,7 +675,7 @@ body {
     width: 98vw;
     margin: 0 1vw;
     height: 2.5vh;
-    background: #F0F0F0;
+    background: #000000; /* Changed to black background */
     display: flex;
     justify-content: center;
     align-items: center;
