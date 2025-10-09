@@ -13,12 +13,12 @@ body {
     user-select: none;
     margin: 0;
     position: relative;
-    min-height: 100vh; /* Allow body to grow beyond viewport if needed */
+    min-height: 100vh;
 }
 
 #game-container {
     width: 100%;
-    max-height: 60vh; /* Restrict total height to ~60vh */
+    max-height: 60vh;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -29,9 +29,10 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 45vh; /* Kept at 45vh as background */
+    height: 82vh; /* Expanded to cover guess area */
     background: url('newbackground.png') no-repeat center center;
-    background-size: cover;
+    background-size: contain; /* Fits vertically without cropping */
+    background-position: center top;
     z-index: 1;
 }
 
@@ -66,9 +67,7 @@ body {
     gap: 0.5vh;
 }
 
-#all-games-link,
-#give-up-link,
-#guesses-link {
+#all-games-link {
     font-size: 1.6vh;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
@@ -98,6 +97,29 @@ body {
     pointer-events: none;
 }
 
+/* Explicit styling for give-up-link and guesses-link to prevent unstyled appearance */
+#give-up-link,
+#guesses-link {
+    font-family: 'Luckiest Guy', cursive; /* Ensure font consistency */
+    font-size: 1.6vh;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    text-decoration: underline;
+    position: absolute; /* Position relative to game-screen */
+    top: 39vh; /* One quarter line above guess box */
+    z-index: 10;
+    cursor: pointer; /* Ensure clickable appearance */
+}
+
+#give-up-link {
+    left: 1vw; /* Align with left edge of guess box */
+}
+
+#guesses-link {
+    right: 1vw; /* Align with right edge */
+    text-align: right;
+}
+
 #game-screen {
     display: flex;
     flex-direction: column;
@@ -105,9 +127,9 @@ body {
     align-items: flex-start;
     width: 98vw;
     margin: 0 1vw;
-    height: 40vh; /* Kept at 40vh to fit within 60vh total */
-    position: relative; /* Changed to relative to flow in container */
-    top: 10vh; /* Still offset to align below header */
+    height: 40vh;
+    position: relative;
+    top: 10vh;
     left: 0;
     z-index: 5;
     background: transparent;
@@ -154,6 +176,22 @@ body {
     text-indent: -0.5em;
 }
 
+.hint-text {
+    z-index: 20; /* Ensure hint text is above all hint shapes */
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    font-size: min(4vh, 3.5vw);
+    line-height: 1.1;
+    text-align: center;
+    text-indent: -0.5em;
+    color: #FFFFFF; /* Explicitly set to ensure visibility */
+    text-shadow: 1px 1px 2px #000000;
+}
+
 #hint-1, #hint-2, #hint-3, #hint-4, #hint-5 {
     top: auto;
     left: auto;
@@ -169,8 +207,8 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 20;
-    background: transparent;
-    position: relative; /* Changed to relative to flow in container */
+    background: transparent; /* Ensure no background conflict */
+    position: relative;
 }
 
 #guess-input-container {
@@ -180,7 +218,7 @@ body {
     height: 7.5vh;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.85);
+    background: rgba(255, 255, 255, 0.85); /* Semi-transparent container */
     border-radius: 1vh 0 0 1vh;
 }
 
@@ -200,7 +238,7 @@ body {
     font-family: 'Luckiest Guy', cursive;
     font-size: 3.5vh;
     color: #000000;
-    background: transparent;
+    background: #FFFFFF; /* Solid white background */
     width: 100%;
     padding: 0;
     text-transform: uppercase;
@@ -272,7 +310,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     position: fixed;
     top: 0;
     left: 0;
@@ -285,7 +323,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     overflow: hidden;
 }
 
@@ -295,7 +333,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
     margin: 0;
@@ -321,7 +359,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
 }
@@ -362,7 +400,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: 85vw;
-    max-height: 50vh; /* Reduced to fit within 60vh */
+    max-height: 50vh;
     border-radius: 1vh;
     padding: 2vh;
     background: rgba(0, 0, 0, 0.85);
@@ -385,7 +423,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 40vh; /* Reduced to fit within tab-content */
+    max-height: 40vh;
     overflow-y: auto;
 }
 
@@ -575,7 +613,7 @@ body {
     left: 0;
     width: 98vw;
     margin: 0 1vw;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     background: rgba(0, 0, 0, 0.5);
     z-index: 200;
     align-items: center;
@@ -642,7 +680,7 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 100;
-    position: relative; /* Changed to relative to flow in container */
+    position: relative;
 }
 
 #ad-box span {
@@ -655,7 +693,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 60vh; /* Adjusted to match game container height */
+    height: 60vh;
     pointer-events: none;
     z-index: 1000;
 }
@@ -672,7 +710,7 @@ body {
         opacity: 1;
     }
     100% {
-        transform: translateY(60vh) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw)); /* Adjusted to match game container height */
+        transform: translateY(60vh) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw));
         opacity: 0;
     }
 }
@@ -699,6 +737,7 @@ body {
     background: rgb(199, 21, 133);
     border-radius: 50%;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    z-index: 10;
 }
 
 .hint-shape-fluffy-cloud::before {
@@ -727,18 +766,6 @@ body {
     height: 6vw;
     bottom: 0;
     right: 4vw;
-}
-
-.hint-shape-fluffy-cloud .hint-text {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    font-size: min(4vh, 3.5vw);
-    line-height: 1.1;
-    text-align: center;
-    text-indent: -0.5em;
 }
 
 .hint-shape-circle {
@@ -819,6 +846,7 @@ body {
     position: absolute;
     background: rgb(135, 206, 235);
     border-radius: 50%;
+    z-index: 10;
 }
 
 .hint-shape-cloud::before {
@@ -849,6 +877,7 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 50%;
+    z-index: 10;
 }
 
 .hint-shape-sun::before {

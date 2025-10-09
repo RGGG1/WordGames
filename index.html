@@ -15,11 +15,11 @@
         <div id="game-screen" class="screen">
             <div id="hints-container">
                 <span id="hints-heading">Hints</span>
-                <div id="hint-1" class="hint"></div>
-                <div id="hint-2" class="hint"></div>
-                <div id="hint-3" class="hint"></div>
-                <div id="hint-4" class="hint"></div>
-                <div id="hint-5" class="hint"></div>
+                <div id="hint-1" class="hint"><span class="hint-text"></span></div>
+                <div id="hint-2" class="hint"><span class="hint-text"></span></div>
+                <div id="hint-3" class="hint"><span class="hint-text"></span></div>
+                <div id="hint-4" class="hint"><span class="hint-text"></span></div>
+                <div id="hint-5" class="hint"><span class="hint-text"></span></div>
             </div>
             <a href="#" id="give-up-link">Give Up</a>
             <a href="#" id="guesses-link">Guesses: 0/5</a>
@@ -50,7 +50,7 @@
             <span>Private Games</span>
             <div id="private-list" class="game-list"></div>
             <button type="button" id="create-pineapple" class="control-btn">Create a Wordy</button>
-            <button type="private-back-btn" id="btn" class="control-btn">Back</button>
+            <button type="button" id="private-back-btn" class="control-btn">Back</button>
         </div>
     </div>
     <div id="form-content" class="screen">
@@ -64,8 +64,8 @@
             <input type="text" id="hint-4" placeholder="Hint 4..." maxlength="15" autocomplete="off" spellcheck="false">
             <input type="text" id="hint-5" placeholder="Hint 5..." maxlength="15" autocomplete="off" spellcheck="false">
         </div>
-        <button type="submit" id="confirm-btn" class="control-btn">Confirm</button>
-        <button type="form-back-btn" id="form-btn" class="control-btn">Back</button>
+        <button type="button" id="confirm-btn" class="control-btn">Confirm</button>
+        <button type="button" id="form-back-btn" class="control-btn">Back</button>
     </div>
     <div id="game-over" class="screen">
         <div id="share-section">
