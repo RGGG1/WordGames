@@ -39,14 +39,14 @@ body {
 #header {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Changed to center for aligning controls */
+    align-items: center;
     width: 98vw;
     height: 10vh;
     margin: 0 1vw;
     padding: 0.5vh 2vw;
     background: transparent;
     position: fixed;
-    top: 0.15vh; /* Added 0.15vh to existing top: 0 */
+    top: 0.15vh;
     left: 0;
     z-index: 100;
 }
@@ -62,9 +62,14 @@ body {
 
 #header-controls {
     display: flex;
-    flex-direction: row; /* Changed to row for inline controls */
-    align-items: center; /* Align items vertically centered */
+    flex-direction: row;
+    align-items: center;
     gap: 0.5vh;
+    position: absolute;
+    bottom: calc(0.6vh + 7.5vh); /* Half a line below game-screen, above guess-area */
+    left: 2vw;
+    right: 2vw;
+    z-index: 15; /* Between game-screen (5) and guess-area (20) */
 }
 
 #all-games-link {
@@ -77,10 +82,10 @@ body {
 
 #game-number-container {
     display: flex;
-    justify-content: center; /* Center the game controls */
+    justify-content: center;
     align-items: center;
     gap: 0.5vw;
-    flex-grow: 1; /* Allow it to take available space */
+    flex-grow: 1;
 }
 
 #prev-game-arrow,
@@ -98,23 +103,22 @@ body {
     pointer-events: none;
 }
 
-/* Explicit styling for give-up-link and guesses-link to prevent unstyled appearance */
 #give-up-link,
 #guesses-link {
-    font-family: 'Luckiest Guy', cursive; /* Ensure font consistency */
+    font-family: 'Luckiest Guy', cursive;
     font-size: 1.6vh;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
-    cursor: pointer; /* Ensure clickable appearance */
+    cursor: pointer;
 }
 
 #give-up-link {
-    margin-right: auto; /* Push to the left */
+    margin-right: auto;
 }
 
 #guesses-link {
-    margin-left: 2vw; /* Space from game controls */
+    margin-left: 2vw;
     text-align: right;
 }
 
@@ -160,7 +164,7 @@ body {
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    padding: 0.5vh 0.75vw; /* Updated padding-left: 0.5vw + 0.25vw */
+    padding: 0.5vh 0.75vw;
     box-sizing: border-box;
     width: 25vw;
     height: 3.5vh;
@@ -175,7 +179,7 @@ body {
 }
 
 .hint-text {
-    z-index: 20; /* Ensure hint text is above all hint shapes */
+    z-index: 20;
     position: relative;
     display: flex;
     align-items: center;
@@ -186,7 +190,7 @@ body {
     line-height: 1.1;
     text-align: center;
     text-indent: -0.5em;
-    color: #FFFFFF; /* Explicitly set to ensure visibility */
+    color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
 }
 
@@ -205,10 +209,10 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 20;
-    background: #000000; /* Added black background */
+    background: #000000;
     position: relative;
-    margin-bottom: 0.6vh; /* Added half a line space */
-    padding-top: 0.6vh; /* Added half a line padding-top */
+    margin-bottom: 0.6vh;
+    padding-top: 0.6vh;
 }
 
 #guess-input-container {
@@ -218,7 +222,7 @@ body {
     height: 7.5vh;
     justify-content: center;
     align-items: center;
-    background: rgba(255, 255, 255, 0.85); /* Semi-transparent container */
+    background: rgba(255, 255, 255, 0.85);
     border-radius: 1vh 0 0 1vh;
 }
 
@@ -238,7 +242,7 @@ body {
     font-family: 'Luckiest Guy', cursive;
     font-size: 3.5vh;
     color: #000000;
-    background: #FFFFFF; /* Solid white background */
+    background: #FFFFFF;
     width: 100%;
     padding: 0;
     text-transform: uppercase;
@@ -302,21 +306,6 @@ body {
         transform: translateX(5px);
         background: rgba(255, 0, 0, 0.7);
     }
-}
-
-.screen {
-    display: none;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100vw;
-    height: 60vh;
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 50;
-    background: rgba(0, 0, 0, 0.5);
-    overflow: hidden;
 }
 
 #game-select-content {
@@ -675,17 +664,17 @@ body {
     width: 98vw;
     margin: 0 1vw;
     height: 2.5vh;
-    background: #000000; /* Changed to black background */
+    background: #000000;
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 10;
     position: relative;
 }
 
 #ad-box span {
     font-size: 1.5vh;
-    color: #000000;
+    color: #FFFFFF; /* Changed to white */
 }
 
 .pineapple-rain {
