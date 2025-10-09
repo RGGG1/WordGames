@@ -11,11 +11,17 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    overflow: hidden;
-    height: 100vh;
-    width: 100vw;
     margin: 0;
     position: relative;
+    min-height: 100vh; /* Allow body to grow beyond viewport if needed */
+}
+
+#game-container {
+    width: 100%;
+    max-height: 60vh; /* Restrict total height to ~60vh */
+    position: relative;
+    display: flex;
+    flex-direction: column;
 }
 
 #background-container {
@@ -23,7 +29,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: 45vh; /* Changed to 45vh per request */
+    height: 45vh; /* Kept at 45vh as background */
     background: url('newbackground.png') no-repeat center center;
     background-size: cover;
     z-index: 1;
@@ -34,9 +40,9 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     width: 98vw;
-    height: 10vh; /* Set to 10vh per request */
+    height: 10vh;
     margin: 0 1vw;
-    padding: 0.5vh 2vw; /* Reduced padding to 0.5vh top/bottom per request */
+    padding: 0.5vh 2vw;
     background: transparent;
     position: fixed;
     top: 0;
@@ -45,7 +51,7 @@ body {
 }
 
 #game-name {
-    font-size: 2vh; /* Changed to 2vh per request */
+    font-size: 2vh;
     color: #000000;
     -webkit-text-stroke: 1px #FFFFFF;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
@@ -99,9 +105,9 @@ body {
     align-items: flex-start;
     width: 98vw;
     margin: 0 1vw;
-    height: 40vh; /* Changed to 40vh per request */
-    position: fixed;
-    top: 10vh; /* Adjusted to align below header */
+    height: 40vh; /* Kept at 40vh to fit within 60vh total */
+    position: relative; /* Changed to relative to flow in container */
+    top: 10vh; /* Still offset to align below header */
     left: 0;
     z-index: 5;
     background: transparent;
@@ -119,7 +125,7 @@ body {
 
 #hints-heading {
     font-family: 'Luckiest Guy', cursive;
-    font-size: 1.75vh; /* Changed to 1.75vh per request */
+    font-size: 1.75vh;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     margin-bottom: 0.5vh;
@@ -137,7 +143,7 @@ body {
     padding: 0.5vh 0.5vw;
     box-sizing: border-box;
     width: 25vw;
-    height: 3.5vh; /* Changed to 3.5vh per request */
+    height: 3.5vh;
     word-break: break-word;
     line-height: 1.2;
     z-index: 15;
@@ -156,25 +162,22 @@ body {
 }
 
 #guess-area {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
     width: 100%;
-    height: 7.5vh; /* Changed to 7.5vh per request */
+    height: 7.5vh;
     display: flex;
     flex-direction: row;
     justify-content: center;
     align-items: center;
     z-index: 20;
     background: transparent;
+    position: relative; /* Changed to relative to flow in container */
 }
 
 #guess-input-container {
     display: flex;
     flex-direction: column;
     width: 60vw;
-    height: 7.5vh; /* Changed to 7.5vh to match guess-area */
+    height: 7.5vh;
     justify-content: center;
     align-items: center;
     background: rgba(255, 255, 255, 0.85);
@@ -215,7 +218,7 @@ body {
 
 #guess-btn {
     width: 34vw;
-    height: 7.5vh; /* Changed to 7.5vh to match guess-area */
+    height: 7.5vh;
     background: #FFB300;
     border: none;
     border-radius: 0 1vh 1vh 0;
@@ -269,7 +272,7 @@ body {
     justify-content: center;
     align-items: center;
     width: 100vw;
-    height: calc(100vh - 2.5vh); /* Adjusted for new ad-box height */
+    height: 60vh; /* Adjusted to match game container height */
     position: fixed;
     top: 0;
     left: 0;
@@ -282,7 +285,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: calc(100vh - 2.5vh); /* Adjusted for new ad-box height */
+    height: 60vh; /* Adjusted to match game container height */
     overflow: hidden;
 }
 
@@ -292,7 +295,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: calc(100vh - 2.5vh); /* Adjusted for new ad-box height */
+    height: 60vh; /* Adjusted to match game container height */
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
     margin: 0;
@@ -318,7 +321,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - 2.5vh); /* Adjusted for new ad-box height */
+    height: 60vh; /* Adjusted to match game container height */
     background: rgba(0, 0, 0, 0.5);
     z-index: -1;
 }
@@ -359,7 +362,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: 85vw;
-    max-height: 70vh;
+    max-height: 50vh; /* Reduced to fit within 60vh */
     border-radius: 1vh;
     padding: 2vh;
     background: rgba(0, 0, 0, 0.85);
@@ -382,7 +385,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 60vh;
+    max-height: 40vh; /* Reduced to fit within tab-content */
     overflow-y: auto;
 }
 
@@ -572,7 +575,7 @@ body {
     left: 0;
     width: 98vw;
     margin: 0 1vw;
-    height: calc(100vh - 2.5vh); /* Adjusted for new ad-box height */
+    height: 60vh; /* Adjusted to match game container height */
     background: rgba(0, 0, 0, 0.5);
     z-index: 200;
     align-items: center;
@@ -631,17 +634,15 @@ body {
 }
 
 #ad-box {
-    position: fixed;
-    bottom: 0;
-    left: 0;
     width: 98vw;
     margin: 0 1vw;
-    height: 2.5vh; /* Changed to 2.5vh per request */
+    height: 2.5vh;
     background: #F0F0F0;
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 100;
+    position: relative; /* Changed to relative to flow in container */
 }
 
 #ad-box span {
@@ -651,10 +652,10 @@ body {
 
 .pineapple-rain {
     position: fixed;
-    top: 5vh;
+    top: 0;
     left: 0;
     width: 100%;
-    height: calc(100vh - 5vh - 2.5vh); /* Adjusted for new ad-box height */
+    height: 60vh; /* Adjusted to match game container height */
     pointer-events: none;
     z-index: 1000;
 }
@@ -671,7 +672,7 @@ body {
         opacity: 1;
     }
     100% {
-        transform: translateY(calc(100vh - 2.5vh)) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw)); /* Adjusted for new ad-box height */
+        transform: translateY(60vh) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw)); /* Adjusted to match game container height */
         opacity: 0;
     }
 }
@@ -681,7 +682,7 @@ body {
     background: rgb(199, 21, 133);
     position: relative;
     width: 25vw;
-    height: 3.5vh; /* Changed to 3.5vh per request */
+    height: 3.5vh;
     border-radius: 30%;
     display: flex;
     align-items: center;
@@ -703,14 +704,14 @@ body {
 .hint-shape-fluffy-cloud::before {
     width: 8vw;
     height: 8vw;
-    top: -1vh; /* Adjusted to scale with smaller hint height */
+    top: -1vh;
     left: -1vw;
 }
 
 .hint-shape-fluffy-cloud::after {
     width: 6vw;
     height: 6vw;
-    bottom: -0.75vh; /* Adjusted to scale with smaller hint height */
+    bottom: -0.75vh;
     right: -1vw;
 }
 
@@ -755,7 +756,7 @@ body {
         0% 70%, 0% 20%
     );
     width: 25vw;
-    height: 3.5vh; /* Changed to 3.5vh per request */
+    height: 3.5vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -765,7 +766,7 @@ body {
     background: rgb(100, 149, 237);
     position: relative;
     width: 25vw;
-    height: 3.5vh; /* Changed to 3.5vh per request */
+    height: 3.5vh;
     clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
     transform: rotate(0deg);
     display: flex;
@@ -791,7 +792,7 @@ body {
     background: rgb(100, 149, 237);
     position: relative;
     width: 25vw;
-    height: 3.5vh; /* Changed to 3.5vh per request */
+    height: 3.5vh;
     transform: rotate(45deg);
     display: flex;
     align-items: center;
@@ -823,14 +824,14 @@ body {
 .hint-shape-cloud::before {
     width: 7.5vw;
     height: 7.5vw;
-    top: -1vh; /* Adjusted to scale with smaller hint height */
+    top: -1vh;
     left: 1vw;
 }
 
 .hint-shape-cloud::after {
     width: 4.5vw;
     height: 4.5vw;
-    top: -0.5vh; /* Adjusted to scale with smaller hint height */
+    top: -0.5vh;
     right: 1vw;
 }
 
