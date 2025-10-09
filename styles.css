@@ -39,11 +39,11 @@ body {
 #header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center; /* Changed to center to align all items vertically */
     width: 98vw;
     height: 10vh;
     margin: 0 1vw;
-    padding: 0.5vh 2vw;
+    padding: 0.75vh 2vw; /* Increased padding-top and padding-bottom by 0.25vh */
     background: transparent;
     position: fixed;
     top: 0;
@@ -62,9 +62,9 @@ body {
 
 #header-controls {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.5vh;
+    flex-direction: row; /* Changed to row to place items on the same line */
+    align-items: center;
+    gap: 2vw; /* Adjusted gap for horizontal layout */
 }
 
 #all-games-link {
@@ -77,7 +77,7 @@ body {
 
 #game-number-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     align-items: center;
     gap: 0.5vw;
 }
@@ -100,24 +100,13 @@ body {
 /* Explicit styling for give-up-link and guesses-link to prevent unstyled appearance */
 #give-up-link,
 #guesses-link {
-    font-family: 'Luckiest Guy', cursive; /* Ensure font consistency */
+    font-family: 'Luckiest Guy', cursive;
     font-size: 1.6vh;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
-    position: absolute; /* Position relative to game-screen */
-    top: 39vh; /* One quarter line above guess box */
-    z-index: 10;
-    cursor: pointer; /* Ensure clickable appearance */
-}
-
-#give-up-link {
-    left: 1vw; /* Align with left edge of guess box */
-}
-
-#guesses-link {
-    right: 1vw; /* Align with right edge */
-    text-align: right;
+    position: static; /* Changed from absolute to static to align in header-controls */
+    cursor: pointer;
 }
 
 #game-screen {
@@ -162,7 +151,7 @@ body {
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    padding: 0.5vh 0.5vw;
+    padding: 0.5vh 1vw; /* Modified to add 0.5vw padding-left */
     box-sizing: border-box;
     width: 25vw;
     height: 3.5vh;
@@ -209,6 +198,7 @@ body {
     z-index: 20;
     background: transparent; /* Ensure no background conflict */
     position: relative;
+    margin-top: 1vh; /* Added to move guess section down by one line */
 }
 
 #guess-input-container {
@@ -220,6 +210,8 @@ body {
     align-items: center;
     background: rgba(255, 255, 255, 0.85); /* Semi-transparent container */
     border-radius: 1vh 0 0 1vh;
+    border: 2px solid #000000; /* Added black border */
+    border-right: none; /* Remove right border to avoid double border with button */
 }
 
 #guess-prompt {
@@ -258,8 +250,9 @@ body {
     width: 34vw;
     height: 7.5vh;
     background: #FFB300;
-    border: none;
+    border: 2px solid #000000; /* Added black border */
     border-radius: 0 1vh 1vh 0;
+    border-left: none; /* Remove left border to avoid double border with input container */
     font-family: 'Luckiest Guy', cursive;
     font-size: 3.5vh;
     color: #FFFFFF;
@@ -721,7 +714,7 @@ body {
     position: relative;
     width: 25vw;
     height: 3.5vh;
-    border-radius: 30%;
+    border-radius: 0; /* Changed to 0 for rectangle shape */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -735,35 +728,35 @@ body {
     content: '';
     position: absolute;
     background: rgb(199, 21, 133);
-    border-radius: 50%;
+    border-radius: 0; /* Changed to 0 for rectangle shape */
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
     z-index: 10;
 }
 
 .hint-shape-fluffy-cloud::before {
     width: 8vw;
-    height: 8vw;
+    height: 4vw; /* Adjusted height for rectangle */
     top: -1vh;
     left: -1vw;
 }
 
 .hint-shape-fluffy-cloud::after {
     width: 6vw;
-    height: 6vw;
+    height: 3vw; /* Adjusted height for rectangle */
     bottom: -0.75vh;
     right: -1vw;
 }
 
 .hint-shape-fluffy-cloud .puff-1 {
     width: 7vw;
-    height: 7vw;
+    height: 3.5vw; /* Adjusted height for rectangle */
     top: 0;
     left: 4vw;
 }
 
 .hint-shape-fluffy-cloud .puff-2 {
     width: 6vw;
-    height: 6vw;
+    height: 3vw; /* Adjusted height for rectangle */
     bottom: 0;
     right: 4vw;
 }
@@ -836,7 +829,7 @@ body {
 
 .hint-shape-cloud {
     background: rgb(135, 206, 235);
-    border-radius: 50%;
+    border-radius: 50% / 30%; /* Modified to create an oval shape */
     position: relative;
 }
 
@@ -845,20 +838,20 @@ body {
     content: '';
     position: absolute;
     background: rgb(135, 206, 235);
-    border-radius: 50%;
+    border-radius: 50% / 30%; /* Match oval shape for pseudo-elements */
     z-index: 10;
 }
 
 .hint-shape-cloud::before {
     width: 7.5vw;
-    height: 7.5vw;
+    height: 5vw; /* Adjusted to maintain oval proportion */
     top: -1vh;
     left: 1vw;
 }
 
 .hint-shape-cloud::after {
     width: 4.5vw;
-    height: 4.5vw;
+    height: 3vw; /* Adjusted to maintain oval proportion */
     top: -0.5vh;
     right: 1vw;
 }
