@@ -145,40 +145,41 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Adjust background
-function adjustBackground() {
-    console.log("Adjusting background to:", currentBackground);
-    const backgroundContainer = document.getElementById("background-container");
-    const guessArea = document.getElementById("guess-area");
-    
-    if (backgroundContainer && guessArea) {
-        backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
-        backgroundContainer.style.backgroundSize = "100% auto"; // Fit vertically, stretch horizontally [NEW: Explicitly set to match CSS change]
+    function adjustBackground() {
+        console.log("Adjusting background to:", currentBackground);
+        const backgroundContainer = document.getElementById("background-container");
+        const guessArea = document.getElementById("guess-area");
+        
+        if (backgroundContainer && guessArea) {
+            backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
+            backgroundContainer.style.backgroundSize = "cover";
 
-        // Calculate the height to cover game-screen (45vh) and guess-area (7.5vh) [NEW: Updated comment to reflect new heights]
-        const guessAreaRect = guessArea.getBoundingClientRect();
-        const backgroundHeight = guessAreaRect.bottom; // Distance from top of viewport to bottom of guess area
+            // Calculate the height based on the guess area's top position
+            const guessAreaRect = guessArea.getBoundingClientRect();
+            const backgroundHeight = guessAreaRect.top; // Distance from top of viewport to top of guess area
 
-        // Use visualViewport if available to handle keyboard presence
-        if (window.visualViewport) {
-            const viewportHeight = window.visualViewport.height;
-            // Use the smaller of the viewport height and guess area bottom to account for keyboard
-            backgroundContainer.style.height = `${Math.min(viewportHeight, backgroundHeight)}px`;
-            console.log("Using visualViewport height:", viewportHeight, "Guess area bottom:", backgroundHeight);
+            // Use visualViewport if available to handle keyboard presence
+            if (window.visualViewport) {
+                const viewportHeight = window.visualViewport.height;
+                // Use the smaller of the viewport height and guess area top to account for keyboard
+                backgroundContainer.style.height = `${Math.min(viewportHeight, backgroundHeight)}px`;
+                console.log("Using visualViewport height:", viewportHeight, "Guess area top:", backgroundHeight);
+            } else {
+                // Fallback: Use guess area top position or a percentage-based height
+                backgroundContainer.style.height = backgroundHeight > 0 ? `${backgroundHeight}px` : isMobile ? `calc(100vh - 10vh)` : `calc(100vh - 8vh)`;
+                console.log("Using fallback height, guess area top:", backgroundHeight);
+            }
+
+            // Force repaint
+            backgroundContainer.offsetHeight;
         } else {
-            // Fallback: Use guess area bottom position
-            backgroundContainer.style.height = backgroundHeight > 0 ? `${backgroundHeight}px` : `52.5vh`; // 45vh + 7.5vh [NEW: Updated fallback height from previous value to 52.5vh]
-            console.log("Using fallback height, guess area bottom:", backgroundHeight);
+            console.warn("background-container or guess-area not found, using default background height");
+            backgroundContainer.style.height = isMobile ? `calc(100vh - 10vh)` : `calc(100vh - 8vh)`;
         }
-
-        // Force repaint
-        backgroundContainer.offsetHeight;
-    } else {
-        console.warn("background-container or guess-area not found, using default background height");
-        backgroundContainer.style.height = `52.5vh`; // 45vh + 7.5vh [NEW: Updated default height to 52.5vh]
+        
+        document.body.style.background = "#FFFFFF";
     }
-    
-    document.body.style.background = "#000000"; // Ensure body background is black [NEW: Added to match CSS body background change]
-}
+
     window.addEventListener("resize", adjustBackground);
     if (window.visualViewport) {
         window.visualViewport.addEventListener("resize", () => {
