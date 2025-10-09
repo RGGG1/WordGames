@@ -43,10 +43,10 @@ body {
     width: 98vw;
     height: 10vh;
     margin: 0 1vw;
-    padding: 0.5vh 2vw;
+    padding: 0.25vh 2vw; /* Reduced top padding from 0.5vh to 0.25vh for half-line move up */
     background: transparent;
     position: fixed;
-    top: 0;
+    top: 0.15vh; /* Added 0.15vh to top */
     left: 0;
     z-index: 100;
 }
@@ -62,9 +62,10 @@ body {
 
 #header-controls {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.5vh;
+    flex-direction: row; /* Changed from column to row */
+    align-items: center; /* Align items vertically centered */
+    justify-content: flex-end; /* Keep controls right-aligned */
+    gap: 1vw; /* Adjusted gap for horizontal layout */
 }
 
 #all-games-link {
@@ -77,7 +78,7 @@ body {
 
 #game-number-container {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center; /* Center the game number controls */
     align-items: center;
     gap: 0.5vw;
 }
@@ -100,24 +101,14 @@ body {
 /* Explicit styling for give-up-link and guesses-link to prevent unstyled appearance */
 #give-up-link,
 #guesses-link {
-    font-family: 'Luckiest Guy', cursive; /* Ensure font consistency */
+    font-family: 'Luckiest Guy', cursive;
     font-size: 1.6vh;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
-    position: absolute; /* Position relative to game-screen */
-    top: 39vh; /* One quarter line above guess box */
+    position: static; /* Changed from absolute to static for inline flow */
     z-index: 10;
-    cursor: pointer; /* Ensure clickable appearance */
-}
-
-#give-up-link {
-    left: 1vw; /* Align with left edge of guess box */
-}
-
-#guesses-link {
-    right: 1vw; /* Align with right edge */
-    text-align: right;
+    cursor: pointer;
 }
 
 #game-screen {
@@ -162,7 +153,7 @@ body {
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    padding: 0.5vh 0.5vw;
+    padding: 0.5vh 0.75vw; /* Increased padding-left from 0.5vw to 0.75vw */
     box-sizing: border-box;
     width: 25vw;
     height: 3.5vh;
@@ -207,8 +198,9 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 20;
-    background: transparent; /* Ensure no background conflict */
+    background: #000000; /* Changed from transparent to black */
     position: relative;
+    padding-top: 0.5vh; /* Added half-line padding-top */
 }
 
 #guess-input-container {
@@ -673,7 +665,7 @@ body {
 
 #ad-box {
     width: 98vw;
-    margin: 0 1vw;
+    margin: 0.5vh 1vw; /* Added 0.5vh margin-top for half-line spacing */
     height: 2.5vh;
     background: #F0F0F0;
     display: flex;
@@ -721,51 +713,19 @@ body {
     position: relative;
     width: 25vw;
     height: 3.5vh;
-    border-radius: 30%;
+    border-radius: 50% / 25%; /* Creates an oval shape */
     display: flex;
     align-items: center;
     justify-content: center;
     box-shadow: 0 0 15px rgba(0, 0, 0, 0.15);
 }
 
+/* Remove pseudo-elements for oval shape */
 .hint-shape-fluffy-cloud::before,
 .hint-shape-fluffy-cloud::after,
 .hint-shape-fluffy-cloud .puff-1,
 .hint-shape-fluffy-cloud .puff-2 {
-    content: '';
-    position: absolute;
-    background: rgb(199, 21, 133);
-    border-radius: 50%;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    z-index: 10;
-}
-
-.hint-shape-fluffy-cloud::before {
-    width: 8vw;
-    height: 8vw;
-    top: -1vh;
-    left: -1vw;
-}
-
-.hint-shape-fluffy-cloud::after {
-    width: 6vw;
-    height: 6vw;
-    bottom: -0.75vh;
-    right: -1vw;
-}
-
-.hint-shape-fluffy-cloud .puff-1 {
-    width: 7vw;
-    height: 7vw;
-    top: 0;
-    left: 4vw;
-}
-
-.hint-shape-fluffy-cloud .puff-2 {
-    width: 6vw;
-    height: 6vw;
-    bottom: 0;
-    right: 4vw;
+    display: none;
 }
 
 .hint-shape-circle {
@@ -836,31 +796,18 @@ body {
 
 .hint-shape-cloud {
     background: rgb(135, 206, 235);
-    border-radius: 50%;
     position: relative;
+    width: 25vw;
+    height: 3.5vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
+/* Remove pseudo-elements for rectangle shape */
 .hint-shape-cloud::before,
 .hint-shape-cloud::after {
-    content: '';
-    position: absolute;
-    background: rgb(135, 206, 235);
-    border-radius: 50%;
-    z-index: 10;
-}
-
-.hint-shape-cloud::before {
-    width: 7.5vw;
-    height: 7.5vw;
-    top: -1vh;
-    left: 1vw;
-}
-
-.hint-shape-cloud::after {
-    width: 4.5vw;
-    height: 4.5vw;
-    top: -0.5vh;
-    right: 1vw;
+    display: none;
 }
 
 .hint-shape-sun {
@@ -901,26 +848,16 @@ body {
 .hint-color-9 { background: rgb(0, 191, 255); }
 .hint-color-10 { background: rgb(255, 20, 147); }
 
-.hint.hint-color-1.hint-shape-cloud::before,
-.hint.hint-color-1.hint-shape-cloud::after { background: rgb(255, 105, 180); }
-.hint.hint-color-2.hint-shape-cloud::before,
-.hint.hint-color-2.hint-shape-cloud::after { background: rgb(255, 215, 0); }
-.hint.hint-color-3.hint-shape-cloud::before,
-.hint.hint-color-3.hint-shape-cloud::after { background: rgb(50, 205, 50); }
-.hint.hint-color-4.hint-shape-cloud::before,
-.hint.hint-color-4.hint-shape-cloud::after { background: rgb(135, 206, 235); }
-.hint.hint-color-5.hint-shape-cloud::before,
-.hint.hint-color-5.hint-shape-cloud::after { background: rgb(199, 21, 133); }
-.hint.hint-color-6.hint-shape-cloud::before,
-.hint.hint-color-6.hint-shape-cloud::after { background: rgb(138, 43, 226); }
-.hint.hint-color-7.hint-shape-cloud::before,
-.hint.hint-color-7.hint-shape-cloud::after { background: rgb(255, 69, 0); }
-.hint.hint-color-8.hint-shape-cloud::before,
-.hint.hint-color-8.hint-shape-cloud::after { background: rgb(75, 0, 130); }
-.hint.hint-color-9.hint-shape-cloud::before,
-.hint.hint-color-9.hint-shape-cloud::after { background: rgb(0, 191, 255); }
-.hint.hint-color-10.hint-shape-cloud::before,
-.hint.hint-color-10.hint-shape-cloud::after { background: rgb(255, 20, 147); }
+.hint.hint-color-1.hint-shape-cloud { background: rgb(255, 105, 180); }
+.hint.hint-color-2.hint-shape-cloud { background: rgb(255, 215, 0); }
+.hint.hint-color-3.hint-shape-cloud { background: rgb(50, 205, 50); }
+.hint.hint-color-4.hint-shape-cloud { background: rgb(135, 206, 235); }
+.hint.hint-color-5.hint-shape-cloud { background: rgb(199, 21, 133); }
+.hint.hint-color-6.hint-shape-cloud { background: rgb(138, 43, 226); }
+.hint.hint-color-7.hint-shape-cloud { background: rgb(255, 69, 0); }
+.hint.hint-color-8.hint-shape-cloud { background: rgb(75, 0, 130); }
+.hint.hint-color-9.hint-shape-cloud { background: rgb(0, 191, 255); }
+.hint.hint-color-10.hint-shape-cloud { background: rgb(255, 20, 147); }
 
 .hint.hint-color-1.hint-shape-sun::before,
 .hint.hint-color-1.hint-shape-sun::after { background: rgb(255, 105, 180); }
@@ -942,46 +879,16 @@ body {
 .hint.hint-color-9.hint-shape-sun::after { background: rgb(0, 191, 255); }
 .hint.hint-color-10.hint-shape-sun::after { background: rgb(255, 20, 147); }
 
-.hint.hint-color-1.hint-shape-fluffy-cloud::before,
-.hint.hint-color-1.hint-shape-fluffy-cloud::after,
-.hint.hint-color-1.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-1.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 105, 180); }
-.hint.hint-color-2.hint-shape-fluffy-cloud::before,
-.hint.hint-color-2.hint-shape-fluffy-cloud::after,
-.hint.hint-color-2.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-2.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 215, 0); }
-.hint.hint-color-3.hint-shape-fluffy-cloud::before,
-.hint.hint-color-3.hint-shape-fluffy-cloud::after,
-.hint.hint-color-3.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-3.hint-shape-fluffy-cloud .puff-2 { background: rgb(50, 205, 50); }
-.hint.hint-color-4.hint-shape-fluffy-cloud::before,
-.hint.hint-color-4.hint-shape-fluffy-cloud::after,
-.hint.hint-color-4.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-4.hint-shape-fluffy-cloud .puff-2 { background: rgb(135, 206, 235); }
-.hint.hint-color-5.hint-shape-fluffy-cloud::before,
-.hint.hint-color-5.hint-shape-fluffy-cloud::after,
-.hint.hint-color-5.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-5.hint-shape-fluffy-cloud .puff-2 { background: rgb(199, 21, 133); }
-.hint.hint-color-6.hint-shape-fluffy-cloud::before,
-.hint.hint-color-6.hint-shape-fluffy-cloud::after,
-.hint.hint-color-6.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-6.hint-shape-fluffy-cloud .puff-2 { background: rgb(138, 43, 226); }
-.hint.hint-color-7.hint-shape-fluffy-cloud::before,
-.hint.hint-color-7.hint-shape-fluffy-cloud::after,
-.hint.hint-color-7.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-7.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 69, 0); }
-.hint.hint-color-8.hint-shape-fluffy-cloud::before,
-.hint.hint-color-8.hint-shape-fluffy-cloud::after,
-.hint.hint-color-8.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-8.hint-shape-fluffy-cloud .puff-2 { background: rgb(75, 0, 130); }
-.hint.hint-color-9.hint-shape-fluffy-cloud::before,
-.hint.hint-color-9.hint-shape-fluffy-cloud::after,
-.hint.hint-color-9.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-9.hint-shape-fluffy-cloud .puff-2 { background: rgb(0, 191, 255); }
-.hint.hint-color-10.hint-shape-fluffy-cloud::before,
-.hint.hint-color-10.hint-shape-fluffy-cloud::after,
-.hint.hint-color-10.hint-shape-fluffy-cloud .puff-1,
-.hint.hint-color-10.hint-shape-fluffy-cloud .puff-2 { background: rgb(255, 20, 147); }
+.hint.hint-color-1.hint-shape-fluffy-cloud { background: rgb(255, 105, 180); }
+.hint.hint-color-2.hint-shape-fluffy-cloud { background: rgb(255, 215, 0); }
+.hint.hint-color-3.hint-shape-fluffy-cloud { background: rgb(50, 205, 50); }
+.hint.hint-color-4.hint-shape-fluffy-cloud { background: rgb(135, 206, 235); }
+.hint.hint-color-5.hint-shape-fluffy-cloud { background: rgb(199, 21, 133); }
+.hint.hint-color-6.hint-shape-fluffy-cloud { background: rgb(138, 43, 226); }
+.hint.hint-color-7.hint-shape-fluffy-cloud { background: rgb(255, 69, 0); }
+.hint.hint-color-8.hint-shape-fluffy-cloud { background: rgb(75, 0, 130); }
+.hint.hint-color-9.hint-shape-fluffy-cloud { background: rgb(0, 191, 255); }
+.hint.hint-color-10.hint-shape-fluffy-cloud { background: rgb(255, 20, 147); }
 
 .hint.hint-color-1.hint-shape-aviator { background: rgb(255, 105, 180); }
 .hint.hint-color-2.hint-shape-aviator { background: rgb(255, 215, 0); }

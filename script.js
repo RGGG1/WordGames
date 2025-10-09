@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const touchThreshold = 10;
 
     // Hint shapes, colors, and reveal effects
-    const hintShapes = ['cloud', 'sun', 'aviator', 'diamond', 'fluffy-cloud'];
+    const hintShapes = ['oval', 'sun', 'aviator', 'diamond', 'rectangle'];
     const hintColors = [
         'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
         'color-6', 'color-7', 'color-8', 'color-9', 'color-10'
@@ -1235,8 +1235,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         visibleHints.forEach((hint, index) => {
             const hintElement = document.getElementById(hintRevealOrder[index]);
             if (hintElement && hintStyles[index]) {
-                const isFluffyCloudShape = hintStyles[index].shape === "hint-shape-fluffy-cloud";
-                const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
+                const isrectangleShape = hintStyles[index].shape === "hint-shape-rectangle";
+                const hintContent = isrectangleShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[index].effect;
@@ -1245,7 +1245,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
-                    hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
+                    hintElement.innerHTML = isrectangleShape ? `<span class="hint-text">${letters}</span>` : letters;
                 } else {
                     hintElement.classList.add(`reveal-${effect}`);
                     setTimeout(() => {
@@ -1265,8 +1265,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const hintElement = document.getElementById(hintRevealOrder[hintIndex]);
             if (hintElement && hintStyles[hintIndex]) {
                 const hint = hints[hintIndex];
-                const isFluffyCloudShape = hintStyles[hintIndex].shape === "hint-shape-fluffy-cloud";
-                const hintContent = isFluffyCloudShape ? `<span class="hint-text">${hint}</span>` : hint;
+                const isrectangleShape = hintStyles[hintIndex].shape === "hint-shape-rectangle";
+                const hintContent = isrectangleShape ? `<span class="hint-text">${hint}</span>` : hint;
                 hintElement.innerHTML = hintContent;
                 hintElement.style.display = "flex";
                 const effect = hintStyles[hintIndex].effect;
@@ -1275,7 +1275,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         const displayChar = letter === " " ? " " : letter;
                         return `<span class="letter" style="animation: fadeInLetter 0.3s forwards; animation-delay: ${i * 0.05}s">${displayChar}</span>`;
                     }).join("");
-                    hintElement.innerHTML = isFluffyCloudShape ? `<span class="hint-text">${letters}</span>` : letters;
+                    hintElement.innerHTML = isrectangleShape ? `<span class="hint-text">${letters}</span>` : letters;
                 } else {
                     hintElement.classList.add(`reveal-${effect}`);
                     setTimeout(() => {
