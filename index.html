@@ -1,28 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="WORDY is a fun and challenging word guessing game by Big Brain Games. Guess the secret word using hints and share your results!">
+    <meta name="keywords" content="word game, guessing game, puzzle, Big Brain Games, WORDY">
+    <meta name="author" content="Big Brain Games">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#FFB300">
+    <meta property="og:title" content="WORDY by Big Brain Games">
+    <meta property="og:description" content="Can you guess the secret word? Play WORDY and challenge your friends!">
+    <meta property="og:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
+    <meta property="og:url" content="https://wordy.bigbraingames.net">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="WORDY by Big Brain Games">
+    <meta name="twitter:description" content="Can you guess the secret word? Play WORDY and challenge your friends!">
+    <meta name="twitter:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
+    <title>WORDY by Big Brain Games</title>
+    <link rel="icon" type="image/png" href="wordy_favicon.png">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'">
+</head>
 <body>
     <div id="background-container"></div>
     <div id="header">
         <span id="game-name">WORDY</span>
         <div id="header-controls">
             <a href="#" id="all-games-link">All Games</a>
+            <a href="#" id="give-up-link">Give Up</a>
             <div id="game-number-container">
                 <a href="#" id="prev-game-arrow">◄</a>
                 <span id="game-number-text"></span>
                 <a href="#" id="next-game-arrow">▶</a>
             </div>
+            <a href="#" id="guesses-link">Guesses: 0/5</a>
         </div>
     </div>
     <div id="game-container">
         <div id="game-screen" class="screen">
             <div id="hints-container">
                 <span id="hints-heading">Hints</span>
-                <div id="hint-1" class="hint"><span class="hint-text"></span></div>
-                <div id="hint-2" class="hint"><span class="hint-text"></span></div>
-                <div id="hint-3" class="hint"><span class="hint-text"></span></div>
-                <div id="hint-4" class="hint"><span class="hint-text"></span></div>
-                <div id="hint-5" class="hint"><span class="hint-text"></span></div>
-            </div>
-            <a href="#" id="give-up-link">Give Up</a>
-            <a href="#" id="guesses-link">Guesses: 0/5</a>
+                <div id="hint-1" class="hint"></div>
+                <div id="hint-2" class="hint"></div>
+                <div id="hint-3" class="hint"></div>
+                <div id="hint-4" class="hint"></div>
+                <div id="hint-5" class="hint"></div>
+            </div>        
         </div>
         <div id="guess-area">
             <div id="guess-input-container">
@@ -50,7 +74,7 @@
             <span>Private Games</span>
             <div id="private-list" class="game-list"></div>
             <button type="button" id="create-pineapple" class="control-btn">Create a Wordy</button>
-            <button type="button" id="private-back-btn" class="control-btn">Back</button>
+            <button type="private-back-btn" id="btn" class="control-btn">Back</button>
         </div>
     </div>
     <div id="form-content" class="screen">
@@ -64,8 +88,8 @@
             <input type="text" id="hint-4" placeholder="Hint 4..." maxlength="15" autocomplete="off" spellcheck="false">
             <input type="text" id="hint-5" placeholder="Hint 5..." maxlength="15" autocomplete="off" spellcheck="false">
         </div>
-        <button type="button" id="confirm-btn" class="control-btn">Confirm</button>
-        <button type="button" id="form-back-btn" class="control-btn">Back</button>
+        <button type="submit" id="confirm-btn" class="control-btn">Confirm</button>
+        <button type="form-back-btn" id="form-btn" class="control-btn">Back</button>
     </div>
     <div id="game-over" class="screen">
         <div id="share-section">
@@ -108,3 +132,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="script.js"></script>
 </body>
+</html>
