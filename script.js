@@ -1158,8 +1158,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Handling guess:", guess, { isProcessingGuess, gameOver });
         if (isProcessingGuess || gameOver) return;
         isProcessingGuess = true;
-        guessBtn.disabled = true;
-        guessInput.disabled = true;
+        guessBtn.disabled = true; // Disable button to prevent multiple submissions
 
         try {
             if (!/^[A-Z\s]+$/.test(guess)) {
@@ -1171,8 +1170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     animationTimeout = null;
                     isProcessingGuess = false;
                     guessBtn.disabled = false;
-                    guessInput.disabled = false;
-                    guessInput.focus();
+                    guessInput.focus(); // Maintain focus
                     activeInput = guessInput;
                     if (isMobile) {
                         guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -1224,8 +1222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                     isProcessingGuess = false;
                     guessBtn.disabled = false;
-                    guessInput.disabled = false;
-                    guessInput.focus();
+                    guessInput.focus(); // Maintain focus
                     activeInput = guessInput;
                     if (isMobile) {
                         guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -1238,8 +1235,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessInput.value = "";
             isProcessingGuess = false;
             guessBtn.disabled = false;
-            guessInput.disabled = false;
-            guessInput.focus();
+            guessInput.focus(); // Maintain focus
             activeInput = guessInput;
             if (isMobile) {
                 guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });

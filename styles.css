@@ -78,7 +78,7 @@ body {
 #hints-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start; /* Align left */
     width: 100%;
     padding: 2vmin;
 }
@@ -92,35 +92,29 @@ body {
 }
 
 .hints-box {
-    width: 80vw;
-    max-width: 300px;
+    width: 200px; /* Approximately 20 characters at ~10px per character */
+    height: 20vmin; /* Fixed height for 5 hints */
     background: rgba(0, 0, 0, 0.6);
     border-radius: 2vmin;
     padding: 2vmin;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
+    align-items: flex-start; /* Align hints text left */
+    justify-content: flex-start;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    overflow-y: auto; /* Allow scrolling if needed */
 }
 
 #hints-list {
     font-size: 3.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
-    text-align: center;
+    text-align: left;
 }
 
 #hints-list div {
     margin: 0.5vmin 0;
-}
-
-#hints-list div:not(:last-child)::after {
-    content: "__________";
-    display: block;
-    color: #FFFFFF;
-    font-size: 3vmin;
-    margin-top: 0.5vmin;
+    text-decoration: none; /* Remove underlines from hints */
 }
 
 #guess-area {
@@ -131,7 +125,7 @@ body {
     width: calc(100% - 4vw);
     margin: 0 2vw;
     margin-bottom: 0.5em;
-    height: 12vmin;
+    height: 14vmin; /* Increased to accommodate larger font */
     background: #000000;
     z-index: 10;
     flex: 0 0 auto;
@@ -147,7 +141,7 @@ body {
 }
 
 #guess-prompt {
-    font-size: 3vmin;
+    font-size: 4.5vmin; /* Increased by 50% from 3vmin */
     color: #000000;
     padding: 0.5vmin 0;
     text-align: center;
@@ -157,7 +151,7 @@ body {
     border: none;
     outline: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: 3.5vmin;
+    font-size: 5.25vmin; /* Increased by 50% from 3.5vmin */
     color: #000000;
     background: #FFFFFF;
     width: 100%;
@@ -178,7 +172,7 @@ body {
 #guess-btn {
     width: 40vw;
     height: 100%;
-    min-height: 12vmin;
+    min-height: 14vmin; /* Match increased guess-area height */
     background: #FFB300;
     border: none;
     border-radius: 0 1vmin 1vmin 0;
@@ -622,8 +616,94 @@ body {
     #game-container, #background-container, .screen, .dialog {
         height: calc(var(--viewport-height, 100vh));
     }
-    #header { height: 10vmin; }
-    #guess-area { height: 12vmin; }
-    #footer-controls { height: 8vmin; }
-    #ad-box { height: 6vmin; }
+    #header { 
+        height: 10vmin; 
+    }
+    #guess-area {
+        height: 14vmin; /* Increased to match larger font size */
+        margin-bottom: 1vmin;
+    }
+    #guess-input-container {
+        width: 60vw;
+    }
+    #guess-prompt {
+        font-size: 4.5vmin; /* Increased by 50% from 3vmin */
+    }
+    #guess-input {
+        font-size: 5.25vmin; /* Increased by 50% from 3.5vmin */
+    }
+    #guess-btn {
+        width: 40vw;
+        min-height: 14vmin; /* Match guess-area height */
+        font-size: 4vmin;
+    }
+    #hints-container {
+        padding: 1vmin;
+    }
+    #hints-heading {
+        font-size: 4vmin;
+    }
+    .hints-box {
+        width: 200px; /* Approximately 20 characters */
+        height: 20vmin; /* Fixed height for 5 hints */
+        padding: 1vmin;
+    }
+    #hints-list {
+        font-size: 3.5vmin;
+    }
+    #hints-list div {
+        margin: 0.5vmin 0;
+    }
+    #game-name {
+        font-size: 4vmin;
+    }
+    #all-games-link {
+        font-size: 3vmin;
+    }
+    #give-up-link, #guesses-link {
+        font-size: 3vmin;
+    }
+    #prev-game-arrow, #next-game-arrow, #game-number-text {
+        font-size: 3vmin;
+    }
+    .tab {
+        font-size: 3vmin;
+        padding: 1vmin 3vw;
+    }
+    .tab-content > span {
+        font-size: 3vmin;
+    }
+    .game-list-row span {
+        font-size: 2.5vmin;
+    }
+    #form-container input {
+        font-size: 2.5vmin;
+        height: 6vmin;
+    }
+    .control-btn {
+        font-size: 3vmin;
+        height: 6vmin;
+    }
+    #share-text {
+        font-size: 3vmin;
+    }
+    #game-number-display {
+        font-size: 2.5vmin;
+    }
+    #game-over-message {
+        font-size: 4vmin;
+    }
+    .dialog-message {
+        font-size: 2.5vmin;
+    }
+    #guesses-title {
+        font-size: 3vmin;
+    }
+    #guesses-list {
+        font-size: 2.5vmin;
+    }
+    #share-buttons a {
+        width: 6vmin;
+        height: 6vmin;
+    }
 }
