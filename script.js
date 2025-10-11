@@ -112,17 +112,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     function adjustBackground() {
         console.log("Adjusting background and layout");
         const backgroundContainer = document.getElementById("background-container");
-        const viewportHeight = window.visualViewport?.height || window.innerHeight;
-        document.documentElement.style.setProperty('--viewport-height', `${viewportHeight}px`);
-        if (backgroundContainer && gameContainer) {
-            backgroundContainer.style.height = `${viewportHeight}px`;
-            gameContainer.style.minHeight = `${viewportHeight}px`;
-            backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center / cover`;
+        if (window.visualViewport) {
+            const viewportHeight = window.visualViewport.height;
+            console.log("Visual viewport height:", viewportHeight);
+            document.documentElement.style.setProperty('--viewport-height', `${viewportHeight}px`);
+            if (backgroundContainer && gameContainer) {
+                backgroundContainer.style.height = `${viewportHeight}px`;
+                gameContainer.style.height = `${viewportHeight}px`;
+                backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
+                backgroundContainer.style.backgroundSize = "100% 100%";
+            }
+        } else {
+            const fallbackHeight = window.innerHeight;
+            console.log("Using fallback height:", fallbackHeight);
+            document.documentElement.style.setProperty('--viewport-height', `${fallbackHeight}px`);
+            if (backgroundContainer && gameContainer) {
+                backgroundContainer.style.height = `${fallbackHeight}px`;
+                gameContainer.style.height = `${fallbackHeight}px`;
+                backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
+                backgroundContainer.style.backgroundSize = "100% 100%";
+            }
         }
-        // Ensure guess area is visible above keyboard
-        if (isMobile && guessInput === document.activeElement) {
-            guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
-        }
+        if (backgroundContainer) backgroundContainer.offsetHeight; // Force repaint
     }
 
     // Ensure keyboard stays open
@@ -135,18 +146,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             !document.querySelector('.screen.active') &&
             !document.querySelector('.dialog[style*="display: flex"]')
         ) {
-            console.log("Ensuring keyboard stays open");
+            console.log("Ensuring keyboard stays open by focusing guess input");
             if (document.activeElement !== guessInput) {
                 guessInput.focus();
                 activeInput = guessInput;
-                if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
-                    setTimeout(() => {
-                        if (document.activeElement !== guessInput) {
-                            guessInput.focus();
-                        }
-                    }, 100);
-                }
+            }
+            if (isMobile) {
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         }
     }
@@ -154,32 +160,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Ensure initial focus on game load
     function ensureInitialFocus() {
         if (guessInput && !gameOver && !isProcessingGuess && gameScreen.style.display === "flex") {
-            console.log("Setting initial focus");
+            console.log("Attempting initial focus on guess input");
             guessInput.focus();
             activeInput = guessInput;
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                // Force keyboard on mobile by simulating a touch event
+                const touchEvent = new Event('touchstart', { bubbles: true });
+                guessInput.dispatchEvent(touchEvent);
                 setTimeout(() => {
                     if (document.activeElement !== guessInput) {
+                        console.log("Initial focus failed, retrying");
                         guessInput.focus();
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                        guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
-                }, 200);
+                }, 300);
             }
         }
-    }
-
-    // Prevent keyboard dismissal on Android
-    if (guessInput) {
-        guessInput.addEventListener("blur", (e) => {
-            if (isMobile && !gameOver && !isProcessingGuess && !isUILocked) {
-                console.log("Preventing input blur");
-                setTimeout(() => {
-                    guessInput.focus();
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
-                }, 50);
-            }
-        });
     }
 
     // Event listeners for resize and viewport changes
@@ -207,7 +204,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             adjustBackground();
             initialTouchHandled = true;
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         }
     });
@@ -225,7 +222,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessInput.focus();
             activeInput = guessInput;
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
             keepKeyboardOpen();
         }
@@ -244,7 +241,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isUILocked = false;
                 keepKeyboardOpen();
             }, 500);
-        }, 50);
+        }, 100);
         gameNameElement.addEventListener(isMobile ? "touchstart" : "click", handler);
         gameNameElement.addEventListener("keydown", (e) => {
             if (e.key === "Enter" || e.key === " ") handler(e);
@@ -279,7 +276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeInput = guessInput;
             adjustBackground();
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         });
         guessInput.addEventListener("touchstart", (e) => {
@@ -289,7 +286,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeInput = guessInput;
             adjustBackground();
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                // Force keyboard to appear
                 setTimeout(() => {
                     if (document.activeElement !== guessInput) {
                         guessInput.focus();
@@ -310,7 +308,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 activeInput = guessInput;
                 adjustBackground();
                 if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 }
             }
         };
@@ -328,7 +326,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
                             guessInput.focus();
@@ -350,10 +348,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guess button triggered", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                guessInput.focus();
-                activeInput = guessInput;
-                if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                // Ensure input is focused before processing guess
+                if (isMobile && document.activeElement !== guessInput) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 }
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
@@ -361,12 +360,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                     handleGuess(guess);
                 }
             }
-        }, 50);
+        }, 100);
         guessBtn.addEventListener("click", handler);
-        guessBtn.addEventListener("touchstart", (e) => {
-            e.preventDefault();
-            handler(e);
-        });
+        guessBtn.addEventListener("touchstart", handler);
     }
 
     // Setup form inputs
@@ -451,7 +447,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 displayGameList();
                 adjustBackground();
                 keepKeyboardOpen();
-            }, 50);
+            }, 100);
         };
 
         officialTab.addEventListener("click", tabHandler(officialTab, officialContent));
@@ -476,7 +472,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isUILocked = false;
                 keepKeyboardOpen();
             }, 500);
-        }, 50);
+        }, 100);
         allGamesLink.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
@@ -493,7 +489,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isUILocked = false;
                 keepKeyboardOpen();
             }, 500);
-        }, 50);
+        }, 100);
         giveUpLink.addEventListener(isMobile ? "touchstart" : "click", handler);
 
         giveUpYesBtn.addEventListener("click", (e) => {
@@ -545,7 +541,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isUILocked = false;
                 keepKeyboardOpen();
             }, 500);
-        }, 50);
+        }, 100);
         guessesLink.addEventListener(isMobile ? "touchstart" : "click", handler);
         guessesScreen.addEventListener("click", (e) => {
             if (e.target === guessesScreen) {
@@ -680,7 +676,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isUILocked = false;
                 keepKeyboardOpen();
             }, 500);
-        }, 50);
+        }, 100);
         createPineappleBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
@@ -696,7 +692,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isUILocked = false;
                 keepKeyboardOpen();
             }, 500);
-        }, 50);
+        }, 100);
         createPineappleLink.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
@@ -712,7 +708,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isUILocked = false;
                 keepKeyboardOpen();
             }, 500);
-        }, 50);
+        }, 100);
         formBackBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
@@ -728,7 +724,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isUILocked = false;
                 keepKeyboardOpen();
             }, 500);
-        }, 50);
+        }, 100);
         officialBackBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
@@ -744,7 +740,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isUILocked = false;
                 keepKeyboardOpen();
             }, 500);
-        }, 50);
+        }, 100);
         privateBackBtn.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
@@ -804,7 +800,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 nextGameBtnEnd.classList.remove("loading");
                 keepKeyboardOpen();
             }
-        }, 50);
+        }, 100);
         nextGameBtnEnd.addEventListener(isMobile ? "touchstart" : "click", handler);
     }
 
@@ -873,7 +869,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 confirmBtn.classList.remove("loading");
                 keepKeyboardOpen();
             }
-        }, 50);
+        }, 100);
         confirmBtn.addEventListener("click", handler);
         confirmBtn.addEventListener("touchstart", handler);
     }
@@ -905,7 +901,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 resetScreenDisplays(gameScreen);
                                 adjustBackground();
                                 updateArrowStates(allGames.findIndex(g => g["Game Number"] === gameNum), allGames);
-                                ensureInitialFocus();
+                                ensureInitialFocus(); // Ensure keyboard on load
                             });
                         } else {
                             loadLatestGame();
@@ -1010,7 +1006,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             isLoadingGame = false;
                             keepKeyboardOpen();
                         }
-                    }, 50);
+                    }, 100);
                     resultSpan.addEventListener(isMobile ? "touchstart" : "click", handler);
                     row.addEventListener("touchstart", (e) => {
                         touchStartX = e.touches[0].clientX;
@@ -1075,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             isLoadingGame = false;
                             keepKeyboardOpen();
                         }
-                    }, 50);
+                    }, 100);
                     resultSpan.addEventListener(isMobile ? "touchstart" : "click", handler);
                     row.addEventListener("touchstart", (e) => {
                         touchStartX = e.touches[0].clientX;
@@ -1111,7 +1107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays(gameScreen);
             adjustBackground();
             updateArrowStates(0, allGames);
-            ensureInitialFocus();
+            ensureInitialFocus(); // Ensure keyboard on load
         } else {
             console.error("No games available to load");
             if (formErrorDialog && formErrorMessage) {
@@ -1213,7 +1209,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Handling guess:", guess, { isProcessingGuess, gameOver });
         if (isProcessingGuess || gameOver) return;
         isProcessingGuess = true;
-        guessBtn.disabled = true;
+        guessBtn.disabled = true; // Disable button to prevent multiple submissions
 
         try {
             if (!/^[A-Z\s]+$/.test(guess)) {
@@ -1225,13 +1221,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                     isProcessingGuess = false;
                     guessBtn.disabled = false;
                     if (document.activeElement !== guessInput) {
-                        guessInput.focus();
+                        guessInput.focus(); // Maintain focus
                         activeInput = guessInput;
                     }
                     if (isMobile) {
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                        guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
-                    keepKeyboardOpen();
+                    keepKeyboardOpen(); // Ensure keyboard stays open
                 }, 350);
                 return;
             }
@@ -1253,7 +1249,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     gameType = "pineapple";
                 }
                 saveGameResult(gameType, normalizedGameNumber, secretWord, `${guessCount}/5`);
-                guessInput.value = "";
+                guessInput.value = ""; // Clear input only on correct guess
                 endGame(true);
                 return;
             } else {
@@ -1273,7 +1269,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             gameType = "pineapple";
                         }
                         saveGameResult(gameType, normalizedGameNumber, secretWord, "X/5");
-                        guessInput.value = "";
+                        guessInput.value = ""; // Clear input only on game end
                         endGame(false);
                     } else {
                         displayHint();
@@ -1281,13 +1277,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                     isProcessingGuess = false;
                     guessBtn.disabled = false;
                     if (document.activeElement !== guessInput) {
-                        guessInput.focus();
+                        guessInput.focus(); // Maintain focus
                         activeInput = guessInput;
                     }
                     if (isMobile) {
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
+                        guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
-                    keepKeyboardOpen();
+                    keepKeyboardOpen(); // Ensure keyboard stays open
                 }, 350);
                 return;
             }
@@ -1300,106 +1296,106 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isProcessingGuess = false;
                 guessBtn.disabled = false;
                 if (document.activeElement !== guessInput) {
-                    guessInput.focus();
+                    guessInput.focus(); // Maintain focus
                     activeInput = guessInput;
                 }
                 if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
-                    }
-                    keepKeyboardOpen();
-                }, 350);
-            }
-        }
-    
-        // Save game result
-        function saveGameResult(gameType, gameNumber, secretWord, status) {
-            console.log("Saving game result", { gameType, gameNumber, secretWord, status });
-            gameResults[`${gameType}_${gameNumber}`] = { secretWord, status };
-            localStorage.setItem("gameResults", JSON.stringify(gameResults));
-            console.log("Game results updated:", gameResults);
-        }
-    
-        // End game
-        function endGame(won, gaveUp = false) {
-            console.log("Ending game", { won, gaveUp });
-            gameOver = true;
-            guessBtn.disabled = true;
-            guessInput.disabled = true;
-            gameScreen.classList.add("game-ended");
-    
-            const gameOverScreen = document.getElementById("game-over");
-            const shareText = document.getElementById("share-text");
-            const gameNumberDisplay = document.getElementById("game-number-display");
-    
-            if (gameOverScreen && shareText && gameNumberDisplay) {
-                gameOverScreen.style.display = "flex";
-                gameNumberDisplay.textContent = currentGameNumber;
-                shareText.innerHTML = gaveUp
-                    ? `I gave up on <span class="guess-count">WORDY ${currentGameNumber}</span> 😔`
-                    : won
-                        ? `I solved <span class="guess-count">WORDY ${currentGameNumber}</span> in ${guessCount}/5! 🥳`
-                        : `I couldn't solve <span class="guess-count">WORDY ${currentGameNumber}</span> 😔`;
-    
-                const shareMessage = gaveUp
-                    ? `I gave up on WORDY ${currentGameNumber} 😔\nPlay it at: https://wordy.bigbraingames.net`
-                    : won
-                        ? `I solved WORDY ${currentGameNumber} in ${guessCount}/5! 🥳\nPlay it at: https://wordy.bigbraingames.net`
-                        : `I couldn't solve WORDY ${currentGameNumber} 😔\nPlay it at: https://wordy.bigbraingames.net`;
-    
-                const shareButtons = [
-                    { id: "share-whatsapp", url: `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}` },
-                    { id: "share-telegram", url: `https://t.me/share/url?url=https://wordy.bigbraingames.net&text=${encodeURIComponent(shareMessage)}` },
-                    { id: "share-twitter", url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}` },
-                    { id: "share-instagram", url: "#" }
-                ];
-    
-                shareButtons.forEach(button => {
-                    const element = document.getElementById(button.id);
-                    if (element) {
-                        element.href = button.url;
-                        if (button.id === "share-instagram") {
-                            element.addEventListener("click", (e) => {
-                                e.preventDefault();
-                                console.log("Instagram sharing not supported via URL, copying share message");
-                                navigator.clipboard.writeText(shareMessage).then(() => {
-                                    alert("Share message copied to clipboard! Paste it in Instagram.");
-                                }).catch(err => {
-                                    console.error("Failed to copy share message:", err);
-                                });
-                            });
-                        }
-                    }
-                });
-    
-                if (won && !gaveUp) {
-                    const pineappleRain = document.createElement("div");
-                    pineappleRain.className = "pineapple-rain";
-                    document.body.appendChild(pineappleRain);
-    
-                    for (let i = 0; i < 30; i++) {
-                        const pineapple = document.createElement("div");
-                        pineapple.className = "pineapple-piece";
-                        pineapple.textContent = "🍍";
-                        pineapple.style.left = `${Math.random() * 100}vw`;
-                        pineapple.style.animationDuration = `${Math.random() * 2 + 1}s`;
-                        pineapple.style.animationDelay = `${Math.random() * 0.5}s`;
-                        pineapple.style.setProperty('--drift', Math.random() * 2 - 1);
-                        pineapple.style.setProperty('--rotation', `${Math.random() * 360}deg`);
-                        pineappleRain.appendChild(pineapple);
-                    }
-    
-                    setTimeout(() => {
-                        pineappleRain.remove();
-                    }, 3000);
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 }
-    
-                resetScreenDisplays(gameOverScreen);
-            } else {
-                console.error("Game over elements not found");
-            }
+                keepKeyboardOpen(); // Ensure keyboard stays open
+            }, 350);
         }
-    
-        // Initial setup
-        await fetchOfficialGames();
-        console.log("Initial setup completed");
-    });
+    }
+
+    // Save game result
+    function saveGameResult(gameType, gameNumber, secretWord, status) {
+        console.log("Saving game result", { gameType, gameNumber, secretWord, status });
+        gameResults[`${gameType}_${gameNumber}`] = { secretWord, status };
+        localStorage.setItem("gameResults", JSON.stringify(gameResults));
+        console.log("Game results updated:", gameResults);
+    }
+
+    // End game
+    function endGame(won, gaveUp = false) {
+        console.log("Ending game", { won, gaveUp });
+        gameOver = true;
+        guessBtn.disabled = true;
+        guessInput.disabled = true;
+        gameScreen.classList.add("game-ended");
+
+        const gameOverScreen = document.getElementById("game-over");
+        const shareText = document.getElementById("share-text");
+        const gameNumberDisplay = document.getElementById("game-number-display");
+
+        if (gameOverScreen && shareText && gameNumberDisplay) {
+            gameOverScreen.style.display = "flex";
+            gameNumberDisplay.textContent = currentGameNumber;
+            shareText.innerHTML = gaveUp
+                ? `I gave up on <span class="guess-count">WORDY ${currentGameNumber}</span> 😔`
+                : won
+                    ? `I solved <span class="guess-count">WORDY ${currentGameNumber}</span> in ${guessCount}/5! 🥳`
+                    : `I couldn't solve <span class="guess-count">WORDY ${currentGameNumber}</span> 😔`;
+
+            const shareMessage = gaveUp
+                ? `I gave up on WORDY ${currentGameNumber} 😔\nPlay it at: https://wordy.bigbraingames.net`
+                : won
+                    ? `I solved WORDY ${currentGameNumber} in ${guessCount}/5! 🥳\nPlay it at: https://wordy.bigbraingames.net`
+                    : `I couldn't solve WORDY ${currentGameNumber} 😔\nPlay it at: https://wordy.bigbraingames.net`;
+
+            const shareButtons = [
+                { id: "share-whatsapp", url: `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}` },
+                { id: "share-telegram", url: `https://t.me/share/url?url=https://wordy.bigbraingames.net&text=${encodeURIComponent(shareMessage)}` },
+                { id: "share-twitter", url: `https://twitter.com/intent/tweet?text=${encodeURIComponent(shareMessage)}` },
+                { id: "share-instagram", url: "#" }
+            ];
+
+            shareButtons.forEach(button => {
+                const element = document.getElementById(button.id);
+                if (element) {
+                    element.href = button.url;
+                    if (button.id === "share-instagram") {
+                        element.addEventListener("click", (e) => {
+                            e.preventDefault();
+                            console.log("Instagram sharing not supported via URL, copying share message");
+                            navigator.clipboard.writeText(shareMessage).then(() => {
+                                alert("Share message copied to clipboard! Paste it in Instagram.");
+                            }).catch(err => {
+                                console.error("Failed to copy share message:", err);
+                            });
+                        });
+                    }
+                }
+            });
+
+            if (won && !gaveUp) {
+                const pineappleRain = document.createElement("div");
+                pineappleRain.className = "pineapple-rain";
+                document.body.appendChild(pineappleRain);
+
+                for (let i = 0; i < 30; i++) {
+                    const pineapple = document.createElement("div");
+                    pineapple.className = "pineapple-piece";
+                    pineapple.textContent = "🍍";
+                    pineapple.style.left = `${Math.random() * 100}vw`;
+                    pineapple.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                    pineapple.style.animationDelay = `${Math.random() * 0.5}s`;
+                    pineapple.style.setProperty('--drift', Math.random() * 2 - 1);
+                    pineapple.style.setProperty('--rotation', `${Math.random() * 360}deg`);
+                    pineappleRain.appendChild(pineapple);
+                }
+
+                setTimeout(() => {
+                    pineappleRain.remove();
+                }, 3000);
+            }
+
+            resetScreenDisplays(gameOverScreen);
+        } else {
+            console.error("Game over elements not found");
+        }
+    }
+
+    // Initial setup
+    await fetchOfficialGames();
+    console.log("Initial setup completed");
+});
