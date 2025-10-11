@@ -138,14 +138,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Ensure keyboard stays open
     function keepKeyboardOpen() {
-        if (gameScreen.style.display === "flex" && !gameOver && !isProcessingGuess && !isUILocked && !document.querySelector('.screen.active') && !document.querySelector('.dialog[style*="display: flex"]')) {
-            if (guessInput && document.activeElement !== guessInput) {
-                console.log("Refocusing guess input to keep keyboard open");
-                guessInput.focus();
-                activeInput = guessInput;
-                if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }
+        if (
+            gameScreen.style.display === "flex" &&
+            !gameOver &&
+            !isProcessingGuess &&
+            !isUILocked &&
+            !document.querySelector('.screen.active') &&
+            !document.querySelector('.dialog[style*="display: flex"]')
+        ) {
+            console.log("Ensuring keyboard stays open by focusing guess input");
+            guessInput.focus();
+            activeInput = guessInput;
+            if (isMobile) {
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         }
     }
@@ -197,6 +202,25 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeInput = guessInput;
             adjustBackground();
             initialTouchHandled = true;
+        }
+    });
+
+    // Global click handler to refocus guess input
+    document.addEventListener("click", (e) => {
+        if (
+            gameScreen.style.display === "flex" &&
+            !gameOver &&
+            !isProcessingGuess &&
+            !isUILocked &&
+            !e.target.closest('.screen, .dialog, #guess-btn, #guess-input, #guess-input-container, #guess-area')
+        ) {
+            console.log("Global click detected, refocusing guess input");
+            guessInput.focus();
+            activeInput = guessInput;
+            if (isMobile) {
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
+            keepKeyboardOpen();
         }
     });
 
@@ -284,30 +308,28 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Setup guess area
     if (guessArea) {
-    const handler = (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        console.log("Guess area triggered");
-        if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-            // Ensure the input is focused and keyboard is triggered
-            guessInput.focus();
-            activeInput = guessInput;
-            // Force keyboard to show by temporarily blurring and refocusing
-            if (isMobile && document.activeElement === guessInput) {
-                guessInput.blur();
-                setTimeout(() => {
-                    guessInput.focus();
+        const handler = (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guess area triggered");
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                guessInput.focus();
+                activeInput = guessInput;
+                if (isMobile && document.activeElement === guessInput) {
+                    guessInput.blur();
+                    setTimeout(() => {
+                        guessInput.focus();
+                        guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                    }, 0);
+                } else if (isMobile) {
                     guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }, 0);
-            } else if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
+                adjustBackground();
             }
-            adjustBackground();
-        }
-    };
-    guessArea.addEventListener("click", handler);
-    guessArea.addEventListener("touchstart", handler);
-}
+        };
+        guessArea.addEventListener("click", handler);
+        guessArea.addEventListener("touchstart", handler);
+    }
 
     // Setup guess button
     if (guessBtn) {
@@ -376,7 +398,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (activeScreen === gameScreen) {
             gameScreen.style.display = "flex";
             guessArea.style.display = "flex";
-            setTimeout(ensureInitialFocus, 100);
+            setTimeout(() => {
+                ensureInitialFocus();
+                keepKeyboardOpen();
+            }, 100);
         } else if (activeScreen === gameSelectContent || activeScreen === formContent || activeScreen.id === "game-over") {
             activeScreen.style.display = "flex";
             activeScreen.classList.add("active");
@@ -468,6 +493,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
             giveUpDialog.style.display = "none";
             endGame(false, true);
+            keepKeyboardOpen();
         });
 
         giveUpNoBtn.addEventListener("click", (e) => {
@@ -1183,6 +1209,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     if (isMobile) {
                         guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
+                    keepKeyboardOpen(); // Ensure keyboard stays open
                 }, 350);
                 return;
             }
@@ -1235,6 +1262,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     if (isMobile) {
                         guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
+                    keepKeyboardOpen(); // Ensure keyboard stays open
                 }, 350);
                 return;
             }
@@ -1248,6 +1276,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (isMobile) {
                 guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
+            keepKeyboardOpen(); // Ensure keyboard stays open
         }
     }
 
