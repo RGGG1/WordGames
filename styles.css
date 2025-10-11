@@ -550,14 +550,14 @@ body {
 }
 
 #guesses-title {
-    font-size: 3vmin;
+    font-size: 6vmin; /* Doubled from 3vmin */
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     margin-bottom: 1vmin;
 }
 
 #guesses-list {
-    font-size: 2.5vmin;
+    font-size: 5vmin; /* Doubled from 2.5vmin */
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
@@ -574,7 +574,7 @@ body {
 }
 
 .dialog-message {
-    font-size: 2.5vmin;
+    font-size: 5vmin; /* Doubled from 2.5vmin */
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
@@ -696,13 +696,13 @@ body {
         font-size: 4vmin;
     }
     .dialog-message {
-        font-size: 2.5vmin;
+        font-size: 5vmin; /* Doubled from 2.5vmin */
     }
     #guesses-title {
-        font-size: 3vmin;
+        font-size: 6vmin; /* Doubled from 3vmin */
     }
     #guesses-list {
-        font-size: 2.5vmin;
+        font-size: 5vmin; /* Doubled from 2.5vmin */
     }
     #share-buttons a {
         width: 6vmin;
