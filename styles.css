@@ -123,6 +123,7 @@ body {
     align-items: center;
     width: calc(100% - 4vw); /* Reduced width for margins */
     margin: 0 2vw; /* Side margins */
+    margin-bottom: 0.5em; /* Added half-line spacing */
     height: 12vmin;
     background: #000000;
     z-index: 10;
@@ -156,6 +157,7 @@ body {
     text-align: center;
     text-transform: uppercase;
     flex: 1;
+    border-bottom-left-radius: 1vmin; /* Added to match curved aesthetic */
 }
 
 #guess-input:focus {
