@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     let animationTimeout = null;
     let activeInput = null;
     let currentBackground = "newbackground.png";
-    let hintStyles = [];
     let gameResults = JSON.parse(localStorage.getItem("gameResults")) || {};
 
     // DOM elements
@@ -73,42 +72,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     let touchStartY = 0;
     let touchMoved = false;
     const touchThreshold = 10;
-
-    // Hint shapes, colors, and reveal effects
-    const hintShapes = ['cloud', 'sun', 'aviator', 'diamond', 'fluffy-cloud'];
-    const hintColors = [
-        'color-1', 'color-2', 'color-3', 'color-4', 'color-5',
-        'color-6', 'color-7', 'color-8', 'color-9', 'color-10'
-    ];
-    const hintRevealEffects = [
-        'pop', 'stretch', 'zoom', 'bounce', 'spin',
-        'slide-left', 'slide-right', 'slide-up', 'slide-down', 'letter', 'splash'
-    ];
-
-    // Hint reveal order mapping
-    const hintRevealOrder = ['hint-1', 'hint-2', 'hint-3', 'hint-4', 'hint-5'];
-
-    // Shuffle array utility
-    function shuffleArray(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-        return array;
-    }
-
-    // Randomize hint styles
-    function randomizeHintStyles() {
-        hintStyles = [];
-        const availableColors = shuffleArray([...hintColors]);
-        const shuffledEffects = shuffleArray([...hintRevealEffects]);
-        for (let i = 0; i < 5; i++) {
-            const color = availableColors[i % availableColors.length] || hintColors[i % hintColors.length];
-            const effect = shuffledEffects[i % shuffledEffects.length];
-            hintStyles.push({ shape: `hint-shape-${hintShapes[i % hintShapes.length]}`, color: `hint-color-${color}`, effect });
-        }
-        console.log("Assigned randomized hint styles:", hintStyles);
-    }
 
     // Debounce utility
     function debounce(func, wait) {
@@ -180,6 +143,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 console.log("Refocusing guess input to keep keyboard open");
                 guessInput.focus();
                 activeInput = guessInput;
+                if (isMobile) {
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
             }
         }
     }
@@ -202,7 +168,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         activeInput = guessInput;
                         attempts++;
                     }
-                }, 500);
+                }, 200);
             }
         }
     }
@@ -230,7 +196,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessInput.focus();
             activeInput = guessInput;
             adjustBackground();
-            initialTouchHandled = true; // Prevent repeated triggers
+            initialTouchHandled = true;
         }
     });
 
@@ -281,6 +247,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Guess input focused");
             activeInput = guessInput;
             adjustBackground();
+            if (isMobile) {
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
         });
         guessInput.addEventListener("touchstart", (e) => {
             e.preventDefault();
@@ -288,6 +257,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessInput.focus();
             activeInput = guessInput;
             adjustBackground();
+            if (isMobile) {
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
         });
     }
 
@@ -301,6 +273,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.focus();
                 activeInput = guessInput;
                 adjustBackground();
+                if (isMobile) {
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
             }
         };
         guessInputContainer.addEventListener("click", handler);
@@ -317,6 +292,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.focus();
                 activeInput = guessInput;
                 adjustBackground();
+                if (isMobile) {
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
             }
         };
         guessArea.addEventListener("click", handler);
@@ -1136,14 +1114,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Game loaded", { secretWord, hints, currentGameNumber, currentGameId });
 
         // Clear previous hints
-        document.querySelectorAll(".hint").forEach(hint => {
-            hint.style.display = "none";
-            hint.className = "hint";
-            hint.innerHTML = "";
-        });
-
-        // Randomize hint styles
-        randomizeHintStyles();
+        const hintsList = document.getElementById("hints-list");
+        if (hintsList) {
+            hintsList.innerHTML = "";
+        }
 
         // Display initial hint
         if (hints.length > 0) {
@@ -1152,23 +1126,29 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         gameScreen.classList.remove("game-ended");
         guessInput.value = "";
-        setTimeout(ensureInitialFocus, 100); // Ensure focus after game load
+        setTimeout(ensureInitialFocus, 100);
     }
 
     // Display hint
     function displayHint() {
         console.log("Displaying hint:", hintIndex + 1);
-        if (hintIndex < hints.length && hintIndex < hintRevealOrder.length) {
-            const hintElement = document.getElementById(hintRevealOrder[hintIndex]);
-            if (hintElement) {
-                const style = hintStyles[hintIndex];
-                hintElement.className = `hint ${style.shape} ${style.color} reveal-${style.effect}`;
-                hintElement.innerHTML = `<span class="hint-text">${hints[hintIndex]}</span>`;
-                hintElement.style.display = "flex";
-                console.log(`Hint ${hintIndex + 1} displayed with style:`, style);
+        if (hintIndex < hints.length) {
+            const hintsList = document.getElementById("hints-list");
+            if (hintsList) {
+                const hintElement = document.createElement("div");
+                hintElement.textContent = hints[hintIndex];
+                hintsList.appendChild(hintElement);
+                hintElement.style.opacity = 0;
+                hintElement.style.transform = "scale(0.8)";
+                setTimeout(() => {
+                    hintElement.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+                    hintElement.style.opacity = 1;
+                    hintElement.style.transform = "scale(1)";
+                }, 50);
+                console.log(`Hint ${hintIndex + 1} displayed: ${hints[hintIndex]}`);
                 hintIndex++;
             } else {
-                console.error(`Hint element not found for ID: ${hintRevealOrder[hintIndex]}`);
+                console.error("Hints list element not found");
             }
         }
     }
@@ -1187,13 +1167,16 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInputContainer.classList.add("wrong-guess");
                 animationTimeout = setTimeout(() => {
                     guessInputContainer.classList.remove("wrong-guess");
-                    guessInput.value = ""; // Clear input after invalid guess
+                    guessInput.value = "";
                     animationTimeout = null;
                     isProcessingGuess = false;
                     guessBtn.disabled = false;
                     guessInput.disabled = false;
-                    guessInput.focus(); // Maintain focus
+                    guessInput.focus();
                     activeInput = guessInput;
+                    if (isMobile) {
+                        guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                    }
                 }, 350);
                 return;
             }
@@ -1222,7 +1205,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInputContainer.classList.add("wrong-guess");
                 animationTimeout = setTimeout(() => {
                     guessInputContainer.classList.remove("wrong-guess");
-                    guessInput.value = ""; // Clear input after incorrect guess
+                    guessInput.value = "";
                     animationTimeout = null;
                     if (guessCount >= 5) {
                         let normalizedGameNumber;
@@ -1237,24 +1220,30 @@ document.addEventListener("DOMContentLoaded", async () => {
                         saveGameResult(gameType, normalizedGameNumber, secretWord, "X/5");
                         endGame(false);
                     } else {
-                        displayHint(); // Show next hint after every incorrect guess
+                        displayHint();
                     }
                     isProcessingGuess = false;
                     guessBtn.disabled = false;
                     guessInput.disabled = false;
-                    guessInput.focus(); // Maintain focus
+                    guessInput.focus();
                     activeInput = guessInput;
+                    if (isMobile) {
+                        guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                    }
                 }, 350);
                 return;
             }
         } catch (error) {
             console.error("Error handling guess:", error.message);
-            guessInput.value = ""; // Clear input on error
+            guessInput.value = "";
             isProcessingGuess = false;
             guessBtn.disabled = false;
             guessInput.disabled = false;
-            guessInput.focus(); // Maintain focus
+            guessInput.focus();
             activeInput = guessInput;
+            if (isMobile) {
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
         }
     }
 
@@ -1293,7 +1282,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     ? `I solved WORDY ${currentGameNumber} in ${guessCount}/5! 🥳\nPlay it at: https://wordy.bigbraingames.net`
                     : `I couldn't solve WORDY ${currentGameNumber} 😔\nPlay it at: https://wordy.bigbraingames.net`;
 
-            // Setup share buttons
             const shareButtons = [
                 { id: "share-whatsapp", url: `https://api.whatsapp.com/send?text=${encodeURIComponent(shareMessage)}` },
                 { id: "share-telegram", url: `https://t.me/share/url?url=https://wordy.bigbraingames.net&text=${encodeURIComponent(shareMessage)}` },
@@ -1319,7 +1307,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 }
             });
 
-            // Pineapple rain animation
             if (won && !gaveUp) {
                 const pineappleRain = document.createElement("div");
                 pineappleRain.className = "pineapple-rain";
