@@ -270,16 +270,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guess input container triggered");
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                setTimeout(() => {
-                    guessInput.focus();
-                    activeInput = guessInput;
-                    adjustBackground();
-                    if (isMobile) {
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
-                        // Force keyboard to show on mobile
-                        guessInput.click(); // Simulate click to ensure keyboard
-                    }
-                }, 0); // Slight delay for reliable focus
+                guessInput.focus();
+                activeInput = guessInput;
+                adjustBackground();
+                if (isMobile) {
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
             }
         };
         guessInputContainer.addEventListener("click", handler);
@@ -293,16 +289,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guess area triggered");
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                setTimeout(() => {
-                    guessInput.focus();
-                    activeInput = guessInput;
-                    adjustBackground();
-                    if (isMobile) {
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "center" });
-                        // Force keyboard to show on mobile
-                        guessInput.click(); // Simulate click to ensure keyboard
-                    }
-                }, 0); // Slight delay for reliable focus
+                guessInput.focus();
+                activeInput = guessInput;
+                adjustBackground();
+                if (isMobile) {
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
             }
         };
         guessArea.addEventListener("click", handler);
