@@ -84,7 +84,7 @@ body {
 }
 
 .hints-box {
-    width: calc(20 * 0.7 * 3.5vmin); /* ~20 characters at 3.5vmin font size */
+    width: calc(20 * 0.7 * 3vmin); /* ~20 characters at 3vmin font size */
     background: rgba(0, 0, 0, 0.6);
     border-radius: 2vmin;
     padding: 2vmin; /* Padding around content */
@@ -94,7 +94,7 @@ body {
     justify-content: flex-start;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     overflow-y: auto; /* Allow scrolling if needed */
-    height: calc(6vmin + (5 * 3.5vmin) + (5 * 0.5vmin) + (2 * 2vmin)); /* Title + 5 hints + padding */
+    height: calc(6vmin + (5 * 4.5vmin) + (5 * 0.5vmin) + (2 * 2vmin)); /* Title + 5 hints + padding */
 }
 
 #hints-heading {
@@ -224,7 +224,7 @@ body {
 }
 
 #give-up-link, #guesses-link {
-    font-size: 3vmin;
+    font-size: 3.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
@@ -238,7 +238,7 @@ body {
 }
 
 #prev-game-arrow, #next-game-arrow, #game-number-text {
-    font-size: 3vmin;
+    font-size: 3.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     padding: 1vmin;
@@ -644,7 +644,7 @@ body {
     }
     .hints-box {
         width: calc(20 * 0.7 * 3.5vmin); /* Maintain width for mobile */
-        height: calc(6vmin + (5 * 3.5vmin) + (5 * 0.5vmin) + (2 * 1vmin)); /* Adjusted padding for mobile */
+        height: calc(6vmin + (5 * 4.5vmin) + (5 * 0.5vmin) + (2 * 1vmin)); /* Adjusted padding for mobile */
         padding: 1vmin; /* Slightly reduced padding for mobile */
     }
     #hints-heading {
@@ -660,13 +660,13 @@ body {
         font-size: 4vmin;
     }
     #all-games-link {
-        font-size: 3vmin;
+        font-size: 3.5vmin;
     }
     #give-up-link, #guesses-link {
-        font-size: 3vmin;
+        font-size: 3.5vmin;
     }
     #prev-game-arrow, #next-game-arrow, #game-number-text {
-        font-size: 3vmin;
+        font-size: 3.5vmin;
     }
     .tab {
         font-size: 3vmin;
