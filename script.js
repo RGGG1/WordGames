@@ -284,22 +284,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Setup guess area
     if (guessArea) {
-        const handler = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Guess area triggered");
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                guessInput.focus();
-                activeInput = guessInput;
-                adjustBackground();
-                if (isMobile) {
+    const handler = (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        console.log("Guess area triggered");
+        if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+            // Ensure the input is focused and keyboard is triggered
+            guessInput.focus();
+            activeInput = guessInput;
+            // Force keyboard to show by temporarily blurring and refocusing
+            if (isMobile && document.activeElement === guessInput) {
+                guessInput.blur();
+                setTimeout(() => {
+                    guessInput.focus();
                     guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }
+                }, 0);
+            } else if (isMobile) {
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
-        };
-        guessArea.addEventListener("click", handler);
-        guessArea.addEventListener("touchstart", handler);
-    }
+            adjustBackground();
+        }
+    };
+    guessArea.addEventListener("click", handler);
+    guessArea.addEventListener("touchstart", handler);
+}
 
     // Setup guess button
     if (guessBtn) {

@@ -84,7 +84,7 @@ body {
 }
 
 .hints-box {
-    width: calc(20 * 0.7 * 3vmin); /* ~20 characters at 3vmin font size */
+    width: calc(20 * 0.7 * 3vmin * 0.9); /* Reduced by 10% */
     background: rgba(0, 0, 0, 0.6);
     border-radius: 2vmin;
     padding: 2vmin; /* Padding around content */
@@ -94,7 +94,7 @@ body {
     justify-content: flex-start;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     overflow-y: auto; /* Allow scrolling if needed */
-    height: calc(6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 2vmin)); /* Title + 5 hints + padding */
+    height: calc((6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 2vmin)) * 1.1); /* Increased by 10% */
 }
 
 #hints-heading {
@@ -643,8 +643,8 @@ body {
         padding: 1vmin;
     }
     .hints-box {
-        width: calc(20 * 0.7 * 3.5vmin); /* Maintain width for mobile */
-        height: calc(6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 1vmin)); /* Adjusted padding for mobile */
+        width: calc(20 * 0.7 * 3.5vmin * 0.9); /* Reduced by 10% */
+        height: calc((6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 1vmin)) * 1.1); /* Increased by 10% */
         padding: 1vmin; /* Slightly reduced padding for mobile */
     }
     #hints-heading {
