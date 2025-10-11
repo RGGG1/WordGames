@@ -11,25 +11,28 @@ body {
     -ms-user-select: none;
     user-select: none;
     background: #FFFFFF;
-    overflow: hidden;
+    overflow-x: hidden;
+    overflow-y: auto;
+    touch-action: manipulation;
+    -webkit-overflow-scrolling: touch;
 }
 
 #game-container {
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
-    overflow: hidden;
+    min-height: 100vh;
+    max-height: 100vh;
+    position: relative;
 }
 
 #background-container {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
-    background: url('newbackground.png') no-repeat center center;
-    background-size: 100% 100%;
+    height: 100vh;
+    background: url('newbackground.png') no-repeat center center / cover;
     z-index: 1;
 }
 
@@ -38,11 +41,11 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 1vw 2vw;
+    padding: 10px;
     background: transparent;
     z-index: 10;
     flex: 0 0 auto;
-    height: 10vmin;
+    height: 60px;
 }
 
 #game-name {
@@ -69,7 +72,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 2vw;
+    padding: 10px;
     background: transparent;
     z-index: 5;
     overflow: hidden;
@@ -78,23 +81,23 @@ body {
 #hints-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align left */
+    align-items: flex-start;
     width: 100%;
-    padding: 2vmin;
+    padding: 10px;
 }
 
 .hints-box {
-    width: calc(20 * 0.7 * 3vmin * 0.9); /* Reduced by 10% */
+    width: 90vw;
+    max-width: 400px;
     background: rgba(0, 0, 0, 0.6);
-    border-radius: 2vmin;
-    padding: 2vmin; /* Padding around content */
+    border-radius: 10px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center contents horizontally */
-    justify-content: flex-start;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    overflow-y: auto; /* Allow scrolling if needed */
-    height: calc((6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 2vmin)) * 1.1); /* Increased by 10% */
+    align-items: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    max-height: 40vh;
+    overflow-y: auto;
 }
 
 #hints-heading {
@@ -103,21 +106,20 @@ body {
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
     text-align: center;
-    margin-top: 1vmin; /* Added to move heading down */
-    margin-bottom: 1vmin;
+    margin: 10px 0;
 }
 
 #hints-list {
     font-size: 4.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
-    text-align: center; /* Center hints text */
+    text-align: center;
     width: 100%;
 }
 
 #hints-list div {
-    margin: 0.75vmin 0;
-    text-decoration: none; /* Remove underlines from hints */
+    margin: 5px 0;
+    text-decoration: none;
 }
 
 #guess-area {
@@ -125,28 +127,26 @@ body {
     flex-direction: row;
     justify-content: center;
     align-items: center;
-    width: calc(100% - 4vw);
-    margin: 0 2vw;
-    margin-bottom: 0.5em;
-    height: 14vmin; /* Increased to accommodate larger font */
+    width: 100%;
+    padding: 10px;
     background: #000000;
     z-index: 10;
-    flex: 0 0 auto;
+    position: sticky;
+    bottom: 0;
 }
 
 #guess-input-container {
     display: flex;
     flex-direction: column;
-    width: 60vw;
-    height: 100%;
+    width: 60%;
     background: rgba(255, 255, 255, 0.85);
-    border-radius: 1vmin 0 0 1vmin;
+    border-radius: 8px 0 0 8px;
 }
 
 #guess-prompt {
-    font-size: 4.5vmin; /* Increased by 50% from 3vmin */
+    font-size: 4.5vmin;
     color: #000000;
-    padding: 0.5vmin 0;
+    padding: 5px 0;
     text-align: center;
 }
 
@@ -154,14 +154,15 @@ body {
     border: none;
     outline: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: 6vmin; /* Increased by 50% from 3.5vmin */
+    font-size: 5vmin;
     color: #000000;
     background: #FFFFFF;
     width: 100%;
+    height: 50px;
     text-align: center;
     text-transform: uppercase;
-    flex: 1;
-    border-bottom-left-radius: 1vmin;
+    border-bottom-left-radius: 8px;
+    padding: 10px;
 }
 
 #guess-input:focus {
@@ -173,23 +174,22 @@ body {
 }
 
 #guess-btn {
-    width: 40vw;
-    height: 100%;
-    min-height: 14vmin; /* Match increased guess-area height */
+    width: 40%;
+    height: 50px;
     background: #FFB300;
     border: none;
-    border-radius: 0 1vmin 1vmin 0;
+    border-radius: 0 8px 8px 0;
     font-family: 'Luckiest Guy', cursive;
     font-size: 4vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
-    transition: transform 0.1s ease, background 0.1s ease;
-    -webkit-tap-highlight-color: rgba(255, 179, 0, 0.5);
+    transition: transform 0.1s ease, background 0.2s ease;
+    touch-action: manipulation;
 }
 
 #guess-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
     background: #E0A000;
 }
 
@@ -217,11 +217,11 @@ body {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    padding: 1vw 2vw;
+    padding: 10px;
     background: transparent;
     z-index: 10;
     flex: 0 0 auto;
-    height: 8vmin;
+    height: 50px;
 }
 
 #give-up-link, #guesses-link {
@@ -229,20 +229,20 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
-    padding: 1vmin;
+    padding: 5px;
 }
 
 #game-number-container {
     display: flex;
     align-items: center;
-    gap: 1vw;
+    gap: 5px;
 }
 
 #prev-game-arrow, #next-game-arrow, #game-number-text {
     font-size: 3.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
-    padding: 1vmin;
+    padding: 5px;
 }
 
 #prev-game-arrow.disabled, #next-game-arrow.disabled {
@@ -253,7 +253,7 @@ body {
 
 #ad-box {
     width: 100%;
-    height: 6vmin;
+    height: 40px;
     background: #000000;
     display: flex;
     justify-content: center;
@@ -272,7 +272,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
+    height: 100vh;
     background: rgba(0, 0, 0, 0.5);
     z-index: 50;
     display: none;
@@ -284,14 +284,14 @@ body {
 
 #game-select-content {
     width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
+    height: 100vh;
 }
 
 #tabs {
     display: flex;
     justify-content: center;
-    gap: 2vw;
-    margin-bottom: 2vmin;
+    gap: 10px;
+    margin-bottom: 10px;
     z-index: 10;
 }
 
@@ -301,8 +301,8 @@ body {
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
     background: #000000;
-    padding: 1vmin 2vw;
-    border-radius: 0.5vmin;
+    padding: 5px 10px;
+    border-radius: 5px;
 }
 
 .tab.active {
@@ -327,9 +327,9 @@ body {
     flex-direction: column;
     align-items: center;
     width: 85vw;
-    max-height: 90vmin;
-    border-radius: 1vmin;
-    padding: 2vmin;
+    max-height: 80vh;
+    border-radius: 10px;
+    padding: 15px;
     background: rgba(0, 0, 0, 0.85);
     overflow: hidden;
 }
@@ -342,14 +342,14 @@ body {
     font-size: 3vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
-    margin-bottom: 1vmin;
+    margin-bottom: 10px;
 }
 
 .game-list {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 60vmin;
+    max-height: 60vh;
     overflow-y: auto;
 }
 
@@ -358,7 +358,7 @@ body {
     grid-template-columns: 2fr 1fr;
     align-items: center;
     width: 100%;
-    padding: 1vmin 2vw;
+    padding: 5px 10px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -387,22 +387,22 @@ body {
 #form-container {
     display: flex;
     flex-direction: column;
-    gap: 1vmin;
+    gap: 10px;
     width: 85vw;
     background: rgba(0, 0, 0, 0.85);
-    border-radius: 1vmin;
-    padding: 2vmin;
+    border-radius: 10px;
+    padding: 15px;
 }
 
 #form-container input {
-    height: 6vmin;
+    height: 45px;
     background: rgba(255, 255, 255, 0.85);
     border: none;
-    border-radius: 1vmin;
+    border-radius: 8px;
     font-family: 'Luckiest Guy', cursive;
     font-size: 3.5vmin;
     color: #000000;
-    padding: 0 2vw;
+    padding: 0 10px;
     text-align: center;
     text-transform: uppercase;
 }
@@ -413,23 +413,22 @@ body {
 
 .control-btn {
     width: 40vw;
-    height: 6vmin;
-    min-height: 12vmin;
+    height: 45px;
     background: #FFB300;
     border: none;
-    border-radius: 1vmin;
+    border-radius: 8px;
     font-family: 'Luckiest Guy', cursive;
     font-size: 3vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
-    margin: 1vmin 0;
-    transition: transform 0.1s ease, background 0.1s ease;
-    -webkit-tap-highlight-color: rgba(255, 179, 0, 0.5);
+    margin: 10px 0;
+    transition: transform 0.1s ease, background 0.2s ease;
+    touch-action: manipulation;
 }
 
 .control-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.98);
     background: #E0A000;
 }
 
@@ -440,7 +439,7 @@ body {
 
 .control-btn.loading::after {
     content: "⏳";
-    margin-left: 1vmin;
+    margin-left: 5px;
     animation: spin 1s linear infinite;
 }
 
@@ -454,7 +453,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: 85vw;
-    margin-bottom: 4vmin;
+    margin-bottom: 20px;
 }
 
 #share-panel {
@@ -464,8 +463,8 @@ body {
     width: 100%;
     background: #000000;
     border: 2px solid #FFB300;
-    border-radius: 1vmin;
-    padding: 2vmin;
+    border-radius: 10px;
+    padding: 15px;
 }
 
 #secret-word-message {
@@ -473,7 +472,7 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
-    margin: 2vmin 0;
+    margin: 10px 0;
 }
 
 #share-text {
@@ -491,23 +490,23 @@ body {
     font-size: 2.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
-    margin-top: 1vmin;
+    margin-top: 10px;
 }
 
 #share-buttons {
     display: flex;
     justify-content: center;
-    gap: 2vw;
-    margin-top: 2vmin;
+    gap: 10px;
+    margin-top: 10px;
     background: rgba(0, 0, 0, 0.5);
-    padding: 1vmin 2vw;
-    border-radius: 1vmin;
+    padding: 5px 10px;
+    border-radius: 8px;
 }
 
 #share-buttons a {
     display: block;
-    width: 6vmin;
-    height: 6vmin;
+    width: 40px;
+    height: 40px;
 }
 
 #share-buttons img {
@@ -526,10 +525,10 @@ body {
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    padding: 2vmin;
+    padding: 10px;
     background: rgba(0, 0, 0, 0.5);
-    border-radius: 1vmin;
-    margin-bottom: 2vmin;
+    border-radius: 10px;
+    margin-bottom: 10px;
 }
 
 .dialog-content {
@@ -537,8 +536,8 @@ body {
     width: 85vw;
     background: #000000;
     border: 2px solid #FFB300;
-    border-radius: 1vmin;
-    padding: 2vmin;
+    border-radius: 10px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -554,20 +553,20 @@ body {
     font-size: 4.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
-    margin-bottom: 1vmin;
+    margin-bottom: 10px;
 }
 
 #guesses-list {
-    font-size: 4.5vmin; /* Match #guesses-title */
+    font-size: 4.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
-    max-height: 20vmin;
+    max-height: 20vh;
     overflow-y: auto;
 }
 
 .separator {
-    margin: 0 0.5vw;
+    margin: 0 5px;
 }
 
 .separator.yellow {
@@ -575,17 +574,17 @@ body {
 }
 
 .dialog-message {
-    font-size: 4.5vmin; /* Match #guesses-title */
+    font-size: 4.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
-    margin-bottom: 2vmin;
+    margin-bottom: 10px;
 }
 
 #give-up-buttons {
     display: flex;
     justify-content: center;
-    gap: 2vw;
+    gap: 10px;
 }
 
 .pineapple-rain {
@@ -593,7 +592,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(var(--viewport-height, 100vh));
+    height: 100vh;
     pointer-events: none;
     z-index: 1000;
 }
@@ -610,103 +609,100 @@ body {
         opacity: 1;
     }
     100% {
-        transform: translateY(calc(var(--viewport-height, 100vh) + 10vmin)) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw));
+        transform: translateY(calc(100vh + 10vmin)) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw));
         opacity: 0;
     }
 }
 
 @media screen and (max-width: 768px) {
     #game-container, #background-container, .screen, .dialog {
-        height: calc(var(--viewport-height, 100vh));
+        min-height: 100vh;
     }
-    #header { 
-        height: 10vmin; 
+    #header {
+        height: 60px;
+        padding: 10px;
     }
     #guess-area {
-        height: 14vmin; /* Increased to match larger font size */
-        margin-bottom: 1vmin;
+        padding: 10px;
     }
     #guess-input-container {
-        width: 60vw;
+        width: 60%;
     }
     #guess-prompt {
-        font-size: 4.5vmin; /* Increased by 50% from 3vmin */
+        font-size: 4.5vmin;
     }
     #guess-input {
-        font-size: 6vmin; /* Increased by 50% from 3.5vmin */
+        font-size: 4.5vmin;
+        height: 45px;
     }
     #guess-btn {
-        width: 40vw;
-        min-height: 14vmin; /* Match guess-area height */
-        font-size: 4vmin;
+        font-size: 3.5vmin;
+        height: 45px;
     }
     #hints-container {
-        padding: 1vmin;
+        padding: 10px;
     }
     .hints-box {
-        width: calc(20 * 0.7 * 3.5vmin * 0.9); /* Reduced by 10% */
-        height: calc((6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 1vmin)) * 1.1); /* Increased by 10% */
-        padding: 1vmin; /* Slightly reduced padding for mobile */
+        width: 95vw;
+        max-height: 35vh;
+        padding: 10px;
     }
     #hints-heading {
-        font-size: 4.5vmin;
+        font-size: 4vmin;
     }
     #hints-list {
-        font-size: 4.5vmin;
-    }
-    #hints-list div {
-        margin: 0.75vmin 0;
+        font-size: 4vmin;
     }
     #game-name {
-        font-size: 4vmin;
+        font-size: 3.5vmin;
     }
     #all-games-link {
-        font-size: 3.5vmin;
+        font-size: 3vmin;
     }
     #give-up-link, #guesses-link {
-        font-size: 3.5vmin;
+        font-size: 3vmin;
     }
     #prev-game-arrow, #next-game-arrow, #game-number-text {
-        font-size: 3.5vmin;
+        font-size: 3vmin;
     }
     .tab {
-        font-size: 3vmin;
-        padding: 1vmin 3vw;
+        font-size: 2.5vmin;
+        padding: 5px 10px;
     }
     .tab-content > span {
-        font-size: 3vmin;
-    }
-    .game-list-row span {
-        font-size: 3.5vmin;
-    }
-    #form-container input {
-        font-size: 3.5vmin;
-        height: 6vmin;
-    }
-    .control-btn {
-        font-size: 3vmin;
-        height: 6vmin;
-    }
-    #share-text {
-        font-size: 3vmin;
-    }
-    #game-number-display {
         font-size: 2.5vmin;
     }
+    .game-list-row span {
+        font-size: 3vmin;
+    }
+    #form-container input {
+        font-size: 3vmin;
+        height: 40px;
+    }
+    .control-btn {
+        font-size: 2.5vmin;
+        height: 40px;
+    }
+    #share-text {
+        font-size: 2.5vmin;
+    }
+    #game-number-display {
+        font-size: 2vmin;
+    }
     #game-over-message {
-        font-size: 4vmin;
+        font-size: 3.5vmin;
     }
     .dialog-message {
-        font-size: 4.5vmin; /* Match #guesses-title */
+        font-size: 4vmin;
     }
     #guesses-title {
-        font-size: 4.5vmin;
+        font-size: 4vmin;
     }
     #guesses-list {
-        font-size: 4.5vmin; /* Match #guesses-title */
+        font-size: 4vmin;
     }
     #share-buttons a {
-        width: 6vmin;
-        height: 6vmin;
+        width: 35px;
+        height: 35px;
     }
 }
