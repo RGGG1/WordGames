@@ -147,8 +147,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             !document.querySelector('.dialog[style*="display: flex"]')
         ) {
             console.log("Ensuring keyboard stays open by focusing guess input");
-            guessInput.focus();
-            activeInput = guessInput;
+            if (document.activeElement !== guessInput) {
+                guessInput.focus();
+                activeInput = guessInput;
+            }
             if (isMobile) {
                 guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
@@ -161,19 +163,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Attempting initial focus on guess input");
             guessInput.focus();
             activeInput = guessInput;
-            if (isMobile && document.activeElement !== guessInput) {
-                console.log("Initial focus failed, retrying after delay");
-                let attempts = 0;
-                const focusInterval = setInterval(() => {
-                    if (document.activeElement === guessInput || attempts >= 5) {
-                        clearInterval(focusInterval);
-                        console.log("Focus interval stopped", { focused: document.activeElement === guessInput, attempts });
-                    } else {
+            if (isMobile) {
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                // Force keyboard on mobile by simulating a touch event
+                const touchEvent = new Event('touchstart', { bubbles: true });
+                guessInput.dispatchEvent(touchEvent);
+                setTimeout(() => {
+                    if (document.activeElement !== guessInput) {
+                        console.log("Initial focus failed, retrying");
                         guessInput.focus();
-                        activeInput = guessInput;
-                        attempts++;
+                        guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
-                }, 200);
+                }, 300);
             }
         }
     }
@@ -202,6 +203,9 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeInput = guessInput;
             adjustBackground();
             initialTouchHandled = true;
+            if (isMobile) {
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+            }
         }
     });
 
@@ -283,6 +287,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             adjustBackground();
             if (isMobile) {
                 guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                // Force keyboard to appear
+                setTimeout(() => {
+                    if (document.activeElement !== guessInput) {
+                        guessInput.focus();
+                    }
+                }, 100);
             }
         });
     }
@@ -315,14 +325,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
-                if (isMobile && document.activeElement === guessInput) {
-                    guessInput.blur();
-                    setTimeout(() => {
-                        guessInput.focus();
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                    }, 0);
-                } else if (isMobile) {
+                if (isMobile) {
                     guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                    setTimeout(() => {
+                        if (document.activeElement !== guessInput) {
+                            guessInput.focus();
+                        }
+                    }, 100);
                 }
                 adjustBackground();
             }
@@ -339,6 +348,12 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guess button triggered", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                // Ensure input is focused before processing guess
+                if (isMobile && document.activeElement !== guessInput) {
+                    guessInput.focus();
+                    activeInput = guessInput;
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
                     console.log("Submitting guess:", guess);
@@ -886,6 +901,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                                 resetScreenDisplays(gameScreen);
                                 adjustBackground();
                                 updateArrowStates(allGames.findIndex(g => g["Game Number"] === gameNum), allGames);
+                                ensureInitialFocus(); // Ensure keyboard on load
                             });
                         } else {
                             loadLatestGame();
@@ -1091,6 +1107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             resetScreenDisplays(gameScreen);
             adjustBackground();
             updateArrowStates(0, allGames);
+            ensureInitialFocus(); // Ensure keyboard on load
         } else {
             console.error("No games available to load");
             if (formErrorDialog && formErrorMessage) {
@@ -1200,12 +1217,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInputContainer.classList.add("wrong-guess");
                 animationTimeout = setTimeout(() => {
                     guessInputContainer.classList.remove("wrong-guess");
-                    guessInput.value = "";
                     animationTimeout = null;
                     isProcessingGuess = false;
                     guessBtn.disabled = false;
-                    guessInput.focus(); // Maintain focus
-                    activeInput = guessInput;
+                    if (document.activeElement !== guessInput) {
+                        guessInput.focus(); // Maintain focus
+                        activeInput = guessInput;
+                    }
                     if (isMobile) {
                         guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
@@ -1231,6 +1249,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     gameType = "pineapple";
                 }
                 saveGameResult(gameType, normalizedGameNumber, secretWord, `${guessCount}/5`);
+                guessInput.value = ""; // Clear input only on correct guess
                 endGame(true);
                 return;
             } else {
@@ -1238,7 +1257,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInputContainer.classList.add("wrong-guess");
                 animationTimeout = setTimeout(() => {
                     guessInputContainer.classList.remove("wrong-guess");
-                    guessInput.value = "";
                     animationTimeout = null;
                     if (guessCount >= 5) {
                         let normalizedGameNumber;
@@ -1251,14 +1269,17 @@ document.addEventListener("DOMContentLoaded", async () => {
                             gameType = "pineapple";
                         }
                         saveGameResult(gameType, normalizedGameNumber, secretWord, "X/5");
+                        guessInput.value = ""; // Clear input only on game end
                         endGame(false);
                     } else {
                         displayHint();
                     }
                     isProcessingGuess = false;
                     guessBtn.disabled = false;
-                    guessInput.focus(); // Maintain focus
-                    activeInput = guessInput;
+                    if (document.activeElement !== guessInput) {
+                        guessInput.focus(); // Maintain focus
+                        activeInput = guessInput;
+                    }
                     if (isMobile) {
                         guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
@@ -1268,15 +1289,21 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         } catch (error) {
             console.error("Error handling guess:", error.message);
-            guessInput.value = "";
-            isProcessingGuess = false;
-            guessBtn.disabled = false;
-            guessInput.focus(); // Maintain focus
-            activeInput = guessInput;
-            if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-            }
-            keepKeyboardOpen(); // Ensure keyboard stays open
+            guessInputContainer.classList.add("wrong-guess");
+            animationTimeout = setTimeout(() => {
+                guessInputContainer.classList.remove("wrong-guess");
+                animationTimeout = null;
+                isProcessingGuess = false;
+                guessBtn.disabled = false;
+                if (document.activeElement !== guessInput) {
+                    guessInput.focus(); // Maintain focus
+                    activeInput = guessInput;
+                }
+                if (isMobile) {
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                }
+                keepKeyboardOpen(); // Ensure keyboard stays open
+            }, 350);
         }
     }
 
