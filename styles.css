@@ -10,7 +10,7 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background: #FFFFFF;
+    background: #000000; /* Changed to black to match bottom half */
     overflow: hidden;
 }
 
@@ -18,19 +18,32 @@ body {
     display: flex;
     flex-direction: column;
     width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
+    height: 50vh; /* Fixed to top half of the screen */
+    position: fixed;
+    top: 0;
+    left: 0;
     overflow: hidden;
 }
 
 #background-container {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
+    height: 50vh; /* Match game-container */
     background: url('newbackground.png') no-repeat center center;
     background-size: 100% 100%;
     z-index: 1;
+}
+
+#bottom-half {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100vw;
+    height: 50vh; /* Bottom half is black */
+    background: #000000;
+    z-index: 0;
 }
 
 #header {
@@ -42,7 +55,7 @@ body {
     background: transparent;
     z-index: 10;
     flex: 0 0 auto;
-    height: 10vmin;
+    height: 8vmin; /* Reduced to fit in top half */
 }
 
 #game-name {
@@ -69,7 +82,7 @@ body {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 2vw;
+    padding: 1vmin; /* Reduced padding */
     background: transparent;
     z-index: 5;
     overflow: hidden;
@@ -78,46 +91,46 @@ body {
 #hints-container {
     display: flex;
     flex-direction: column;
-    align-items: flex-start; /* Align left */
+    align-items: flex-start;
     width: 100%;
-    padding: 2vmin;
+    padding: 1vmin; /* Reduced padding */
 }
 
 .hints-box {
-    width: calc(20 * 0.7 * 3vmin * 0.9); /* Reduced by 10% */
+    width: calc(20 * 0.7 * 3vmin * 0.9); /* Adjusted for compactness */
     background: rgba(0, 0, 0, 0.6);
     border-radius: 2vmin;
-    padding: 2vmin; /* Padding around content */
+    padding: 1vmin; /* Reduced padding */
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center contents horizontally */
+    align-items: center;
     justify-content: flex-start;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    overflow-y: auto; /* Allow scrolling if needed */
-    height: calc((6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 2vmin)) * 1.1); /* Increased by 10% */
+    overflow-y: auto;
+    height: calc((6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 1vmin)) * 0.8); /* Scaled down to fit */
 }
 
 #hints-heading {
-    font-size: 4.5vmin;
+    font-size: 4vmin; /* Slightly smaller */
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
     text-align: center;
-    margin-top: 1vmin; /* Added to move heading down */
+    margin-top: 1vmin;
     margin-bottom: 1vmin;
 }
 
 #hints-list {
-    font-size: 4.5vmin;
+    font-size: 4vmin; /* Slightly smaller */
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
-    text-align: center; /* Center hints text */
+    text-align: center;
     width: 100%;
 }
 
 #hints-list div {
     margin: 0.75vmin 0;
-    text-decoration: none; /* Remove underlines from hints */
+    text-decoration: none;
 }
 
 #guess-area {
@@ -127,8 +140,8 @@ body {
     align-items: center;
     width: calc(100% - 4vw);
     margin: 0 2vw;
-    margin-bottom: 0.5em;
-    height: 14vmin; /* Increased to accommodate larger font */
+    margin-bottom: 0.5vmin; /* Reduced margin */
+    height: 12vmin; /* Reduced to fit */
     background: #000000;
     z-index: 10;
     flex: 0 0 auto;
@@ -144,7 +157,7 @@ body {
 }
 
 #guess-prompt {
-    font-size: 4.5vmin; /* Increased by 50% from 3vmin */
+    font-size: 4vmin; /* Reduced from 4.5vmin */
     color: #000000;
     padding: 0.5vmin 0;
     text-align: center;
@@ -154,7 +167,7 @@ body {
     border: none;
     outline: none;
     font-family: 'Luckiest Guy', cursive;
-    font-size: 6vmin; /* Increased by 50% from 3.5vmin */
+    font-size: 5vmin; /* Reduced from 6vmin */
     color: #000000;
     background: #FFFFFF;
     width: 100%;
@@ -175,12 +188,12 @@ body {
 #guess-btn {
     width: 40vw;
     height: 100%;
-    min-height: 14vmin; /* Match increased guess-area height */
+    min-height: 12vmin;
     background: #FFB300;
     border: none;
     border-radius: 0 1vmin 1vmin 0;
     font-family: 'Luckiest Guy', cursive;
-    font-size: 4vmin;
+    font-size: 3.5vmin; /* Reduced from 4vmin */
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
@@ -221,7 +234,7 @@ body {
     background: transparent;
     z-index: 10;
     flex: 0 0 auto;
-    height: 8vmin;
+    height: 7vmin; /* Reduced to fit */
 }
 
 #give-up-link, #guesses-link {
@@ -272,7 +285,7 @@ body {
     top: 0;
     left: 0;
     width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
+    height: 50vh; /* Match game-container */
     background: rgba(0, 0, 0, 0.5);
     z-index: 50;
     display: none;
@@ -284,7 +297,7 @@ body {
 
 #game-select-content {
     width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
+    height: 50vh;
 }
 
 #tabs {
@@ -327,9 +340,9 @@ body {
     flex-direction: column;
     align-items: center;
     width: 85vw;
-    max-height: 90vmin;
+    max-height: 40vmin; /* Reduced to fit */
     border-radius: 1vmin;
-    padding: 2vmin;
+    padding: 1vmin; /* Reduced padding */
     background: rgba(0, 0, 0, 0.85);
     overflow: hidden;
 }
@@ -349,7 +362,7 @@ body {
     display: flex;
     flex-direction: column;
     width: 100%;
-    max-height: 60vmin;
+    max-height: 30vmin; /* Reduced to fit */
     overflow-y: auto;
 }
 
@@ -391,7 +404,7 @@ body {
     width: 85vw;
     background: rgba(0, 0, 0, 0.85);
     border-radius: 1vmin;
-    padding: 2vmin;
+    padding: 1vmin; /* Reduced padding */
 }
 
 #form-container input {
@@ -414,7 +427,7 @@ body {
 .control-btn {
     width: 40vw;
     height: 6vmin;
-    min-height: 12vmin;
+    min-height: 6vmin; /* Adjusted to match form input height */
     background: #FFB300;
     border: none;
     border-radius: 1vmin;
@@ -454,7 +467,7 @@ body {
     flex-direction: column;
     align-items: center;
     width: 85vw;
-    margin-bottom: 4vmin;
+    margin-bottom: 2vmin; /* Reduced margin */
 }
 
 #share-panel {
@@ -465,7 +478,7 @@ body {
     background: #000000;
     border: 2px solid #FFB300;
     border-radius: 1vmin;
-    padding: 2vmin;
+    padding: 1vmin; /* Reduced padding */
 }
 
 #secret-word-message {
@@ -473,7 +486,7 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
-    margin: 2vmin 0;
+    margin: 1vmin 0; /* Reduced margin */
 }
 
 #share-text {
@@ -498,7 +511,7 @@ body {
     display: flex;
     justify-content: center;
     gap: 2vw;
-    margin-top: 2vmin;
+    margin-top: 1vmin;
     background: rgba(0, 0, 0, 0.5);
     padding: 1vmin 2vw;
     border-radius: 1vmin;
@@ -526,10 +539,10 @@ body {
     color: #FFFFFF;
     text-align: center;
     text-shadow: 1px 1px 2px #000000;
-    padding: 2vmin;
+    padding: 1vmin; /* Reduced padding */
     background: rgba(0, 0, 0, 0.5);
     border-radius: 1vmin;
-    margin-bottom: 2vmin;
+    margin-bottom: 1vmin; /* Reduced margin */
 }
 
 .dialog-content {
@@ -538,7 +551,7 @@ body {
     background: #000000;
     border: 2px solid #FFB300;
     border-radius: 1vmin;
-    padding: 2vmin;
+    padding: 1vmin; /* Reduced padding */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -551,14 +564,14 @@ body {
 }
 
 #guesses-title {
-    font-size: 4.5vmin;
+    font-size: 4vmin; /* Reduced from 4.5vmin */
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     margin-bottom: 1vmin;
 }
 
 #guesses-list {
-    font-size: 4.5vmin; /* Match #guesses-title */
+    font-size: 4vmin; /* Reduced from 4.5vmin */
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
@@ -575,11 +588,11 @@ body {
 }
 
 .dialog-message {
-    font-size: 4.5vmin; /* Match #guesses-title */
+    font-size: 4vmin; /* Reduced from 4.5vmin */
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
-    margin-bottom: 2vmin;
+    margin-bottom: 1vmin; /* Reduced margin */
 }
 
 #give-up-buttons {
@@ -593,7 +606,7 @@ body {
     top: 0;
     left: 0;
     width: 100%;
-    height: calc(var(--viewport-height, 100vh));
+    height: 50vh; /* Match game-container */
     pointer-events: none;
     z-index: 1000;
 }
@@ -610,49 +623,52 @@ body {
         opacity: 1;
     }
     100% {
-        transform: translateY(calc(var(--viewport-height, 100vh) + 10vmin)) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw));
+        transform: translateY(50vh) rotate(var(--rotation)) translateX(calc(var(--drift) * 5vw));
         opacity: 0;
     }
 }
 
 @media screen and (max-width: 768px) {
     #game-container, #background-container, .screen, .dialog {
-        height: calc(var(--viewport-height, 100vh));
+        height: 50vh;
     }
-    #header { 
-        height: 10vmin; 
+    #bottom-half {
+        height: 50vh;
+    }
+    #header {
+        height: 8vmin;
     }
     #guess-area {
-        height: 14vmin; /* Increased to match larger font size */
-        margin-bottom: 1vmin;
+        height: 12vmin;
+        margin-bottom: 0.5vmin;
     }
     #guess-input-container {
         width: 60vw;
     }
     #guess-prompt {
-        font-size: 4.5vmin; /* Increased by 50% from 3vmin */
+        font-size: 4vmin;
     }
     #guess-input {
-        font-size: 6vmin; /* Increased by 50% from 3.5vmin */
+        font-size: 5vmin;
     }
     #guess-btn {
         width: 40vw;
-        min-height: 14vmin; /* Match guess-area height */
-        font-size: 4vmin;
+        min-height: 12vmin;
+        font-size: 3.5vmin;
     }
     #hints-container {
         padding: 1vmin;
     }
     .hints-box {
-        width: calc(20 * 0.7 * 3.5vmin * 0.9); /* Reduced by 10% */
-        height: calc((6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 1vmin)) * 1.1); /* Increased by 10% */
-        padding: 1vmin; /* Slightly reduced padding for mobile */
+        width: calc(20 * 0.7 * 3.5vmin * 0.9);
+        height: calc((6vmin + (5 * 4.5vmin) + (5 * 0.75vmin) + (2 * 1vmin)) * 0.8);
+        padding: 1vmin;
     }
     #hints-heading {
-        font-size: 4.5vmin;
+        font-size: 4vmin;
     }
     #hints-list {
-        font-size: 4.5vmin;
+        font-size: 4vmin;
     }
     #hints-list div {
         margin: 0.75vmin 0;
@@ -679,6 +695,9 @@ body {
     .game-list-row span {
         font-size: 3.5vmin;
     }
+    .game-list {
+        max-height: 30vmin;
+    }
     #form-container input {
         font-size: 3.5vmin;
         height: 6vmin;
@@ -697,13 +716,13 @@ body {
         font-size: 4vmin;
     }
     .dialog-message {
-        font-size: 4.5vmin; /* Match #guesses-title */
+        font-size: 4vmin;
     }
     #guesses-title {
-        font-size: 4.5vmin;
+        font-size: 4vmin;
     }
     #guesses-list {
-        font-size: 4.5vmin; /* Match #guesses-title */
+        font-size: 4vmin;
     }
     #share-buttons a {
         width: 6vmin;
