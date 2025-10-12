@@ -2,37 +2,132 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WORDY</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="description" content="WORDY is a fun and challenging word guessing game by Big Brain Games. Guess the secret word using hints and share your results!">
+    <meta name="keywords" content="word game, guessing game, puzzle, Big Brain Games, WORDY">
+    <meta name="author" content="Big Brain Games">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#FFB300">
+    <meta property="og:title" content="WORDY by Big Brain Games">
+    <meta property="og:description" content="Can you guess the secret word? Play WORDY and challenge your friends!">
+    <meta property="og:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
+    <meta property="og:url" content="https://wordy.bigbraingames.net">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="WORDY by Big Brain Games">
+    <meta name="twitter:description" content="Can you guess the secret word? Play WORDY and challenge your friends!">
+    <meta name="twitter:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
+    <title>WORDY by Big Brain Games</title>
+    <link rel="icon" type="image/png" href="wordy_favicon.png">
     <link rel="stylesheet" href="styles.css">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'">
 </head>
 <body>
     <div id="game-container">
-        <header id="background-header">
-            <h1>WORDY</h1>
-        </header>
-        <main>
+        <div id="background-container"></div>
+        <div id="header">
+            <span id="game-name" tabindex="0" aria-label="Return to game screen">WORDY</span>
+            <a href="#" id="all-games-link" aria-label="View all games">All Games</a>
+        </div>
+        <div id="game-screen">
             <div id="hints-container">
-                <h2>Hints</h2>
-                <div id="hints-list"></div>
+                <div id="hints-box" class="hints-box">
+                    <span id="hints-heading">Hints</span>
+                    <div id="hints-list"></div>
+                </div>
             </div>
-            <div id="guess-area">
+        </div>
+        <div id="footer-controls">
+            <a href="#" id="give-up-link" aria-label="Give up current game">Give Up</a>
+            <div id="game-number-container">
+                <a href="#" id="prev-game-arrow" aria-label="Previous game">◄</a>
+                <span id="game-number-text"></span>
+                <a href="#" id="next-game-arrow" aria-label="Next game">▶</a>
+            </div>
+            <a href="#" id="guesses-link" aria-label="View guesses">Guesses: 0/5</a>
+        </div>
+        <div id="guess-area">
+            <div id="guess-input-container">
+                <span id="guess-prompt">The Secret Word is...</span>
                 <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter your guess" autofocus>
             </div>
-            <div id="feedback">
-                <span id="guess-count">Guesses: 0/5</span>
-                <button id="share-btn" style="display: none;">Share Result</button>
-            </div>
-            <button id="guess-btn">GUESS</button>
-        </main>
-    </div>
-    <div id="error-dialog" style="display: none;">
-        <div class="dialog-content">
-            <span id="error-message">Failed to load game data.</span>
-            <button id="error-ok-btn">OK</button>
+            <button type="button" id="guess-btn" aria-label="Submit guess">GUESS</button>
+        </div>
+        <div id="ad-box">
+            <span>Big Brain Games</span>
         </div>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js" defer></script>
+    <div id="game-select-content" class="screen">
+        <div id="tabs">
+            <span id="official-tab" class="tab active" tabindex="0" aria-label="Official games tab">Official</span>
+            <span class="tab-seperator">     |     </span>
+            <span id="private-tab" class="tab" tabindex="0" aria-label="Private games tab">Private</span>
+        </div>
+        <div id="official-games" class="tab-content active">
+            <span>Official Games</span>
+            <div id="official-list" class="game-list"></div>
+            <button type="button" id="official-back-btn" class="control-btn" aria-label="Back to game">Back</button>
+        </div>
+        <div id="private-games" class="tab-content">
+            <span>Private Games</span>
+            <div id="private-list" class="game-list"></div>
+            <button type="button" id="create-pineapple" class="control-btn" aria-label="Create a new game">Create a Wordy</button>
+            <button type="button" id="private-back-btn" class="control-btn" aria-label="Back to game">Back</button>
+        </div>
+    </div>
+    <div id="form-content" class="screen">
+        <span>Create a Wordy</span>
+        <div id="form-container">
+            <input type="text" id="game-name-input" placeholder="Game Name..." maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter game name">
+            <input type="text" id="secret-word" placeholder="Secret Word..." maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter secret word">
+            <input type="text" id="hint-1" placeholder="Hint 1..." maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter hint 1">
+            <input type="text" id="hint-2" placeholder="Hint 2..." maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter hint 2">
+            <input type="text" id="hint-3" placeholder="Hint 3..." maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter hint 3">
+            <input type="text" id="hint-4" placeholder="Hint 4..." maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter hint 4">
+            <input type="text" id="hint-5" placeholder="Hint 5..." maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter hint 5">
+        </div>
+        <button type="submit" id="confirm-btn" class="control-btn" aria-label="Confirm game creation">Confirm</button>
+        <button type="button" id="form-back-btn" class="control-btn" aria-label="Back to game">Back</button>
+    </div>
+    <div id="game-over" class="screen">
+        <div id="share-section">
+            <div id="share-panel">
+                <span id="share-text"></span>
+                <span id="game-number-display"></span>
+            </div>
+            <div id="share-buttons">
+                <a id="share-whatsapp" href="#" target="_blank" aria-label="Share on WhatsApp"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp"></a>
+                <a id="share-telegram" href="#" target="_blank" aria-label="Share on Telegram"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a>
+                <a id="share-twitter" href="#" target="_blank" aria-label="Share on Twitter"><img src="https://upload.wikimedia.org/wikipedia/sco/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png" alt="Twitter"></a>
+                <a id="share-instagram" href="#" target="_blank" aria-label="Share on Instagram"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram"></a>
+            </div>
+        </div>
+        <button type="button" id="next-game-btn-end" class="control-btn" aria-label="Play next game">Next Game</button>
+        <button type="button" id="create-pineapple-end" class="control-btn" aria-label="Create a new game">Create a Wordy</button>
+    </div>
+    <div id="guesses-screen" class="dialog">
+        <div class="dialog-content">
+            <span id="guesses-title">Your Guesses</span>
+            <div id="guesses-list"></div>
+            <button type="button" id="guesses-close-btn" class="control-btn" aria-label="Close guesses dialog">Close</button>
+        </div>
+    </div>
+    <div id="give-up-dialog" class="dialog">
+        <div class="dialog-content">
+            <span class="dialog-message">Give Up?</span>
+            <div id="give-up-buttons">
+                <button type="button" id="give-up-yes-btn" class="control-btn" aria-label="Confirm give up">Yes</button>
+                <button type="button" id="give-up-no-btn" class="control-btn" aria-label="Cancel give up">No</button>
+            </div>
+        </div>
+    </div>
+    <div id="form-error-dialog" class="dialog">
+        <div class="dialog-content">
+            <span class="dialog-message"></span>
+            <button type="button" id="form-error-ok-btn" class="control-btn" aria-label="Close error dialog">OK</button>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
