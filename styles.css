@@ -10,9 +10,10 @@ body {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    background: #000000; /* Set background to black */
+    background: #000000;
     overflow-x: hidden;
-    overflow-y: auto; /* Allow vertical scrolling for mobile */
+    overflow-y: auto;
+    scroll-behavior: smooth; /* Enable smooth scrolling for anchor links */
 }
 
 #game-container {
@@ -21,6 +22,7 @@ body {
     width: 100vw;
     min-height: calc(var(--viewport-height, 100vh));
     align-items: center;
+    padding-bottom: 10vmin; /* Ensure space for give-up section */
 }
 
 #header {
@@ -51,6 +53,12 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
+    cursor: pointer;
+    touch-action: manipulation; /* Prevent zoom on tap */
+}
+
+#all-games-link:active {
+    color: #E0A000;
 }
 
 #footer-controls {
@@ -71,6 +79,12 @@ body {
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
     padding: 1vmin;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+#give-up-link:active, #guesses-link:active {
+    color: #E0A000;
 }
 
 #game-number-container {
@@ -84,6 +98,12 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     padding: 1vmin;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+#prev-game-arrow:active, #next-game-arrow:active {
+    color: #E0A000;
 }
 
 #prev-game-arrow.disabled, #next-game-arrow.disabled {
@@ -105,6 +125,7 @@ body {
     border-radius: 1vmin;
     z-index: 10;
     flex: 0 0 auto;
+    touch-action: manipulation;
 }
 
 #guess-input-container {
@@ -158,6 +179,7 @@ body {
     text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
     transition: transform 0.1s ease, background 0.1s ease;
+    touch-action: manipulation;
 }
 
 #guess-btn:active {
@@ -232,9 +254,9 @@ body {
 }
 
 #background-image {
-    width: 2in; /* 2 inches wide */
-    height: auto; /* Maintain aspect ratio */
-    max-width: 90vw; /* Prevent overflow on small screens */
+    width: 2in;
+    height: auto;
+    max-width: 90vw;
     border-radius: 1vmin;
 }
 
@@ -247,11 +269,110 @@ body {
     align-items: center;
     z-index: 10;
     flex: 0 0 auto;
+    margin: 2vmin 0;
 }
 
 #ad-box span {
     font-size: 2.5vmin;
     color: #000000;
+}
+
+#guesses-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90vw;
+    max-width: 600px;
+    margin: 2vmin 0;
+}
+
+#guesses-title {
+    font-size: 4vmin;
+    color: #FFB300;
+    text-shadow: 1px 1px 2px #000000;
+    text-align: center;
+    margin: 1vmin 0;
+}
+
+#guesses-list {
+    font-size: 3.5vmin;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    text-align: center;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2vmin;
+}
+
+#guesses-list div {
+    margin: 0 1vmin;
+}
+
+.guess-separator {
+    color: #FFB300;
+}
+
+#give-up-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 90vw;
+    max-width: 600px;
+    margin: 4vmin 0;
+}
+
+#give-up-title {
+    font-size: 4vmin;
+    color: #FFB300;
+    text-shadow: 1px 1px 2px #000000;
+    text-align: center;
+    margin: 1vmin 0;
+}
+
+#give-up-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2vmin;
+}
+
+.control-btn {
+    width: 40vw;
+    max-width: 200px;
+    height: 6vmin;
+    min-height: 10vmin;
+    background: #FFB300;
+    border: none;
+    border-radius: 1vmin;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 3vmin;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    cursor: pointer;
+    margin: 1vmin 0;
+    transition: transform 0.1s ease, background 0.1s ease;
+    touch-action: manipulation;
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+    background: #E0A000;
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.control-btn.loading::after {
+    content: "⏳";
+    margin-left: 1vmin;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .screen, .dialog {
@@ -289,6 +410,7 @@ body {
     background: #333333;
     padding: 1vmin 3vmin;
     border-radius: 0.5vmin;
+    touch-action: manipulation;
 }
 
 .tab.active {
@@ -399,44 +521,6 @@ body {
     opacity: 0.5;
 }
 
-.control-btn {
-    width: 40vw;
-    max-width: 200px;
-    height: 6vmin;
-    min-height: 10vmin;
-    background: #FFB300;
-    border: none;
-    border-radius: 1vmin;
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 3vmin;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
-    cursor: pointer;
-    margin: 1vmin 0;
-    transition: transform 0.1s ease, background 0.1s ease;
-}
-
-.control-btn:active {
-    transform: scale(0.95);
-    background: #E0A000;
-}
-
-.control-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.control-btn.loading::after {
-    content: "⏳";
-    margin-left: 1vmin;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 #share-section {
     display: flex;
     flex-direction: column;
@@ -516,42 +600,12 @@ body {
     100% { transform: scale(1); opacity: 1; }
 }
 
-#guesses-title {
-    font-size: 4vmin;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
-    margin-bottom: 1vmin;
-}
-
-#guesses-list {
-    font-size: 3.5vmin;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
-    text-align: center;
-    max-height: 20vmin;
-    overflow-y: auto;
-}
-
-.separator {
-    margin: 0 1vmin;
-}
-
-.separator.yellow {
-    color: #FFB300;
-}
-
 .dialog-message {
     font-size: 4vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
     margin-bottom: 2vmin;
-}
-
-#give-up-buttons {
-    display: flex;
-    justify-content: center;
-    gap: 2vmin;
 }
 
 .pineapple-rain {
@@ -611,15 +665,15 @@ body {
         min-height: 12vmin;
         font-size: 3.5vmin;
     }
-    #hints-heading {
+    #hints-heading, #guesses-title, #give-up-title {
         font-size: 4vmin;
     }
-    #hints-list {
+    #hints-list, #guesses-list {
         font-size: 3.5vmin;
         flex-wrap: wrap;
         gap: 1vmin;
     }
-    #hints-list div {
+    #hints-list div, #guesses-list div {
         margin: 0 0.5vmin;
     }
     #background-image {
@@ -672,11 +726,5 @@ body {
     }
     .dialog-message {
         font-size: 4vmin;
-    }
-    #guesses-title {
-        font-size: 4vmin;
-    }
-    #guesses-list {
-        font-size: 3.5vmin;
     }
 }
