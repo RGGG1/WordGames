@@ -1,7 +1,7 @@
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
@@ -295,7 +295,7 @@ body {
 }
 
 .image-arrow.loading::after {
-    content: "⏳";
+    content: "";
     position: absolute;
     top: 50%;
     left: 50%;
@@ -623,7 +623,7 @@ body {
 }
 
 .control-btn.loading::after {
-    content: "⏳";
+    content: "";
     margin-left: 1vmin;
     animation: spin 1s linear infinite;
 }

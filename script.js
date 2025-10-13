@@ -97,11 +97,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const interval = setInterval(() => {
             current += increment;
-            scoreText.textContent = `🍍 ${Math.round(current)}`;
+            scoreText.textContent = ` ${Math.round(current)}`;
             stepCount++;
             if (stepCount >= steps) {
                 clearInterval(interval);
-                scoreText.textContent = `🍍 ${end}`;
+                scoreText.textContent = ` ${end}`;
                 scoreText.classList.remove("deducting");
             }
         }, duration / steps);
@@ -429,14 +429,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeScreen.classList.add("active");
             if (hintsContainer) hintsContainer.classList.add("hidden");
             if (guessesSection) guessesSection.classList.add("hidden");
+            backgroundImageContainer.classList.add("hidden");
             if (activeScreen === formContent) {
                 activeInput = document.getElementById("game-name-input");
                 if (activeInput) setTimeout(() => activeInput.focus(), 0);
-            }
-            // Hide background image on game over
-            if (activeScreen.id === "game-over") {
-                backgroundImageContainer.classList.add("hidden");
-                gameOverOverlay.style.display = "block";
             }
         }
 
@@ -1078,8 +1074,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintIndex = 0;
         firstGuessMade = false;
         gameOver = false;
-        score = 500; // Reset score for new game
-        scoreText.textContent = `🍍 ${score}`;
+        
+        // Maintain cumulative score, reset current game score
+        score = 500;
+        scoreText.textContent = ` ${cumulativeScore}`;
         scoreText.classList.remove("deducting");
         displayHints();
         displayGuesses();
@@ -1093,7 +1091,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintIndex = guesses.length;
             firstGuessMade = guessCount > 0;
             score = gameStates[gameKey].score || 500;
-            scoreText.textContent = `🍍 ${score}`;
             displayHints();
             displayGuesses();
             if (gameResults[gameKey] && gameResults[gameKey].status !== "Not Played") {
@@ -1124,7 +1121,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const hintDiv = document.createElement("div");
                     hintDiv.textContent = hints[i];
                     hintsList.appendChild(hintDiv);
-                    // Add separator after each hint except the last one
                     if (i < hintIndex - 1) {
                         const separator = document.createElement("span");
                         separator.className = "hint-separator";
@@ -1151,7 +1147,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const guessDiv = document.createElement("div");
                     guessDiv.textContent = guess;
                     guessesList.appendChild(guessDiv);
-                    // Add separator after each guess except the last one
                     if (index < guesses.length - 1) {
                         const separator = document.createElement("span");
                         separator.className = "guess-separator";
@@ -1191,18 +1186,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         guesses.push(guess);
         guessCount++;
-        firstGuessMade = true;
 
         const oldScore = score;
         const oldCumulativeScore = cumulativeScore;
 
-        // Calculate new score for this guess
+        // Deduct score for every guess including first
         if (guessCount <= 5) {
             const points = [500, 400, 300, 200, 100][guessCount - 1];
-            const deduction = oldScore - points;
             score = points;
-            
-            // Animate score deduction from first guess
+            animateScoreChange(oldScore, score, true);
+        } else {
+            score = 0;
             animateScoreChange(oldScore, score, true);
         }
 
@@ -1218,9 +1212,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             const finalScore = score;
             gameResults[gameKey] = { status: `${guessCount}/5` };
             localStorage.setItem("gameResults", JSON.stringify(gameResults));
+            
+            // Add to cumulative score
             cumulativeScore += finalScore;
             localStorage.setItem("cumulativeScore", cumulativeScore);
-            scoreText.textContent = `🍍 ${cumulativeScore}`;
+            
+            // Reset to 500 only if cumulative reaches 0 (which won't happen with additions)
+            if (cumulativeScore <= 0) {
+                cumulativeScore = 500;
+                localStorage.setItem("cumulativeScore", cumulativeScore);
+            }
+            
+            scoreText.textContent = ` ${cumulativeScore}`;
             animateScoreChange(oldCumulativeScore, cumulativeScore, false, 1500);
             triggerPineappleRain();
             endGame(`${guessCount}/5`);
@@ -1289,7 +1292,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 challenge.textContent = "Can you solve it?";
                 shareText.appendChild(challenge);
             } else {
-                const points = [500, 400, 300, 200, 100][parseInt(status.split("/")[0]) - 1] || 100;
+                const guesses = parseInt(status.split("/")[0]);
+                const points = [500, 400, 300, 200, 100][guesses - 1] || 100;
                 const message = document.createElement("div");
                 message.textContent = `I scored `;
                 const scoreSpan = document.createElement("span");
@@ -1304,6 +1308,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
 
+        const isPrivate = currentGameNumber.includes("- Private");
+        const gameNum = isPrivate ? currentGameId : currentGameNumber.replace("Game #", "");
         const shareMessage = status === "X/5"
             ? `WORDY #${gameNum} was hard.\nCan you solve it?\nhttps://wordy.bigbraingames.net/?game=${gameNum}`
             : `I scored ${[500, 400, 300, 200, 100][parseInt(status.split("/")[0]) - 1] || 100} for WORDY #${gameNum}.\nCan you beat it?\nhttps://wordy.bigbraingames.net/?game=${gameNum}`;
@@ -1349,7 +1355,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize the game
     console.log("Initializing game");
     await fetchOfficialGames();
-    scoreText.textContent = `🍍 ${cumulativeScore}`;
+    scoreText.textContent = ` ${cumulativeScore}`;
     adjustBackground();
     ensureInitialFocus();
 });
