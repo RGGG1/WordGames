@@ -48,6 +48,33 @@ body {
     outline: 2px solid #FFB300;
 }
 
+#score {
+    font-size: 4.5vmin;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    text-align: right;
+}
+
+#score.flash-red {
+    color: #FF0000;
+    animation: flashRed 0.5s ease;
+}
+
+#score.flash-green {
+    color: #50FF50;
+    animation: flashGreen 0.5s ease;
+}
+
+@keyframes flashRed {
+    0%, 100% { color: #FFFFFF; }
+    50% { color: #FF0000; }
+}
+
+@keyframes flashGreen {
+    0%, 100% { color: #FFFFFF; }
+    50% { color: #50FF50; }
+}
+
 #guess-section {
     display: flex;
     justify-content: center;
@@ -77,7 +104,7 @@ body {
     width: 100%;
     height: 100%;
     background: #FFFFFF;
-    border: 2px solid #FFB300; /* Yellow border */
+    border: 2px solid #FFB300;
     border-radius: 1vmin;
 }
 
@@ -98,7 +125,7 @@ body {
 #guess-input::placeholder {
     color: #808080;
     font-size: 3.5vmin;
-    animation: blink 1.5s ease-in-out infinite; /* Blinking placeholder */
+    animation: blink 1.5s ease-in-out infinite;
 }
 
 @keyframes blink {
@@ -120,28 +147,24 @@ body {
 
 @keyframes shakeAndFlash {
     0%, 100% { transform: translateX(0); background: #FFFFFF; }
-    20%, 60% { transform: translateX(-8px); background: #8B0000; } /* Deep red */
-    40%, 80% { transform: translateX(8px); background: #8B0000; } /* Deep red */
+    20%, 60% { transform: translateX(-8px); background: #000000; }
+    40%, 80% { transform: translateX(8px); background: #000000; }
 }
 
 #game-number-section {
     width: 90vw;
     max-width: 600px;
-    margin: 0.5vmin 0;
+    margin: 2vmin 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-#game-number-text, #score-text {
+#game-number-text {
     font-size: 3vmin;
     color: #808080;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
-}
-
-#score-text {
-    text-align: right;
 }
 
 #hints-container {
@@ -277,7 +300,7 @@ body {
 }
 
 #guesses-list {
-    font-size: 3.5vmin;
+    font-size: 4.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
@@ -296,7 +319,7 @@ body {
 }
 
 #no-guesses-text {
-    font-size: 3.5vmin;
+    font-size: 4.5vmin;
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: center;
@@ -668,18 +691,26 @@ body {
     #guess-input::placeholder {
         font-size: 3.5vmin;
     }
-    #game-number-text, #score-text {
+    #game-number-text {
         font-size: 3vmin;
     }
     #hints-heading, #guesses-title, #all-games-title {
         font-size: 4vmin;
     }
-    #hints-list, #guesses-list, #no-guesses-text {
+    #hints-list {
         font-size: 3.5vmin;
         flex-wrap: wrap;
         gap: 1vmin;
     }
-    #hints-list div, #guesses-list div {
+    #hints-list div {
+        margin: 0 0.5vmin;
+    }
+    #guesses-list, #no-guesses-text {
+        font-size: 4.5vmin;
+        flex-wrap: wrap;
+        gap: 1vmin;
+    }
+    #guesses-list div {
         margin: 0 0.5vmin;
     }
     #background-image {
@@ -692,6 +723,9 @@ body {
     }
     #game-name {
         font-size: 5vmin;
+    }
+    #score {
+        font-size: 4.5vmin;
     }
     .tab {
         font-size: 3.5vmin;
