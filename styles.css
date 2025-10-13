@@ -61,57 +61,6 @@ body {
     color: #E0A000;
 }
 
-#footer-controls {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    padding: 2vmin 4vmin;
-    background: transparent;
-    z-index: 10;
-    flex: 0 0 auto;
-    height: 8vmin;
-}
-
-#give-up-link, #guesses-link {
-    font-size: 3.5vmin;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
-    text-decoration: underline;
-    padding: 1vmin;
-    cursor: pointer;
-    touch-action: manipulation;
-}
-
-#give-up-link:active, #guesses-link:active {
-    color: #E0A000;
-}
-
-#game-number-container {
-    display: flex;
-    align-items: center;
-    gap: 2vmin;
-}
-
-#prev-game-arrow, #next-game-arrow, #game-number-text {
-    font-size: 3.5vmin;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
-    padding: 1vmin;
-    cursor: pointer;
-    touch-action: manipulation;
-}
-
-#prev-game-arrow:active, #next-game-arrow:active {
-    color: #E0A000;
-}
-
-#prev-game-arrow.disabled, #next-game-arrow.disabled {
-    opacity: 0.5;
-    cursor: default;
-    pointer-events: none;
-}
-
 #guess-area {
     display: flex;
     flex-direction: row;
@@ -202,6 +151,19 @@ body {
     40%, 80% { transform: translateX(8px); background: rgba(255, 0, 0, 0.9); }
 }
 
+#game-number-section {
+    width: 90vw;
+    max-width: 600px;
+    margin: 1vmin 0;
+}
+
+#game-number-text {
+    font-size: 3vmin;
+    color: #808080;
+    text-shadow: 1px 1px 2px #000000;
+    text-align: center;
+}
+
 #hints-container {
     display: flex;
     flex-direction: column;
@@ -251,13 +213,48 @@ body {
     align-items: center;
     width: 100%;
     margin: 2vmin 0;
+    gap: 2vmin;
 }
 
 #background-image {
-    width: 2in;
-    height: auto;
+    width: auto;
+    height: 1.8in; /* Reduced by 10% from 2in */
     max-width: 90vw;
     border-radius: 1vmin;
+}
+
+.image-arrow {
+    width: 8vmin;
+    height: 8vmin;
+    background: #FFB300;
+    border: none;
+    border-radius: 1vmin;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 4vmin;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    cursor: pointer;
+    transition: transform 0.1s ease, background 0.1s ease;
+    touch-action: manipulation;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.image-arrow:active {
+    transform: scale(0.95);
+    background: #E0A000;
+}
+
+.image-arrow.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.image-arrow.loading::after {
+    content: "⏳";
+    margin-left: 1vmin;
+    animation: spin 1s linear infinite;
 }
 
 #ad-box {
@@ -643,10 +640,6 @@ body {
         height: 10vmin;
         padding: 2vmin;
     }
-    #footer-controls {
-        height: 8vmin;
-        padding: 2vmin;
-    }
     #guess-area {
         height: 12vmin;
         margin: 1vmin 0;
@@ -665,6 +658,9 @@ body {
         min-height: 12vmin;
         font-size: 3.5vmin;
     }
+    #game-number-text {
+        font-size: 3vmin;
+    }
     #hints-heading, #guesses-title, #give-up-title {
         font-size: 4vmin;
     }
@@ -677,19 +673,18 @@ body {
         margin: 0 0.5vmin;
     }
     #background-image {
-        width: 2in;
+        height: 1.8in; /* Reduced by 10% from 2in */
         max-width: 80vw;
+    }
+    .image-arrow {
+        width: 8vmin;
+        height: 8vmin;
+        font-size: 4vmin;
     }
     #game-name {
         font-size: 5vmin;
     }
     #all-games-link {
-        font-size: 3.5vmin;
-    }
-    #give-up-link, #guesses-link {
-        font-size: 3.5vmin;
-    }
-    #prev-game-arrow, #next-game-arrow, #game-number-text {
         font-size: 3.5vmin;
     }
     .tab {

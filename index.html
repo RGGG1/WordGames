@@ -28,21 +28,15 @@
             <span id="game-name" tabindex="0" aria-label="Return to game screen">WORDY</span>
             <a href="#" id="all-games-link" aria-label="View all games">All Games</a>
         </div>
-        <div id="footer-controls">
-            <a href="#give-up-section" id="give-up-link" aria-label="Scroll to give up section">Give Up</a>
-            <div id="game-number-container">
-                <a href="#" id="prev-game-arrow" aria-label="Previous game">◄</a>
-                <span id="game-number-text"></span>
-                <a href="#" id="next-game-arrow" aria-label="Next game">▶</a>
-            </div>
-            <a href="#guesses-section" id="guesses-link" aria-label="Scroll to guesses section">Guesses: 0/5</a>
-        </div>
         <div id="guess-area">
             <div id="guess-input-container">
                 <span id="guess-prompt">The Secret Word is...</span>
                 <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter your guess" autofocus>
             </div>
             <button type="button" id="guess-btn" aria-label="Submit guess">GUESS</button>
+        </div>
+        <div id="game-number-section">
+            <span id="game-number-text"></span>
         </div>
         <div id="hints-container">
             <div id="hints-box" class="hints-box">
@@ -51,7 +45,9 @@
             </div>
         </div>
         <div id="background-image-container">
+            <button type="button" id="prev-image-arrow" class="image-arrow" aria-label="Previous game">◄</button>
             <img id="background-image" src="newbackground.png" alt="Game background">
+            <button type="button" id="next-image-arrow" class="image-arrow" aria-label="Next game">▶</button>
         </div>
         <div id="ad-box">
             <span>Big Brain Games</span>
@@ -64,7 +60,6 @@
             <span id="give-up-title">GIVE UP?</span>
             <div id="give-up-buttons">
                 <button type="button" id="give-up-yes-btn" class="control-btn" aria-label="Confirm give up">Yes</button>
-                <button type="button" id="give-up-no-btn" class="control-btn" aria-label="Cancel give up">No</button>
             </div>
         </div>
     </div>
