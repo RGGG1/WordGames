@@ -26,7 +26,7 @@
     <div id="game-container">
         <div id="header">
             <span id="game-name" tabindex="0" aria-label="Return to game screen">WORDY</span>
-            <a href="#" id="all-games-link" aria-label="View all games">All Games</a>
+            <a href="#all-games-section" id="all-games-link" aria-label="View all games">All Games</a>
         </div>
         <div id="guess-area">
             <div id="guess-input-container">
@@ -45,9 +45,9 @@
             </div>
         </div>
         <div id="background-image-container">
-            <button type="button" id="prev-image-arrow" class="image-arrow" aria-label="Previous game">◄</button>
+            <button type="button" id="prev-image-arrow" class="image-arrow" aria-label="Previous game"></button>
             <img id="background-image" src="newbackground.png" alt="Game background">
-            <button type="button" id="next-image-arrow" class="image-arrow" aria-label="Next game">▶</button>
+            <button type="button" id="next-image-arrow" class="image-arrow" aria-label="Next game"></button>
         </div>
         <div id="ad-box">
             <span>Big Brain Games</span>
@@ -62,23 +62,24 @@
                 <button type="button" id="give-up-yes-btn" class="control-btn" aria-label="Confirm give up">Yes</button>
             </div>
         </div>
-    </div>
-    <div id="game-select-content" class="screen">
-        <div id="tabs">
-            <span id="official-tab" class="tab active" tabindex="0" aria-label="Official games tab">Official</span>
-            <span class="tab-seperator">     |     </span>
-            <span id="private-tab" class="tab" tabindex="0" aria-label="Private games tab">Private</span>
-        </div>
-        <div id="official-games" class="tab-content active">
-            <span>Official Games</span>
-            <div id="official-list" class="game-list"></div>
-            <button type="button" id="official-back-btn" class="control-btn" aria-label="Back to game">Back</button>
-        </div>
-        <div id="private-games" class="tab-content">
-            <span>Private Games</span>
-            <div id="private-list" class="game-list"></div>
-            <button type="button" id="create-pineapple" class="control-btn" aria-label="Create a new game">Create a Wordy</button>
-            <button type="button" id="private-back-btn" class="control-btn" aria-label="Back to game">Back</button>
+        <div id="all-games-section">
+            <span id="all-games-title">ALL GAMES</span>
+            <div id="tabs">
+                <span id="official-tab" class="tab active" tabindex="0" aria-label="Official games tab">Official</span>
+                <span class="tab-seperator">     |     </span>
+                <span id="private-tab" class="tab" tabindex="0" aria-label="Private games tab">Private</span>
+            </div>
+            <div id="official-games" class="tab-content active">
+                <span>Official Games</span>
+                <div id="official-list" class="game-list"></div>
+                <button type="button" id="official-back-btn" class="control-btn" aria-label="Back to game">Back</button>
+            </div>
+            <div id="private-games" class="tab-content">
+                <span>Private Games</span>
+                <div id="private-list" class="game-list"></div>
+                <button type="button" id="create-pineapple" class="control-btn" aria-label="Create a new game">Create a Wordy</button>
+                <button type="button" id="private-back-btn" class="control-btn" aria-label="Back to game">Back</button>
+            </div>
         </div>
     </div>
     <div id="form-content" class="screen">

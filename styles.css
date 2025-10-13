@@ -13,7 +13,7 @@ body {
     background: #000000;
     overflow-x: hidden;
     overflow-y: auto;
-    scroll-behavior: smooth; /* Enable smooth scrolling for anchor links */
+    scroll-behavior: smooth;
 }
 
 #game-container {
@@ -22,7 +22,7 @@ body {
     width: 100vw;
     min-height: calc(var(--viewport-height, 100vh));
     align-items: center;
-    padding-bottom: 10vmin; /* Ensure space for give-up section */
+    padding-bottom: 10vmin;
 }
 
 #header {
@@ -54,7 +54,7 @@ body {
     text-shadow: 1px 1px 2px #000000;
     text-decoration: underline;
     cursor: pointer;
-    touch-action: manipulation; /* Prevent zoom on tap */
+    touch-action: manipulation;
 }
 
 #all-games-link:active {
@@ -154,7 +154,7 @@ body {
 #game-number-section {
     width: 90vw;
     max-width: 600px;
-    margin: 1vmin 0;
+    margin: 0.5vmin 0; /* Reduced from 1vmin to bring closer to hints */
 }
 
 #game-number-text {
@@ -170,7 +170,7 @@ body {
     align-items: center;
     width: 90vw;
     max-width: 600px;
-    margin: 2vmin 0;
+    margin: 0.5vmin 0; /* Reduced from 2vmin to bring closer to game number */
 }
 
 .hints-box {
@@ -213,12 +213,12 @@ body {
     align-items: center;
     width: 100%;
     margin: 2vmin 0;
-    gap: 2vmin;
+    gap: 4vmin; /* Increased from 2vmin to space arrows further from image */
 }
 
 #background-image {
     width: auto;
-    height: 1.8in; /* Reduced by 10% from 2in */
+    height: 2.25in; /* Increased by 25% from 1.8in */
     max-width: 90vw;
     border-radius: 1vmin;
 }
@@ -226,24 +226,37 @@ body {
 .image-arrow {
     width: 8vmin;
     height: 8vmin;
-    background: #FFB300;
+    background: transparent;
     border: none;
-    border-radius: 1vmin;
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 4vmin;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
     cursor: pointer;
-    transition: transform 0.1s ease, background 0.1s ease;
+    transition: transform 0.1s ease;
     touch-action: manipulation;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
 }
 
-.image-arrow:active {
-    transform: scale(0.95);
-    background: #E0A000;
+#prev-image-arrow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 4vmin solid transparent;
+    border-right-color: #FFB300;
+}
+
+#next-image-arrow::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border: 4vmin solid transparent;
+    border-left-color: #FFB300;
+}
+
+.image-arrow:active::before {
+    border-right-color: #E0A000; /* For prev arrow */
+    border-left-color: #E0A000; /* For next arrow */
 }
 
 .image-arrow.disabled {
@@ -251,9 +264,18 @@ body {
     cursor: not-allowed;
 }
 
+.image-arrow.loading::before {
+    border-right-color: #FFFFFF; /* For prev arrow */
+    border-left-color: #FFFFFF; /* For next arrow */
+}
+
 .image-arrow.loading::after {
     content: "⏳";
-    margin-left: 1vmin;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 4vmin;
     animation: spin 1s linear infinite;
 }
 
@@ -333,63 +355,21 @@ body {
     gap: 2vmin;
 }
 
-.control-btn {
-    width: 40vw;
-    max-width: 200px;
-    height: 6vmin;
-    min-height: 10vmin;
-    background: #FFB300;
-    border: none;
-    border-radius: 1vmin;
-    font-family: 'Luckiest Guy', cursive;
-    font-size: 3vmin;
-    color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
-    cursor: pointer;
-    margin: 1vmin 0;
-    transition: transform 0.1s ease, background 0.1s ease;
-    touch-action: manipulation;
-}
-
-.control-btn:active {
-    transform: scale(0.95);
-    background: #E0A000;
-}
-
-.control-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.control-btn.loading::after {
-    content: "⏳";
-    margin-left: 1vmin;
-    animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
-.screen, .dialog {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
-    background: rgba(0, 0, 0, 0.7);
-    z-index: 50;
-    display: none;
+#all-games-section {
+    display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    overflow-y: auto;
+    width: 90vw;
+    max-width: 600px;
+    margin: 4vmin 0;
 }
 
-#game-select-content {
-    width: 100vw;
-    height: calc(var(--viewport-height, 100vh));
+#all-games-title {
+    font-size: 4vmin;
+    color: #FFB300;
+    text-shadow: 1px 1px 2px #000000;
+    text-align: center;
+    margin: 1vmin 0;
 }
 
 #tabs {
@@ -431,8 +411,7 @@ body {
     display: none;
     flex-direction: column;
     align-items: center;
-    width: 90vw;
-    max-width: 600px;
+    width: 100%;
     max-height: 80vmin;
     border-radius: 1vmin;
     padding: 2vmin;
@@ -488,6 +467,60 @@ body {
     color: #FFB300;
     text-decoration: underline;
     cursor: pointer;
+}
+
+.control-btn {
+    width: 40vw;
+    max-width: 200px;
+    height: 6vmin;
+    min-height: 10vmin;
+    background: #FFB300;
+    border: none;
+    border-radius: 1vmin;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 3vmin;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    cursor: pointer;
+    margin: 1vmin 0;
+    transition: transform 0.1s ease, background 0.1s ease;
+    touch-action: manipulation;
+}
+
+.control-btn:active {
+    transform: scale(0.95);
+    background: #E0A000;
+}
+
+.control-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.control-btn.loading::after {
+    content: "⏳";
+    margin-left: 1vmin;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.screen, .dialog {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: calc(var(--viewport-height, 100vh));
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 50;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow-y: auto;
 }
 
 #form-container {
@@ -661,7 +694,7 @@ body {
     #game-number-text {
         font-size: 3vmin;
     }
-    #hints-heading, #guesses-title, #give-up-title {
+    #hints-heading, #guesses-title, #give-up-title, #all-games-title {
         font-size: 4vmin;
     }
     #hints-list, #guesses-list {
@@ -673,13 +706,12 @@ body {
         margin: 0 0.5vmin;
     }
     #background-image {
-        height: 1.8in; /* Reduced by 10% from 2in */
+        height: 2.25in; /* Increased by 25% from 1.8in */
         max-width: 80vw;
     }
     .image-arrow {
         width: 8vmin;
         height: 8vmin;
-        font-size: 4vmin;
     }
     #game-name {
         font-size: 5vmin;
