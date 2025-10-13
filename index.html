@@ -26,14 +26,11 @@
     <div id="game-container">
         <div id="header">
             <span id="game-name" tabindex="0" aria-label="Return to game screen">WORDY</span>
-            <a href="#all-games-section" id="all-games-link" aria-label="View all games">All Games</a>
         </div>
         <div id="guess-area">
             <div id="guess-input-container">
-                <span id="guess-prompt">The Secret Word is...</span>
-                <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter your guess" autofocus>
+                <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false" placeholder="The secret word is..." aria-label="Enter your guess" autofocus>
             </div>
-            <button type="button" id="guess-btn" aria-label="Submit guess">GUESS</button>
         </div>
         <div id="game-number-section">
             <span id="game-number-text"></span>
@@ -55,12 +52,6 @@
         <div id="guesses-section">
             <span id="guesses-title">GUESSES</span>
             <div id="guesses-list"></div>
-        </div>
-        <div id="give-up-section">
-            <span id="give-up-title">GIVE UP?</span>
-            <div id="give-up-buttons">
-                <button type="button" id="give-up-yes-btn" class="control-btn" aria-label="Confirm give up">Yes</button>
-            </div>
         </div>
         <div id="all-games-section">
             <span id="all-games-title">ALL GAMES</span>

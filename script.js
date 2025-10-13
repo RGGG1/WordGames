@@ -12,7 +12,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     let currentGameNumber = null;
     let currentGameId = null;
     let guessCount = 0;
-    let gaveUp = false;
     let isProcessingGuess = false;
     let isLoadingGame = false;
     let isUILocked = false;
@@ -29,13 +28,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const confirmBtn = document.getElementById("confirm-btn");
     const formBackBtn = document.getElementById("form-back-btn");
     const createPineappleLink = document.getElementById("create-pineapple-end");
-    const guessBtn = document.getElementById("guess-btn");
     const nextGameBtnEnd = document.getElementById("next-game-btn-end");
     const officialBackBtn = document.getElementById("official-back-btn");
     const privateBackBtn = document.getElementById("private-back-btn");
-    const giveUpYesBtn = document.getElementById("give-up-yes-btn");
     const guessesList = document.getElementById("guesses-list");
-    const allGamesLink = document.getElementById("all-games-link");
     const prevImageArrow = document.getElementById("prev-image-arrow");
     const nextImageArrow = document.getElementById("next-image-arrow");
     const gameNumberText = document.getElementById("game-number-text");
@@ -163,7 +159,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Document-level touch handler to focus input on first interaction
     let initialTouchHandled = false;
     document.addEventListener("touchstart", (e) => {
-        if (!initialTouchHandled && !gameOver && !isProcessingGuess && !isUILocked && gameContainer.style.display !== "none" && !e.target.closest('.screen, .dialog, #guess-btn')) {
+        if (!initialTouchHandled && !gameOver && !isProcessingGuess && !isUILocked && gameContainer.style.display !== "none" && !e.target.closest('.screen, .dialog')) {
             console.log("First document touch, focusing guess input");
             guessInput.focus();
             activeInput = guessInput;
@@ -182,7 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             !gameOver &&
             !isProcessingGuess &&
             !isUILocked &&
-            !e.target.closest('.screen, .dialog, #guess-btn, #guess-input, #guess-input-container, #guess-area')
+            !e.target.closest('.screen, .dialog, #guess-input, #guess-input-container, #guess-area')
         ) {
             console.log("Global click detected, refocusing guess input");
             guessInput.focus();
@@ -305,30 +301,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessArea.addEventListener("touchstart", handler);
     }
 
-    // Setup guess button
-    if (guessBtn) {
-        guessBtn.disabled = false;
-        const handler = debounce((e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Guess button triggered", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                if (isMobile && document.activeElement !== guessInput) {
-                    guessInput.focus();
-                    activeInput = guessInput;
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }
-                const guess = guessInput.value.trim().toUpperCase();
-                if (guess) {
-                    console.log("Submitting guess:", guess);
-                    handleGuess(guess);
-                }
-            }
-        }, 100);
-        guessBtn.addEventListener("click", handler);
-        guessBtn.addEventListener("touchstart", handler);
-    }
-
     // Setup form inputs
     const formInputs = [
         document.getElementById("game-name-input"),
@@ -418,46 +390,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         privateTab.addEventListener("keydown", (e) => {
             if (e.key === "Enter" || e.key === " ") tabHandler(privateTab, privateContent)(e);
-        });
-    }
-
-    // All Games link
-    if (allGamesLink) {
-        const handler = debounce((e) => {
-            e.preventDefault();
-            console.log("All Games link triggered", { isUILocked, isLoadingGame });
-            if (isUILocked || isLoadingGame) return;
-            isUILocked = true;
-            document.getElementById("all-games-section").scrollIntoView({ behavior: "smooth", block: "start" });
-            setTimeout(() => {
-                isUILocked = false;
-                keepKeyboardOpen();
-            }, 500);
-        }, 100);
-        allGamesLink.addEventListener(isMobile ? "touchstart" : "click", handler);
-        allGamesLink.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") handler(e);
-        });
-    }
-
-    // Give Up Yes button
-    if (giveUpYesBtn) {
-        giveUpYesBtn.addEventListener("click", (e) => {
-            e.preventDefault();
-            console.log("Give Up Yes button clicked");
-            gaveUp = true;
-            let normalizedGameNumber;
-            let gameType;
-            if (currentGameNumber.includes("- Private")) {
-                normalizedGameNumber = currentGameId;
-                gameType = "privatePineapple";
-            } else {
-                normalizedGameNumber = currentGameNumber.replace("Game #", "");
-                gameType = "pineapple";
-            }
-            saveGameResult(gameType, normalizedGameNumber, secretWord, "Gave Up");
-            endGame(false, true);
-            keepKeyboardOpen();
         });
     }
 
@@ -866,7 +798,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const gameName = game["Game Name"] || "";
                 const displayName = gameName ? `${gameNumber} - ${gameName}` : gameNumber;
                 const result = gameResults[`pineapple_${game["Game Number"]}`] || { status: "Not Played" };
-                const resultClass = result.status === "Gave Up" || result.status === "X/5" ? "gave-up" : "";
+                const resultClass = result.status === "X/5" ? "lost" : "";
                 row.innerHTML = `
                     <span>${displayName}</span>
                     <span class="result ${resultClass}">${result.status !== "Not Played" ? result.status : "Play Now"}</span>
@@ -931,7 +863,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const gameName = game["Game Name"] || "";
                 const displayName = gameName ? `${gameNumber} - ${gameName}` : gameNumber;
                 const result = gameResults[`privatePineapple_${gameNumber}`] || { status: "Not Played" };
-                const resultClass = result.status === "Gave Up" || result.status === "X/5" ? "gave-up" : "";
+                const resultClass = result.status === "X/5" ? "lost" : "";
                 row.innerHTML = `
                     <span>${displayName}</span>
                     <span class="result ${resultClass}">${result.status !== "Not Played" ? result.status : "Play Now"}</span>
@@ -1017,14 +949,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-        // Load game
+    // Load game
     function loadGame(game) {
         console.log("Loading game:", game);
         gameOver = false;
         guessInput.disabled = false;
-        guessBtn.disabled = false;
         guessCount = 0;
-        gaveUp = false;
         guesses = [];
         firstGuessMade = false;
         hintIndex = 0;
@@ -1049,7 +979,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             backgroundImage.alt = `Background for ${currentGameNumber}`;
         }
         gameNumberText.textContent = currentGameNumber;
-        guessesList.innerHTML = "";
+        guessesList.innerHTML = firstGuessMade ? "" : '<span id="no-guesses-text">No guesses yet</span>';
         updateHints();
         guessInput.value = "";
         guessInput.focus();
@@ -1060,7 +990,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const resultKey = isPrivate ? `privatePineapple_${currentGameId}` : `pineapple_${game["Game Number"]}`;
         if (gameResults[resultKey] && gameResults[resultKey].status !== "Not Played") {
             console.log("Game already played:", gameResults[resultKey]);
-            endGame(false, gameResults[resultKey].status === "Gave Up");
+            endGame(gameResults[resultKey].status !== "X/5", false);
         }
     }
 
@@ -1087,8 +1017,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Handling guess:", guess, { gameOver, isProcessingGuess });
         if (gameOver || isProcessingGuess) return;
         isProcessingGuess = true;
-        guessBtn.disabled = true;
-        guessInput.disabled = true;
+                guessInput.disabled = true;
 
         try {
             if (!/^[A-Z\s]+$/.test(guess)) {
@@ -1099,15 +1028,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             guesses.push(guess);
             firstGuessMade = true;
 
-            const guessSpan = document.createElement("span");
-            guessSpan.textContent = guess;
-            guessesList.appendChild(guessSpan);
-            if (guesses.length < 5) {
-                const separator = document.createElement("span");
-                separator.className = "guess-separator";
-                separator.textContent = "|";
-                guessesList.appendChild(separator);
-            }
+            guessesList.innerHTML = "";
+            guesses.forEach((g, index) => {
+                const guessSpan = document.createElement("span");
+                guessSpan.textContent = g;
+                guessesList.appendChild(guessSpan);
+                if (index < guesses.length - 1 && guesses.length < 5) {
+                    const separator = document.createElement("span");
+                    separator.className = "guess-separator";
+                    separator.textContent = "|";
+                    guessesList.appendChild(separator);
+                }
+            });
 
             if (guess === secretWord) {
                 console.log("Correct guess!");
@@ -1121,7 +1053,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     gameType = "pineapple";
                 }
                 saveGameResult(gameType, normalizedGameNumber, secretWord, `${guessCount}/5`);
-                endGame(true, false);
+                endGame(true);
             } else {
                 console.log("Incorrect guess, showing next hint");
                 guessInputContainer.classList.add("wrong-guess");
@@ -1142,11 +1074,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                             gameType = "pineapple";
                         }
                         saveGameResult(gameType, normalizedGameNumber, secretWord, "X/5");
-                        endGame(false, false);
+                        endGame(false);
                     }
                     guessInput.value = "";
                     guessInput.disabled = false;
-                    guessBtn.disabled = false;
                     isProcessingGuess = false;
                     guessInput.focus();
                     activeInput = guessInput;
@@ -1161,7 +1092,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 animationTimeout = null;
                 guessInput.value = "";
                 guessInput.disabled = false;
-                guessBtn.disabled = false;
                 isProcessingGuess = false;
                 guessInput.focus();
                 activeInput = guessInput;
@@ -1183,11 +1113,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // End game
-    function endGame(isWin, gaveUpLocal) {
-        console.log("Ending game", { isWin, gaveUpLocal });
+    function endGame(isWin) {
+        console.log("Ending game", { isWin });
         gameOver = true;
         guessInput.disabled = true;
-        guessBtn.disabled = true;
         const shareText = document.getElementById("share-text");
         const gameNumberDisplay = document.getElementById("game-number-display");
         const shareButtons = document.getElementById("share-buttons");
@@ -1198,9 +1127,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (isWin) {
             message = `I guessed the secret word in <span class="guess-count">${guessCount}/5</span> guesses for ${currentGameNumber}!`;
             emojiResult = Array(guessCount).fill("🟩").join("") + Array(5 - guessCount).fill("⬜").join("");
-        } else if (gaveUpLocal) {
-            message = `I gave up on ${currentGameNumber}. The secret word was ${secretWord}.`;
-            emojiResult = "😞";
         } else {
             message = `I couldn't guess the secret word for ${currentGameNumber}. It was ${secretWord}.`;
             emojiResult = "❌";
