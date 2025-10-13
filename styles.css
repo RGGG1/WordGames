@@ -48,6 +48,19 @@ body {
     outline: 2px solid #FFB300;
 }
 
+#all-games-link {
+    font-size: 3.5vmin;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    text-decoration: underline;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+#all-games-link:active {
+    color: #E0A000;
+}
+
 #guess-area {
     display: flex;
     flex-direction: row;
@@ -67,10 +80,17 @@ body {
 #guess-input-container {
     display: flex;
     flex-direction: column;
-    width: 100%;
+    width: 65%;
     height: 100%;
     background: #FFFFFF;
-    border-radius: 1vmin;
+    border-radius: 1vmin 0 0 1vmin;
+}
+
+#guess-prompt {
+    font-size: 3.5vmin;
+    color: #000000;
+    text-align: center;
+    padding: 1vmin 0;
 }
 
 #guess-input {
@@ -84,12 +104,7 @@ body {
     text-align: center;
     text-transform: uppercase;
     flex: 1;
-    border-radius: 1vmin;
-}
-
-#guess-input::placeholder {
-    color: #808080;
-    font-size: 3.5vmin;
+    border-bottom-left-radius: 1vmin;
 }
 
 #guess-input:focus {
@@ -98,6 +113,32 @@ body {
 
 #guess-input:disabled {
     opacity: 0.5;
+}
+
+#guess-btn {
+    width: 35%;
+    height: 100%;
+    min-height: 12vmin;
+    background: #FFB300;
+    border: none;
+    border-radius: 0 1vmin 1vmin 0;
+    font-family: 'Luckiest Guy', cursive;
+    font-size: 3.5vmin;
+    color: #FFFFFF;
+    text-shadow: 1px 1px 2px #000000;
+    cursor: pointer;
+    transition: transform 0.1s ease, background 0.1s ease;
+    touch-action: manipulation;
+}
+
+#guess-btn:active {
+    transform: scale(0.95);
+    background: #E0A000;
+}
+
+#guess-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
 }
 
 #guess-input-container.wrong-guess {
@@ -113,7 +154,7 @@ body {
 #game-number-section {
     width: 90vw;
     max-width: 600px;
-    margin: 0.5vmin 0;
+    margin: 0.5vmin 0; /* Reduced from 1vmin to bring closer to hints */
 }
 
 #game-number-text {
@@ -129,7 +170,7 @@ body {
     align-items: center;
     width: 90vw;
     max-width: 600px;
-    margin: 0.2vmin 0; /* Reduced from 0.5vmin */
+    margin: 0.5vmin 0; /* Reduced from 2vmin to bring closer to game number */
 }
 
 .hints-box {
@@ -172,12 +213,12 @@ body {
     align-items: center;
     width: 100%;
     margin: 2vmin 0;
-    gap: 4vmin;
+    gap: 4vmin; /* Increased from 2vmin to space arrows further from image */
 }
 
 #background-image {
     width: auto;
-    height: 2.5875in; /* Increased by 15% from 2.25in */
+    height: 2.25in; /* Increased by 25% from 1.8in */
     max-width: 90vw;
     border-radius: 1vmin;
 }
@@ -214,8 +255,8 @@ body {
 }
 
 .image-arrow:active::before {
-    border-right-color: #E0A000;
-    border-left-color: #E0A000;
+    border-right-color: #E0A000; /* For prev arrow */
+    border-left-color: #E0A000; /* For next arrow */
 }
 
 .image-arrow.disabled {
@@ -224,8 +265,8 @@ body {
 }
 
 .image-arrow.loading::before {
-    border-right-color: #FFFFFF;
-    border-left-color: #FFFFFF;
+    border-right-color: #FFFFFF; /* For prev arrow */
+    border-left-color: #FFFFFF; /* For next arrow */
 }
 
 .image-arrow.loading::after {
@@ -238,7 +279,7 @@ body {
     animation: spin 1s linear infinite;
 }
 
-#ad-box, #ad-box-2 {
+#ad-box {
     width: 100%;
     height: 6vmin;
     background: #FFFFFF;
@@ -250,7 +291,7 @@ body {
     margin: 2vmin 0;
 }
 
-#ad-box span, #ad-box-2 span {
+#ad-box span {
     font-size: 2.5vmin;
     color: #000000;
 }
@@ -374,6 +415,7 @@ body {
     max-height: 80vmin;
     border-radius: 1vmin;
     padding: 2vmin;
+    background: #333333;
     overflow-y: auto;
 }
 
@@ -400,9 +442,8 @@ body {
     display: grid;
     grid-template-columns: 2fr 1fr;
     align-items: center;
-    justify-content: center;
     width: 100%;
-    padding: 1vmin 10%;
+    padding: 1vmin 2vmin;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
 }
 
@@ -637,12 +678,17 @@ body {
         margin: 1vmin 0;
     }
     #guess-input-container {
-        width: 100%;
+        width: 65%;
+    }
+    #guess-prompt {
+        font-size: 3.5vmin;
     }
     #guess-input {
         font-size: 5vmin;
     }
-    #guess-input::placeholder {
+    #guess-btn {
+        width: 35%;
+        min-height: 12vmin;
         font-size: 3.5vmin;
     }
     #game-number-text {
@@ -660,7 +706,7 @@ body {
         margin: 0 0.5vmin;
     }
     #background-image {
-        height: 2.5875in; /* Increased by 15% from 2.25in */
+        height: 2.25in; /* Increased by 25% from 1.8in */
         max-width: 80vw;
     }
     .image-arrow {
@@ -669,6 +715,9 @@ body {
     }
     #game-name {
         font-size: 5vmin;
+    }
+    #all-games-link {
+        font-size: 3.5vmin;
     }
     .tab {
         font-size: 3.5vmin;
