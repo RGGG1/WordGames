@@ -27,13 +27,16 @@
         <div id="header">
             <span id="game-name" tabindex="0" aria-label="Return to game screen">WORDY</span>
         </div>
-        <div id="guess-area">
-            <div id="guess-input-container">
-                <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false" placeholder="The secret word is..." aria-label="Enter your guess" autofocus>
+        <div id="guess-section">
+            <div id="guess-area">
+                <div id="guess-input-container">
+                    <input type="text" id="guess-input" maxlength="15" autocomplete="off" spellcheck="false" placeholder="Guess the secret word here..." aria-label="Enter your guess" autofocus>
+                </div>
             </div>
         </div>
         <div id="game-number-section">
             <span id="game-number-text"></span>
+            <span id="score-text">Score: 500</span>
         </div>
         <div id="hints-container">
             <div id="hints-box" class="hints-box">
@@ -46,13 +49,14 @@
             <img id="background-image" src="newbackground.png" alt="Game background">
             <button type="button" id="next-image-arrow" class="image-arrow" aria-label="Next game"></button>
         </div>
-        <div id="ad-box">
-            <span>Big Brain Games</span>
-        </div>
         <div id="guesses-section">
             <span id="guesses-title">GUESSES</span>
             <div id="guesses-list"></div>
         </div>
+        <div id="ad-box">
+            <span>Big Brain Games</span>
+        </div>
+        <div id="incorrect-guess-indicator" class="incorrect-guess-indicator">❌</div>
         <div id="all-games-section">
             <span id="all-games-title">ALL GAMES</span>
             <div id="tabs">
