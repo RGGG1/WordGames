@@ -29,13 +29,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     const confirmBtn = document.getElementById("confirm-btn");
     const formBackBtn = document.getElementById("form-back-btn");
     const createPineappleLink = document.getElementById("create-pineapple-end");
-    const guessBtn = document.getElementById("guess-btn");
     const nextGameBtnEnd = document.getElementById("next-game-btn-end");
     const officialBackBtn = document.getElementById("official-back-btn");
     const privateBackBtn = document.getElementById("private-back-btn");
     const giveUpYesBtn = document.getElementById("give-up-yes-btn");
     const guessesList = document.getElementById("guesses-list");
-    const allGamesLink = document.getElementById("all-games-link");
     const prevImageArrow = document.getElementById("prev-image-arrow");
     const nextImageArrow = document.getElementById("next-image-arrow");
     const gameNumberText = document.getElementById("game-number-text");
@@ -163,7 +161,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Document-level touch handler to focus input on first interaction
     let initialTouchHandled = false;
     document.addEventListener("touchstart", (e) => {
-        if (!initialTouchHandled && !gameOver && !isProcessingGuess && !isUILocked && gameContainer.style.display !== "none" && !e.target.closest('.screen, .dialog, #guess-btn')) {
+        if (!initialTouchHandled && !gameOver && !isProcessingGuess && !isUILocked && gameContainer.style.display !== "none" && !e.target.closest('.screen, .dialog')) {
             console.log("First document touch, focusing guess input");
             guessInput.focus();
             activeInput = guessInput;
@@ -182,7 +180,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             !gameOver &&
             !isProcessingGuess &&
             !isUILocked &&
-            !e.target.closest('.screen, .dialog, #guess-btn, #guess-input, #guess-input-container, #guess-area')
+            !e.target.closest('.screen, .dialog, #guess-input, #guess-input-container, #guess-area')
         ) {
             console.log("Global click detected, refocusing guess input");
             guessInput.focus();
@@ -305,30 +303,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessArea.addEventListener("touchstart", handler);
     }
 
-    // Setup guess button
-    if (guessBtn) {
-        guessBtn.disabled = false;
-        const handler = debounce((e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            console.log("Guess button triggered", { gameOver, disabled: guessInput.disabled, isProcessingGuess });
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                if (isMobile && document.activeElement !== guessInput) {
-                    guessInput.focus();
-                    activeInput = guessInput;
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
-                }
-                const guess = guessInput.value.trim().toUpperCase();
-                if (guess) {
-                    console.log("Submitting guess:", guess);
-                    handleGuess(guess);
-                }
-            }
-        }, 100);
-        guessBtn.addEventListener("click", handler);
-        guessBtn.addEventListener("touchstart", handler);
-    }
-
     // Setup form inputs
     const formInputs = [
         document.getElementById("game-name-input"),
@@ -390,7 +364,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         adjustBackground();
     }
 
-    // Tab navigation
+        // Tab navigation
     if (officialTab && privateTab && officialContent && privateContent) {
         const tabHandler = (tab, content) => {
             return debounce((e) => {
@@ -418,25 +392,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
         privateTab.addEventListener("keydown", (e) => {
             if (e.key === "Enter" || e.key === " ") tabHandler(privateTab, privateContent)(e);
-        });
-    }
-
-    // All Games link
-    if (allGamesLink) {
-        const handler = debounce((e) => {
-            e.preventDefault();
-            console.log("All Games link triggered", { isUILocked, isLoadingGame });
-            if (isUILocked || isLoadingGame) return;
-            isUILocked = true;
-            document.getElementById("all-games-section").scrollIntoView({ behavior: "smooth", block: "start" });
-            setTimeout(() => {
-                isUILocked = false;
-                keepKeyboardOpen();
-            }, 500);
-        }, 100);
-        allGamesLink.addEventListener(isMobile ? "touchstart" : "click", handler);
-        allGamesLink.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") handler(e);
         });
     }
 
@@ -1017,12 +972,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-        // Load game
+    // Load game
     function loadGame(game) {
         console.log("Loading game:", game);
         gameOver = false;
         guessInput.disabled = false;
-        guessBtn.disabled = false;
         guessCount = 0;
         gaveUp = false;
         guesses = [];
@@ -1087,7 +1041,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Handling guess:", guess, { gameOver, isProcessingGuess });
         if (gameOver || isProcessingGuess) return;
         isProcessingGuess = true;
-        guessBtn.disabled = true;
         guessInput.disabled = true;
 
         try {
@@ -1146,7 +1099,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     }
                     guessInput.value = "";
                     guessInput.disabled = false;
-                    guessBtn.disabled = false;
                     isProcessingGuess = false;
                     guessInput.focus();
                     activeInput = guessInput;
@@ -1161,7 +1113,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 animationTimeout = null;
                 guessInput.value = "";
                 guessInput.disabled = false;
-                guessBtn.disabled = false;
                 isProcessingGuess = false;
                 guessInput.focus();
                 activeInput = guessInput;
@@ -1187,7 +1138,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Ending game", { isWin, gaveUpLocal });
         gameOver = true;
         guessInput.disabled = true;
-        guessBtn.disabled = true;
         const shareText = document.getElementById("share-text");
         const gameNumberDisplay = document.getElementById("game-number-display");
         const shareButtons = document.getElementById("share-buttons");
