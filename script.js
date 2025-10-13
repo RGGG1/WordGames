@@ -88,52 +88,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     }
 
-    // Preload background image
-    function preloadBackground(url) {
-        return new Promise((resolve) => {
-            if (!url || url.trim() === "") {
-                console.warn(`Invalid background URL: ${url}, using default: ${defaultBackground}`);
-                url = defaultBackground;
-            }
-            const img = new Image();
-            img.src = url;
-            img.onload = () => {
-                console.log(`Successfully preloaded background: ${url}`);
-                resolve(url);
-            };
-            img.onerror = () => {
-                console.error(`Failed to preload background: ${url}, using default: ${defaultBackground}`);
-                resolve(defaultBackground);
-            };
-        });
-    }
-
     // Adjust background and layout
     function adjustBackground() {
         console.log("Adjusting background and layout");
-        const backgroundContainer = document.getElementById("background-container");
+        const backgroundImage = document.getElementById("background-image");
         if (window.visualViewport) {
             const viewportHeight = window.visualViewport.height;
             console.log("Visual viewport height:", viewportHeight);
             document.documentElement.style.setProperty('--viewport-height', `${viewportHeight}px`);
-            if (backgroundContainer && gameContainer) {
-                backgroundContainer.style.height = `${viewportHeight}px`;
-                gameContainer.style.height = `${viewportHeight}px`;
-                backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
-                backgroundContainer.style.backgroundSize = "100% 100%";
+            if (gameContainer) {
+                gameContainer.style.minHeight = `${viewportHeight}px`;
             }
         } else {
             const fallbackHeight = window.innerHeight;
             console.log("Using fallback height:", fallbackHeight);
             document.documentElement.style.setProperty('--viewport-height', `${fallbackHeight}px`);
-            if (backgroundContainer && gameContainer) {
-                backgroundContainer.style.height = `${fallbackHeight}px`;
-                gameContainer.style.height = `${fallbackHeight}px`;
-                backgroundContainer.style.background = `url('${currentBackground}') no-repeat center center`;
-                backgroundContainer.style.backgroundSize = "100% 100%";
+            if (gameContainer) {
+                gameContainer.style.minHeight = `${fallbackHeight}px`;
             }
         }
-        if (backgroundContainer) backgroundContainer.offsetHeight; // Force repaint
+        if (backgroundImage) backgroundImage.offsetHeight; // Force repaint
     }
 
     // Ensure keyboard stays open
@@ -592,7 +566,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const targetGame = gameList[currentIndex + 1];
                     console.log("Loading previous game", { currentIndex, targetIndex: currentIndex + 1 });
                     currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
-                    await preloadBackground(currentBackground);
                     loadGame(targetGame);
                     resetScreenDisplays(gameScreen);
                     adjustBackground();
@@ -641,7 +614,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const targetGame = gameList[currentIndex - 1];
                     console.log("Loading next game", { currentIndex, targetIndex: currentIndex - 1 });
                     currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
-                    await preloadBackground(currentBackground);
                     loadGame(targetGame);
                     resetScreenDisplays(gameScreen);
                     adjustBackground();
@@ -780,7 +752,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const targetGame = gameList[currentIndex - 1];
                     console.log("Loading next game from end screen", { currentIndex, targetIndex: currentIndex - 1 });
                     currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
-                    await preloadBackground(currentBackground);
                     loadGame(targetGame);
                     resetScreenDisplays(gameScreen);
                     adjustBackground();
@@ -896,13 +867,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         if (game) {
                             console.log("Loading game from URL parameter:", gameNum);
                             currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                            preloadBackground(currentBackground).then(() => {
-                                loadGame(game);
-                                resetScreenDisplays(gameScreen);
-                                adjustBackground();
-                                updateArrowStates(allGames.findIndex(g => g["Game Number"] === gameNum), allGames);
-                                ensureInitialFocus(); // Ensure keyboard on load
-                            });
+                            loadGame(game);
+                            resetScreenDisplays(gameScreen);
+                            adjustBackground();
+                            updateArrowStates(allGames.findIndex(g => g["Game Number"] === gameNum), allGames);
+                            ensureInitialFocus(); // Ensure keyboard on load
                         } else {
                             loadLatestGame();
                         }
@@ -990,7 +959,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         isLoadingGame = true;
                         try {
                             currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                            await preloadBackground(currentBackground);
                             loadGame(game);
                             resetScreenDisplays(gameScreen);
                             adjustBackground();
@@ -1055,7 +1023,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                         isLoadingGame = true;
                         try {
                             currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                            await preloadBackground(currentBackground);
                             loadGame(game);
                             resetScreenDisplays(gameScreen);
                             adjustBackground();
@@ -1102,7 +1069,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (allGames.length > 0) {
             const latestGame = allGames[0];
             currentBackground = latestGame["Background"] && latestGame["Background"].trim() !== "" ? latestGame["Background"] : defaultBackground;
-            await preloadBackground(currentBackground);
             loadGame(latestGame);
             resetScreenDisplays(gameScreen);
             adjustBackground();
@@ -1162,6 +1128,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             game["Hint 5"]?.trim().toUpperCase() || ""
         ].filter(hint => hint);
 
+        // Update background image
+        const backgroundImage = document.getElementById("background-image");
+        if (backgroundImage) {
+            currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+            backgroundImage.src = currentBackground;
+        }
+
         console.log("Game loaded", { secretWord, hints, currentGameNumber, currentGameId });
 
         // Clear previous hints
@@ -1186,6 +1159,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (hintIndex < hints.length) {
             const hintsList = document.getElementById("hints-list");
             if (hintsList) {
+                // Clear previous hints if it's the first hint
+                if (hintIndex === 0) {
+                    hintsList.innerHTML = "";
+                }
+                // Add separator if not the first hint
+                if (hintIndex > 0) {
+                    const separator = document.createElement("span");
+                    separator.className = "hint-separator";
+                    separator.textContent = "|";
+                    hintsList.appendChild(separator);
+                }
+                // Add the hint
                 const hintElement = document.createElement("div");
                 hintElement.textContent = hints[hintIndex];
                 hintsList.appendChild(hintElement);

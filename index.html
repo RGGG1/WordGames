@@ -17,25 +17,16 @@
     <meta name="twitter:title" content="WORDY by Big Brain Games">
     <meta name="twitter:description" content="Can you guess the secret word? Play WORDY and challenge your friends!">
     <meta name="twitter:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
-    <title>WORDY Big Brain Games</title>
+    <title>WORDY by Big Brain Games</title>
     <link rel="icon" type="image/png" href="wordy_favicon.png">
     <link rel="stylesheet" href="styles.css">
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'">
 </head>
 <body>
     <div id="game-container">
-        <div id="background-container"></div>
         <div id="header">
             <span id="game-name" tabindex="0" aria-label="Return to game screen">WORDY</span>
             <a href="#" id="all-games-link" aria-label="View all games">All Games</a>
-        </div>
-        <div id="game-screen">
-            <div id="hints-container">
-                <div id="hints-box" class="hints-box">
-                    <span id="hints-heading">Hints</span>
-                    <div id="hints-list"></div>
-                </div>
-            </div>
         </div>
         <div id="footer-controls">
             <a href="#" id="give-up-link" aria-label="Give up current game">Give Up</a>
@@ -53,10 +44,20 @@
             </div>
             <button type="button" id="guess-btn" aria-label="Submit guess">GUESS</button>
         </div>
+        <div id="hints-container">
+            <div id="hints-box" class="hints-box">
+                <span id="hints-heading">HINTS</span>
+                <div id="hints-list"></div>
+            </div>
+        </div>
+        <div id="background-image-container">
+            <img id="background-image" src="newbackground.png" alt="Game background">
+        </div>
         <div id="ad-box">
             <span>Big Brain Games</span>
         </div>
     </div>
+    <!-- Rest of the HTML remains unchanged -->
     <div id="game-select-content" class="screen">
         <div id="tabs">
             <span id="official-tab" class="tab active" tabindex="0" aria-label="Official games tab">Official</span>
