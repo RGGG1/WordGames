@@ -224,6 +224,10 @@ body {
     position: relative;
 }
 
+#background-image-container.hidden {
+    visibility: hidden;
+}
+
 #background-image {
     width: auto;
     height: 2.25in;
