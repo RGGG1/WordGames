@@ -79,7 +79,6 @@ body {
     background: #FFFFFF;
     border: 2px solid #FFB300; /* Yellow border */
     border-radius: 1vmin;
-    touch-action: manipulation;
 }
 
 #guess-input {

@@ -113,35 +113,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             !document.querySelector('.screen.active') &&
             !document.querySelector('.dialog[style*="display: flex"]')
         ) {
-            console.log("Ensuring keyboard stays open in Chrome", { activeElement: document.activeElement?.id, disabled: guessInput.disabled, browser: navigator.userAgent });
-            if (!guessInput.disabled && document.activeElement !== guessInput) {
-                const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent);
-                if (isChrome) {
-                    const touchEvent = new TouchEvent('touchstart', {
-                        bubbles: true,
-                        cancelable: true,
-                        touches: [new Touch({
-                            identifier: Date.now(),
-                            target: guessInput,
-                            clientX: 0,
-                            clientY: 0,
-                            radiusX: 10,
-                            radiusY: 10
-                        })]
-                    });
-                    guessInput.dispatchEvent(touchEvent);
-                }
+            console.log("Ensuring keyboard stays open by focusing guess input");
+            if (document.activeElement !== guessInput) {
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
-                            console.log("Chrome: Refocusing guess input to keep keyboard open");
+                            console.log("Refocusing guess input to keep keyboard open");
                             guessInput.focus();
-                            guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                         }
-                    }, 150);
+                    }, 50); // Immediate refocus to prevent collapse
                 }
             }
         }
@@ -149,33 +132,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Ensure initial focus on game load
     function ensureInitialFocus() {
-        if (guessInput && !gameOver && !isProcessingGuess && !guessInput.disabled && gameContainer.style.display !== "none") {
-            console.log("Attempting initial focus in Chrome", { disabled: guessInput.disabled, browser: navigator.userAgent });
-            const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent);
-            if (isChrome) {
-                const touchEvent = new TouchEvent('touchstart', {
-                    bubbles: true,
-                    cancelable: true,
-                    touches: [new Touch({
-                        identifier: Date.now(),
-                        target: guessInput,
-                        clientX: 0,
-                        clientY: 0,
-                        radiusX: 10,
-                        radiusY: 10
-                    })]
-                });
-                guessInput.dispatchEvent(touchEvent);
-            }
+        if (guessInput && !gameOver && !isProcessingGuess && gameContainer.style.display !== "none") {
+            console.log("Attempting initial focus on guess input");
             guessInput.focus();
             activeInput = guessInput;
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
+                const touchEvent = new Event('touchstart', { bubbles: true });
+                guessInput.dispatchEvent(touchEvent);
                 setTimeout(() => {
                     if (document.activeElement !== guessInput) {
-                        console.log("Chrome: Initial focus failed, retrying");
+                        console.log("Initial focus failed, retrying");
                         guessInput.focus();
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                        guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
                 }, 300);
             }
@@ -202,70 +171,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.addEventListener("touchstart", (e) => {
         if (!initialTouchHandled && !gameOver && !isProcessingGuess && !isUILocked && gameContainer.style.display !== "none" && !e.target.closest('.screen, .dialog')) {
             console.log("First document touch, focusing guess input");
-            const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent);
-            if (isChrome) {
-                const touchEvent = new TouchEvent('touchstart', {
-                    bubbles: true,
-                    cancelable: true,
-                    touches: [new Touch({
-                        identifier: Date.now(),
-                        target: guessInput,
-                        clientX: e.touches?.[0]?.clientX || 0,
-                        clientY: e.touches?.[0]?.clientY || 0,
-                        radiusX: 10,
-                        radiusY: 10
-                    })]
-                });
-                guessInput.dispatchEvent(touchEvent);
-            }
             guessInput.focus();
             activeInput = guessInput;
             adjustBackground();
             initialTouchHandled = true;
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-                setTimeout(() => {
-                    if (document.activeElement !== guessInput) {
-                        console.log("Chrome: Document touch focus failed, retrying");
-                        guessInput.focus();
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-                    }
-                }, 150);
-            }
-        }
-    });
-
-    // Game container touch handler for Chrome
-    document.getElementById("game-container").addEventListener("touchstart", (e) => {
-        if (!gameOver && !isProcessingGuess && !isUILocked && !guessInput.disabled && gameContainer.style.display !== "none") {
-            console.log("Game container touched in Chrome", { disabled: guessInput.disabled, browser: navigator.userAgent });
-            const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent);
-            if (isChrome) {
-                const touchEvent = new TouchEvent('touchstart', {
-                    bubbles: true,
-                    cancelable: true,
-                    touches: [new Touch({
-                        identifier: Date.now(),
-                        target: guessInput,
-                        clientX: e.touches?.[0]?.clientX || 0,
-                        clientY: e.touches?.[0]?.clientY || 0,
-                        radiusX: 10,
-                        radiusY: 10
-                    })]
-                });
-                guessInput.dispatchEvent(touchEvent);
-            }
-            guessInput.focus();
-            activeInput = guessInput;
-            if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-                setTimeout(() => {
-                    if (document.activeElement !== guessInput) {
-                        console.log("Chrome: Game container focus failed, retrying");
-                        guessInput.focus();
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-                    }
-                }, 150);
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         }
     });
@@ -280,26 +191,10 @@ document.addEventListener("DOMContentLoaded", async () => {
             !e.target.closest('.screen, .dialog')
         ) {
             console.log("Global click detected, refocusing guess input");
-            const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent);
-            if (isChrome) {
-                const touchEvent = new TouchEvent('touchstart', {
-                    bubbles: true,
-                    cancelable: true,
-                    touches: [new Touch({
-                        identifier: Date.now(),
-                        target: guessInput,
-                        clientX: e.clientX || 0,
-                        clientY: e.clientY || 0,
-                        radiusX: 10,
-                        radiusY: 10
-                    })]
-                });
-                guessInput.dispatchEvent(touchEvent);
-            }
             guessInput.focus();
             activeInput = guessInput;
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
             keepKeyboardOpen();
         }
@@ -353,22 +248,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeInput = guessInput;
             adjustBackground();
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
             }
         });
         guessInput.addEventListener("touchstart", (e) => {
+            e.preventDefault();
             console.log("Guess input touched");
             guessInput.focus();
             activeInput = guessInput;
             adjustBackground();
             if (isMobile) {
-                guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 setTimeout(() => {
                     if (document.activeElement !== guessInput) {
-                        console.log("Chrome: Guess input touch focus failed, retrying");
                         guessInput.focus();
                     }
-                }, 150);
+                }, 100);
             }
         });
     }
@@ -376,37 +271,21 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Setup guess input container
     if (guessInputContainer) {
         const handler = (e) => {
-            console.log("Guess input container triggered in Chrome", { gameOver, isProcessingGuess, isUILocked, disabled: guessInput.disabled, browser: navigator.userAgent });
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess && !isUILocked) {
-                const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent);
-                if (isChrome) {
-                    const touchEvent = new TouchEvent('touchstart', {
-                        bubbles: true,
-                        cancelable: true,
-                        touches: [new Touch({
-                            identifier: Date.now(),
-                            target: guessInput,
-                            clientX: e.clientX || e.touches?.[0]?.clientX || 0,
-                            clientY: e.clientY || e.touches?.[0]?.clientY || 0,
-                            radiusX: 10,
-                            radiusY: 10
-                        })]
-                    });
-                    guessInput.dispatchEvent(touchEvent);
-                }
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guess input container triggered");
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
+                adjustBackground();
                 if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
-                            console.log("Chrome: Refocusing guess input");
                             guessInput.focus();
-                            guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                         }
-                    }, 150);
+                    }, 100);
                 }
-                adjustBackground();
             }
         };
         guessInputContainer.addEventListener("click", handler);
@@ -416,35 +295,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Setup guess area
     if (guessArea) {
         const handler = (e) => {
-            console.log("Guess area triggered in Chrome", { gameOver, isProcessingGuess, isUILocked, disabled: guessInput.disabled, browser: navigator.userAgent });
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess && !isUILocked) {
-                const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent);
-                if (isChrome) {
-                    const touchEvent = new TouchEvent('touchstart', {
-                        bubbles: true,
-                        cancelable: true,
-                        touches: [new Touch({
-                            identifier: Date.now(),
-                            target: guessInput,
-                            clientX: e.clientX || e.touches?.[0]?.clientX || 0,
-                            clientY: e.clientY || e.touches?.[0]?.clientY || 0,
-                            radiusX: 10,
-                            radiusY: 10
-                        })]
-                    });
-                    guessInput.dispatchEvent(touchEvent);
-                }
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guess area triggered");
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
-                            console.log("Chrome: Refocusing guess input");
                             guessInput.focus();
-                            guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                         }
-                    }, 150);
+                    }, 100);
                 }
                 adjustBackground();
             }
@@ -456,35 +319,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Setup guess section
     if (guessSection) {
         const handler = (e) => {
-            console.log("Guess section triggered in Chrome", { gameOver, isProcessingGuess, isUILocked, disabled: guessInput.disabled, browser: navigator.userAgent });
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess && !isUILocked) {
-                const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent);
-                if (isChrome) {
-                    const touchEvent = new TouchEvent('touchstart', {
-                        bubbles: true,
-                        cancelable: true,
-                        touches: [new Touch({
-                            identifier: Date.now(),
-                            target: guessInput,
-                            clientX: e.clientX || e.touches?.[0]?.clientX || 0,
-                            clientY: e.clientY || e.touches?.[0]?.clientY || 0,
-                            radiusX: 10,
-                            radiusY: 10
-                        })]
-                    });
-                    guessInput.dispatchEvent(touchEvent);
-                }
+            e.preventDefault();
+            e.stopPropagation();
+            console.log("Guess section triggered");
+            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
-                    guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+                    guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
-                            console.log("Chrome: Refocusing guess input");
                             guessInput.focus();
-                            guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
                         }
-                    }, 150);
+                    }, 100);
                 }
                 adjustBackground();
             }
@@ -1141,7 +988,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Load game
+        // Load game
     function loadGame(game) {
         console.log("Loading game:", game);
         gameOver = false;
@@ -1190,7 +1037,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Handle guess
     async function handleGuess(guess) {
-        console.log("Handling guess in Chrome:", guess, { gameOver, isProcessingGuess, browser: navigator.userAgent });
+        console.log("Handling guess:", guess);
         if (isProcessingGuess || gameOver || !guess) return;
         isProcessingGuess = true;
         guessInput.disabled = true;
@@ -1250,34 +1097,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     guessInput.value = "";
                     guessInput.disabled = false;
                     isProcessingGuess = false;
-                    const isChrome = /Chrome/i.test(navigator.userAgent) && !/Edge/i.test(navigator.userAgent);
-                    if (isChrome) {
-                        const touchEvent = new TouchEvent('touchstart', {
-                            bubbles: true,
-                            cancelable: true,
-                            touches: [new Touch({
-                                identifier: Date.now(),
-                                target: guessInput,
-                                clientX: 0,
-                                clientY: 0,
-                                radiusX: 10,
-                                radiusY: 10
-                            })]
-                        });
-                        guessInput.dispatchEvent(touchEvent);
-                    }
-                    guessInput.focus();
                     keepKeyboardOpen();
-                    if (isMobile) {
-                        guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-                        setTimeout(() => {
-                            if (document.activeElement !== guessInput) {
-                                console.log("Chrome: Post-guess refocus failed, retrying");
-                                guessInput.focus();
-                                guessInput.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
-                            }
-                        }, 150);
-                    }
                 }, 350);
             }
         }
