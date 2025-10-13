@@ -57,12 +57,12 @@ body {
 
 #score.flash-red {
     color: #FF0000;
-    animation: flashRed 0.5s ease;
+    animation: flashRed 0.5s ease infinite;
 }
 
 #score.flash-green {
     color: #50FF50;
-    animation: flashGreen 0.5s ease;
+    animation: flashGreen 0.5s ease infinite;
 }
 
 @keyframes flashRed {
@@ -147,8 +147,8 @@ body {
 
 @keyframes shakeAndFlash {
     0%, 100% { transform: translateX(0); background: #FFFFFF; }
-    20%, 60% { transform: translateX(-8px); background: #000000; }
-    40%, 80% { transform: translateX(8px); background: #000000; }
+    20%, 60% { transform: translateX(-8px); background: #FF0000; }
+    40%, 80% { transform: translateX(8px); background: #FF0000; }
 }
 
 #game-number-section {
@@ -720,46 +720,5 @@ body {
     .image-arrow {
         width: 8vmin;
         height: 8vmin;
-    }
-    #game-name {
-        font-size: 5vmin;
-    }
-    #score {
-        font-size: 4.5vmin;
-    }
-    .tab {
-        font-size: 3.5vmin;
-        padding: 1vmin 2vmin;
-    }
-    .tab-seperator {
-        font-size: 3.5vmin;
-    }
-    .tab-content > span {
-        font-size: 3.5vmin;
-    }
-    .game-list-row span {
-        font-size: 3.5vmin;
-    }
-    #form-container input {
-        font-size: 3.5vmin;
-        height: 6vmin;
-    }
-    .control-btn {
-        font-size: 3vmin;
-        height: 6vmin;
-        max-width: 180px;
-    }
-    #share-text {
-        font-size: 3.5vmin;
-    }
-    #game-number-display {
-        font-size: 3vmin;
-    }
-    #share-buttons a {
-        width: 6vmin;
-        height: 6vmin;
-    }
-    .dialog-message {
-        font-size: 4vmin;
     }
 }

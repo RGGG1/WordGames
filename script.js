@@ -97,6 +97,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (stepCount >= steps) {
                 clearInterval(interval);
                 scoreText.textContent = `🍍 ${end}`;
+                scoreText.classList.remove(end < start ? "flash-red" : "flash-green");
             }
         }, duration / steps);
     }
@@ -1021,7 +1022,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             currentGameNumber += ` - ${gameName}`;
         }
 
-                // Restore game state if exists and not completed
+        // Restore game state if exists and not completed
         const savedState = gameResults[`${isPrivate ? "privatePineapple" : "pineapple"}_${currentGameId}`];
         if (!savedState || savedState.status === "Not Played") {
             if (gameStates[currentGameId]) {
@@ -1034,13 +1035,13 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessCount = 0;
                 guesses = [];
                 hintIndex = 0;
-                score = 500;
+                score = 500; // Always start new game with 500 points
             }
         } else {
             guessCount = 0;
             guesses = [];
             hintIndex = 0;
-            score = 500;
+            score = 500; // Always start new game with 500 points
         }
 
         secretWord = game["Secret Word"]?.trim().toUpperCase() || "";
@@ -1125,10 +1126,39 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        // Check for duplicate guess
+        if (guesses.includes(sanitizedGuess)) {
+            console.log("Duplicate guess, ignoring penalties:", sanitizedGuess);
+            // Still add to UI for user feedback
+            if (guessesList) {
+                const noGuessesText = document.getElementById("no-guesses-text");
+                if (noGuessesText) noGuessesText.remove();
+                const guessElement = document.createElement("div");
+                guessElement.textContent = sanitizedGuess;
+                if (guesses.length > 0) {
+                    const separator = document.createElement("span");
+                    separator.className = "guess-separator";
+                    separator.textContent = "|";
+                    guessesList.insertBefore(separator, guessesList.firstChild);
+                }
+                guessesList.insertBefore(guessElement, guessesList.firstChild);
+            }
+            guessInputContainer.classList.add("wrong-guess");
+            incorrectGuessIndicator.style.display = "block";
+            animationTimeout = setTimeout(() => {
+                guessInputContainer.classList.remove("wrong-guess");
+                incorrectGuessIndicator.style.display = "none";
+                guessInput.value = "";
+                guessInput.disabled = false;
+                isProcessingGuess = false;
+                keepKeyboardOpen();
+            }, 350);
+            return;
+        }
+
         guessCount++;
         firstGuessMade = true;
         guesses.push(sanitizedGuess);
-        const previousScore = score;
 
         if (guessesList) {
             const noGuessesText = document.getElementById("no-guesses-text");
@@ -1150,9 +1180,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessInputContainer.classList.add("wrong-guess");
             incorrectGuessIndicator.style.display = "block";
             score = Math.max(0, score - 100);
+            cumulativeScore = Math.max(0, cumulativeScore - 100);
+            if (cumulativeScore === 0) {
+                cumulativeScore = 500;
+                score = 500;
+                console.log("Cumulative score reached 0, replenished to 500");
+            }
             scoreText.classList.add("flash-red");
-            animateScoreChange(cumulativeScore, cumulativeScore - 100);
-            cumulativeScore -= 100;
+            animateScoreChange(cumulativeScore + 100, cumulativeScore, 1500);
             localStorage.setItem("cumulativeScore", cumulativeScore);
 
             if (hintIndex < hints.length - 1) {
@@ -1172,17 +1207,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             animationTimeout = setTimeout(() => {
                 guessInputContainer.classList.remove("wrong-guess");
                 incorrectGuessIndicator.style.display = "none";
-                scoreText.classList.remove("flash-red");
                 guessInput.value = "";
                 guessInput.disabled = false;
                 isProcessingGuess = false;
                 keepKeyboardOpen();
             }, 350);
         } else {
-            score = Math.max(100, score + 100);
+            // Award points based on guess count
+            const points = [500, 400, 300, 200, 100][guessCount - 1] || 100;
+            score += points;
+            cumulativeScore += points;
             scoreText.classList.add("flash-green");
-            animateScoreChange(cumulativeScore, cumulativeScore + 100);
-            cumulativeScore += 100;
+            animateScoreChange(cumulativeScore - points, cumulativeScore, 1500);
             localStorage.setItem("cumulativeScore", cumulativeScore);
             createPineappleRain();
         }
