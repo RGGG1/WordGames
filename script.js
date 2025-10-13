@@ -399,7 +399,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         const screens = [formErrorDialog, formContent, document.getElementById("game-over")];
         const hintsContainer = document.getElementById("hints-container");
         const guessesSection = document.getElementById("guesses-section");
-        const backgroundImageContainer = document.getElementById("background-image-container");
 
         screens.forEach(screen => {
             if (screen && screen !== activeScreen) {
@@ -413,7 +412,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessArea.style.display = "flex";
             if (hintsContainer) hintsContainer.classList.remove("hidden");
             if (guessesSection) guessesSection.classList.remove("hidden");
-            if (backgroundImageContainer) backgroundImageContainer.classList.remove("hidden");
             setTimeout(() => {
                 ensureInitialFocus();
                 keepKeyboardOpen();
@@ -423,7 +421,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             activeScreen.classList.add("active");
             if (hintsContainer) hintsContainer.classList.add("hidden");
             if (guessesSection) guessesSection.classList.add("hidden");
-            if (backgroundImageContainer) backgroundImageContainer.classList.add("hidden");
             if (activeScreen === formContent) {
                 activeInput = document.getElementById("game-name-input");
                 if (activeInput) setTimeout(() => activeInput.focus(), 0);
@@ -666,12 +663,12 @@ document.addEventListener("DOMContentLoaded", async () => {
                     adjustBackground();
                     updateArrowStates(currentIndex - 1, gameList);
                 } else {
-                    throw new Error("No more games available.");
+                    nextImageArrow.classList.add("disabled");
                 }
             } catch (error) {
                 console.error("Error navigating to next game from end screen:", error.message);
                 if (formErrorDialog && formErrorMessage) {
-                    formErrorMessage.textContent = error.message;
+                    formErrorMessage.textContent = "Failed to load next game.";
                     formErrorDialog.style.display = "flex";
                 }
             } finally {
@@ -838,7 +835,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Display game list
+        // Display game list
     function displayGameList() {
         console.log("Displaying game list", { officialTabActive: officialTab.classList.contains("active") });
         const officialList = document.getElementById("official-list");
@@ -881,14 +878,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         isLoadingGame = true;
                         try {
                             currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                            gameOver = false;
                             loadGame(game);
                             resetScreenDisplays(gameContainer);
                             adjustBackground();
                             updateArrowStates(allGames.findIndex(g => g["Game Number"] === game["Game Number"]), allGames);
                             document.getElementById("game-container").scrollIntoView({ behavior: "smooth", block: "start" });
-                            guessInput.disabled = false;
-                            ensureInitialFocus();
                         } catch (error) {
                             console.error("Error loading game:", error.message);
                             if (formErrorDialog && formErrorMessage) {
@@ -961,14 +955,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                         isLoadingGame = true;
                         try {
                             currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
-                            gameOver = false;
                             loadGame(game);
                             resetScreenDisplays(gameContainer);
                             adjustBackground();
                             updateArrowStates(privateGames.findIndex(g => g["Game Number"] === gameNumber), privateGames);
                             document.getElementById("game-container").scrollIntoView({ behavior: "smooth", block: "start" });
-                            guessInput.disabled = false;
-                            ensureInitialFocus();
                         } catch (error) {
                             console.error("Error loading private game:", error.message);
                             if (formErrorDialog && formErrorMessage) {
@@ -1168,10 +1159,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Update score
         const oldScore = score;
-        const points = [500, 400, 300, 200, 100][guessCount - 1] || 100;
-        score = points;
-        scoreText.textContent = `🍍 ${score}`;
-        if (guessCount > 1 && score < oldScore) {
+        if (guessCount <= 5) {
+            const points = [500, 400, 300, 200, 100][guessCount - 1] || 100;
+            score = points;
+            scoreText.textContent = `🍍 ${score}`;
+            if (score < oldScore) {
+                scoreText.classList.add("flash-red");
+            }
+        } else {
+            score = 0;
+            scoreText.textContent = `🍍 ${score}`;
             scoreText.classList.add("flash-red");
         }
 
@@ -1233,7 +1230,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         adjustBackground();
     }
 
-        // Display share section
+    // Display share section
     function displayShareSection(status) {
         console.log("Displaying share section", { status });
         const shareText = document.getElementById("share-text");
@@ -1316,7 +1313,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         setTimeout(() => {
             container.remove();
-        }, 2500); // Fixed to 2.5 seconds
+        }, 3000);
     }
 
     // Initialize the game
