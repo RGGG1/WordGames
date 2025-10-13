@@ -52,6 +52,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const privateContent = document.getElementById("private-games");
     const shareSection = document.getElementById("share-section");
     const gameNameElement = document.getElementById("game-name");
+    const backgroundImageContainer = document.getElementById("background-image-container");
+    const gameOverOverlay = document.getElementById("game-over-overlay");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -83,11 +85,15 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Animate score change
-    function animateScoreChange(start, end, duration = 1500) {
-        const steps = 20;
+    function animateScoreChange(start, end, isDeduction = false, duration = 800) {
+        const steps = 30;
         const increment = (end - start) / steps;
         let current = start;
         let stepCount = 0;
+
+        if (isDeduction) {
+            scoreText.classList.add("deducting");
+        }
 
         const interval = setInterval(() => {
             current += increment;
@@ -96,7 +102,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (stepCount >= steps) {
                 clearInterval(interval);
                 scoreText.textContent = `🍍 ${end}`;
-                scoreText.classList.remove(end < start ? "flash-red" : "flash-green");
+                scoreText.classList.remove("deducting");
             }
         }, duration / steps);
     }
@@ -410,6 +416,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (activeScreen === gameContainer) {
             gameContainer.style.display = "flex";
             guessArea.style.display = "flex";
+            backgroundImageContainer.classList.remove("hidden");
+            gameOverOverlay.style.display = "none";
             if (hintsContainer) hintsContainer.classList.remove("hidden");
             if (guessesSection) guessesSection.classList.remove("hidden");
             setTimeout(() => {
@@ -424,6 +432,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (activeScreen === formContent) {
                 activeInput = document.getElementById("game-name-input");
                 if (activeInput) setTimeout(() => activeInput.focus(), 0);
+            }
+            // Hide background image on game over
+            if (activeScreen.id === "game-over") {
+                backgroundImageContainer.classList.add("hidden");
+                gameOverOverlay.style.display = "block";
             }
         }
 
@@ -632,7 +645,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         });
     }
 
-    // Next Game End button
+    // Next Game End button - loads next unplayed game
     if (nextGameBtnEnd) {
         const handler = debounce(async (e) => {
             e.preventDefault();
@@ -642,33 +655,56 @@ document.addEventListener("DOMContentLoaded", async () => {
             isLoadingGame = true;
             nextGameBtnEnd.classList.add("loading");
             try {
-                if (!currentGameNumber || !currentGameId) throw new Error("No current game number or ID set");
-                let currentIndex;
-                let gameList;
+                let nextGame = null;
                 let isPrivate = currentGameNumber.includes("- Private");
-                if (isPrivate) {
-                    currentIndex = privateGames.findIndex(game => game["Game Number"] === currentGameId);
-                    gameList = privateGames;
-                } else {
-                    currentIndex = allGames.findIndex(game => game["Game Number"] === currentGameNumber.replace("Game #", ""));
-                    gameList = allGames;
+                
+                // First try to find unplayed game in current list
+                let gameList = isPrivate ? privateGames : allGames;
+                let currentIndex = gameList.findIndex(game => {
+                    return isPrivate ? 
+                        game["Game Number"] === currentGameId : 
+                        game["Game Number"] === currentGameNumber.replace("Game #", "");
+                });
+                
+                // Look for next unplayed game after current index
+                for (let i = 0; i < gameList.length; i++) {
+                    const index = (currentIndex + i + 1) % gameList.length;
+                    const gameKey = isPrivate ? 
+                        `privatePineapple_${gameList[index]["Game Number"]}` : 
+                        `pineapple_${gameList[index]["Game Number"]}`;
+                    if (!gameResults[gameKey] || gameResults[gameKey].status === "Not Played") {
+                        nextGame = gameList[index];
+                        break;
+                    }
                 }
-                if (currentIndex === -1) throw new Error(`Current game not found: ${currentGameNumber}, ID: ${currentGameId}`);
-                if (currentIndex > 0) {
-                    const targetGame = gameList[currentIndex - 1];
-                    console.log("Loading next game from end screen", { currentIndex, targetIndex: currentIndex - 1 });
-                    currentBackground = targetGame["Background"] && targetGame["Background"].trim() !== "" ? targetGame["Background"] : defaultBackground;
-                    loadGame(targetGame);
+                
+                // If no unplayed games in current list, try the other list
+                if (!nextGame) {
+                    const otherList = isPrivate ? allGames : privateGames;
+                    for (let game of otherList) {
+                        const gameKey = isPrivate ? 
+                            `pineapple_${game["Game Number"]}` : 
+                            `privatePineapple_${game["Game Number"]}`;
+                        if (!gameResults[gameKey] || gameResults[gameKey].status === "Not Played") {
+                            nextGame = game;
+                            break;
+                        }
+                    }
+                }
+                
+                if (nextGame) {
+                    console.log("Loading next unplayed game:", nextGame);
+                    currentBackground = nextGame["Background"] && nextGame["Background"].trim() !== "" ? nextGame["Background"] : defaultBackground;
+                    loadGame(nextGame);
                     resetScreenDisplays(gameContainer);
                     adjustBackground();
-                    updateArrowStates(currentIndex - 1, gameList);
                 } else {
-                    nextImageArrow.classList.add("disabled");
+                    throw new Error("No unplayed games available");
                 }
             } catch (error) {
-                console.error("Error navigating to next game from end screen:", error.message);
+                console.error("Error loading next game:", error.message);
                 if (formErrorDialog && formErrorMessage) {
-                    formErrorMessage.textContent = "Failed to load next game.";
+                    formErrorMessage.textContent = "No unplayed games available.";
                     formErrorDialog.style.display = "flex";
                 }
             } finally {
@@ -835,7 +871,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-        // Display game list
+    // Display game list
     function displayGameList() {
         console.log("Displaying game list", { officialTabActive: officialTab.classList.contains("active") });
         const officialList = document.getElementById("official-list");
@@ -1044,7 +1080,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameOver = false;
         score = 500; // Reset score for new game
         scoreText.textContent = `🍍 ${score}`;
-        scoreText.classList.remove("flash-red", "flash-green");
+        scoreText.classList.remove("deducting");
         displayHints();
         displayGuesses();
         resetScreenDisplays(gameContainer);
@@ -1157,19 +1193,17 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessCount++;
         firstGuessMade = true;
 
-        // Update score
         const oldScore = score;
+        const oldCumulativeScore = cumulativeScore;
+
+        // Calculate new score for this guess
         if (guessCount <= 5) {
-            const points = [500, 400, 300, 200, 100][guessCount - 1] || 100;
+            const points = [500, 400, 300, 200, 100][guessCount - 1];
+            const deduction = oldScore - points;
             score = points;
-            scoreText.textContent = `🍍 ${score}`;
-            if (score < oldScore) {
-                scoreText.classList.add("flash-red");
-            }
-        } else {
-            score = 0;
-            scoreText.textContent = `🍍 ${score}`;
-            scoreText.classList.add("flash-red");
+            
+            // Animate score deduction from first guess
+            animateScoreChange(oldScore, score, true);
         }
 
         // Save game state
@@ -1181,23 +1215,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guess === secretWord) {
             console.log("Correct guess!");
-            const finalScore = [500, 400, 300, 200, 100][guessCount - 1] || 100;
+            const finalScore = score;
             gameResults[gameKey] = { status: `${guessCount}/5` };
             localStorage.setItem("gameResults", JSON.stringify(gameResults));
-            const oldCumulativeScore = cumulativeScore;
             cumulativeScore += finalScore;
             localStorage.setItem("cumulativeScore", cumulativeScore);
             scoreText.textContent = `🍍 ${cumulativeScore}`;
-            scoreText.classList.remove("flash-red");
-            scoreText.classList.add("flash-green");
-            animateScoreChange(oldCumulativeScore, cumulativeScore);
+            animateScoreChange(oldCumulativeScore, cumulativeScore, false, 1500);
             triggerPineappleRain();
             endGame(`${guessCount}/5`);
         } else if (guessCount >= 5) {
             console.log("Game over: too many guesses");
             gameResults[gameKey] = { status: "X/5" };
             localStorage.setItem("gameResults", JSON.stringify(gameResults));
-            scoreText.classList.add("flash-red");
             endGame("X/5");
         } else {
             console.log("Incorrect guess, showing next hint");

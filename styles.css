@@ -53,26 +53,27 @@ body {
     color: #FFFFFF;
     text-shadow: 1px 1px 2px #000000;
     text-align: right;
+    transition: color 0.1s ease;
 }
 
-#score.flash-red {
+#score.deducting {
     color: #FF0000;
     animation: flashRed 0.5s ease infinite;
 }
 
-#score.flash-green {
+#score.adding {
     color: #50FF50;
     animation: flashGreen 0.5s ease infinite;
 }
 
 @keyframes flashRed {
-    0%, 100% { color: #FFFFFF; }
-    50% { color: #FF0000; }
+    0%, 100% { color: #FF0000; }
+    50% { color: #FFFFFF; }
 }
 
 @keyframes flashGreen {
-    0%, 100% { color: #FFFFFF; }
-    50% { color: #50FF50; }
+    0%, 100% { color: #50FF50; }
+    50% { color: #FFFFFF; }
 }
 
 #guess-section {
@@ -235,6 +236,17 @@ body {
     border-radius: 1vmin;
 }
 
+#game-over-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    border-radius: 1vmin;
+    z-index: 1;
+}
+
 .image-arrow {
     width: 8vmin;
     height: 8vmin;
@@ -244,6 +256,7 @@ body {
     transition: transform 0.1s ease;
     touch-action: manipulation;
     position: relative;
+    z-index: 12;
 }
 
 #prev-image-arrow::before {
@@ -302,7 +315,7 @@ body {
     transform: translate(-50%, -50%);
     width: 90vw;
     max-width: 600px;
-    z-index: 10;
+    z-index: 11;
 }
 
 #share-section {
@@ -311,6 +324,9 @@ body {
     align-items: center;
     width: 100%;
     margin-bottom: 2vmin;
+    gap: 3vmin;
+    position: relative;
+    z-index: 2;
 }
 
 #secret-word-display {
