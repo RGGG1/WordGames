@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const guessesSection = document.getElementById("guesses-section");
     const backgroundImage = document.getElementById("background-image");
     const hintsList = document.getElementById("hints-list");
-    const gameOverScreen = document.getElementById("game-over");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -409,7 +408,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Reset screen displays
     function resetScreenDisplays(activeScreen) {
         console.log("Resetting screen displays for:", activeScreen?.id);
-        const screens = [formErrorDialog, formContent, gameOverScreen];
+        const screens = [formErrorDialog, formContent, document.getElementById("game-over")];
         hintsContainer.classList.remove("hidden");
         guessesSection.classList.remove("hidden");
         backgroundImageContainer.classList.remove("hidden");
@@ -425,14 +424,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             gameContainer.style.display = "flex";
             guessArea.style.display = "flex";
             backgroundImageContainer.classList.remove("hidden");
-            gameOverScreen.style.display = "none";
+            gameOverOverlay.style.display = "none";
             hintsContainer.classList.remove("hidden");
             guessesSection.classList.remove("hidden");
             setTimeout(() => {
                 ensureInitialFocus();
                 keepKeyboardOpen();
             }, 100);
-        } else if (activeScreen === formContent || activeScreen === gameOverScreen) {
+        } else if (activeScreen === formContent || activeScreen.id === "game-over") {
             activeScreen.style.display = "flex";
             activeScreen.classList.add("active");
             hintsContainer.classList.add("hidden");
@@ -913,7 +912,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const handler = debounce(async (e) => {
                         e.preventDefault();
                         console.log("Play Now triggered for game:", gameNumber);
-                        if (isUILalmost || isLoadingGame) return;
+                        if (isUILocked || isLoadingGame) return;
                         isUILocked = true;
                         isLoadingGame = true;
                         try {
@@ -1252,10 +1251,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Ending game", { status });
         gameOver = true;
         guessInput.disabled = true;
-        gameOverScreen.style.display = "flex";
-        gameOverOverlay.style.display = "block";
-        resetScreenDisplays(gameOverScreen);
-        displayShareSection(status);
+        const gameOverScreen = document.getElementById("game-over");
+        if (gameOverScreen) {
+            gameOverScreen.style.display = "flex";
+            hintsContainer.classList.add("hidden");
+            backgroundImageContainer.classList.add("hidden");
+            guessesSection.classList.add("hidden");
+            gameOverOverlay.style.display = "block";
+            resetScreenDisplays(gameOverScreen);
+            displayShareSection(status);
+        }
         adjustBackground();
     }
 
