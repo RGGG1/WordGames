@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let gameOver = false;
     let secretWord = "";
     let hints = [];
-    let hintIndex = 0;
+    let hintIndex = 1;  // Start with first hint revealed
     let firstGuessMade = false;
     let allGames = [];
     let privateGames = [];
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchMoved = false;
-    const touchThreshold = 10;
+    const touchThreshold = 15;  // Increased slightly to make tap less sensitive
 
     // Debounce utility
     function debounce(func, wait) {
@@ -1071,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.value = "";
         guesses = [];
         guessCount = 0;
-        hintIndex = 0;
+        hintIndex = 1;  // First hint revealed at start
         firstGuessMade = false;
         gameOver = false;
         
@@ -1090,7 +1090,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameStates[gameKey]) {
             guesses = gameStates[gameKey].guesses || [];
             guessCount = guesses.length;
-            hintIndex = guesses.length;
+            hintIndex = Math.max(1, guesses.length + 1);  // Ensure first hint stays revealed even if saved
             firstGuessMade = guessCount > 0;
             cumulativeScore = gameStates[gameKey].cumulativeScore || cumulativeScore;
             localStorage.setItem("cumulativeScore", cumulativeScore);
@@ -1209,7 +1209,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         localStorage.setItem("gameStates", JSON.stringify(gameStates));
 
         displayGuesses();
-        hintIndex = guessCount;
+        hintIndex = guessCount + 1;  // Reveal next hint after guess
 
         if (guess === secretWord) {
             console.log("Correct guess!");
@@ -1252,7 +1252,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameOver = true;
         guessInput.disabled = true;
         
-        // Hide hints, guesses, image (keep arrows)
+        // Hide hints, guesses, image container (including arrows)
         hintsContainer.classList.add("hidden");
         guessesSection.classList.add("hidden");
         backgroundImageContainer.classList.add("end-game");
