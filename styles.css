@@ -14,6 +14,9 @@ body {
     overflow-x: hidden;
     overflow-y: auto;
     scroll-behavior: smooth;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
 #game-container {
@@ -805,4 +808,25 @@ body {
     #game-over {
         width: 80vw;
     }
+}
+
+/* Ensure Luckiest Guy applies consistently across text elements */
+body,
+#guess-input,
+.control-btn,
+#form-container input,
+#hints-heading,
+#hints-list,
+#guesses-title,
+#guesses-list,
+#no-guesses-text,
+#secret-word-display,
+#share-text div,
+#game-number-display,
+#all-games-title,
+.tab,
+.game-list-row span,
+.dialog-message,
+#ad-box span {
+    font-family: 'Luckiest Guy', cursive !important;
 }
