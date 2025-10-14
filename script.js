@@ -1322,7 +1322,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gameNum = isPrivate ? currentGameId : currentGameNumber.replace("Game #", "");
         const points = status === "X/5" ? "" : [500, 400, 300, 200, 100][parseInt(status.split("/")[0]) - 1] || 100;
         const shareMessage = status === "X/5"
-            ? `WORDY #${gameNum} was hard.\nCan you solve it?\nhttps://wordy.bigbraingames.net/?game=${gameNum}`
+            ? `WORDY #${gameNum} was hard.\nCan you solve it?`
             : `I scored ${points} for WORDY #${gameNum}.\nCan you beat it?`;
 
         if (shareWhatsApp) {
