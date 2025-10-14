@@ -20,9 +20,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     let activeInput = null;
     let currentBackground = "newbackground.png";
     let gameResults = JSON.parse(localStorage.getItem("gameResults")) || {};
-    let score = 500; // Current game score
-    let cumulativeScore = parseInt(localStorage.getItem("cumulativeScore")) || 500; // Persistent score
+    let cumulativeScore = parseInt(localStorage.getItem("cumulativeScore")) || 500; // Persistent cumulative only
     let gameStates = JSON.parse(localStorage.getItem("gameStates")) || {};
+    let pendingScoreAddition = 0; // For correct guess addition
 
     // DOM elements
     const gameContainer = document.getElementById("game-container");
@@ -54,6 +54,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const gameNameElement = document.getElementById("game-name");
     const backgroundImageContainer = document.getElementById("background-image-container");
     const gameOverOverlay = document.getElementById("game-over-overlay");
+    const hintsContainer = document.getElementById("hints-container");
+    const guessesSection = document.getElementById("guesses-section");
+    const backgroundImage = document.getElementById("background-image");
+    const hintsList = document.getElementById("hints-list");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -85,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     // Animate score change
-    function animateScoreChange(start, end, isDeduction = false, duration = 800) {
+    function animateScoreChange(start, end, isDeduction = false, isAddition = false, duration = 800) {
         const steps = 30;
         const increment = (end - start) / steps;
         let current = start;
@@ -93,16 +97,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (isDeduction) {
             scoreText.classList.add("deducting");
+        } else if (isAddition) {
+            scoreText.classList.add("adding");
         }
 
         const interval = setInterval(() => {
             current += increment;
-            scoreText.textContent = ` ${Math.round(current)}`;
+            scoreText.textContent = `🍍 ${Math.round(current)}`;
             stepCount++;
             if (stepCount >= steps) {
                 clearInterval(interval);
-                scoreText.textContent = ` ${end}`;
-                scoreText.classList.remove("deducting");
+                scoreText.textContent = `🍍 ${end}`;
+                scoreText.classList.remove("deducting", "adding");
             }
         }, duration / steps);
     }
@@ -403,8 +409,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     function resetScreenDisplays(activeScreen) {
         console.log("Resetting screen displays for:", activeScreen?.id);
         const screens = [formErrorDialog, formContent, document.getElementById("game-over")];
-        const hintsContainer = document.getElementById("hints-container");
-        const guessesSection = document.getElementById("guesses-section");
+        hintsContainer.classList.remove("hidden");
+        guessesSection.classList.remove("hidden");
+        backgroundImageContainer.classList.remove("hidden");
 
         screens.forEach(screen => {
             if (screen && screen !== activeScreen) {
@@ -418,8 +425,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessArea.style.display = "flex";
             backgroundImageContainer.classList.remove("hidden");
             gameOverOverlay.style.display = "none";
-            if (hintsContainer) hintsContainer.classList.remove("hidden");
-            if (guessesSection) guessesSection.classList.remove("hidden");
+            hintsContainer.classList.remove("hidden");
+            guessesSection.classList.remove("hidden");
             setTimeout(() => {
                 ensureInitialFocus();
                 keepKeyboardOpen();
@@ -427,8 +434,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         } else if (activeScreen === formContent || activeScreen.id === "game-over") {
             activeScreen.style.display = "flex";
             activeScreen.classList.add("active");
-            if (hintsContainer) hintsContainer.classList.add("hidden");
-            if (guessesSection) guessesSection.classList.add("hidden");
+            hintsContainer.classList.add("hidden");
+            guessesSection.classList.add("hidden");
             backgroundImageContainer.classList.add("hidden");
             if (activeScreen === formContent) {
                 activeInput = document.getElementById("game-name-input");
@@ -1075,10 +1082,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         firstGuessMade = false;
         gameOver = false;
         
-        // Maintain cumulative score, reset current game score
-        score = 500;
-        scoreText.textContent = ` ${cumulativeScore}`;
-        scoreText.classList.remove("deducting");
+        scoreText.textContent = `🍍 ${cumulativeScore}`;
+        scoreText.classList.remove("deducting", "adding");
         displayHints();
         displayGuesses();
         resetScreenDisplays(gameContainer);
@@ -1090,13 +1095,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             guessCount = guesses.length;
             hintIndex = guesses.length;
             firstGuessMade = guessCount > 0;
-            score = gameStates[gameKey].score || 500;
+            cumulativeScore = gameStates[gameKey].cumulativeScore || cumulativeScore;
+            localStorage.setItem("cumulativeScore", cumulativeScore);
             displayHints();
             displayGuesses();
             if (gameResults[gameKey] && gameResults[gameKey].status !== "Not Played") {
                 endGame(gameResults[gameKey].status);
             }
         }
+        scoreText.textContent = `🍍 ${cumulativeScore}`;
     }
 
     // Update arrow states
@@ -1113,13 +1120,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Display hints
     function displayHints() {
         console.log("Displaying hints", { hintIndex, hints });
-        const hintsList = document.getElementById("hints-list");
         if (hintsList) {
             hintsList.innerHTML = "";
             for (let i = 0; i < hintIndex; i++) {
                 if (hints[i]) {
                     const hintDiv = document.createElement("div");
                     hintDiv.textContent = hints[i];
+                    hintDiv.classList.add("hint-burst");
                     hintsList.appendChild(hintDiv);
                     if (i < hintIndex - 1) {
                         const separator = document.createElement("span");
@@ -1187,21 +1194,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         guesses.push(guess);
         guessCount++;
 
-        const oldScore = score;
-        const oldCumulativeScore = cumulativeScore;
+        const oldScore = cumulativeScore;
 
-        // Deduct score for every guess including first
-        if (guessCount <= 5) {
-            const points = [500, 400, 300, 200, 100][guessCount - 1];
-            score = points;
-            animateScoreChange(oldScore, score, true);
-        } else {
-            score = 0;
-            animateScoreChange(oldScore, score, true);
+        if (guess !== secretWord) {
+            // Deduct 100 from first incorrect guess
+            const newScore = Math.max(0, oldScore - 100);
+            animateScoreChange(oldScore, newScore, true);
+            cumulativeScore = newScore;
+            localStorage.setItem("cumulativeScore", cumulativeScore);
         }
 
         // Save game state
-        gameStates[gameKey] = { guesses, score };
+        gameStates[gameKey] = { guesses, cumulativeScore };
         localStorage.setItem("gameStates", JSON.stringify(gameStates));
 
         displayGuesses();
@@ -1209,22 +1213,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guess === secretWord) {
             console.log("Correct guess!");
-            const finalScore = score;
+            const pointsToAdd = [500, 400, 300, 200, 100][guessCount - 1] || 0;
+            const newScore = cumulativeScore + pointsToAdd;
+            animateScoreChange(cumulativeScore, newScore, false, true, 1500);
+            cumulativeScore = newScore;
+            localStorage.setItem("cumulativeScore", cumulativeScore);
+            
             gameResults[gameKey] = { status: `${guessCount}/5` };
             localStorage.setItem("gameResults", JSON.stringify(gameResults));
             
-            // Add to cumulative score
-            cumulativeScore += finalScore;
-            localStorage.setItem("cumulativeScore", cumulativeScore);
-            
-            // Reset to 500 only if cumulative reaches 0 (which won't happen with additions)
-            if (cumulativeScore <= 0) {
-                cumulativeScore = 500;
-                localStorage.setItem("cumulativeScore", cumulativeScore);
-            }
-            
-            scoreText.textContent = ` ${cumulativeScore}`;
-            animateScoreChange(oldCumulativeScore, cumulativeScore, false, 1500);
             triggerPineappleRain();
             endGame(`${guessCount}/5`);
         } else if (guessCount >= 5) {
@@ -1236,13 +1233,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Incorrect guess, showing next hint");
             guessInputContainer.classList.add("wrong-guess");
             incorrectGuessIndicator.style.display = "block";
+            displayHints();
             animationTimeout = setTimeout(() => {
                 guessInputContainer.classList.remove("wrong-guess");
                 incorrectGuessIndicator.style.display = "none";
                 isProcessingGuess = false;
                 guessInput.disabled = false;
                 guessInput.value = "";
-                displayHints();
                 keepKeyboardOpen();
             }, 350);
         }
@@ -1257,6 +1254,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         const gameOverScreen = document.getElementById("game-over");
         if (gameOverScreen) {
             gameOverScreen.style.display = "flex";
+            hintsContainer.classList.add("hidden");
+            backgroundImageContainer.classList.add("hidden");
+            guessesSection.classList.add("hidden");
+            gameOverOverlay.style.display = "block";
             resetScreenDisplays(gameOverScreen);
             displayShareSection(status);
         }
@@ -1354,8 +1355,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Initialize the game
     console.log("Initializing game");
+    scoreText.textContent = `🍍 ${cumulativeScore}`;
     await fetchOfficialGames();
-    scoreText.textContent = ` ${cumulativeScore}`;
     adjustBackground();
     ensureInitialFocus();
 });
