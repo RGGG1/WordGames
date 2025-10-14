@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let gameOver = false;
     let secretWord = "";
     let hints = [];
-    let hintIndex = 1;  // Start with first hint revealed
+    let hintIndex = 0;
     let firstGuessMade = false;
     let allGames = [];
     let privateGames = [];
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchMoved = false;
-    const touchThreshold = 15;  // Increased slightly to make tap less sensitive
+    const touchThreshold = 10;
 
     // Debounce utility
     function debounce(func, wait) {
@@ -1071,7 +1071,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.value = "";
         guesses = [];
         guessCount = 0;
-        hintIndex = 1;  // First hint revealed at start
+        hintIndex = 0;
         firstGuessMade = false;
         gameOver = false;
         
@@ -1090,7 +1090,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameStates[gameKey]) {
             guesses = gameStates[gameKey].guesses || [];
             guessCount = guesses.length;
-            hintIndex = Math.max(1, guesses.length + 1);  // Ensure first hint stays revealed even if saved
+            hintIndex = guesses.length;
             firstGuessMade = guessCount > 0;
             cumulativeScore = gameStates[gameKey].cumulativeScore || cumulativeScore;
             localStorage.setItem("cumulativeScore", cumulativeScore);
@@ -1209,7 +1209,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         localStorage.setItem("gameStates", JSON.stringify(gameStates));
 
         displayGuesses();
-        hintIndex = guessCount + 1;  // Reveal next hint after guess
+        hintIndex = guessCount;
 
         if (guess === secretWord) {
             console.log("Correct guess!");
@@ -1252,7 +1252,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         gameOver = true;
         guessInput.disabled = true;
         
-        // Hide hints, guesses, image container (including arrows)
+        // Hide hints, guesses, image (keep arrows)
         hintsContainer.classList.add("hidden");
         guessesSection.classList.add("hidden");
         backgroundImageContainer.classList.add("end-game");
@@ -1315,7 +1315,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const points = status === "X/5" ? "" : [500, 400, 300, 200, 100][parseInt(status.split("/")[0]) - 1] || 100;
         const shareMessage = status === "X/5"
             ? `WORDY #${gameNum} was hard.\nCan you solve it?\nhttps://wordy.bigbraingames.net/?game=${gameNum}`
-            : `I scored ${points} for WORDY #${gameNum}.\nCan you beat it?\nhttps://wordy.bigbraingames.net/?game=${gameNum}`;
+            : `I scored ${points} for WORDY #${gameNum}.\nCan you beat it?`;
 
         if (shareWhatsApp) {
             shareWhatsApp.href = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
