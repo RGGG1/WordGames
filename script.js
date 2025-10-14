@@ -147,6 +147,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
             console.log("Ensuring keyboard stays open by focusing guess input");
             if (document.activeElement !== guessInput) {
+                guessInput.disabled = false;
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
@@ -154,6 +155,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
                             console.log("Refocusing guess input to keep keyboard open");
+                            guessInput.disabled = false;
                             guessInput.focus();
                         }
                     }, 50);
@@ -205,6 +207,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.addEventListener("touchstart", (e) => {
         if (!initialTouchHandled && !gameOver && !isProcessingGuess && !isUILocked && gameContainer.style.display !== "none" && !e.target.closest('.screen, .dialog')) {
             console.log("First document touch, focusing guess input");
+            guessInput.disabled = false;
             guessInput.focus();
             activeInput = guessInput;
             adjustBackground();
@@ -225,6 +228,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             !e.target.closest('.screen, .dialog')
         ) {
             console.log("Global click detected, refocusing guess input");
+            guessInput.disabled = false;
             guessInput.focus();
             activeInput = guessInput;
             if (isMobile) {
@@ -288,6 +292,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.addEventListener("touchstart", (e) => {
             e.preventDefault();
             console.log("Guess input touched");
+            guessInput.disabled = false;
             guessInput.focus();
             activeInput = guessInput;
             adjustBackground();
@@ -295,6 +300,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 setTimeout(() => {
                     if (document.activeElement !== guessInput) {
+                        guessInput.disabled = false;
                         guessInput.focus();
                     }
                 }, 100);
@@ -309,6 +315,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guess input container triggered");
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                guessInput.disabled = false;
                 guessInput.focus();
                 activeInput = guessInput;
                 adjustBackground();
@@ -316,6 +323,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
+                            guessInput.disabled = false;
                             guessInput.focus();
                         }
                     }, 100);
@@ -333,12 +341,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guess area triggered");
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                guessInput.disabled = false;
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
                     guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
+                            guessInput.disabled = false;
                             guessInput.focus();
                         }
                     }, 100);
@@ -357,12 +367,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.stopPropagation();
             console.log("Guess section triggered");
             if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
+                guessInput.disabled = false;
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
                     guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
+                            guessInput.disabled = false;
                             guessInput.focus();
                         }
                     }, 100);
@@ -1170,7 +1182,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
         isProcessingGuess = true;
-        guessInput.disabled = true;
+        const oldScore = cumulativeScore;
         const isPrivate = currentGameNumber.includes("- Private");
         const gameKey = isPrivate ? `privatePineapple_${currentGameId}` : `pineapple_${currentGameNumber.replace("Game #", "")}`;
 
@@ -1182,7 +1194,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInputContainer.classList.remove("wrong-guess");
                 incorrectGuessIndicator.style.display = "none";
                 isProcessingGuess = false;
-                guessInput.disabled = false;
+                guessInput.value = "";
                 keepKeyboardOpen();
             }, 350);
             return;
@@ -1191,17 +1203,15 @@ document.addEventListener("DOMContentLoaded", async () => {
         guesses.push(guess);
         guessCount++;
 
-        const oldScore = cumulativeScore;
-
         if (guess !== secretWord) {
-            // Deduct 100 from first incorrect guess
-            if (guessCount === 1 || (guessCount > 1 && guesses[0] === secretWord)) {
-                // No deduction if first guess correct, but since incorrect, deduct only on first incorrect
-                const newScore = Math.max(0, oldScore - 100);
-                animateScoreChange(oldScore, newScore, true);
-                cumulativeScore = newScore;
-                localStorage.setItem("cumulativeScore", cumulativeScore);
+            // Deduct 100 for every incorrect guess
+            let newScore = oldScore - 100;
+            if (newScore <= 0) {
+                newScore = 500;
             }
+            animateScoreChange(oldScore, newScore, true);
+            cumulativeScore = newScore;
+            localStorage.setItem("cumulativeScore", cumulativeScore);
         }
 
         // Save game state
@@ -1238,7 +1248,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInputContainer.classList.remove("wrong-guess");
                 incorrectGuessIndicator.style.display = "none";
                 isProcessingGuess = false;
-                guessInput.disabled = false;
                 guessInput.value = "";
                 keepKeyboardOpen();
             }, 350);
@@ -1250,7 +1259,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     function endGame(status) {
         console.log("Ending game", { status });
         gameOver = true;
-        guessInput.disabled = true;
         
         // Hide hints, guesses, image (keep arrows)
         hintsContainer.classList.add("hidden");
