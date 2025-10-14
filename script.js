@@ -58,6 +58,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const backgroundImage = document.getElementById("background-image");
     const hintsList = document.getElementById("hints-list");
     const gameOverScreen = document.getElementById("game-over"); // Added for inline reference
+    const congratsMessage = document.getElementById("congrats-message");
 
     // URLs
     const officialUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vTiz6IVPR4cZB9JlbNPC1Km5Jls5wsW3i-G9WYLppmnfPDz2kxb0I-g1BY50wFzuJ0aYgYdyub6VpCd/pub?output=csv";
@@ -272,7 +273,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isProcessingGuess = false;
             }
         });
-        guessInput.addEventListener("keydown", (e) => {
+        const enterHandler = (e) => {
             if (e.key === "Enter" && !gameOver && !guessInput.disabled && !isProcessingGuess) {
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
@@ -280,7 +281,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                     handleGuess(guess);
                 }
             }
-        });
+        };
+        guessInput.addEventListener("keydown", enterHandler);
         guessInput.addEventListener("focus", () => {
             console.log("Guess input focused");
             activeInput = guessInput;
@@ -1113,6 +1115,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
         scoreText.textContent = `🍍 ${cumulativeScore}`;
+        setTimeout(ensureInitialFocus, 100);
     }
 
     // Update arrow states
@@ -1284,6 +1287,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         const shareTwitter = document.getElementById("share-twitter");
         const shareInstagram = document.getElementById("share-instagram");
 
+        if (congratsMessage) {
+            if (status !== "X/5") {
+                congratsMessage.textContent = "CONGRATULATIONS";
+            } else {
+                congratsMessage.textContent = "Hard Luck - Play Again";
+            }
+        }
         if (secretWordDisplay) {
             secretWordDisplay.textContent = `Secret Word: ${secretWord}`;
         }

@@ -255,6 +255,11 @@ body {
     display: none;
 }
 
+/* Hide arrows during end game */
+#background-image-container.end-game .image-arrow {
+    display: none;
+}
+
 .image-arrow {
     width: 8vmin;
     height: 8vmin;
@@ -334,6 +339,14 @@ body {
     margin-bottom: 2vmin;
     gap: 3vmin;
     position: relative;
+}
+
+#congrats-message {
+    font-size: 6vmin;
+    color: #FFB300;
+    text-shadow: 1px 1px 2px #000000;
+    text-align: center;
+    margin-bottom: 2vmin;
 }
 
 #secret-word-display {
@@ -827,6 +840,7 @@ body,
 .tab,
 .game-list-row span,
 .dialog-message,
-#ad-box span {
+#ad-box span,
+#congrats-message {
     font-family: 'Luckiest Guy', cursive !important;
 }
