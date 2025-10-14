@@ -199,7 +199,7 @@ body {
 #hints-list {
     font-size: 3.5vmin;
     color: #FFFFFF;
-    text-shadow: 1px 1px 2px #000000;
+    text-shadow: 1px, 1px 2px #000000;
     text-align: center;
     display: flex;
     flex-wrap: wrap;
@@ -281,7 +281,7 @@ body {
 
 .image-arrow:active::before {
     border-right-color: #E0A000;
-    border-left-color: #E0A000;
+    border-left-color: #e0a000;
 }
 
 .image-arrow.disabled {
@@ -307,36 +307,35 @@ body {
 #game-over {
     display: none;
     flex-direction: column;
+    position: relative;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 90vw;
+    width: 100%;
     max-width: 600px;
     z-index: 11;
 }
 
-#share-section {
+#share-section, .share-section {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100%;
+    width: 90vw;
+    max-width: 600px;
     margin-bottom: 2vmin;
     gap: 3vmin;
     position: relative;
-    z-index: 12; /* Above overlay */
+    background: #000000; /* Fully black background for end screen content */
+    padding: 4vmin 0; /* Padding to cover the area */
+    border-radius: 1vmin;
+    z-index: 12;
 }
 
-#secret-word-display {
-    font-size: 4vmin;
-    color: #FFB300;
-    text-shadow: 1px 1px 2px #000000;
-    text-align: center;
-    margin-bottom: 2vmin;
+/* Ensure arrows remain visible above the black background */
+#prev-image-arrow, #next-image-arrow {
+    z-index: 12; /* Already set, but confirm */
 }
 
+/* Adjust share panel if needed */
 #share-panel {
     display: flex;
     flex-direction: column;
