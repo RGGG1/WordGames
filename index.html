@@ -17,10 +17,10 @@
     <meta name="twitter:title" content="WORDY by Big Brain Games">
     <meta name="twitter:description" content="Can you guess the secret word? Play WORDY and challenge your friends!">
     <meta name="twitter:image" content="https://wordy.bigbraingames.net/wordy_favicon.png">
-    <title>WORDY - Big Brain Games</title>
+    <title>WORDY by Big Brain Games</title>
     <link rel="icon" type="image/png" href="wordy_favicon.png">
     <link rel="stylesheet" href="styles.css">
-    <link rel=" preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'">
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" as="style" onload="this.rel='stylesheet'">
 </head>
 <body>
     <div id="game-container">
@@ -44,30 +44,30 @@
                 <div id="hints-list"></div>
             </div>
         </div>
+        <div id="guesses-section">
+            <span id="guesses-title">GUESSES</span>
+            <div id="guesses-list"></div>
+        </div>
+        <div id="game-over" class="game-over">
+            <div id="share-section">
+                <div id="secret-word-display"></div>
+                <div id="share-panel">
+                    <span id="share-text"></span>
+                    <span id="game-number-display"></span>
+                </div>
+                <div id="share-buttons">
+                    <a id="share-whatsapp" href="#" target="_blank" aria-label="Share on WhatsApp"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6/mac/Whatsapp.svg" alt="WhatsApp"></a>
+                    <a id="share-telegram" href="#" target="_blank" aria-label="Share on Telegram"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a>
+                    <a id="share-twitter" href="#" target="_blank" aria-label="Share on Twitter"><img src="https://upload.wikimedia.org/wikipedia/sco/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png" alt="Twitter"></a>
+                    <a id="share-instagram" href="#" target="_blank" aria-label="Share on Instagram"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram"></a>
+                </div>
+                <button type="button" id="next-game-btn-end" class="control-btn" aria-label="Play next game">Next Game</button>
+            </div>
+        </div>
         <div id="background-image-container">
             <button type="button" id="prev-image-arrow" class="image-arrow" aria-label="Previous game"></button>
             <img id="background-image" src="newbackground.png" alt="Game background">
             <button type="button" id="next-image-arrow" class="image-arrow" aria-label="Next game"></button>
-            <div id="game-over" class="game-over">
-                <div id="share-section">
-                    <div id="secret-word-display"></div>
-                    <div id="share-panel">
-                        <span id="share-text"></span>
-                        <span id="game-number-display"></span>
-                    </div>
-                    <div id="share-buttons">
-                        <a id="share-whatsapp" href="#" target="_blank" aria-label="Share on WhatsApp"><img src="https://upload.wikimedia.org/wikipedia/commons/6/6/mac/Whatsapp.svg" alt="WhatsApp"></a>
-                        <a id="share-telegram" href="#" target="_blank" aria-label="Share on Telegram"><img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram"></a>
-                        <a id="share-twitter" href="#" target="_blank" aria-label="Share on Twitter"><img src="https://upload.wikimedia.org/wikipedia/sco/thumb/9/9f/Twitter_bird_logo_2012.svg/1200px-Twitter_bird_logo_2012.svg.png" alt="Twitter"></a>
-                        <a id="share-instagram" href="#" target="_blank" aria-label="Share on Instagram"><img src="https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png" alt="Instagram"></a>
-                    </div>
-                    <button type="button" id="next-game-btn-end" class="control-btn" aria-label="Play next game">Next Game</button>
-                </div>
-            </div>
-        </div>
-        <div id="guesses-section">
-            <span id="guesses-title">GUESSES</span>
-            <div id="guesses-list"></div>
         </div>
         <div id="ad-box">
             <span>Big Brain Games</span>
@@ -105,7 +105,6 @@
             <input type="text" id="hint-5" placeholder="Hint 5..." maxlength="15" autocomplete="off" spellcheck="false" aria-label="Enter hint 5">
         </div>
         <button type="submit" id="confirm-btn" class="control-btn" aria-label="Confirm game creation">Confirm</button>
-        < ....
         <button type="button" id="form-back-btn" class="control-btn" aria-label="Back to game">Back</button>
     </div>
     <div id="form-error-dialog" class="dialog">

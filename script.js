@@ -53,7 +53,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     const shareSection = document.getElementById("share-section");
     const gameNameElement = document.getElementById("game-name");
     const backgroundImageContainer = document.getElementById("background-image-container");
-    const gameOverOverlay = document.getElementById("game-over-overlay");
     const hintsContainer = document.getElementById("hints-container");
     const guessesSection = document.getElementById("guesses-section");
     const backgroundImage = document.getElementById("background-image");
@@ -422,16 +421,20 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (activeScreen === gameContainer) {
             gameContainer.style.display = "flex";
-            guessArea.style.display = "flex";
             backgroundImageContainer.classList.remove("hidden");
-            gameOverOverlay.style.display = "none";
             hintsContainer.classList.remove("hidden");
             guessesSection.classList.remove("hidden");
             setTimeout(() => {
                 ensureInitialFocus();
                 keepKeyboardOpen();
             }, 100);
-        } else if (activeScreen === formContent || activeScreen.id === "game-over") {
+        } else if (activeScreen.id === "game-over") {
+            activeScreen.style.display = "flex";
+            activeScreen.classList.add("active");
+            hintsContainer.classList.add("hidden");
+            guessesSection.classList.add("hidden");
+            backgroundImageContainer.classList.add("hidden");
+        } else if (activeScreen === formContent) {
             activeScreen.style.display = "flex";
             activeScreen.classList.add("active");
             hintsContainer.classList.add("hidden");
@@ -1086,6 +1089,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         scoreText.classList.remove("deducting", "adding");
         displayHints();
         displayGuesses();
+        document.getElementById("game-over").style.display = "none";
         resetScreenDisplays(gameContainer);
 
         // Load saved game state
@@ -1254,15 +1258,16 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Ending game", { status });
         gameOver = true;
         guessInput.disabled = true;
+        guessInput.blur();
         const gameOverScreen = document.getElementById("game-over");
         if (gameOverScreen) {
-            gameOverScreen.style.display = "flex";
             hintsContainer.classList.add("hidden");
-            backgroundImageContainer.classList.add("hidden");
             guessesSection.classList.add("hidden");
-            gameOverOverlay.style.display = "block";
-            resetScreenDisplays(gameOverScreen);
+            backgroundImageContainer.classList.add("hidden");
+            gameOverScreen.style.display = "flex";
             displayShareSection(status);
+            resetScreenDisplays(gameOverScreen);
+            gameOverScreen.scrollIntoView({ behavior: "smooth", block: "center" });
         }
         adjustBackground();
     }
@@ -1277,6 +1282,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const shareTelegram = document.getElementById("share-telegram");
         const shareTwitter = document.getElementById("share-twitter");
         const shareInstagram = document.getElementById("share-instagram");
+        const sharePanel = document.getElementById("share-panel");
 
         if (secretWordDisplay) {
             secretWordDisplay.textContent = `Secret Word: ${secretWord}`;
@@ -1330,6 +1336,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         if (shareInstagram) {
             shareInstagram.href = `https://www.instagram.com/?url=${encodeURIComponent(`https://wordy.bigbraingames.net/?game=${gameNum}`)}`;
+        }
+        if (sharePanel) {
+            sharePanel.style.animation = "popInShare 0.5s ease-out";
         }
     }
 
