@@ -1115,6 +1115,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
         scoreText.textContent = `🍍 ${cumulativeScore}`;
+        if (guessInput) {
+            const enterHandler = (e) => {
+                if (e.key === "Enter" && !gameOver && !guessInput.disabled && !isProcessingGuess) {
+                    const guess = guessInput.value.trim().toUpperCase();
+                    if (guess) {
+                        console.log("Guess submitted via Enter:", guess);
+                        handleGuess(guess);
+                    }
+                }
+            };
+            guessInput.addEventListener("keydown", enterHandler);
+        }
         setTimeout(ensureInitialFocus, 100);
     }
 
