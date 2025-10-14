@@ -1335,7 +1335,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const container = document.createElement("div");
         container.className = "pineapple-rain";
         document.body.appendChild(container);
-        const numPieces = isMobile ? 20 : 50;
+        const numPieces = isMobile ? 60 : 150;
         for (let i = 0; i < numPieces; i++) {
             const piece = document.createElement("div");
             piece.className = "pineapple-piece";
