@@ -178,7 +178,7 @@ body {
 }
 
 #hints-container.hidden {
-    visibility: hidden;
+    display: none; /* Simplified: fully hide */
 }
 
 .hints-box {
@@ -237,7 +237,7 @@ body {
 }
 
 #background-image-container.hidden {
-    visibility: hidden;
+    display: none; /* Simplified: fully hide if needed, but we hide pieces individually */
 }
 
 #background-image {
@@ -245,6 +245,11 @@ body {
     height: 2.25in;
     max-width: 90vw;
     border-radius: 1vmin;
+}
+
+/* Hide image but keep arrows visible during end game */
+#background-image-container.end-game #background-image {
+    display: none;
 }
 
 .image-arrow {
@@ -305,17 +310,17 @@ body {
 }
 
 #game-over {
-    display: none;
+    display: none; /* Hidden by default, flows in column */
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 90vw;
     max-width: 600px;
-    z-index: 11;
+    margin: 2vmin 0; /* Match surrounding spacing */
+}
+
+#game-over.active {
+    display: flex; /* Show when active */
 }
 
 #share-section {
@@ -326,7 +331,6 @@ body {
     margin-bottom: 2vmin;
     gap: 3vmin;
     position: relative;
-    z-index: 12; /* Above overlay */
 }
 
 #secret-word-display {
@@ -417,7 +421,7 @@ body {
 }
 
 #guesses-section.hidden {
-    visibility: hidden;
+    display: none; /* Simplified: fully hide */
 }
 
 #guesses-title {
@@ -678,7 +682,7 @@ body {
     color: #000000;
     padding: 0 2vmin;
     text-align: center;
-    text-transform: uppercase;
+    text-transform: uprising;
 }
 
 #form-container input:disabled {
