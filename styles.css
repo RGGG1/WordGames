@@ -247,17 +247,6 @@ body {
     border-radius: 1vmin;
 }
 
-#game-over-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0, 0, 0, 0.9);
-    border-radius: 1vmin;
-    z-index: 1;
-}
-
 .image-arrow {
     width: 8vmin;
     height: 8vmin;
@@ -359,6 +348,15 @@ body {
     border-radius: 1vmin;
     padding: 3vmin;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Added subtle shadow for polish */
+}
+
+#share-panel.flash-border {
+    animation: flashYellowBorder 1s ease-in-out 3;
+}
+
+@keyframes flashYellowBorder {
+    0%, 100% { border-color: #FFB300; }
+    50% { border-color: #FFFFFF; }
 }
 
 #share-text {

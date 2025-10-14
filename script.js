@@ -1066,7 +1066,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             game["Hint 4"]?.trim().toUpperCase() || "",
             game["Hint 5"]?.trim().toUpperCase() || ""
         ].filter(hint => hint);
-        const isPrivate = game["Game Number"].toString().includes("- Private");
+        const isPrivate = typeof game["Game Number"] === 'string' && game["Game Number"].includes("- Private");
         currentGameNumber = isPrivate ? game["Game Number"] : `Game #${game["Game Number"]}`;
         currentGameId = game["Game Number"];
         gameNumberText.textContent = currentGameNumber;
@@ -1198,10 +1198,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (guess !== secretWord) {
             // Deduct 100 from first incorrect guess
-            const newScore = Math.max(0, oldScore - 100);
-            animateScoreChange(oldScore, newScore, true);
-            cumulativeScore = newScore;
-            localStorage.setItem("cumulativeScore", cumulativeScore);
+            if (guessCount === 1 || (guessCount > 1 && guesses[0] === secretWord)) {
+                // No deduction if first guess correct, but since incorrect, deduct only on first incorrect
+                const newScore = Math.max(0, oldScore - 100);
+                animateScoreChange(oldScore, newScore, true);
+                cumulativeScore = newScore;
+                localStorage.setItem("cumulativeScore", cumulativeScore);
+            }
         }
 
         // Save game state
@@ -1311,9 +1314,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const isPrivate = currentGameNumber.includes("- Private");
         const gameNum = isPrivate ? currentGameId : currentGameNumber.replace("Game #", "");
+        const points = status === "X/5" ? "" : [500, 400, 300, 200, 100][parseInt(status.split("/")[0]) - 1] || 100;
         const shareMessage = status === "X/5"
             ? `WORDY #${gameNum} was hard.\nCan you solve it?\nhttps://wordy.bigbraingames.net/?game=${gameNum}`
-            : `I scored ${[500, 400, 300, 200, 100][parseInt(status.split("/")[0]) - 1] || 100} for WORDY #${gameNum}.\nCan you beat it?\nhttps://wordy.bigbraingames.net/?game=${gameNum}`;
+            : `I scored ${points} for WORDY #${gameNum}.\nCan you beat it?\nhttps://wordy.bigbraingames.net/?game=${gameNum}`;
 
         if (shareWhatsApp) {
             shareWhatsApp.href = `https://wa.me/?text=${encodeURIComponent(shareMessage)}`;
