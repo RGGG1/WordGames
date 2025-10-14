@@ -672,12 +672,11 @@ document.addEventListener("DOMContentLoaded", async () => {
                 // Look for next unplayed game after current index
                 for (let i = 0; i < gameList.length; i++) {
                     const index = (currentIndex + i + 1) % gameList.length;
-                    const game = gameList[index];
                     const gameKey = isPrivate ? 
-                        `privatePineapple_${game["Game Number"]}` : 
-                        `pineapple_${game["Game Number"]}`;
+                        `privatePineapple_${gameList[index]["Game Number"]}` : 
+                        `pineapple_${gameList[index]["Game Number"]}`;
                     if (!gameResults[gameKey] || gameResults[gameKey].status === "Not Played") {
-                        nextGame = game;
+                        nextGame = gameList[index];
                         break;
                     }
                 }
@@ -685,9 +684,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 // If no unplayed games in current list, try the other list
                 if (!nextGame) {
                     const otherList = isPrivate ? allGames : privateGames;
-                    const otherPrefix = isPrivate ? "pineapple_" : "privatePineapple_";
                     for (let game of otherList) {
-                        const gameKey = `${otherPrefix}${game["Game Number"]}`;
+                        const gameKey = isPrivate ? 
+                            `pineapple_${game["Game Number"]}` : 
+                            `privatePineapple_${game["Game Number"]}`;
                         if (!gameResults[gameKey] || gameResults[gameKey].status === "Not Played") {
                             nextGame = game;
                             break;
@@ -802,7 +802,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 header: true,
                 skipEmptyLines: true,
                 complete: (result) => {
-                    allGames = result.data || [];
+                    allGames = result.data;
                     console.log("Official games fetched:", allGames.length);
                     allGames.sort((a, b) => parseInt(b["Game Number"]) - parseInt(a["Game Number"]));
                     displayGameList();
@@ -853,7 +853,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 header: true,
                 skipEmptyLines: true,
                 complete: (result) => {
-                    privateGames = result.data || [];
+                    privateGames = result.data;
                     console.log("Private games fetched:", privateGames.length);
                     displayGameList();
                 },
@@ -888,8 +888,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const gameNumber = `Game #${game["Game Number"]}`;
                 const gameName = game["Game Name"] || "";
                 const displayName = gameName ? `${gameNumber} - ${gameName}` : gameNumber;
-                const gameKey = `pineapple_${game["Game Number"]}`;
-                const result = gameResults[gameKey] || { status: "Not Played" };
+                const result = gameResults[`pineapple_${game["Game Number"]}`] || { status: "Not Played" };
                 let displayResult = "Play Now";
                 let resultClass = "play-now";
                 if (result.status !== "Not Played") {
@@ -966,8 +965,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const gameNumber = game["Game Number"];
                 const gameName = game["Game Name"] || "";
                 const displayName = gameName ? `${gameNumber} - ${gameName}` : gameNumber;
-                const gameKey = `privatePineapple_${game["Game Number"]}`;
-                const result = gameResults[gameKey] || { status: "Not Played" };
+                const result = gameResults[`privatePineapple_${gameNumber}`] || { status: "Not Played" };
                 let displayResult = "Play Now";
                 let resultClass = "play-now";
                 if (result.status !== "Not Played") {
@@ -1068,14 +1066,14 @@ document.addEventListener("DOMContentLoaded", async () => {
             game["Hint 4"]?.trim().toUpperCase() || "",
             game["Hint 5"]?.trim().toUpperCase() || ""
         ].filter(hint => hint);
-        const isPrivate = privateGames.includes(game) || (typeof game["Game Number"] === 'string' && game["Game Number"].includes("Private"));
+        const isPrivate = typeof game["Game Number"] === 'string' && game["Game Number"].includes("- Private");
         currentGameNumber = isPrivate ? game["Game Number"] : `Game #${game["Game Number"]}`;
         currentGameId = game["Game Number"];
         gameNumberText.textContent = currentGameNumber;
-        const backgroundImageEl = document.getElementById("background-image");
-        if (backgroundImageEl) {
-            backgroundImageEl.src = currentBackground;
-            backgroundImageEl.alt = `Background for ${currentGameNumber}`;
+        const backgroundImage = document.getElementById("background-image");
+        if (backgroundImage) {
+            backgroundImage.src = currentBackground;
+            backgroundImage.alt = `Background for ${currentGameNumber}`;
         }
         guessInput.value = "";
         guesses = [];
@@ -1091,12 +1089,11 @@ document.addEventListener("DOMContentLoaded", async () => {
         resetScreenDisplays(gameContainer);
 
         // Load saved game state
-        const gameKey = isPrivate ? `privatePineapple_${currentGameId}` : `pineapple_${game["Game Number"]}`;
+        const gameKey = isPrivate ? `privatePineapple_${currentGameId}` : `pineapple_${currentGameNumber.replace("Game #", "")}`;
         if (gameStates[gameKey]) {
             guesses = gameStates[gameKey].guesses || [];
-            guesses = guesses.slice(0, 5); // Safety cap
             guessCount = guesses.length;
-            hintIndex = Math.min(guessCount, 5);
+            hintIndex = guesses.length;
             firstGuessMade = guessCount > 0;
             cumulativeScore = gameStates[gameKey].cumulativeScore || cumulativeScore;
             localStorage.setItem("cumulativeScore", cumulativeScore);
@@ -1199,12 +1196,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const oldScore = cumulativeScore;
 
-        if (guess !== secretWord && guessCount === 1) {
-            // Deduct 100 only on first incorrect guess
-            const newScore = Math.max(0, oldScore - 100);
-            animateScoreChange(oldScore, newScore, true);
-            cumulativeScore = newScore;
-            localStorage.setItem("cumulativeScore", cumulativeScore);
+        if (guess !== secretWord) {
+            // Deduct 100 from first incorrect guess
+            if (guessCount === 1 || (guessCount > 1 && guesses[0] === secretWord)) {
+                // No deduction if first guess correct, but since incorrect, deduct only on first incorrect
+                const newScore = Math.max(0, oldScore - 100);
+                animateScoreChange(oldScore, newScore, true);
+                cumulativeScore = newScore;
+                localStorage.setItem("cumulativeScore", cumulativeScore);
+            }
         }
 
         // Save game state
