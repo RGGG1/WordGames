@@ -974,6 +974,51 @@ document.addEventListener("DOMContentLoaded", async () => {
                             handler(e);
                         }
                     });
+                } else if (resultSpan && result.status !== "Not Played") {
+                    // For completed games, allow viewing
+                    const handler = debounce(async (e) => {
+                        e.preventDefault();
+                        console.log("Viewing completed game:", gameNumber);
+                        if (isUILocked || isLoadingGame) return;
+                        isUILocked = true;
+                        isLoadingGame = true;
+                        try {
+                            currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                            loadGame(game);
+                            resetScreenDisplays(gameContainer);
+                            adjustBackground();
+                            updateArrowStates(allGames.findIndex(g => g["Game Number"] === game["Game Number"]), allGames);
+                            document.getElementById("game-container").scrollIntoView({ behavior: "smooth", block: "start" });
+                        } catch (error) {
+                            console.error("Error loading game:", error.message);
+                            if (formErrorDialog && formErrorMessage) {
+                                formErrorMessage.textContent = "Failed to load game.";
+                                formErrorDialog.style.display = "flex";
+                            }
+                        } finally {
+                            isUILocked = false;
+                            isLoadingGame = false;
+                            keepKeyboardOpen();
+                        }
+                    }, 100);
+                    resultSpan.addEventListener(isMobile ? "touchstart" : "click", handler);
+                    row.addEventListener("touchstart", (e) => {
+                        touchStartX = e.touches[0].clientX;
+                        touchStartY = e.touches[0].clientY;
+                        touchMoved = false;
+                    });
+                    row.addEventListener("touchmove", () => {
+                        touchMoved = true;
+                    });
+                    row.addEventListener("touchend", (e) => {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const touchEndY = e.changedTouches[0].clientY;
+                        const deltaX = Math.abs(touchEndX - touchStartX);
+                        const deltaY = Math.abs(touchEndY - touchStartY);
+                        if (!touchMoved && deltaX < touchThreshold && deltaY < touchThreshold) {
+                            handler(e);
+                        }
+                    });
                 }
                 officialList.appendChild(row);
             });
@@ -1011,6 +1056,51 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const handler = debounce(async (e) => {
                         e.preventDefault();
                         console.log("Play Now triggered for private game:", gameNumber);
+                        if (isUILocked || isLoadingGame) return;
+                        isUILocked = true;
+                        isLoadingGame = true;
+                        try {
+                            currentBackground = game["Background"] && game["Background"].trim() !== "" ? game["Background"] : defaultBackground;
+                            loadGame(game);
+                            resetScreenDisplays(gameContainer);
+                            adjustBackground();
+                            updateArrowStates(privateGames.findIndex(g => g["Game Number"] === gameNumber), privateGames);
+                            document.getElementById("game-container").scrollIntoView({ behavior: "smooth", block: "start" });
+                        } catch (error) {
+                            console.error("Error loading private game:", error.message);
+                            if (formErrorDialog && formErrorMessage) {
+                                formErrorMessage.textContent = "Failed to load game.";
+                                formErrorDialog.style.display = "flex";
+                            }
+                        } finally {
+                            isUILocked = false;
+                            isLoadingGame = false;
+                            keepKeyboardOpen();
+                        }
+                    }, 100);
+                    resultSpan.addEventListener(isMobile ? "touchstart" : "click", handler);
+                    row.addEventListener("touchstart", (e) => {
+                        touchStartX = e.touches[0].clientX;
+                        touchStartY = e.touches[0].clientY;
+                        touchMoved = false;
+                    });
+                    row.addEventListener("touchmove", () => {
+                        touchMoved = true;
+                    });
+                    row.addEventListener("touchend", (e) => {
+                        const touchEndX = e.changedTouches[0].clientX;
+                        const touchEndY = e.changedTouches[0].clientY;
+                        const deltaX = Math.abs(touchEndX - touchStartX);
+                        const deltaY = Math.abs(touchEndY - touchStartY);
+                        if (!touchMoved && deltaX < touchThreshold && deltaY < touchThreshold) {
+                            handler(e);
+                        }
+                    });
+                } else if (resultSpan && result.status !== "Not Played") {
+                    // For completed games, allow viewing
+                    const handler = debounce(async (e) => {
+                        e.preventDefault();
+                        console.log("Viewing completed private game:", gameNumber);
                         if (isUILocked || isLoadingGame) return;
                         isUILocked = true;
                         isLoadingGame = true;
@@ -1117,7 +1207,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Load saved game state
         const gameKey = isPrivate ? `privatePineapple_${currentGameId}` : `pineapple_${currentGameNumber.replace("Game #", "")}`;
-        if (gameStates[gameKey]) {
+        const result = gameResults[gameKey];
+        const isCompleted = result && result.status !== "Not Played";
+
+        if (gameStates[gameKey] && !isCompleted) {
             guesses = gameStates[gameKey].guesses || [];
             guessCount = guesses.length;
             hintIndex = guesses.length + 1;
@@ -1126,9 +1219,15 @@ document.addEventListener("DOMContentLoaded", async () => {
             localStorage.setItem("cumulativeScore", cumulativeScore);
             displayHints();
             displayGuesses();
-            if (gameResults[gameKey] && gameResults[gameKey].status !== "Not Played") {
-                endGame(gameResults[gameKey].status);
-            }
+        } else if (isCompleted) {
+            // For completed games, show end state
+            guesses = gameStates[gameKey]?.guesses || [];
+            guessCount = guesses.length;
+            hintIndex = 5 + 1; // Show all hints
+            displayHints();
+            displayGuesses();
+            endGame(result.status);
+            gameOver = true; // Ensure gameOver is true
         }
         scoreText.textContent = `🍍 ${cumulativeScore}`;
         setupGuessEnterHandler(); // Ensure handler is re-attached every load
@@ -1198,6 +1297,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Handle guess
     async function handleGuess(guess) {
         console.log("Handling guess:", guess);
+        const isPrivate = currentGameNumber.includes("- Private");
+        const gameKey = isPrivate ? `privatePineapple_${currentGameId}` : `pineapple_${currentGameNumber.replace("Game #", "")}`;
+        const result = gameResults[gameKey];
+
+        // If game is completed, ignore guesses
+        if (result && result.status !== "Not Played") {
+            console.log("Game already completed, guess ignored");
+            return;
+        }
+
         if (isProcessingGuess || gameOver) {
             console.log("Guess ignored", { isProcessingGuess, gameOver });
             return;
@@ -1211,8 +1320,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         isProcessingGuess = true;
         const oldScore = cumulativeScore;
-        const isPrivate = currentGameNumber.includes("- Private");
-        const gameKey = isPrivate ? `privatePineapple_${currentGameId}` : `pineapple_${currentGameNumber.replace("Game #", "")}`;
 
         if (!/^[A-Z\s]+$/.test(guess)) {
             console.log("Invalid guess, only letters and spaces allowed");
