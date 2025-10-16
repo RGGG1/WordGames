@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let touchStartX = 0;
     let touchStartY = 0;
     let touchMoved = false;
-    const touchThreshold = 10;
+    const touchThreshold = 25;
 
     // Debounce utility
     function debounce(func, wait) {
