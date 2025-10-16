@@ -1100,7 +1100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.value = "";
         guesses = [];
         guessCount = 0;
-        hintIndex = 1; // Show first hint immediately
+        hintIndex = 0;
         firstGuessMade = false;
         gameOver = false;
         
@@ -1120,7 +1120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameStates[gameKey]) {
             guesses = gameStates[gameKey].guesses || [];
             guessCount = guesses.length;
-            hintIndex = Math.max(1, guesses.length + 1); // At least 1, then +1 after each guess
+            hintIndex = guesses.length;
             firstGuessMade = guessCount > 0;
             cumulativeScore = gameStates[gameKey].cumulativeScore || cumulativeScore;
             localStorage.setItem("cumulativeScore", cumulativeScore);
@@ -1152,13 +1152,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Displaying hints", { hintIndex, hints });
         if (hintsList) {
             hintsList.innerHTML = "";
-            for (let i = 0; i < Math.min(hintIndex, hints.length); i++) {
+            for (let i = 0; i < hintIndex; i++) {
                 if (hints[i]) {
                     const hintDiv = document.createElement("div");
                     hintDiv.textContent = hints[i];
                     hintDiv.classList.add("hint-burst");
                     hintsList.appendChild(hintDiv);
-                    if (i < Math.min(hintIndex, hints.length) - 1) {
+                    if (i < hintIndex - 1) {
                         const separator = document.createElement("span");
                         separator.className = "hint-separator";
                         separator.textContent = "|";
@@ -1247,7 +1247,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         localStorage.setItem("gameStates", JSON.stringify(gameStates));
 
         displayGuesses();
-        hintIndex = guessCount + 1; // Reveal next hint after this guess
+        hintIndex = guessCount;
 
         if (guess === secretWord) {
             console.log("Correct guess!");
@@ -1325,6 +1325,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (secretWordDisplay) {
             secretWordDisplay.textContent = `Secret Word: ${secretWord}`;
         }
+        if (gameNumberDisplay) {
+            gameNumberDisplay.textContent = currentGameNumber;
+        }
         if (shareText) {
             shareText.innerHTML = "";
             const isPrivate = currentGameNumber.includes("- Private");
@@ -1347,7 +1350,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 message.appendChild(scoreSpan);
                 message.appendChild(document.createTextNode(` for WORDY #${gameNum}.`));
                 shareText.appendChild(message);
-                const challenge = document.createimeter("div");
+                const challenge = document.createElement("div");
                 challenge.textContent = "Can you beat it?";
                 shareText.appendChild(challenge);
             }
