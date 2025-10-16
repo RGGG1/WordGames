@@ -1375,12 +1375,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (shareInstagram) {
             shareInstagram.href = `https://www.instagram.com/?url=${encodeURIComponent(`https://wordy.bigbraingames.net/?game=${gameNum}`)}`;
         }
-        // Improved: Add flashing border to share panel for attention
-        const sharePanel = document.getElementById("share-panel");
-        if (sharePanel) {
-            sharePanel.classList.add("flash-border");
-            setTimeout(() => sharePanel.classList.remove("flash-border"), 3000);
-        }
     }
 
     // Trigger pineapple rain animation
