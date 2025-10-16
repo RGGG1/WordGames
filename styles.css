@@ -112,6 +112,11 @@ body {
     border-radius: 1vmin;
 }
 
+#guess-input-container.game-over {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
 #guess-input {
     border: none;
     outline: none;

@@ -148,7 +148,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         ) {
             console.log("Ensuring keyboard stays open by focusing guess input");
             if (document.activeElement !== guessInput) {
-                guessInput.disabled = false;
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
@@ -156,7 +155,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
                             console.log("Refocusing guess input to keep keyboard open");
-                            guessInput.disabled = false;
                             guessInput.focus();
                         }
                     }, 50);
@@ -169,7 +167,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     function ensureInitialFocus() {
         if (guessInput && !gameOver && !isProcessingGuess && gameContainer.style.display !== "none") {
             console.log("Attempting initial focus on guess input");
-            guessInput.disabled = false;
             guessInput.focus();
             activeInput = guessInput;
             if (isMobile) {
@@ -179,7 +176,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 setTimeout(() => {
                     if (document.activeElement !== guessInput) {
                         console.log("Initial focus failed, retrying");
-                        guessInput.disabled = false;
                         guessInput.focus();
                         guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     }
@@ -191,7 +187,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Setup guess input enter handler
     function setupGuessEnterHandler() {
         const enterHandler = (e) => {
-            if (e.key === "Enter" && !gameOver && !guessInput.disabled && !isProcessingGuess) {
+            if (e.key === "Enter" && !gameOver && !isProcessingGuess) {
                 e.preventDefault(); // Prevent any default behavior like form submit
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
@@ -224,7 +220,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.addEventListener("touchstart", (e) => {
         if (!initialTouchHandled && !gameOver && !isProcessingGuess && !isUILocked && gameContainer.style.display !== "none" && !e.target.closest('.screen, .dialog')) {
             console.log("First document touch, focusing guess input");
-            guessInput.disabled = false;
             guessInput.focus();
             activeInput = guessInput;
             adjustBackground();
@@ -245,7 +240,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             !e.target.closest('.screen, .dialog')
         ) {
             console.log("Global click detected, refocusing guess input");
-            guessInput.disabled = false;
             guessInput.focus();
             activeInput = guessInput;
             if (isMobile) {
@@ -277,7 +271,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Setup guess input
     if (guessInput) {
-        guessInput.disabled = false;
         setupGuessEnterHandler();
         guessInput.addEventListener("input", () => {
             console.log("Guess input value changed:", guessInput.value);
@@ -301,7 +294,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.addEventListener("touchstart", (e) => {
             e.preventDefault();
             console.log("Guess input touched");
-            guessInput.disabled = false;
             guessInput.focus();
             activeInput = guessInput;
             adjustBackground();
@@ -309,7 +301,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                 setTimeout(() => {
                     if (document.activeElement !== guessInput) {
-                        guessInput.disabled = false;
                         guessInput.focus();
                     }
                 }, 100);
@@ -323,8 +314,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Guess input container triggered");
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                guessInput.disabled = false;
+            if (!gameOver && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
                 adjustBackground();
@@ -332,7 +322,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
-                            guessInput.disabled = false;
                             guessInput.focus();
                         }
                     }, 100);
@@ -349,15 +338,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Guess area triggered");
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                guessInput.disabled = false;
+            if (!gameOver && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
                     guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
-                            guessInput.disabled = false;
                             guessInput.focus();
                         }
                     }, 100);
@@ -375,15 +362,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             e.preventDefault();
             e.stopPropagation();
             console.log("Guess section triggered");
-            if (!gameOver && !guessInput.disabled && !isProcessingGuess) {
-                guessInput.disabled = false;
+            if (!gameOver && !isProcessingGuess) {
                 guessInput.focus();
                 activeInput = guessInput;
                 if (isMobile) {
                     guessInput.scrollIntoView({ behavior: "smooth", block: "nearest" });
                     setTimeout(() => {
                         if (document.activeElement !== guessInput) {
-                            guessInput.disabled = false;
                             guessInput.focus();
                         }
                     }, 100);
@@ -447,6 +432,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             hintsContainer.classList.remove("hidden");
             guessesSection.classList.remove("hidden");
             backgroundImageContainer.classList.remove("end-game"); // New: unhide image
+            guessInputContainer.classList.remove("game-over");
             setTimeout(() => {
                 ensureInitialFocus();
                 keepKeyboardOpen();
@@ -1104,6 +1090,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintsContainer.classList.remove("hidden");
         guessesSection.classList.remove("hidden");
         backgroundImageContainer.classList.remove("end-game"); // Unhide image
+        guessInputContainer.classList.remove("game-over");
         resetScreenDisplays(gameContainer);
 
         // Load saved game state
@@ -1122,7 +1109,6 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
         scoreText.textContent = `🍍 ${cumulativeScore}`;
-        guessInput.disabled = false;
         setupGuessEnterHandler(); // Ensure handler is re-attached every load
         setTimeout(ensureInitialFocus, 100);
     }
@@ -1276,6 +1262,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         hintsContainer.classList.add("hidden");
         guessesSection.classList.add("hidden");
         backgroundImageContainer.classList.add("end-game");
+        guessInputContainer.classList.add("game-over");
         
         // Show end game inline
         gameOverScreen.style.display = "flex";
@@ -1283,8 +1270,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         displayShareSection(status);
         adjustBackground();
-        guessInput.disabled = true; // Explicitly disable input on game over
-        // Removed any refocus or handler re-attachment here to prevent interference
     }
 
     // Display share section
@@ -1324,7 +1309,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 shareText.appendChild(challenge);
             } else {
                 const guesses = parseInt(status.split("/")[0]);
-                const points = [500, 400, 300, 300, 200, 100][guesses - 1] || 100;
+                const points = [500, 400, 300, 200, 100][guesses - 1] || 100;
                 const message = document.createElement("div");
                 message.textContent = `I scored `;
                 const scoreSpan = document.createElement("span");
