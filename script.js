@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Shared Enter handler (stable reference, always sees current state)
     const enterHandler = (e) => {
-        if (e.key === "Enter" && !gameOver && !isProcessingGuess) {
+        if (e.key === "Enter" && !gameOver && !isProcessingGuess && !isUILocked && gameContainer.style.display !== "none") {
             e.preventDefault(); // Prevent any default behavior like form submit
             const guess = guessInput.value.trim().toUpperCase();
             if (guess) {
@@ -202,6 +202,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.addEventListener("keydown", enterHandler);
     }
 
+    // Add global keydown listener for Enter to handle submission even if focus shifts briefly
+    function setupGlobalEnterHandler() {
+        document.removeEventListener("keydown", globalEnterHandler);
+        document.addEventListener("keydown", globalEnterHandler);
+    }
+
+    const globalEnterHandler = (e) => {
+        if (e.key === "Enter" && !gameOver && !isProcessingGuess && !isUILocked && gameContainer.style.display !== "none" && document.activeElement === guessInput) {
+            e.preventDefault();
+            const guess = guessInput.value.trim().toUpperCase();
+            if (guess) {
+                console.log("Guess submitted via global Enter:", guess);
+                handleGuess(guess);
+            }
+        }
+    };
+
     // Event listeners for resize and viewport changes
     window.addEventListener("resize", () => {
         console.log("Window resized, adjusting layout");
@@ -274,6 +291,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Setup guess input
     if (guessInput) {
         setupGuessEnterHandler();
+        setupGlobalEnterHandler(); // Add global handler
         guessInput.addEventListener("input", () => {
             console.log("Guess input value changed:", guessInput.value);
             guessInput.value = guessInput.value.toUpperCase();
@@ -438,6 +456,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             setTimeout(() => {
                 ensureInitialFocus();
                 keepKeyboardOpen();
+                setupGuessEnterHandler(); // Re-setup on show
+                setupGlobalEnterHandler();
             }, 100);
         } else if (activeScreen === formContent) {
             activeScreen.style.display = "flex";
@@ -1112,6 +1132,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
         scoreText.textContent = `🍍 ${cumulativeScore}`;
         setupGuessEnterHandler(); // Ensure handler is re-attached every load
+        setupGlobalEnterHandler(); // Re-attach global
         setTimeout(ensureInitialFocus, 100);
     }
 
@@ -1181,6 +1202,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Guess ignored", { isProcessingGuess, gameOver });
             return;
         }
+        // Clear any pending animation timeout to avoid race conditions
+        if (animationTimeout) {
+            clearTimeout(animationTimeout);
+            animationTimeout = null;
+            guessInputContainer.classList.remove("wrong-guess");
+            incorrectGuessIndicator.style.display = "none";
+        }
         isProcessingGuess = true;
         const oldScore = cumulativeScore;
         const isPrivate = currentGameNumber.includes("- Private");
@@ -1234,11 +1262,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             
             triggerPineappleRain();
             endGame(`${guessCount}/5`);
+            isProcessingGuess = false; // Reset after correct
         } else if (guessCount >= 5) {
             console.log("Game over: too many guesses");
             gameResults[gameKey] = { status: "X/5" };
             localStorage.setItem("gameResults", JSON.stringify(gameResults));
             endGame("X/5");
+            isProcessingGuess = false;
         } else {
             console.log("Incorrect guess, showing next hint");
             guessInputContainer.classList.add("wrong-guess");
@@ -1374,6 +1404,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Initialize the game
     console.log("Initializing game");
     scoreText.textContent = `🍍 ${cumulativeScore}`;
+    setupGlobalEnterHandler(); // Initial setup
     await fetchOfficialGames();
     adjustBackground();
     ensureInitialFocus();
