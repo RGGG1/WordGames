@@ -703,7 +703,7 @@ body {
     color: #000000;
     padding: 0 2vmin;
     text-align: center;
-    text-transform: uprising;
+    text-transform: uppercase; /* Fixed typo: was 'uprising' */
 }
 
 #form-container input:disabled {
