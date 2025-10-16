@@ -192,6 +192,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     function setupGuessEnterHandler() {
         const enterHandler = (e) => {
             if (e.key === "Enter" && !gameOver && !guessInput.disabled && !isProcessingGuess) {
+                e.preventDefault(); // Prevent any default behavior like form submit
                 const guess = guessInput.value.trim().toUpperCase();
                 if (guess) {
                     console.log("Guess submitted via Enter:", guess);
@@ -1121,6 +1122,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
         scoreText.textContent = `🍍 ${cumulativeScore}`;
+        guessInput.disabled = false;
         setupGuessEnterHandler(); // Ensure handler is re-attached every load
         setTimeout(ensureInitialFocus, 100);
     }
@@ -1281,6 +1283,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         
         displayShareSection(status);
         adjustBackground();
+        guessInput.disabled = true; // Explicitly disable input on game over
     }
 
     // Display share section
@@ -1371,7 +1374,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             piece.style.animationDuration = `${Math.random() * 2 + 2}s`;
             piece.style.animationDelay = `${Math.random() * 0.5}s`;
             piece.style.setProperty("--drift", Math.random() * 2 - 1);
-            piece.style.setProperty("--rotation", `${Math.random() * 360}deg`);
+            piece.style.setProperty("--rotation", `${Math.random() * 360}deg`;
             piece.style.setProperty("--fall-distance", Math.random() * 0.2 + 0.8);
             container.appendChild(piece);
         }
