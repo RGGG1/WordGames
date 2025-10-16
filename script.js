@@ -188,6 +188,21 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
+    // Setup guess input enter handler
+    function setupGuessEnterHandler() {
+        const enterHandler = (e) => {
+            if (e.key === "Enter" && !gameOver && !guessInput.disabled && !isProcessingGuess) {
+                const guess = guessInput.value.trim().toUpperCase();
+                if (guess) {
+                    console.log("Guess submitted via Enter:", guess);
+                    handleGuess(guess);
+                }
+            }
+        };
+        guessInput.removeEventListener("keydown", enterHandler);
+        guessInput.addEventListener("keydown", enterHandler);
+    }
+
     // Event listeners for resize and viewport changes
     window.addEventListener("resize", () => {
         console.log("Window resized, adjusting layout");
@@ -262,6 +277,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Setup guess input
     if (guessInput) {
         guessInput.disabled = false;
+        setupGuessEnterHandler();
         guessInput.addEventListener("input", () => {
             console.log("Guess input value changed:", guessInput.value);
             guessInput.value = guessInput.value.toUpperCase();
@@ -273,16 +289,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 isProcessingGuess = false;
             }
         });
-        const enterHandler = (e) => {
-            if (e.key === "Enter" && !gameOver && !guessInput.disabled && !isProcessingGuess) {
-                const guess = guessInput.value.trim().toUpperCase();
-                if (guess) {
-                    console.log("Guess submitted via Enter:", guess);
-                    handleGuess(guess);
-                }
-            }
-        };
-        guessInput.addEventListener("keydown", enterHandler);
         guessInput.addEventListener("focus", () => {
             console.log("Guess input focused");
             activeInput = guessInput;
@@ -1115,18 +1121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
         scoreText.textContent = `🍍 ${cumulativeScore}`;
-        if (guessInput) {
-            const enterHandler = (e) => {
-                if (e.key === "Enter" && !gameOver && !guessInput.disabled && !isProcessingGuess) {
-                    const guess = guessInput.value.trim().toUpperCase();
-                    if (guess) {
-                        console.log("Guess submitted via Enter:", guess);
-                        handleGuess(guess);
-                    }
-                }
-            };
-            guessInput.addEventListener("keydown", enterHandler);
-        }
+        setupGuessEnterHandler();
         setTimeout(ensureInitialFocus, 100);
     }
 
