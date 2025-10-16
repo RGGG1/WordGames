@@ -1121,7 +1121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
         }
         scoreText.textContent = `🍍 ${cumulativeScore}`;
-        setupGuessEnterHandler();
+        setupGuessEnterHandler(); // Ensure handler is re-attached every load
         setTimeout(ensureInitialFocus, 100);
     }
 
