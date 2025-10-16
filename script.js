@@ -299,7 +299,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 clearTimeout(animationTimeout);
                 animationTimeout = null;
                 guessInputContainer.classList.remove("wrong-guess");
-               _FirstGuessMade = false;
                 incorrectGuessIndicator.style.display = "none";
                 isProcessingGuess = false;
             }
@@ -1101,7 +1100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         guessInput.value = "";
         guesses = [];
         guessCount = 0;
-        hintIndex = 0;
+        hintIndex = 1;
         firstGuessMade = false;
         gameOver = false;
         
@@ -1121,7 +1120,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (gameStates[gameKey]) {
             guesses = gameStates[gameKey].guesses || [];
             guessCount = guesses.length;
-            hintIndex = Math.max(1, guesses.length + 1);
+            hintIndex = guesses.length + 1;
             firstGuessMade = guessCount > 0;
             cumulativeScore = gameStates[gameKey].cumulativeScore || cumulativeScore;
             localStorage.setItem("cumulativeScore", cumulativeScore);
@@ -1153,14 +1152,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         console.log("Displaying hints", { hintIndex, hints });
         if (hintsList) {
             hintsList.innerHTML = "";
-            const showUpTo = Math.min(hintIndex, hints.length);
-            for (let i = 0; i < showUpTo; i++) {
+            for (let i = 0; i < hintIndex; i++) {
                 if (hints[i]) {
                     const hintDiv = document.createElement("div");
                     hintDiv.textContent = hints[i];
                     hintDiv.classList.add("hint-burst");
                     hintsList.appendChild(hintDiv);
-                    if (i < showUpTo - 1) {
+                    if (i < hintIndex - 1) {
                         const separator = document.createElement("span");
                         separator.className = "hint-separator";
                         separator.textContent = "|";
@@ -1232,7 +1230,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         guesses.push(guess);
         guessCount++;
-        hintIndex = guessCount + 1;
 
         if (guess !== secretWord) {
             // Deduct 100 for every incorrect guess
@@ -1250,7 +1247,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         localStorage.setItem("gameStates", JSON.stringify(gameStates));
 
         displayGuesses();
-        displayHints();
+        hintIndex = guessCount + 1;
 
         if (guess === secretWord) {
             console.log("Correct guess!");
@@ -1276,6 +1273,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             console.log("Incorrect guess, showing next hint");
             guessInputContainer.classList.add("wrong-guess");
             incorrectGuessIndicator.style.display = "block";
+            displayHints();
             animationTimeout = setTimeout(() => {
                 guessInputContainer.classList.remove("wrong-guess");
                 incorrectGuessIndicator.style.display = "none";
