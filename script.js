@@ -24,6 +24,18 @@ document.addEventListener("DOMContentLoaded", async () => {
     let gameStates = JSON.parse(localStorage.getItem("gameStates")) || {};
     let pendingScoreAddition = 0; // For correct guess addition
 
+    // Shared Enter handler (stable reference, always sees current state)
+    const enterHandler = (e) => {
+        if (e.key === "Enter" && !gameOver && !isProcessingGuess) {
+            e.preventDefault(); // Prevent any default behavior like form submit
+            const guess = guessInput.value.trim().toUpperCase();
+            if (guess) {
+                console.log("Guess submitted via Enter:", guess);
+                handleGuess(guess);
+            }
+        }
+    };
+
     // DOM elements
     const gameContainer = document.getElementById("game-container");
     const createPineappleBtn = document.getElementById("create-pineapple");
@@ -184,18 +196,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     }
 
-    // Setup guess input enter handler
+    // Setup guess input enter handler (now uses shared stable handler)
     function setupGuessEnterHandler() {
-        const enterHandler = (e) => {
-            if (e.key === "Enter" && !gameOver && !isProcessingGuess) {
-                e.preventDefault(); // Prevent any default behavior like form submit
-                const guess = guessInput.value.trim().toUpperCase();
-                if (guess) {
-                    console.log("Guess submitted via Enter:", guess);
-                    handleGuess(guess);
-                }
-            }
-        };
         guessInput.removeEventListener("keydown", enterHandler);
         guessInput.addEventListener("keydown", enterHandler);
     }
