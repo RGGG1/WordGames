@@ -1284,6 +1284,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         displayShareSection(status);
         adjustBackground();
         guessInput.disabled = true; // Explicitly disable input on game over
+        // Removed any refocus or handler re-attachment here to prevent interference
     }
 
     // Display share section
@@ -1323,7 +1324,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 shareText.appendChild(challenge);
             } else {
                 const guesses = parseInt(status.split("/")[0]);
-                const points = [500, 400, 300, 200, 100][guesses - 1] || 100;
+                const points = [500, 400, 300, 300, 200, 100][guesses - 1] || 100;
                 const message = document.createElement("div");
                 message.textContent = `I scored `;
                 const scoreSpan = document.createElement("span");
@@ -1374,7 +1375,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             piece.style.animationDuration = `${Math.random() * 2 + 2}s`;
             piece.style.animationDelay = `${Math.random() * 0.5}s`;
             piece.style.setProperty("--drift", Math.random() * 2 - 1);
-            piece.style.setProperty("--rotation", `${Math.random() * 360}deg`;
+            piece.style.setProperty("--rotation", `${Math.random() * 360}deg`);
             piece.style.setProperty("--fall-distance", Math.random() * 0.2 + 0.8);
             container.appendChild(piece);
         }
