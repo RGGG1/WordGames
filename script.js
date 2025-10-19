@@ -1444,7 +1444,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 message.textContent = `WORDY #${gameNum} was hard.`;
                 shareText.appendChild(message);
                 const challenge = document.createElement("div");
-                challenge.textContent = "Can you solve it?";
+                challenge.textContent = "Can you solve it? www.wordy.ie";
                 shareText.appendChild(challenge);
             } else {
                 const guesses = parseInt(status.split("/")[0]);
@@ -1458,7 +1458,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 message.appendChild(document.createTextNode(` for WORDY #${gameNum}.`));
                 shareText.appendChild(message);
                 const challenge = document.createElement("div");
-                challenge.textContent = "Can you beat it?";
+                challenge.textContent = "Can you beat it? www.wordy.ie";
                 shareText.appendChild(challenge);
             }
         }
